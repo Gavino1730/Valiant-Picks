@@ -71,6 +71,14 @@ ALTER TABLE bets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_logs ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist (for idempotency)
+DROP POLICY IF EXISTS "Anyone can read games" ON games;
+DROP POLICY IF EXISTS "Users can read own bets" ON bets;
+DROP POLICY IF EXISTS "Users can create bets" ON bets;
+DROP POLICY IF EXISTS "Users can read own transactions" ON transactions;
+DROP POLICY IF EXISTS "Admins can manage games" ON games;
+DROP POLICY IF EXISTS "Admins can manage bets" ON bets;
+
 -- Create policies for games (public read)
 CREATE POLICY "Anyone can read games" ON games
   FOR SELECT USING (true);
@@ -92,3 +100,5 @@ CREATE POLICY "Admins can manage games" ON games
 
 CREATE POLICY "Admins can manage bets" ON bets
   FOR ALL USING (auth.uid() IN (SELECT id FROM users WHERE is_admin = true));
+
+const bcrypt = require('bcryptjs');

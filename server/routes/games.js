@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Game = require('../models/Game');
-const auth = require('../middleware/auth');
+const { authenticateToken } = require('../middleware/auth');
 
 // Admin: Create a new game
-router.post('/', auth, async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   const user = req.user;
   if (!user.is_admin) {
     return res.status(403).json({ error: 'Only admins can create games' });
@@ -83,7 +83,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Admin: Update game status
-router.put('/:id/status', auth, async (req, res) => {
+router.put('/:id/status', authenticateToken, async (req, res) => {
   const user = req.user;
   if (!user.is_admin) {
     return res.status(403).json({ error: 'Only admins can update games' });
@@ -106,7 +106,7 @@ router.put('/:id/status', auth, async (req, res) => {
 });
 
 // Admin: Delete a game
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
   const user = req.user;
   if (!user.is_admin) {
     return res.status(403).json({ error: 'Only admins can delete games' });
