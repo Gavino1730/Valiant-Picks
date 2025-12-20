@@ -1,15 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
+const { authenticateToken, adminOnly } = require('../middleware/auth');
 
 // Get all teams with full details
-router.get('/', auth, async (req, res) => {
+router.get('/', authenticateToken, adminOnly, async (req, res) => {
   try {
-    // Check admin status
-    if (!req.user.is_admin) {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
     // For now, returning sample data structure
     // In a real app, this would fetch from database
     const teams = [
@@ -53,12 +48,8 @@ router.get('/', auth, async (req, res) => {
 });
 
 // Get single team by ID
-router.get('/:teamId', auth, async (req, res) => {
+router.get('/:teamId', authenticateToken, adminOnly, async (req, res) => {
   try {
-    if (!req.user.is_admin) {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
     const { teamId } = req.params;
     // Fetch from database based on teamId
     res.json({ message: 'Team data would be fetched from database' });
@@ -69,12 +60,8 @@ router.get('/:teamId', auth, async (req, res) => {
 });
 
 // Update team info (name, record, ranking, etc)
-router.put('/:teamId', auth, async (req, res) => {
+router.put('/:teamId', authenticateToken, adminOnly, async (req, res) => {
   try {
-    if (!req.user.is_admin) {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
     const { teamId } = req.params;
     const updates = req.body;
 
@@ -107,12 +94,8 @@ router.put('/:teamId', auth, async (req, res) => {
 });
 
 // Add game to schedule
-router.post('/:teamId/schedule', auth, async (req, res) => {
+router.post('/:teamId/schedule', authenticateToken, adminOnly, async (req, res) => {
   try {
-    if (!req.user.is_admin) {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
     const { teamId } = req.params;
     const { result, score, type, date, time, opponent, location } = req.body;
 
@@ -130,12 +113,8 @@ router.post('/:teamId/schedule', auth, async (req, res) => {
 });
 
 // Update game in schedule
-router.put('/:teamId/schedule/:gameId', auth, async (req, res) => {
+router.put('/:teamId/schedule/:gameId', authenticateToken, adminOnly, async (req, res) => {
   try {
-    if (!req.user.is_admin) {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
     const { teamId, gameId } = req.params;
     // Update in database
     res.json({ message: 'Game updated successfully' });
@@ -146,12 +125,8 @@ router.put('/:teamId/schedule/:gameId', auth, async (req, res) => {
 });
 
 // Delete game from schedule
-router.delete('/:teamId/schedule/:gameId', auth, async (req, res) => {
+router.delete('/:teamId/schedule/:gameId', authenticateToken, adminOnly, async (req, res) => {
   try {
-    if (!req.user.is_admin) {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
     const { teamId, gameId } = req.params;
     // Delete from database
     res.json({ message: 'Game deleted successfully' });
@@ -162,12 +137,8 @@ router.delete('/:teamId/schedule/:gameId', auth, async (req, res) => {
 });
 
 // Add player to roster
-router.post('/:teamId/players', auth, async (req, res) => {
+router.post('/:teamId/players', authenticateToken, adminOnly, async (req, res) => {
   try {
-    if (!req.user.is_admin) {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
     const { teamId } = req.params;
     const { number, name, position, grade, height, bio } = req.body;
 
@@ -185,12 +156,8 @@ router.post('/:teamId/players', auth, async (req, res) => {
 });
 
 // Update player
-router.put('/:teamId/players/:playerId', auth, async (req, res) => {
+router.put('/:teamId/players/:playerId', authenticateToken, adminOnly, async (req, res) => {
   try {
-    if (!req.user.is_admin) {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
     const { teamId, playerId } = req.params;
     // Update in database
     res.json({ message: 'Player updated successfully' });
@@ -201,12 +168,8 @@ router.put('/:teamId/players/:playerId', auth, async (req, res) => {
 });
 
 // Delete player
-router.delete('/:teamId/players/:playerId', auth, async (req, res) => {
+router.delete('/:teamId/players/:playerId', authenticateToken, adminOnly, async (req, res) => {
   try {
-    if (!req.user.is_admin) {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
     const { teamId, playerId } = req.params;
     // Delete from database
     res.json({ message: 'Player deleted successfully' });
