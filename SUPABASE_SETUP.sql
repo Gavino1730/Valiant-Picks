@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS player_stats (
 
 CREATE TABLE IF NOT EXISTS games (
   id BIGSERIAL PRIMARY KEY,
+  team_id BIGINT NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
   team_type TEXT NOT NULL,
   home_team TEXT NOT NULL,
   away_team TEXT,
@@ -72,8 +73,12 @@ CREATE TABLE IF NOT EXISTS games (
   game_time TEXT,
   location TEXT,
   status TEXT DEFAULT 'upcoming',
-  winning_odds REAL NOT NULL,
-  losing_odds REAL NOT NULL,
+  result TEXT,
+  home_score INT,
+  away_score INT,
+  type TEXT,
+  winning_odds REAL,
+  losing_odds REAL,
   spread REAL,
   spread_odds REAL,
   over_under REAL,
@@ -119,6 +124,9 @@ CREATE TABLE IF NOT EXISTS admin_logs (
 
 -- Enable Row Level Security (RLS) for security
 ALTER TABLE users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE teams ENABLE ROW LEVEL SECURITY;
+ALTER TABLE players ENABLE ROW LEVEL SECURITY;
+ALTER TABLE player_stats ENABLE ROW LEVEL SECURITY;
 ALTER TABLE games ENABLE ROW LEVEL SECURITY;
 ALTER TABLE bets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
@@ -127,34 +135,17 @@ ALTER TABLE admin_logs ENABLE ROW LEVEL SECURITY;
 -- Drop existing policies if they exist (for idempotency)
 DROP POLICY IF EXISTS "allow_registration" ON users;
 DROP POLICY IF EXISTS "allow_read_own_user" ON users;
-DROP POLICY IF EXISTS "Anyone can register users" ON users;
-DROP POLICY IF EXISTS "Users can read own profile" ON users;
-DROP POLICY IF EXISTS "Admins can see all users" ON users;
-DROP POLICY IF EXISTS "Admins can update users" ON users;
-DROP POLICY IF EXISTS "Anyone can read games" ON games;
-DROP POLICY IF EXISTS "Users can read own bets" ON bets;
-DROP POLICY IF EXISTS "Admins can read all bets" ON bets;
-DROP POLICY IF EXISTS "Users can create bets" ON bets;
-DROP POLICY IF EXISTS "Admins can update bets" ON bets;
-DROP POLICY IF EXISTS "Users can read own transactions" ON transactions;
-DROP POLICY IF EXISTS "Admins can manage games" ON games;
-DROP POLICY IF EXISTS "Admins can manage bets" ON bets;
+DROP POLICY IF EXISTS "allow_read_teams" ON teams;
+DROP POLICY IF EXISTS "allow_insert_teams" ON teams;
+DROP POLICY IF EXISTS "allow_read_players" ON players;
+DROP POLICY IF EXISTS "allow_insert_players" ON players;
+DROP POLICY IF EXISTS "allow_read_player_stats" ON player_stats;
+DROP POLICY IF EXISTS "allow_insert_player_stats" ON player_stats;
 DROP POLICY IF EXISTS "allow_read_games" ON games;
+DROP POLICY IF EXISTS "allow_insert_games" ON games;
 DROP POLICY IF EXISTS "allow_create_bets" ON bets;
 DROP POLICY IF EXISTS "allow_read_own_bets" ON bets;
 DROP POLICY IF EXISTS "allow_read_own_transactions" ON transactions;
-
--- Disable RLS temporarily for setup, will re-enable with proper policies
-ALTER TABLE games DISABLE ROW LEVEL SECURITY;
-ALTER TABLE bets DISABLE ROW LEVEL SECURITY;
-ALTER TABLE transactions DISABLE ROW LEVEL SECURITY;
-ALTER TABLE admin_logs DISABLE ROW LEVEL SECURITY;
-
--- Re-enable RLS
-ALTER TABLE games ENABLE ROW LEVEL SECURITY;
-ALTER TABLE bets ENABLE ROW LEVEL SECURITY;
-ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE admin_logs ENABLE ROW LEVEL SECURITY;
 
 -- Simple policies without recursion
 -- Users table: Allow anyone to insert (register), users can read own data
@@ -164,11 +155,35 @@ CREATE POLICY "allow_registration" ON users
 CREATE POLICY "allow_read_own_user" ON users
   FOR SELECT USING (auth.uid() = id);
 
--- Games table: Public read, admin create/update/delete
+-- Teams table: Public read, anyone can insert
+CREATE POLICY "allow_read_teams" ON teams
+  FOR SELECT USING (true);
+
+CREATE POLICY "allow_insert_teams" ON teams
+  FOR INSERT WITH CHECK (true);
+
+-- Players table: Public read, anyone can insert
+CREATE POLICY "allow_read_players" ON players
+  FOR SELECT USING (true);
+
+CREATE POLICY "allow_insert_players" ON players
+  FOR INSERT WITH CHECK (true);
+
+-- Player stats table: Public read, anyone can insert
+CREATE POLICY "allow_read_player_stats" ON player_stats
+  FOR SELECT USING (true);
+
+CREATE POLICY "allow_insert_player_stats" ON player_stats
+  FOR INSERT WITH CHECK (true);
+
+-- Games table: Public read, anyone can insert
 CREATE POLICY "allow_read_games" ON games
   FOR SELECT USING (true);
 
--- Bets table: Users can create/read own, admins can manage all
+CREATE POLICY "allow_insert_games" ON games
+  FOR INSERT WITH CHECK (true);
+
+-- Bets table: Users can create/read own
 CREATE POLICY "allow_create_bets" ON bets
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
