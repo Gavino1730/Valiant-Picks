@@ -16,7 +16,7 @@ function Dashboard({ user, apiUrl }) {
 
   useEffect(() => {
     fetchGames();
-  }, []);
+  }, [fetchGames]);
 
   const fetchGames = async () => {
     try {
@@ -88,15 +88,6 @@ function Dashboard({ user, apiUrl }) {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getBetTypeLabel = (type) => {
-    const labels = {
-      moneyline: 'Moneyline (Win/Lose)',
-      spread: 'Point Spread',
-      'over-under': 'Over/Under',
-    };
-    return labels[type] || type;
   };
 
   return (
