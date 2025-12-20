@@ -15,20 +15,20 @@ function Dashboard({ user, apiUrl }) {
   const [gamesLoading, setGamesLoading] = useState(true);
 
   useEffect(() => {
-    fetchGames();
-  }, [fetchGames]);
+    const fetchGames = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/games`);
+        setGames(response.data || []);
+      } catch (err) {
+        console.error('Error fetching games:', err);
+        setGames([]);
+      } finally {
+        setGamesLoading(false);
+      }
+    };
 
-  const fetchGames = async () => {
-    try {
-      const response = await axios.get(`${apiUrl}/games`);
-      setGames(response.data || []);
-    } catch (err) {
-      console.error('Error fetching games:', err);
-      setGames([]);
-    } finally {
-      setGamesLoading(false);
-    }
-  };
+    fetchGames();
+  }, [apiUrl]);
 
   const selectedGame = selectedGameId ? games.find(g => g.id === parseInt(selectedGameId)) : null;
 
