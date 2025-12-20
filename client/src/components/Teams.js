@@ -124,7 +124,6 @@ function Teams() {
   const fetchTeams = useCallback(async () => {
     try {
       setLoading(true);
-      setError('');
       const response = await axios.get('/api/teams-admin', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
