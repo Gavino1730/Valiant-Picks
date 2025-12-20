@@ -6,7 +6,6 @@ function Teams() {
   const [activeTab, setActiveTab] = useState('boys');
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   const getHardcodedTeams = useCallback(() => {
     return [
