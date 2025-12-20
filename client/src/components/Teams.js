@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import '../styles/Teams.css';
 
@@ -8,28 +8,7 @@ function Teams() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchTeams();
-  }, []);
-
-  const fetchTeams = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get('/api/teams-admin', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      setTeams(response.data);
-      setError('');
-    } catch (err) {
-      // Fallback to hardcoded data if API fails
-      console.log('Using hardcoded team data');
-      setTeams(getHardcodedTeams());
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getHardcodedTeams = () => {
+  const getHardcodedTeams = useCallback(() => {
     return [
       {
         id: 'boys',
@@ -141,7 +120,28 @@ function Teams() {
         ]
       }
     ];
-  };
+  }, []);
+
+  const fetchTeams = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/teams-admin', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      setTeams(response.data);
+      setError('');
+    } catch (err) {
+      // Fallback to hardcoded data if API fails
+      console.log('Using hardcoded team data');
+      setTeams(getHardcodedTeams());
+    } finally {
+      setLoading(false);
+    }
+  }, [getHardcodedTeams]);
+
+  useEffect(() => {
+    fetchTeams();
+  }, [fetchTeams]);
 
   const selectedTeam = teams.find(t => t.id === activeTab) || null;
 
