@@ -1,3 +1,5 @@
+# Ignore Vercel config
+vercel.json
 # Ignore root lock file to avoid frontend/backend lock file conflicts
 package-lock.json
 
