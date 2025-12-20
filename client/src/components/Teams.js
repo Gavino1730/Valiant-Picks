@@ -9,24 +9,24 @@ function Teams({ apiUrl }) {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/teams`);
+        setTeams(response.data);
+        setError('');
+        if (response.data.length > 0) {
+          setSelectedTeam(response.data[0]);
+        }
+      } catch (err) {
+        setError('Failed to fetch teams');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchTeams();
   }, [apiUrl]);
-
-  const fetchTeams = async () => {
-    try {
-      const response = await axios.get(`${apiUrl}/teams`);
-      setTeams(response.data);
-      setError('');
-      if (response.data.length > 0) {
-        setSelectedTeam(response.data[0]);
-      }
-    } catch (err) {
-      setError('Failed to fetch teams');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (loading) return <div className="card">Loading teams...</div>;
 
