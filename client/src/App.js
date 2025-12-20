@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import AdminPanel from './components/AdminPanel';
 import BetList from './components/BetList';
 import Leaderboard from './components/Leaderboard';
+import Teams from './components/Teams';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -51,6 +52,9 @@ function App() {
           <button onClick={() => setPage('dashboard')} className={page === 'dashboard' ? 'active' : ''}>
             Dashboard
           </button>
+          <button onClick={() => setPage('teams')} className={page === 'teams' ? 'active' : ''}>
+            Teams
+          </button>
           <button onClick={() => setPage('bets')} className={page === 'bets' ? 'active' : ''}>
             My Bets
           </button>
@@ -70,6 +74,7 @@ function App() {
 
       <div className="container">
         {page === 'dashboard' && <Dashboard user={user} apiUrl={API_URL} />}
+        {page === 'teams' && <Teams apiUrl={API_URL} />}
         {page === 'bets' && <BetList apiUrl={API_URL} />}
         {page === 'leaderboard' && <Leaderboard apiUrl={API_URL} />}
         {page === 'admin' && user && user.is_admin && <AdminPanel apiUrl={API_URL} />}
