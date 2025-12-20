@@ -124,17 +124,19 @@ function Teams() {
   const fetchTeams = useCallback(async () => {
     try {
       setLoading(true);
+      const token = localStorage.getItem('token');
       const response = await axios.get('/api/teams-admin', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       if (response.data && response.data.length > 0) {
         setTeams(response.data);
       } else {
+        // If API returns empty, use hardcoded data
         setTeams(getHardcodedTeams());
       }
     } catch (err) {
-      // Fallback to hardcoded data if API fails
-      console.log('API error, using hardcoded team data:', err.message);
+      // Any error - use hardcoded data as fallback
+      console.log('API fetch failed, using hardcoded data:', err.message);
       setTeams(getHardcodedTeams());
     } finally {
       setLoading(false);
@@ -243,6 +245,7 @@ function Teams() {
   );
 
   if (loading) return <div className="teams-page"><p>Loading teams...</p></div>;
+  if (!teams || teams.length === 0) return <div className="teams-page"><p>No teams found</p></div>;
 
   return (
     <div className="teams-page">
@@ -263,7 +266,7 @@ function Teams() {
         </button>
       </div>
 
-      {selectedTeam && <TeamSection team={selectedTeam} />}
+      {selectedTeam ? <TeamSection team={selectedTeam} /> : <p>Select a team</p>}
     </div>
   );
 }
