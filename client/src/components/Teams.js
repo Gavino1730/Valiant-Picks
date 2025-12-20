@@ -147,8 +147,6 @@ function Teams() {
     fetchTeams();
   }, [fetchTeams]);
 
-  const selectedTeam = teams.find(t => t.id === activeTab) || null;
-
   const TeamSection = ({ team }) => (
     <div className="team-section">
       <div className="team-header">
