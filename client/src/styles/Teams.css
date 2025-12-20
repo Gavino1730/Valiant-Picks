@@ -6,8 +6,36 @@
 
 .teams-page h1 {
   color: #004f9e;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   text-align: center;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #666;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tab-button:hover {
+  color: #004f9e;
+}
+
+.tab-button.active {
+  color: #004f9e;
+  border-bottom-color: #004f9e;
 }
 
 .team-section {

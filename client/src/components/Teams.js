@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/Teams.css';
 
 function Teams() {
+  const [activeTab, setActiveTab] = useState('boys');
+
   const boysTeam = {
     name: 'Valley Catholic Boys Basketball',
     type: 'Boys Basketball',
@@ -101,8 +103,24 @@ function Teams() {
   return (
     <div className="teams-page">
       <h1>Valley Catholic Basketball</h1>
-      <TeamSection team={boysTeam} />
-      <TeamSection team={girlsTeam} />
+      
+      <div className="tabs">
+        <button 
+          className={`tab-button ${activeTab === 'boys' ? 'active' : ''}`}
+          onClick={() => setActiveTab('boys')}
+        >
+          Boys Basketball
+        </button>
+        <button 
+          className={`tab-button ${activeTab === 'girls' ? 'active' : ''}`}
+          onClick={() => setActiveTab('girls')}
+        >
+          Girls Basketball
+        </button>
+      </div>
+
+      {activeTab === 'boys' && <TeamSection team={boysTeam} />}
+      {activeTab === 'girls' && <TeamSection team={girlsTeam} />}
     </div>
   );
 }
