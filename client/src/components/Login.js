@@ -24,7 +24,16 @@ function Login({ onLogin, apiUrl }) {
     try {
       // Regular user login
       const endpoint = isRegister ? '/auth/register' : '/auth/login';
-      const response = await axios.post(`${apiUrl}${endpoint}`, formData);
+      
+      // Add timeout for API request (10 seconds)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
+      const response = await axios.post(`${apiUrl}${endpoint}`, formData, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
       
       if (isRegister) {
         setError('');
@@ -35,7 +44,15 @@ function Login({ onLogin, apiUrl }) {
         onLogin(response.data.token, response.data.user);
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'An error occurred');
+      if (err.code === 'ECONNABORTED') {
+        setError('Request timeout. Please check your connection and try again.');
+      } else if (err.response) {
+        setError(err.response?.data?.error || 'An error occurred');
+      } else if (err.message === 'Network Error') {
+        setError('Network error. Please check your internet connection.');
+      } else {
+        setError(err.message || 'An error occurred');
+      }
     } finally {
       setLoading(false);
     }
