@@ -5,15 +5,35 @@ import '../styles/AdminPanel.css';
 function AdminPanel({ apiUrl }) {
   const [allBets, setAllBets] = useState([]);
   const [users, setUsers] = useState([]);
+  const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [tab, setTab] = useState('bets');
+  const [tab, setTab] = useState('games');
   const [selectedUser, setSelectedUser] = useState(null);
   const [newBalance, setNewBalance] = useState('');
+  
+  // Game creation form
+  const [gameForm, setGameForm] = useState({
+    teamType: 'NFL',
+    homeTeam: '',
+    awayTeam: '',
+    gameDate: '',
+    gameTime: '',
+    location: '',
+    winningOdds: '',
+    losingOdds: '',
+    spread: '',
+    spreadOdds: '',
+    overUnder: '',
+    overOdds: '',
+    underOdds: '',
+    notes: ''
+  });
 
   useEffect(() => {
     fetchAllBets();
     fetchUsers();
+    fetchGames();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -38,6 +58,56 @@ function AdminPanel({ apiUrl }) {
       setError('Failed to fetch users: ' + (err.response?.data?.error || err.message));
       console.error('Failed to fetch users:', err);
     }
+  };
+
+  const fetchGames = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/games`);
+      setGames(response.data);
+      setError('');
+    } catch (err) {
+      setError('Failed to fetch games: ' + (err.response?.data?.error || err.message));
+      console.error('Failed to fetch games:', err);
+    }
+  };
+
+  const handleCreateGame = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${apiUrl}/games`, gameForm, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      alert('Game created successfully!');
+      setGameForm({
+        teamType: 'NFL',
+        homeTeam: '',
+        awayTeam: '',
+        gameDate: '',
+        gameTime: '',
+        location: '',
+        winningOdds: '',
+        losingOdds: '',
+        spread: '',
+        spreadOdds: '',
+        overUnder: '',
+        overOdds: '',
+        underOdds: '',
+        notes: ''
+      });
+      fetchGames();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to create game');
+    }
+  };
+
+  const handleGameFormChange = (e) => {
+    const { name, value } = e.target;
+    setGameForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleUpdateBet = async (betId, status, outcome) => {
@@ -76,6 +146,9 @@ function AdminPanel({ apiUrl }) {
       {error && <div className="alert alert-error">{error}</div>}
 
       <div className="tabs">
+        <button className={`tab-btn ${tab === 'games' ? 'active' : ''}`} onClick={() => setTab('games')}>
+          Manage Games
+        </button>
         <button className={`tab-btn ${tab === 'bets' ? 'active' : ''}`} onClick={() => setTab('bets')}>
           Manage Bets
         </button>
@@ -83,6 +156,217 @@ function AdminPanel({ apiUrl }) {
           Manage Users
         </button>
       </div>
+
+      {tab === 'games' && (
+        <div className="admin-section">
+          <h3>Create New Game</h3>
+          <form onSubmit={handleCreateGame} className="game-form">
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="teamType">Sport Type</label>
+                <select 
+                  id="teamType" 
+                  name="teamType" 
+                  value={gameForm.teamType} 
+                  onChange={handleGameFormChange}
+                  required
+                >
+                  <option value="NFL">NFL</option>
+                  <option value="NBA">NBA</option>
+                  <option value="MLB">MLB</option>
+                  <option value="NHL">NHL</option>
+                  <option value="NCAA">NCAA Football</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="homeTeam">Home Team *</label>
+                <input 
+                  id="homeTeam" 
+                  type="text" 
+                  name="homeTeam" 
+                  value={gameForm.homeTeam} 
+                  onChange={handleGameFormChange}
+                  required 
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="awayTeam">Away Team</label>
+                <input 
+                  id="awayTeam" 
+                  type="text" 
+                  name="awayTeam" 
+                  value={gameForm.awayTeam} 
+                  onChange={handleGameFormChange}
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="gameDate">Game Date *</label>
+                <input 
+                  id="gameDate" 
+                  type="date" 
+                  name="gameDate" 
+                  value={gameForm.gameDate} 
+                  onChange={handleGameFormChange}
+                  required 
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="gameTime">Game Time</label>
+                <input 
+                  id="gameTime" 
+                  type="time" 
+                  name="gameTime" 
+                  value={gameForm.gameTime} 
+                  onChange={handleGameFormChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="location">Location</label>
+                <input 
+                  id="location" 
+                  type="text" 
+                  name="location" 
+                  value={gameForm.location} 
+                  onChange={handleGameFormChange}
+                  placeholder="e.g., New York, NY"
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="winningOdds">Winning Odds *</label>
+                <input 
+                  id="winningOdds" 
+                  type="number" 
+                  step="0.01" 
+                  name="winningOdds" 
+                  value={gameForm.winningOdds} 
+                  onChange={handleGameFormChange}
+                  placeholder="e.g., 1.95"
+                  required 
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="losingOdds">Losing Odds *</label>
+                <input 
+                  id="losingOdds" 
+                  type="number" 
+                  step="0.01" 
+                  name="losingOdds" 
+                  value={gameForm.losingOdds} 
+                  onChange={handleGameFormChange}
+                  placeholder="e.g., 1.95"
+                  required 
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="spread">Point Spread</label>
+                <input 
+                  id="spread" 
+                  type="number" 
+                  step="0.5" 
+                  name="spread" 
+                  value={gameForm.spread} 
+                  onChange={handleGameFormChange}
+                  placeholder="e.g., -3.5"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="spreadOdds">Spread Odds</label>
+                <input 
+                  id="spreadOdds" 
+                  type="number" 
+                  step="0.01" 
+                  name="spreadOdds" 
+                  value={gameForm.spreadOdds} 
+                  onChange={handleGameFormChange}
+                  placeholder="e.g., 1.91"
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="overUnder">Over/Under Total</label>
+                <input 
+                  id="overUnder" 
+                  type="number" 
+                  step="0.5" 
+                  name="overUnder" 
+                  value={gameForm.overUnder} 
+                  onChange={handleGameFormChange}
+                  placeholder="e.g., 45.5"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="overOdds">Over Odds</label>
+                <input 
+                  id="overOdds" 
+                  type="number" 
+                  step="0.01" 
+                  name="overOdds" 
+                  value={gameForm.overOdds} 
+                  onChange={handleGameFormChange}
+                  placeholder="e.g., 1.91"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="underOdds">Under Odds</label>
+                <input 
+                  id="underOdds" 
+                  type="number" 
+                  step="0.01" 
+                  name="underOdds" 
+                  value={gameForm.underOdds} 
+                  onChange={handleGameFormChange}
+                  placeholder="e.g., 1.91"
+                />
+              </div>
+            </div>
+
+            <div className="form-group full-width">
+              <label htmlFor="notes">Notes</label>
+              <textarea 
+                id="notes" 
+                name="notes" 
+                value={gameForm.notes} 
+                onChange={handleGameFormChange}
+                placeholder="Add any additional notes about this game"
+                rows="3"
+              />
+            </div>
+
+            <button type="submit" className="btn">Create Game</button>
+          </form>
+
+          <h3>Active Games</h3>
+          {games.length === 0 ? (
+            <p>No games created yet</p>
+          ) : (
+            <div className="games-list">
+              {games.map(game => (
+                <div key={game.id} className="game-card">
+                  <h4>{game.home_team} {game.away_team ? `vs ${game.away_team}` : ''}</h4>
+                  <p><strong>Sport:</strong> {game.team_type}</p>
+                  <p><strong>Date:</strong> {game.game_date} {game.game_time ? `at ${game.game_time}` : ''}</p>
+                  <p><strong>Location:</strong> {game.location || 'N/A'}</p>
+                  <p><strong>Moneyline Odds:</strong> {game.winning_odds}x / {game.losing_odds}x</p>
+                  {game.spread && <p><strong>Spread:</strong> {game.spread} ({game.spread_odds}x)</p>}
+                  {game.over_under && <p><strong>Over/Under:</strong> {game.over_under} (O: {game.over_odds}x / U: {game.under_odds}x)</p>}
+                  {game.notes && <p><strong>Notes:</strong> {game.notes}</p>}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {tab === 'bets' && (
         <>
