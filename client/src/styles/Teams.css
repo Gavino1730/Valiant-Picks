@@ -82,6 +82,54 @@
   color: #004f9e;
 }
 
+.coaching-staff {
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+
+.coaching-staff h3 {
+  color: #004f9e;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.coach-info {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.coach {
+  flex: 1;
+  min-width: 200px;
+}
+
+.coach strong {
+  color: #004f9e;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.coach p {
+  color: #666;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.coach-bio {
+  color: #555;
+  line-height: 1.6;
+  font-size: 14px;
+  margin: 0;
+}
+
 .team-description {
   background: #f5f5f5;
   padding: 20px;
@@ -99,6 +147,73 @@
   line-height: 1.6;
   color: #333;
   margin: 0;
+}
+
+.team-motto {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  color: #004f9e;
+  font-weight: 600;
+}
+
+.schedule-section {
+  margin-bottom: 30px;
+}
+
+.schedule-section h3 {
+  color: #004f9e;
+  margin-bottom: 15px;
+}
+
+.schedule-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.schedule-header {
+  display: grid;
+  grid-template-columns: 70px 100px 100px 100px 100px 1fr 80px;
+  gap: 15px;
+  background: #004f9e;
+  color: white;
+  padding: 12px 15px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.schedule-row {
+  display: grid;
+  grid-template-columns: 70px 100px 100px 100px 100px 1fr 80px;
+  gap: 15px;
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+  font-size: 13px;
+}
+
+.schedule-row:last-child {
+  border-bottom: none;
+}
+
+.schedule-row.win {
+  background: #f0f7f0;
+}
+
+.schedule-row.loss {
+  background: #fff0f0;
+}
+
+.schedule-row.scheduled {
+  background: #f9f9f9;
+}
+
+.schedule-row .result {
+  font-weight: 600;
+  color: #004f9e;
 }
 
 .roster-section h3 {
@@ -180,6 +295,27 @@
   .team-stats {
     flex-direction: column;
     gap: 15px;
+  }
+
+  .schedule-header,
+  .schedule-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .schedule-header > div,
+  .schedule-row > div {
+    display: flex;
+    align-items: center;
+  }
+
+  .schedule-header > div::before,
+  .schedule-row > div::before {
+    content: attr(data-label);
+    font-weight: 600;
+    margin-right: 8px;
+    color: #004f9e;
+    min-width: 80px;
   }
 
   .player-header {
