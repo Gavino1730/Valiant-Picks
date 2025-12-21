@@ -22,7 +22,11 @@ const authLimiter = rateLimit({
 
 // Middleware
 app.use(cors({
-  origin: ['https://betting-6i9.pages.dev', 'http://localhost:3000'],
+  origin: [
+    'https://valiantpicks.com',
+    'https://betting-6i9.pages.dev',
+    'http://localhost:3000'
+  ],
   credentials: true
 }));
 app.use(bodyParser.json({ limit: '10mb' }));
