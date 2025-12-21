@@ -37,7 +37,6 @@ function Dashboard({ user }) {
   const fetchGames = async () => {
     try {
       const response = await apiClient.get('/games');
-      console.log('Fetched games:', response.data);
       // Sort games by date (earliest first)
       const sortedGames = (response.data || []).sort((a, b) => {
         return new Date(a.game_date) - new Date(b.game_date);
@@ -81,15 +80,6 @@ function Dashboard({ user }) {
   };
 
   const selectedGame = selectedGameId ? games.find(g => g.id === parseInt(selectedGameId)) : null;
-  
-  // Log selected game for debugging
-  useEffect(() => {
-    if (selectedGame) {
-      console.log('Selected game:', selectedGame);
-      console.log('Home team:', selectedGame.home_team);
-      console.log('Away team:', selectedGame.away_team);
-    }
-  }, [selectedGame]);
 
   const handlePlaceBet = async (e) => {
     e.preventDefault();
