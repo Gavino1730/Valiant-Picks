@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/Dashboard.css';
-import { formatCurrency, formatCurrencyText } from '../utils/currency';
+import { formatCurrency } from '../utils/currency';
 
 function Dashboard({ user, apiUrl }) {
   const [balance, setBalance] = useState(user?.balance || 0);
