@@ -11,9 +11,7 @@ function AdminTeams() {
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
   const [newPlayer, setNewPlayer] = useState({ number: '', name: '', position: '', grade: '', height: '', bio: '' });
-  const [newGame, setNewGame] = useState({ result: '', score: '', type: '', date: '', time: '', opponent: '', location: '' });
   const [editingPlayer, setEditingPlayer] = useState(null);
-  const [editingGame, setEditingGame] = useState(null);
 
   // Hardcoded fallback teams data
   const getHardcodedTeams = useCallback(() => {
@@ -186,70 +184,6 @@ function AdminTeams() {
 
   const handleCancelEditPlayer = () => {
     setEditingPlayer(null);
-  };
-
-  const handleAddGame = async () => {
-    try {
-      if (!newGame.result || !newGame.score || !newGame.type || !newGame.date || !newGame.time || !newGame.opponent || !newGame.location) {
-        setError('All game fields are required');
-        return;
-      }
-
-      setError('');
-      await apiClient.post(`/teams-admin/${selectedTeam.id}/schedule`, newGame);
-
-      const updatedTeam = { ...selectedTeam };
-      updatedTeam.schedule.push(newGame);
-      setSelectedTeam(updatedTeam);
-      setNewGame({ result: '', score: '', type: '', date: '', time: '', opponent: '', location: '' });
-      setError('Game added successfully');
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to add game');
-    }
-  };
-
-  const handleDeleteGame = async (gameIdx) => {
-    try {
-      setError('');
-      await apiClient.delete(`/teams-admin/${selectedTeam.id}/schedule/${gameIdx}`);
-
-      const updatedTeam = { ...selectedTeam };
-      updatedTeam.schedule = updatedTeam.schedule.filter((_, idx) => idx !== gameIdx);
-      setSelectedTeam(updatedTeam);
-      setError('Game deleted successfully');
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to delete game');
-    }
-  };
-
-  const handleEditGame = (game, idx) => {
-    setEditingGame({ ...game, index: idx });
-  };
-
-  const handleSaveEditGame = async () => {
-    try {
-      if (!editingGame.result || !editingGame.score || !editingGame.type || !editingGame.date || !editingGame.time || !editingGame.opponent || !editingGame.location) {
-        setError('All game fields are required');
-        return;
-      }
-
-      setError('');
-      const gameData = { ...editingGame };
-      delete gameData.index;
-      await apiClient.put(`/teams-admin/${selectedTeam.id}/schedule/${editingGame.index}`, gameData);
-
-      const updatedTeam = { ...selectedTeam };
-      updatedTeam.schedule[editingGame.index] = gameData;
-      setSelectedTeam(updatedTeam);
-      setEditingGame(null);
-      setError('Game updated successfully');
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to update game');
-    }
-  };
-
-  const handleCancelEditGame = () => {
-    setEditingGame(null);
   };
 
   if (loading) return <div className="admin-teams"><p>Loading teams...</p></div>;
