@@ -299,68 +299,196 @@
 }
 
 @media (max-width: 768px) {
+  .leaderboard {
+    padding: 12px;
+  }
+
   .leaderboard h2 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .leaderboard-controls {
+    margin-bottom: 1.5rem;
+  }
+
+  .sort-buttons {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .sort-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .leaderboard-table-wrapper {
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
   }
 
   .leaderboard-table {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
 
   .leaderboard-table th,
   .leaderboard-table td {
-    padding: 0.6rem 0.4rem;
+    padding: 10px 8px;
+  }
+
+  .leaderboard-table th {
+    font-size: 12px;
+  }
+
+  .leaderboard-table th.rank {
+    width: 50px;
   }
 
   .leaderboard-table th.username {
     min-width: 120px;
   }
 
-  .sort-buttons {
-    flex-direction: column;
+  .leaderboard-table th.stat {
+    width: 80px;
   }
 
-  .sort-btn {
-    width: 100%;
+  .rank-badge {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  .user-name {
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 130px;
   }
 
   .leaderboard-stats {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 
   .overview-stat {
-    padding: 1rem;
+    padding: 12px;
+  }
+
+  .overview-stat h4 {
+    font-size: 12px;
+    margin-bottom: 6px;
   }
 
   .overview-stat .value {
-    font-size: 1.4rem;
-  }
-
-  .user-name {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100px;
+    font-size: 1.3rem;
   }
 }
 
 @media (max-width: 480px) {
-  .leaderboard-table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+  .leaderboard {
+    padding: 8px;
   }
 
-  .leaderboard-table thead,
-  .leaderboard-table tbody,
-  .leaderboard-table tr,
-  .leaderboard-table td,
-  .leaderboard-table th {
-    display: block;
+  .leaderboard h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    gap: 0.3rem;
+  }
+
+  .leaderboard-controls {
+    margin-bottom: 1rem;
+  }
+
+  .sort-buttons {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .sort-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .leaderboard-table-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 79, 158, 0.1);
+  }
+
+  /* Mobile-optimized table display */
+  .leaderboard-table {
+    font-size: 0.8rem;
+    min-width: 100%;
+  }
+
+  .leaderboard-table thead {
+    display: none;
+  }
+
+  .leaderboard-table tbody {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .leaderboard-table tr {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 2px solid #e0e0e0;
+    padding: 12px 0;
+  }
+
+  .leaderboard-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    border: none;
+  }
+
+  .leaderboard-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #004f9e;
+    margin-right: 12px;
+    min-width: 80px;
+  }
+
+  .rank-badge {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+    margin-right: 8px;
+  }
+
+  .user-name {
+    font-size: 12px;
+    max-width: 100px;
   }
 
   .leaderboard-stats {
     grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 1rem;
+  }
+
+  .overview-stat {
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .overview-stat h4 {
+    font-size: 11px;
+  }
+
+  .overview-stat .value {
+    font-size: 1.1rem;
+  }
+
+  .stat-unit {
+    font-size: 10px;
   }
 }

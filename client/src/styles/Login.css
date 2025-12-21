@@ -233,21 +233,147 @@ form {
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .login-box {
-    padding: 2rem 1.5rem;
-    max-width: 100%;
-    margin: 0 1rem;
+    padding: 2.5rem 2rem;
+    max-width: 95%;
   }
 
   .login-header h1 {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  .form-group label {
+    font-size: 14px;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .auth-link {
+    font-size: 14px;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .modal-content h3 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 0;
+  }
+
+  .login-box {
+    padding: 1.5rem;
+    max-width: 100%;
+    margin: 0 12px;
+    border-radius: 12px;
+  }
+
+  .login-header {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .login-header h1 {
+    font-size: 1.3rem;
+    margin-bottom: 0;
   }
 
   .admin-link {
     position: static;
-    margin-top: 1rem;
     width: 100%;
     text-align: center;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 11px 12px;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+
+  button {
+    width: 100%;
+    padding: 11px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+
+  .toggle-form {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  .link-btn {
+    font-size: 13px;
+  }
+
+  .alert {
+    padding: 0.8rem;
+    font-size: 13px;
+    border-left-width: 3px;
+  }
+
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .modal-content {
+    width: 100%;
+    padding: 1.2rem;
+    border-radius: 10px;
+  }
+
+  .modal-content h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .modal-content input {
+    font-size: 16px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modal-buttons button {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
   }
 }

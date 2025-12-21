@@ -288,42 +288,185 @@
 }
 
 @media (max-width: 768px) {
+  .teams-page {
+    padding: 12px;
+  }
+
+  .teams-page h1 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
   .team-section {
-    padding: 20px;
+    padding: 15px;
+    margin-bottom: 40px;
+  }
+
+  .tabs {
+    gap: 5px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .tab-button {
+    padding: 10px 16px;
+    font-size: 14px;
+    flex: 1;
+    min-width: 120px;
   }
 
   .team-stats {
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+  }
+
+  .stat .value {
+    font-size: 18px;
+  }
+
+  .coaching-staff,
+  .team-description {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .coaching-staff h3,
+  .team-description h3,
+  .schedule-section h3,
+  .roster-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .coach-info {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .coach {
+    min-width: auto;
+  }
+
+  .coach strong {
+    font-size: 15px;
+  }
+
+  .coach-bio {
+    font-size: 13px;
   }
 
   .schedule-header,
   .schedule-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
+    font-size: 12px;
   }
 
-  .schedule-header > div,
-  .schedule-row > div {
-    display: flex;
-    align-items: center;
+  .schedule-header {
+    display: none;
   }
 
-  .schedule-header > div::before,
-  .schedule-row > div::before {
-    content: attr(data-label);
+  .schedule-row {
+    display: grid;
+    gap: 6px;
+  }
+
+  .schedule-row::before {
+    content: "Game";
     font-weight: 600;
-    margin-right: 8px;
     color: #004f9e;
-    min-width: 80px;
+    grid-column: 1 / -1;
   }
 
   .player-header {
     flex-direction: column;
     align-items: flex-start;
+    margin-bottom: 10px;
   }
 
   .player-name {
-    flex: none;
+    font-size: 16px;
+  }
+
+  .player-position,
+  .player-grade,
+  .player-height {
+    font-size: 12px;
+    display: inline;
+  }
+
+  .player-position::before,
+  .player-grade::before {
+    content: " • ";
+    color: #ccc;
+  }
+
+  .player-height::before {
+    content: " • ";
+  }
+
+  .player-bio {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .teams-page {
+    padding: 8px;
+  }
+
+  .teams-page h1 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+  }
+
+  .tabs {
+    gap: 3px;
+    justify-content: space-between;
+  }
+
+  .tab-button {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-width: 100px;
+  }
+
+  .team-section {
+    padding: 12px;
+    margin-bottom: 30px;
+    border-radius: 6px;
+  }
+
+  .team-header {
+    padding-bottom: 12px;
+    margin-bottom: 15px;
+  }
+
+  .team-header h2 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+
+  .stat .value {
+    font-size: 16px;
+  }
+
+  .schedule-row {
+    padding: 10px 12px;
+    grid-template-columns: 1fr;
+  }
+
+  .player-row {
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .player-number {
+    padding: 3px 8px;
+    font-size: 12px;
+  }
+
+  .player-name {
+    font-size: 15px;
   }
 }

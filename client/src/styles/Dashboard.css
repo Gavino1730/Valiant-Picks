@@ -446,28 +446,233 @@
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  .bets-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .quick-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .tabs {
-    overflow-x: auto;
-  }
-
-  .tab-btn {
-    white-space: nowrap;
+  .dashboard {
+    padding: 12px;
   }
 
   .user-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
+  }
+
+  .user-info h2 {
+    font-size: 1.3rem;
+  }
+
+  .balance-card {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .balance-card .amount {
+    font-size: 2rem;
+  }
+
+  .potential-win {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .quick-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-item {
+    padding: 15px;
+  }
+
+  .bets-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .bet-item {
+    padding: 15px;
+  }
+
+  .bet-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .bet-amount {
+    font-size: 1.3rem;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 5px;
+    margin-bottom: 15px;
+  }
+
+  .tab-btn {
+    white-space: nowrap;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+    max-width: 90vw;
+  }
+
+  .modal-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .bet-details {
+    gap: 8px;
+  }
+
+  .detail-row {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 8px;
+  }
+
+  .user-header {
+    gap: 8px;
+  }
+
+  .user-info h2 {
+    font-size: 1.1rem;
+  }
+
+  .user-info p {
+    font-size: 0.85rem;
+  }
+
+  .balance-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .balance-card h3 {
+    font-size: 0.8rem;
+  }
+
+  .balance-card .amount {
+    font-size: 1.8rem;
+  }
+
+  .potential-win {
+    padding: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .potential-win h4 {
+    font-size: 0.75rem;
+  }
+
+  .potential-win p {
+    font-size: 1.2rem;
+  }
+
+  .quick-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-item {
+    padding: 12px;
+  }
+
+  .stat-item h4 {
+    font-size: 12px;
+  }
+
+  .stat-item p {
+    font-size: 1.1rem;
+  }
+
+  .bets-grid {
+    gap: 10px;
+  }
+
+  .bet-item {
+    padding: 12px;
+  }
+
+  .bet-header h3 {
+    font-size: 15px;
+  }
+
+  .bet-amount {
+    font-size: 1.1rem;
+  }
+
+  .bet-status {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  .event-desc {
+    font-size: 0.8rem;
+  }
+
+  .bet-date {
+    font-size: 0.75rem;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .tabs {
+    gap: 3px;
+  }
+
+  .tab-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    flex: 1;
+  }
+
+  .modal-content {
+    padding: 1rem;
+  }
+
+  .modal-content h3 {
+    font-size: 1rem;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modal-buttons button {
+    padding: 0.75rem;
+    font-size: 14px;
+  }
+
+  input,
+  select {
+    padding: 10px 12px;
+    font-size: 16px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  button {
+    padding: 10px 16px;
+    font-size: 14px;
   }
 }
