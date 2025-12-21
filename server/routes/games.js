@@ -266,13 +266,28 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
-// Get all upcoming games (public - only visible games for non-admins)
+// Get all upcoming games (public - only visible games, even for admins when betting)
 router.get('/', optionalAuth, async (req, res) => {
   try {
     const games = await Game.getAll();
-    // If not admin, filter to only visible games (explicitly true)
-    const filteredGames = req.user?.is_admin ? games : games.filter(g => g.is_visible === true);
+    // Always filter to only visible games (explicitly true)
+    const filteredGames = games.filter(g => g.is_visible === true);
     res.json(filteredGames);
+  } catch (err) {
+    res.status(500).json({ error: 'Error fetching games: ' + err.message });
+  }
+});
+
+// Admin: Get all games (including hidden ones)
+router.get('/admin/all', authenticateToken, async (req, res) => {
+  const user = req.user;
+  if (!user.is_admin) {
+    return res.status(403).json({ error: 'Only admins can view all games' });
+  }
+
+  try {
+    const games = await Game.getAll();
+    res.json(games);
   } catch (err) {
     res.status(500).json({ error: 'Error fetching games: ' + err.message });
   }

@@ -122,7 +122,7 @@ function AdminPanel() {
 
   const fetchGames = async () => {
     try {
-      const response = await apiClient.get('/games');
+      const response = await apiClient.get('/games/admin/all');
       // Sort games by date (earliest first)
       const sortedGames = (response.data || []).sort((a, b) => {
         return new Date(a.game_date) - new Date(b.game_date);
