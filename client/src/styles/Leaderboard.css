@@ -67,7 +67,7 @@
 
 .leaderboard-table {
   width: 100%;
-  min-width: 1000px;
+  min-width: 700px;
   border-collapse: collapse;
   table-layout: auto;
 }
@@ -104,8 +104,8 @@
 
 .leaderboard-table th.stat {
   text-align: center;
-  width: 110px;
-  min-width: 110px;
+  width: 130px;
+  min-width: 130px;
 }
 
 .leaderboard-table td {
@@ -128,8 +128,8 @@
 
 .leaderboard-table td.stat {
   text-align: center;
-  width: 110px;
-  min-width: 110px;
+  width: 130px;
+  min-width: 130px;
 }
 
 .leaderboard-table tbody tr {
@@ -270,6 +270,34 @@
 .stat-divider {
   color: #888a9b;
   margin: 0 0.3rem;
+}
+
+/* Record stat styling */
+.record-stat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+}
+
+/* Win rate styling */
+.win-rate {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.win-rate.positive {
+  background: rgba(102, 187, 106, 0.15);
+  color: #66bb6a;
+  border: 1px solid rgba(102, 187, 106, 0.3);
+}
+
+.win-rate.negative {
+  background: rgba(239, 83, 80, 0.15);
+  color: #ef5350;
+  border: 1px solid rgba(239, 83, 80, 0.3);
 }
 
 /* ===== OVERVIEW STATS ===== */

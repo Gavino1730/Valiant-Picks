@@ -91,11 +91,8 @@ function Leaderboard() {
               <th className="rank">Rank</th>
               <th className="username">User</th>
               <th className="stat">Balance</th>
-              <th className="stat">Bets</th>
-              <th className="stat">Won/Lost</th>
-              <th className="stat">Pending</th>
-              <th className="stat">Wagered</th>
-              <th className="stat">Winnings</th>
+              <th className="stat">Total Bets</th>
+              <th className="stat">Record</th>
               <th className="stat">Win Rate</th>
             </tr>
           </thead>
@@ -120,22 +117,21 @@ function Leaderboard() {
                 <td className="stat">
                   <span className="stat-value">{user.stats.totalBets}</span>
                 </td>
-                <td className="stat">
-                  <span className="stat-won">{user.stats.wonBets}</span>
-                  <span className="stat-divider">/</span>
-                  <span className="stat-lost">{user.stats.lostBets}</span>
+                <td className="stat record-stat">
+                  <span className="stat-won">{user.stats.wonBets}W</span>
+                  <span className="stat-divider">-</span>
+                  <span className="stat-lost">{user.stats.lostBets}L</span>
+                  {user.stats.pendingBets > 0 && (
+                    <>
+                      <span className="stat-divider">-</span>
+                      <span className="stat-pending">{user.stats.pendingBets}P</span>
+                    </>
+                  )}
                 </td>
                 <td className="stat">
-                  <span className="stat-pending">{user.stats.pendingBets}</span>
-                </td>
-                <td className="stat">
-                  <span className="stat-value">{user.stats.totalWagered.toFixed(2)}</span>
-                </td>
-                <td className="stat">
-                  <span className="stat-winning">{user.stats.totalWinnings.toFixed(2)}</span>
-                </td>
-                <td className="stat">
-                  <span className="stat-value">{user.stats.winRate}%</span>
+                  <span className={`win-rate ${parseFloat(user.stats.winRate) >= 50 ? 'positive' : 'negative'}`}>
+                    {user.stats.winRate}%
+                  </span>
                 </td>
               </tr>
             ))}
