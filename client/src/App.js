@@ -50,7 +50,7 @@ function App() {
     <div className="app">
       <nav className="navbar">
         <div className="nav-brand">
-          <img src="/assets/logo.png" alt="Valiant Picks" className="logo-img" />
+          <img src="/assets/transparent.png" alt="Valiant Picks" className="logo-img" />
           <span>Valiant Picks</span>
         </div>
         <div className="nav-center">
