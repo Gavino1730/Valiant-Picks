@@ -11,6 +11,22 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
   }
 
   try {
+    // Get team IDs from database
+    const { supabase } = require('../supabase');
+    const { data: teams, error: teamsError } = await supabase
+      .from('teams')
+      .select('id, type')
+      .in('type', ['Boys Basketball', 'Girls Basketball']);
+
+    if (teamsError) throw teamsError;
+    
+    const boysTeam = teams.find(t => t.type === 'Boys Basketball');
+    const girlsTeam = teams.find(t => t.type === 'Girls Basketball');
+
+    if (!boysTeam || !girlsTeam) {
+      return res.status(400).json({ error: 'Teams not found in database. Please create teams first.' });
+    }
+
     // Hardcoded schedule data matching what's in teamsAdmin.js
     const boysSchedule = [
       { result: 'W', score: '83-58', type: 'Non League', date: '12/3/25', time: '7:30 pm', opponent: 'Knappa', location: 'Away' },
@@ -88,7 +104,7 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
           overOdds: null,
           underOdds: null,
           notes: `${game.type} game`,
-          teamId: 'boys'
+          teamId: boysTeam.id
         });
         gamesCreated++;
       }
@@ -111,7 +127,7 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
           overOdds: null,
           underOdds: null,
           notes: `${game.type} game`,
-          teamId: 'girls'
+          teamId: girlsTeam.id
         });
         gamesCreated++;
       }
