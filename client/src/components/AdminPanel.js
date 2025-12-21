@@ -153,7 +153,12 @@ function AdminPanel() {
   const handleCreatePropBet = async (e) => {
     e.preventDefault();
     try {
-      await apiClient.post('/prop-bets', propBetForm);
+      // Convert empty expiresAt to null for database
+      const payload = {
+        ...propBetForm,
+        expiresAt: propBetForm.expiresAt || null
+      };
+      await apiClient.post('/prop-bets', payload);
       alert('Prop bet created successfully!');
       setPropBetForm({
         title: '',
