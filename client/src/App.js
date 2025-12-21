@@ -117,7 +117,7 @@ function App() {
             )}
           </button>
           <div className="balance-display">
-            <span className="balance-amount">${formatCurrency(currentUser?.balance)}</span>
+            <span className="balance-amount">{formatCurrency(currentUser?.balance)}</span>
           </div>
           <div className="user-info">
             <span className="username">{currentUser?.username || 'User'}</span>

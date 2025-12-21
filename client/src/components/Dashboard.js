@@ -152,7 +152,7 @@ function Dashboard({ user }) {
           <div className="stat-icon">💰</div>
           <div className="stat-content">
             <h3>Current Balance</h3>
-            <p className="stat-value">${formatCurrency(balance)}</p>
+            <p className="stat-value">{formatCurrency(balance)}</p>
           </div>
         </div>
         
@@ -178,7 +178,7 @@ function Dashboard({ user }) {
           <div className="stat-content">
             <h3>Total Winnings</h3>
             <p className="stat-value" style={{color: stats.totalWinnings >= 0 ? '#66bb6a' : '#ef5350'}}>
-              ${formatCurrency(Math.abs(stats.totalWinnings))}
+              {formatCurrency(Math.abs(stats.totalWinnings))}
             </p>
           </div>
         </div>
@@ -333,8 +333,8 @@ function Dashboard({ user }) {
                   {confidence && amount && parseFloat(amount) > 0 && (
                     <div className="potential-win-card">
                       <div className="potential-label">Potential Payout</div>
-                      <div className="potential-amount">${formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</div>
-                      <div className="potential-profit">Profit: ${formatCurrency(parseFloat(amount) * (confidenceMultipliers[confidence] - 1))}</div>
+                      <div className="potential-amount">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</div>
+                      <div className="potential-profit">Profit: {formatCurrency(parseFloat(amount) * (confidenceMultipliers[confidence] - 1))}</div>
                     </div>
                   )}
 
@@ -382,14 +382,14 @@ function Dashboard({ user }) {
                   <div key={bet.id} className="recent-bet-item">
                     <div className="bet-info">
                       <div className="bet-team">{bet.selected_team}</div>
-                      <div className="bet-amount">${formatCurrency(bet.amount)}</div>
+                      <div className="bet-amount">{formatCurrency(bet.amount)}</div>
                     </div>
                     <div className="bet-status">
                       <span className={`status-badge status-${bet.status === 'pending' ? 'pending' : bet.outcome}`}>
                         {bet.status === 'pending' ? '⏳ Pending' : bet.outcome === 'won' ? '✅ Won' : '❌ Lost'}
                       </span>
                       {bet.outcome === 'won' && (
-                        <span className="bet-win">+${formatCurrency(bet.potential_win - bet.amount)}</span>
+                        <span className="bet-win">+{formatCurrency(bet.potential_win - bet.amount)}</span>
                       )}
                     </div>
                   </div>
