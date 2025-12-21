@@ -62,7 +62,7 @@ router.post('/', authenticateToken, async (req, res) => {
     res.status(201).json(bet);
   } catch (error) {
     console.error('Bet placement error:', error);
-    res.status(500).json({ error: 'Failed to place bet' });
+    res.status(500).json({ error: error.message || 'Failed to place bet' });
   }
 });
 

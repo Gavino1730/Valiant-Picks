@@ -55,7 +55,7 @@ const Game = {
       const { data, error } = await supabase
         .from('games')
         .select('*')
-        .eq('status', 'upcoming')
+        .neq('status', 'completed')
         .order('game_date', { ascending: true });
 
       if (error) throw error;
