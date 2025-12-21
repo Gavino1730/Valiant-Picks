@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../utils/axios';
 import '../styles/Leaderboard.css';
 import { formatCurrency } from '../utils/currency';
 
-function Leaderboard({ apiUrl }) {
+function Leaderboard() {
   const [users, setUsers] = useState([]);
   const [bets, setBets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,11 +17,11 @@ function Leaderboard({ apiUrl }) {
   const fetchData = async () => {
     try {
       // Get all users
-      const usersRes = await axios.get(`${apiUrl}/users`);
+      const usersRes = await apiClient.get('/users');
       setUsers(usersRes.data);
 
       // Get all bets
-      const betsRes = await axios.get(`${apiUrl}/bets/all`);
+      const betsRes = await apiClient.get('/bets/all');
       setBets(betsRes.data);
       setError('');
     } catch (err) {

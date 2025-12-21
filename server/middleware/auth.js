@@ -8,19 +8,11 @@ const authenticateToken = (req, res, next) => {
     return res.status(401).json({ error: 'Access token required' });
   }
 
-  // Check if it's a local admin token (base64 encoded JSON)
-  try {
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
-    if (decoded.username === 'admin' && decoded.is_admin === true) {
-      req.user = decoded;
-      return next();
-    }
-  } catch (e) {
-    // Not a valid admin token, continue with JWT verification
-  }
-
   jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', (err, user) => {
     if (err) {
+      if (err.name === 'TokenExpiredError') {
+        return res.status(401).json({ error: 'Token expired', expired: true });
+      }
       return res.status(403).json({ error: 'Invalid token' });
     }
     req.user = user;

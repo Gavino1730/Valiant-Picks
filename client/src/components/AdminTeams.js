@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import apiClient from '../utils/axios';
 import '../styles/AdminTeams.css';
 
 function AdminTeams() {
@@ -52,9 +52,7 @@ function AdminTeams() {
     try {
       setLoading(true);
       setError('');
-      const token = localStorage.getItem('token');
-      const response = await axios.get('/api/teams-admin', {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      const response = await apiClient.get('/teams-admin', {
         timeout: 3000
       });
       if (Array.isArray(response.data) && response.data.length > 0) {
@@ -113,9 +111,7 @@ function AdminTeams() {
         team_motto: formData.team_motto
       };
 
-      await axios.put(`/api/teams-admin/${selectedTeam.id}`, updates, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await apiClient.put(`/teams-admin/${selectedTeam.id}`, updates);
 
       setSelectedTeam(prev => ({ ...prev, ...updates }));
       setEditMode(false);
@@ -133,9 +129,7 @@ function AdminTeams() {
       }
 
       setError('');
-      await axios.post(`/api/teams-admin/${selectedTeam.id}/players`, newPlayer, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await apiClient.post(`/teams-admin/${selectedTeam.id}/players`, newPlayer);
 
       const updatedTeam = { ...selectedTeam };
       updatedTeam.players.push({ ...newPlayer, number: parseInt(newPlayer.number) });
@@ -150,9 +144,7 @@ function AdminTeams() {
   const handleDeletePlayer = async (playerId) => {
     try {
       setError('');
-      await axios.delete(`/api/teams-admin/${selectedTeam.id}/players/${playerId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await apiClient.delete(`/teams-admin/${selectedTeam.id}/players/${playerId}`);
 
       const updatedTeam = { ...selectedTeam };
       updatedTeam.players = updatedTeam.players.filter(p => p.number !== playerId);
@@ -171,9 +163,7 @@ function AdminTeams() {
       }
 
       setError('');
-      await axios.post(`/api/teams-admin/${selectedTeam.id}/schedule`, newGame, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await apiClient.post(`/teams-admin/${selectedTeam.id}/schedule`, newGame);
 
       const updatedTeam = { ...selectedTeam };
       updatedTeam.schedule.push(newGame);
@@ -188,9 +178,7 @@ function AdminTeams() {
   const handleDeleteGame = async (gameIdx) => {
     try {
       setError('');
-      await axios.delete(`/api/teams-admin/${selectedTeam.id}/schedule/${gameIdx}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await apiClient.delete(`/teams-admin/${selectedTeam.id}/schedule/${gameIdx}`);
 
       const updatedTeam = { ...selectedTeam };
       updatedTeam.schedule = updatedTeam.schedule.filter((_, idx) => idx !== gameIdx);

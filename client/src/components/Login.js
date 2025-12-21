@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../utils/axios';
 import '../styles/Login.css';
 
 function Login({ onLogin, apiUrl }) {
@@ -25,15 +25,7 @@ function Login({ onLogin, apiUrl }) {
       // Regular user login
       const endpoint = isRegister ? '/auth/register' : '/auth/login';
       
-      // Add timeout for API request (10 seconds)
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-      
-      const response = await axios.post(`${apiUrl}${endpoint}`, formData, {
-        signal: controller.signal
-      });
-      
-      clearTimeout(timeoutId);
+      const response = await apiClient.post(endpoint, formData);
       
       if (isRegister) {
         setError('');
@@ -44,14 +36,14 @@ function Login({ onLogin, apiUrl }) {
         onLogin(response.data.token, response.data.user);
       }
     } catch (err) {
-      if (err.code === 'ECONNABORTED') {
-        setError('Request timeout. Please check your connection and try again.');
+      if (err.code === 'ECONNABORTED' || err.message.includes('timeout')) {
+        setError('Request timeout. Please check your connection.');
       } else if (err.response) {
         setError(err.response?.data?.error || 'An error occurred');
       } else if (err.message === 'Network Error') {
-        setError('Network error. Please check your internet connection.');
+        setError('Network error. Please check your connection.');
       } else {
-        setError(err.message || 'An error occurred');
+        setError('An error occurred. Please try again.');
       }
     } finally {
       setLoading(false);

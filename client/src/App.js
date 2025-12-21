@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './App.css';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
@@ -8,37 +7,39 @@ import BetList from './components/BetList';
 import Leaderboard from './components/Leaderboard';
 import Teams from './components/Teams';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
 function App() {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [page, setPage] = useState('dashboard');
 
   useEffect(() => {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    // Token is now handled by axios interceptor
+    if (token && !user) {
+      // Load user from localStorage if not in state
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
     }
-  }, [token]);
+  }, [token, user]);
 
   const handleLogin = (newToken, userData) => {
     setToken(newToken);
     setUser(userData);
     localStorage.setItem('token', newToken);
     localStorage.setItem('user', JSON.stringify(userData));
-    axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
   };
 
   const handleLogout = () => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
+    localStorage.removeItem('user');
     setPage('dashboard');
   };
 
   if (!token) {
-    return <Login onLogin={handleLogin} apiUrl={API_URL} />;
+    return <Login onLogin={handleLogin} />;
   }
 
   // Get user data from state or localStorage
@@ -79,11 +80,11 @@ function App() {
       </nav>
 
       <div className="container">
-        {page === 'dashboard' && <Dashboard user={user} apiUrl={API_URL} />}
-        {page === 'teams' && <Teams apiUrl={API_URL} />}
-        {page === 'bets' && <BetList apiUrl={API_URL} />}
-        {page === 'leaderboard' && <Leaderboard apiUrl={API_URL} />}
-        {page === 'admin' && user && user.is_admin && <AdminPanel apiUrl={API_URL} />}
+        {page === 'dashboard' && <Dashboard user={user} />}
+        {page === 'teams' && <Teams />}
+        {page === 'bets' && <BetList />}
+        {page === 'leaderboard' && <Leaderboard />}
+        {page === 'admin' && user && user.is_admin && <AdminPanel />}
       </div>
     </div>
   );

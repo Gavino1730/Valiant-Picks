@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../utils/axios';
 import '../styles/Dashboard.css';
 import { formatCurrency } from '../utils/currency';
 
-function Dashboard({ user, apiUrl }) {
+function Dashboard({ user }) {
   const [balance, setBalance] = useState(user?.balance || 0);
   const [games, setGames] = useState([]);
   const [selectedGameId, setSelectedGameId] = useState('');
@@ -18,7 +18,7 @@ function Dashboard({ user, apiUrl }) {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/games`);
+        const response = await apiClient.get('/games');
         setGames(response.data || []);
       } catch (err) {
         console.error('Error fetching games:', err);
@@ -29,7 +29,7 @@ function Dashboard({ user, apiUrl }) {
     };
 
     fetchGames();
-  }, [apiUrl]);
+  }, []);
 
   const selectedGame = selectedGameId ? games.find(g => g.id === parseInt(selectedGameId)) : null;
 
@@ -71,11 +71,11 @@ function Dashboard({ user, apiUrl }) {
         odds: parseFloat(odds),
       };
 
-      await axios.post(`${apiUrl}/bets`, betData, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      await apiClient.post('/bets', betData);
+
+      // Refresh user balance from server
+      const userResponse = await apiClient.get('/users/profile');
+      setBalance(userResponse.data.balance);
 
       setMessage(`Bet placed successfully on ${selectedGame.home_team}! Potential win: ${formatCurrency(amount * odds)}`);
       setSelectedGameId('');
@@ -83,7 +83,6 @@ function Dashboard({ user, apiUrl }) {
       setSelectedTeam('');
       setAmount('');
       setOdds('');
-      setBalance(balance - parseFloat(amount));
     } catch (err) {
       setMessage(err.response?.data?.error || 'Error placing bet');
     } finally {

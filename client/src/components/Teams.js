@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import apiClient from '../utils/axios';
 import '../styles/Teams.css';
 
 function Teams() {
@@ -125,9 +125,7 @@ function Teams() {
     const hardcodedData = getHardcodedTeams();
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get('/api/teams-admin', {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      const response = await apiClient.get('/teams-admin', {
         timeout: 3000
       });
       if (Array.isArray(response.data) && response.data.length > 0) {

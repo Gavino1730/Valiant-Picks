@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../utils/axios';
 import '../styles/BetList.css';
 import { formatCurrency } from '../utils/currency';
 
-function BetList({ apiUrl }) {
+function BetList() {
   const [bets, setBets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -15,7 +15,7 @@ function BetList({ apiUrl }) {
 
   const fetchBets = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/bets`);
+      const response = await apiClient.get('/bets');
       setBets(response.data);
       setError('');
     } catch (err) {

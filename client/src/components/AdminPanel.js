@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../utils/axios';
 import AdminTeams from './AdminTeams';
 import '../styles/AdminPanel.css';
 import { formatCurrency } from '../utils/currency';
 
-function AdminPanel({ apiUrl }) {
+function AdminPanel() {
   const [allBets, setAllBets] = useState([]);
   const [users, setUsers] = useState([]);
   const [games, setGames] = useState([]);
@@ -41,7 +41,7 @@ function AdminPanel({ apiUrl }) {
 
   const fetchAllBets = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/bets/all`);
+      const response = await apiClient.get('/bets/all');
       setAllBets(response.data);
       setError('');
     } catch (err) {
@@ -53,7 +53,7 @@ function AdminPanel({ apiUrl }) {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/users`);
+      const response = await apiClient.get('/users');
       setUsers(response.data);
       setError('');
     } catch (err) {
@@ -64,7 +64,7 @@ function AdminPanel({ apiUrl }) {
 
   const fetchGames = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/games`);
+      const response = await apiClient.get('/games');
       setGames(response.data);
       setError('');
     } catch (err) {
@@ -76,11 +76,7 @@ function AdminPanel({ apiUrl }) {
   const handleCreateGame = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${apiUrl}/games`, gameForm, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      await apiClient.post('/games', gameForm);
       alert('Game created successfully!');
       setGameForm({
         teamType: 'Boys Basketball',
@@ -114,7 +110,7 @@ function AdminPanel({ apiUrl }) {
 
   const handleUpdateBet = async (betId, status, outcome) => {
     try {
-      await axios.put(`${apiUrl}/bets/${betId}`, { status, outcome });
+      await apiClient.put(`/bets/${betId}`, { status, outcome });
       fetchAllBets();
       alert('Bet updated successfully!');
     } catch (err) {
@@ -129,7 +125,7 @@ function AdminPanel({ apiUrl }) {
         alert('Invalid balance amount');
         return;
       }
-      await axios.put(`${apiUrl}/users/${userId}/balance`, { balance });
+      await apiClient.put(`/users/${userId}/balance`, { balance });
       fetchUsers();
       setSelectedUser(null);
       setNewBalance('');
