@@ -97,35 +97,6 @@ function Leaderboard({ apiUrl }) {
       <h2>🏆 Leaderboard</h2>
       {error && <div className="alert alert-error">{error}</div>}
 
-      <div className="leaderboard-controls">
-        <div className="sort-buttons">
-          <button
-            className={`sort-btn ${sortBy === 'balance' ? 'active' : ''}`}
-            onClick={() => setSortBy('balance')}
-          >
-            💰 Balance
-          </button>
-          <button
-            className={`sort-btn ${sortBy === 'bets' ? 'active' : ''}`}
-            onClick={() => setSortBy('bets')}
-          >
-            🎲 Bets Placed
-          </button>
-          <button
-            className={`sort-btn ${sortBy === 'winnings' ? 'active' : ''}`}
-            onClick={() => setSortBy('winnings')}
-          >
-            🎯 Winnings
-          </button>
-          <button
-            className={`sort-btn ${sortBy === 'winRate' ? 'active' : ''}`}
-            onClick={() => setSortBy('winRate')}
-          >
-            📊 Win Rate
-          </button>
-        </div>
-      </div>
-
       <div className="leaderboard-table-wrapper">
         <table className="leaderboard-table">
           <thead>
@@ -193,10 +164,6 @@ function Leaderboard({ apiUrl }) {
         <div className="overview-stat">
           <h4>Total Bets Placed</h4>
           <p className="value">{bets.length}</p>
-        </div>
-        <div className="overview-stat">
-          <h4>Total Bucks in Circulation</h4>
-          <p className="value">{formatCurrency(users.reduce((sum, u) => sum + u.balance, 0))}</p>
         </div>
         <div className="overview-stat">
           <h4>Avg Balance</h4>

@@ -62,16 +62,22 @@
   border: 2px solid #3a3f47;
   margin-bottom: 2rem;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .leaderboard-table {
   width: 100%;
+  min-width: 1000px;
   border-collapse: collapse;
+  table-layout: auto;
 }
 
 .leaderboard-table thead {
   background: linear-gradient(135deg, #1a1f27 0%, #232933 100%);
   border-bottom: 3px solid #0080d0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .leaderboard-table th {
@@ -87,16 +93,19 @@
 
 .leaderboard-table th.rank {
   text-align: center;
-  width: 80px;
+  width: 100px;
+  min-width: 100px;
 }
 
 .leaderboard-table th.username {
-  min-width: 150px;
+  width: 180px;
+  min-width: 180px;
 }
 
 .leaderboard-table th.stat {
   text-align: center;
-  width: 100px;
+  width: 110px;
+  min-width: 110px;
 }
 
 .leaderboard-table td {
@@ -104,6 +113,23 @@
   border-bottom: 1px solid #3a3f47;
   color: #d8dce4;
   font-size: 0.95rem;
+}
+
+.leaderboard-table td.rank {
+  text-align: center;
+  width: 100px;
+  min-width: 100px;
+}
+
+.leaderboard-table td.username {
+  width: 180px;
+  min-width: 180px;
+}
+
+.leaderboard-table td.stat {
+  text-align: center;
+  width: 110px;
+  min-width: 110px;
 }
 
 .leaderboard-table tbody tr {
@@ -298,16 +324,33 @@
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
+  .leaderboard-table {
+    min-width: 900px;
+  }
+
   .leaderboard-table th.stat,
   .leaderboard-table td.stat {
-    width: 80px;
-    padding: 0.8rem 0.6rem;
+    width: 90px;
+    min-width: 90px;
+    padding: 1rem 0.8rem;
     font-size: 0.85rem;
+  }
+
+  .leaderboard-table th.rank,
+  .leaderboard-table td.rank {
+    width: 80px;
+    min-width: 80px;
+  }
+
+  .leaderboard-table th.username,
+  .leaderboard-table td.username {
+    width: 140px;
+    min-width: 140px;
   }
 
   .leaderboard-table th,
   .leaderboard-table td {
-    padding: 0.8rem 0.6rem;
+    padding: 1rem 0.8rem;
   }
 
   .sort-buttons {
@@ -352,6 +395,7 @@
   }
 
   .leaderboard-table {
+    min-width: 800px;
     font-size: 0.85rem;
   }
 
@@ -364,16 +408,22 @@
     font-size: 12px;
   }
 
-  .leaderboard-table th.rank {
-    width: 50px;
+  .leaderboard-table th.rank,
+  .leaderboard-table td.rank {
+    width: 70px;
+    min-width: 70px;
   }
 
-  .leaderboard-table th.username {
+  .leaderboard-table th.username,
+  .leaderboard-table td.username {
+    width: 120px;
     min-width: 120px;
   }
 
-  .leaderboard-table th.stat {
+  .leaderboard-table th.stat,
+  .leaderboard-table td.stat {
     width: 80px;
+    min-width: 80px;
   }
 
   .rank-badge {
@@ -441,54 +491,44 @@
     box-shadow: 0 2px 8px rgba(0, 79, 158, 0.1);
   }
 
-  /* Mobile-optimized table display */
+  /* Mobile table with horizontal scroll */
   .leaderboard-table {
-    font-size: 0.8rem;
-    min-width: 100%;
+    min-width: 700px;
+    font-size: 0.75rem;
   }
 
-  .leaderboard-table thead {
-    display: none;
-  }
-
-  .leaderboard-table tbody {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .leaderboard-table tr {
-    display: flex;
-    flex-direction: column;
-    border-bottom: 2px solid #e0e0e0;
-    padding: 12px 0;
-  }
-
+  .leaderboard-table th,
   .leaderboard-table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 12px;
-    border: none;
+    padding: 8px 6px;
   }
 
-  .leaderboard-table td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #004f9e;
-    margin-right: 12px;
-    min-width: 80px;
+  .leaderboard-table th.rank,
+  .leaderboard-table td.rank {
+    width: 60px;
+    min-width: 60px;
+  }
+
+  .leaderboard-table th.username,
+  .leaderboard-table td.username {
+    width: 100px;
+    min-width: 100px;
+  }
+
+  .leaderboard-table th.stat,
+  .leaderboard-table td.stat {
+    width: 70px;
+    min-width: 70px;
   }
 
   .rank-badge {
-    width: 30px;
-    height: 30px;
-    font-size: 12px;
-    margin-right: 8px;
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
   }
 
   .user-name {
-    font-size: 12px;
-    max-width: 100px;
+    font-size: 11px;
+    max-width: 90px;
   }
 
   .leaderboard-stats {
