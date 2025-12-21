@@ -11,7 +11,7 @@ import Games from './components/Games';
 function App() {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [page, setPage] = useState('dashboard');
+  const [page, setPage] = useState(localStorage.getItem('currentPage') || 'dashboard');
 
   useEffect(() => {
     // Token is now handled by axios interceptor
@@ -36,7 +36,13 @@ function App() {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('currentPage');
     setPage('dashboard');
+  };
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    localStorage.setItem('currentPage', newPage);
   };
 
   if (!token) {
@@ -54,23 +60,23 @@ function App() {
           <span>Valiant Picks</span>
         </div>
         <div className="nav-center">
-          <button onClick={() => setPage('dashboard')} className={page === 'dashboard' ? 'active' : ''}>
+          <button onClick={() => handlePageChange('dashboard')} className={page === 'dashboard' ? 'active' : ''}>
             Dashboard
           </button>
-          <button onClick={() => setPage('games')} className={page === 'games' ? 'active' : ''}>
+          <button onClick={() => handlePageChange('games')} className={page === 'games' ? 'active' : ''}>
             Browse Bets
           </button>
-          <button onClick={() => setPage('teams')} className={page === 'teams' ? 'active' : ''}>
+          <button onClick={() => handlePageChange('teams')} className={page === 'teams' ? 'active' : ''}>
             Teams
           </button>
-          <button onClick={() => setPage('bets')} className={page === 'bets' ? 'active' : ''}>
+          <button onClick={() => handlePageChange('bets')} className={page === 'bets' ? 'active' : ''}>
             My Bets
           </button>
-          <button onClick={() => setPage('leaderboard')} className={page === 'leaderboard' ? 'active' : ''}>
+          <button onClick={() => handlePageChange('leaderboard')} className={page === 'leaderboard' ? 'active' : ''}>
             Leaderboard
           </button>
           {user && (user.is_admin || user.isAdminUser) && (
-            <button onClick={() => setPage('admin')} className={page === 'admin' ? 'active' : ''}>
+            <button onClick={() => handlePageChange('admin')} className={page === 'admin' ? 'active' : ''}>
               Admin
             </button>
           )}

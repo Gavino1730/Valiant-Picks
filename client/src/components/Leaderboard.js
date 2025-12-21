@@ -148,12 +148,6 @@ function Leaderboard() {
           <h4>Total Bets Placed</h4>
           <p className="value">{bets.length}</p>
         </div>
-        <div className="overview-stat">
-          <h4>Avg Balance</h4>
-          <p className="value">
-            {users.length > 0 ? formatCurrency(users.reduce((sum, u) => sum + u.balance, 0) / users.length) : formatCurrency(0)}
-          </p>
-        </div>
       </div>
     </div>
   );

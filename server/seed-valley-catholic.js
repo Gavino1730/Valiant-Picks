@@ -826,7 +826,7 @@ async function seedData() {
 
     // Seed Boys Games
     console.log('📍 Seeding Boys Basketball Schedule...');
-    const boysGamesWithTeamId = boysGames.map(g => ({ ...g, team_id: boysTeamId }));
+    const boysGamesWithTeamId = boysGames.map(g => ({ ...g, team_id: boysTeamId, is_visible: false }));
     const { error: boysGamesError } = await supabase
       .from('games')
       .insert(boysGamesWithTeamId);
@@ -836,7 +836,7 @@ async function seedData() {
 
     // Seed Girls Games
     console.log('📍 Seeding Girls Basketball Schedule...');
-    const girlsGamesWithTeamId = girlsGames.map(g => ({ ...g, team_id: girlsTeamId }));
+    const girlsGamesWithTeamId = girlsGames.map(g => ({ ...g, team_id: girlsTeamId, is_visible: false }));
     const { error: girlsGamesError } = await supabase
       .from('games')
       .insert(girlsGamesWithTeamId);

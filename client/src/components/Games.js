@@ -11,6 +11,7 @@ function Games() {
   const [balance, setBalance] = useState(0);
   const [propBetAmounts, setPropBetAmounts] = useState({});
   const [message, setMessage] = useState('');
+  const [teamFilter, setTeamFilter] = useState('all');
 
   useEffect(() => {
     fetchGames();
@@ -131,6 +132,32 @@ function Games() {
         </button>
       </div>
 
+      {activeTab === 'games' && (
+        <div className="filter-buttons" style={{marginBottom: '20px', display: 'flex', gap: '10px', justifyContent: 'center'}}>
+          <button 
+            className={`btn ${teamFilter === 'all' ? 'active' : ''}`}
+            style={{padding: '8px 16px', background: teamFilter === 'all' ? '#1e88e5' : 'rgba(255,255,255,0.1)'}}
+            onClick={() => setTeamFilter('all')}
+          >
+            All Games
+          </button>
+          <button 
+            className={`btn ${teamFilter === 'boys' ? 'active' : ''}`}
+            style={{padding: '8px 16px', background: teamFilter === 'boys' ? '#1e88e5' : 'rgba(255,255,255,0.1)'}}
+            onClick={() => setTeamFilter('boys')}
+          >
+            Boys Basketball
+          </button>
+          <button 
+            className={`btn ${teamFilter === 'girls' ? 'active' : ''}`}
+            style={{padding: '8px 16px', background: teamFilter === 'girls' ? '#1e88e5' : 'rgba(255,255,255,0.1)'}}
+            onClick={() => setTeamFilter('girls')}
+          >
+            Girls Basketball
+          </button>
+        </div>
+      )}
+
       {loading ? (
         <div className="loading">Loading...</div>
       ) : (
@@ -142,7 +169,14 @@ function Games() {
                   <p>No games available at the moment</p>
                 </div>
               ) : (
-                games.map(game => (
+                games
+                  .filter(game => {
+                    if (teamFilter === 'all') return true;
+                    if (teamFilter === 'boys') return game.team_type?.toLowerCase().includes('boys');
+                    if (teamFilter === 'girls') return game.team_type?.toLowerCase().includes('girls');
+                    return true;
+                  })
+                  .map(game => (
                   <div key={game.id} className="game-card-display">
                     <div className="game-header">
                       <span className="game-sport">{game.team_type}</span>
