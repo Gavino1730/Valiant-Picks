@@ -118,14 +118,40 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
     ];
 
     let gamesCreated = 0;
+    let gamesSkipped = 0;
+
+    // Get existing games to check for duplicates
+    const { data: existingGames, error: gamesError } = await supabase
+      .from('games')
+      .select('game_date, game_time, team_type, home_team, away_team');
+    
+    if (gamesError) throw gamesError;
+
+    const gameExists = (teamType, homeTeam, awayTeam, gameDate, gameTime) => {
+      return existingGames.some(g => 
+        g.team_type === teamType &&
+        g.home_team === homeTeam &&
+        g.away_team === awayTeam &&
+        g.game_date === gameDate &&
+        g.game_time === gameTime
+      );
+    };
 
     // Only add scheduled games (not already played)
     for (const game of boysSchedule) {
       if (game.result === 'Scheduled') {
+        const homeTeam = game.location === 'Home' ? 'Valley Catholic' : game.opponent;
+        const awayTeam = game.location === 'Home' ? game.opponent : 'Valley Catholic';
+        
+        if (gameExists('Boys Basketball', homeTeam, awayTeam, game.date, game.time)) {
+          gamesSkipped++;
+          continue;
+        }
+
         await Game.create({
           teamType: 'Boys Basketball',
-          homeTeam: game.location === 'Home' ? 'Valley Catholic' : game.opponent,
-          awayTeam: game.location === 'Home' ? game.opponent : 'Valley Catholic',
+          homeTeam,
+          awayTeam,
           gameDate: game.date,
           gameTime: game.time,
           location: game.location,
@@ -145,10 +171,18 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
 
     for (const game of girlsSchedule) {
       if (game.result === 'Scheduled') {
+        const homeTeam = game.location === 'Home' ? 'Valley Catholic' : game.opponent;
+        const awayTeam = game.location === 'Home' ? game.opponent : 'Valley Catholic';
+        
+        if (gameExists('Girls Basketball', homeTeam, awayTeam, game.date, game.time)) {
+          gamesSkipped++;
+          continue;
+        }
+
         await Game.create({
           teamType: 'Girls Basketball',
-          homeTeam: game.location === 'Home' ? 'Valley Catholic' : game.opponent,
-          awayTeam: game.location === 'Home' ? game.opponent : 'Valley Catholic',
+          homeTeam,
+          awayTeam,
           gameDate: game.date,
           gameTime: game.time,
           location: game.location,
@@ -167,8 +201,9 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
     }
 
     res.json({
-      message: `Successfully seeded ${gamesCreated} games from team schedules`,
-      gamesCreated
+      message: `Successfully seeded ${gamesCreated} games${gamesSkipped > 0 ? ` (${gamesSkipped} duplicates skipped)` : ''}`,
+      gamesCreated,
+      gamesSkipped
     });
   } catch (err) {
     res.status(500).json({ error: 'Error seeding games: ' + err.message });
@@ -484,6 +519,52 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     res.json({ message: 'Game deleted' });
   } catch (err) {
     res.status(500).json({ error: 'Error deleting game: ' + err.message });
+  }
+});
+
+// Admin: Toggle visibility for all games
+router.put('/bulk/toggle-visibility', authenticateToken, async (req, res) => {
+  const user = req.user;
+  if (!user.is_admin) {
+    return res.status(403).json({ error: 'Only admins can toggle visibility' });
+  }
+
+  const { isVisible } = req.body;
+
+  try {
+    const { supabase } = require('../supabase');
+    const { data, error } = await supabase
+      .from('games')
+      .update({ is_visible: isVisible })
+      .neq('id', 0); // Update all games
+    
+    if (error) throw error;
+
+    res.json({ message: `All games ${isVisible ? 'shown' : 'hidden'}` });
+  } catch (err) {
+    res.status(500).json({ error: 'Error toggling visibility: ' + err.message });
+  }
+});
+
+// Admin: Delete all games
+router.delete('/bulk/delete-all', authenticateToken, async (req, res) => {
+  const user = req.user;
+  if (!user.is_admin) {
+    return res.status(403).json({ error: 'Only admins can delete all games' });
+  }
+
+  try {
+    const { supabase } = require('../supabase');
+    const { data, error } = await supabase
+      .from('games')
+      .delete()
+      .neq('id', 0); // Delete all games
+    
+    if (error) throw error;
+
+    res.json({ message: 'All games deleted' });
+  } catch (err) {
+    res.status(500).json({ error: 'Error deleting games: ' + err.message });
   }
 });
 

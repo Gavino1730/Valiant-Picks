@@ -66,6 +66,37 @@ function AdminPanel() {
     }
   };
 
+  const toggleAllVisibility = async (isVisible) => {
+    if (!window.confirm(`Are you sure you want to ${isVisible ? 'show' : 'hide'} ALL games?`)) {
+      return;
+    }
+    try {
+      setError('');
+      const response = await apiClient.put('/games/bulk/toggle-visibility', { isVisible });
+      alert(response.data.message || `All games ${isVisible ? 'shown' : 'hidden'}`);
+      fetchGames();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to toggle visibility');
+    }
+  };
+
+  const deleteAllGames = async () => {
+    if (!window.confirm('⚠️ Are you ABSOLUTELY SURE you want to DELETE ALL GAMES? This cannot be undone!')) {
+      return;
+    }
+    if (!window.confirm('This will permanently delete all games. Type YES in the next dialog to confirm.')) {
+      return;
+    }
+    try {
+      setError('');
+      const response = await apiClient.delete('/games/bulk/delete-all');
+      alert(response.data.message || 'All games deleted');
+      fetchGames();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to delete games');
+    }
+  };
+
   const fetchAllBets = async () => {
     try {
       const response = await apiClient.get('/bets/all');
@@ -404,7 +435,7 @@ function AdminPanel() {
                 Girls Basketball ({games.filter(g => g.team_type === 'Girls Basketball').length})
               </button>
             </div>
-            <div style={{display: 'flex', gap: '10px'}}>
+            <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
               <button 
                 type="button" 
                 className="btn" 
@@ -412,6 +443,30 @@ function AdminPanel() {
                 style={{background: '#66bb6a', padding: '10px 20px'}}
               >
                 📥 Seed from Schedules
+              </button>
+              <button 
+                type="button" 
+                className="btn" 
+                onClick={() => toggleAllVisibility(true)}
+                style={{background: '#29b6f6', padding: '10px 20px'}}
+              >
+                👁️ Show All
+              </button>
+              <button 
+                type="button" 
+                className="btn" 
+                onClick={() => toggleAllVisibility(false)}
+                style={{background: '#ff9800', padding: '10px 20px'}}
+              >
+                🚫 Hide All
+              </button>
+              <button 
+                type="button" 
+                className="btn" 
+                onClick={deleteAllGames}
+                style={{background: '#ef5350', padding: '10px 20px'}}
+              >
+                🗑️ Delete All
               </button>
               <button 
                 type="button" 
