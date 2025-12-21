@@ -57,6 +57,48 @@
   background: linear-gradient(90deg, #004f9e, #0080d0, #004f9e);
 }
 
+.logo-section {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #e8f0f7;
+}
+
+.login-logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 79, 158, 0.15));
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.brand-name {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #004f9e 0%, #0080d0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.brand-tagline {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
 .login-header {
   display: flex;
   justify-content: space-between;
@@ -69,7 +111,7 @@
   margin: 0;
   flex: 1;
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   background: linear-gradient(90deg, #004f9e, #003d7a);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -320,6 +362,26 @@ form {
   .login-header h1 {
     font-size: 1.3rem;
     margin-bottom: 0;
+  }
+
+  .logo-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .login-logo {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0.8rem;
+  }
+
+  .brand-name {
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .brand-tagline {
+    font-size: 0.8rem;
   }
 
   .admin-link {
