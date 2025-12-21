@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Background -->
+  <rect width="32" height="32" fill="#004f9e" rx="4"/>
+  <!-- V for Valiant -->
+  <text x="16" y="24" font-size="20" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">V</text>
+</svg>
