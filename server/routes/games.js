@@ -87,7 +87,8 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
           overUnder: null,
           overOdds: null,
           underOdds: null,
-          notes: `${game.type} game`
+          notes: `${game.type} game`,
+          teamId: 'boys'
         });
         gamesCreated++;
       }
@@ -109,7 +110,8 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
           overUnder: null,
           overOdds: null,
           underOdds: null,
-          notes: `${game.type} game`
+          notes: `${game.type} game`,
+          teamId: 'girls'
         });
         gamesCreated++;
       }

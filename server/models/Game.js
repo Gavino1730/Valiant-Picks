@@ -17,7 +17,8 @@ const Game = {
         overUnder,
         overOdds,
         underOdds,
-        notes
+        notes,
+        teamId
       } = gameData;
 
       const { data, error } = await supabase
@@ -36,7 +37,8 @@ const Game = {
           over_under: overUnder,
           over_odds: overOdds,
           under_odds: underOdds,
-          notes
+          notes,
+          team_id: teamId || 'boys'
         }])
         .select()
         .single();
