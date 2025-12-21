@@ -131,10 +131,14 @@ function Teams() {
         const teamsData = response.data.map(team => ({
           ...team,
           id: team.type === 'Boys Basketball' ? 'boys' : 'girls',
-          // Parse schedule JSON if it's a string
-          schedule: typeof team.schedule === 'string' ? JSON.parse(team.schedule) : team.schedule,
-          // Parse players JSON if it's a string
-          players: typeof team.players === 'string' ? JSON.parse(team.players) : team.players
+          // Parse schedule JSON if it's a string, fallback to empty array if null
+          schedule: team.schedule 
+            ? (typeof team.schedule === 'string' ? JSON.parse(team.schedule) : team.schedule)
+            : [],
+          // Parse players JSON if it's a string, fallback to empty array if null
+          players: team.players
+            ? (typeof team.players === 'string' ? JSON.parse(team.players) : team.players)
+            : []
         }));
         setTeams(teamsData);
       } else {
@@ -202,7 +206,7 @@ function Teams() {
             <div>Opponent</div>
             <div>Location</div>
           </div>
-          {team.schedule.map((game, idx) => (
+          {(team.schedule || []).map((game, idx) => (
             <div key={idx} className={`schedule-row ${game.result === 'W' ? 'win' : game.result === 'L' ? 'loss' : 'scheduled'}`}>
               <div className="result">{game.result}</div>
               <div>{game.score}</div>
@@ -219,7 +223,7 @@ function Teams() {
       <div className="roster-section">
         <h3>Varsity Roster</h3>
         <div className="roster-table">
-          {team.players.map(player => (
+          {(team.players || []).map(player => (
             <div key={player.number} className="player-row">
               <div className="player-header">
                 <span className="player-number">#{player.number}</span>
