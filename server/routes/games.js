@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Game = require('../models/Game');
-const { authenticateToken } = require('../middleware/auth');
+const { authenticateToken, optionalAuth } = require('../middleware/auth');
 
 // Admin: Seed games from team schedules
 router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
@@ -232,7 +232,7 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 // Get all upcoming games (public - only visible games for non-admins)
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', optionalAuth, async (req, res) => {
   try {
     const games = await Game.getAll();
     // If not admin, filter to only visible games

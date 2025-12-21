@@ -20,6 +20,25 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+const optionalAuth = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    req.user = null;
+    return next();
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', (err, user) => {
+    if (err) {
+      req.user = null;
+    } else {
+      req.user = user;
+    }
+    next();
+  });
+};
+
 const adminOnly = (req, res, next) => {
   if (!req.user || !req.user.is_admin) {
     return res.status(403).json({ error: 'Admin access required' });
@@ -27,4 +46,4 @@ const adminOnly = (req, res, next) => {
   next();
 };
 
-module.exports = { authenticateToken, adminOnly };
+module.exports = { authenticateToken, optionalAuth, adminOnly };
