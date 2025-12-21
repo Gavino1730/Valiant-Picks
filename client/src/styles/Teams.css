@@ -2,11 +2,11 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background: linear-gradient(135deg, #f8f9fc 0%, #e8ecf2 100%);
+  background: transparent;
 }
 
 .teams-page h1 {
-  color: #004f9e;
+  color: #ffd700;
   margin-bottom: 30px;
   text-align: center;
   font-size: 2.2rem;
@@ -18,7 +18,7 @@
   display: flex;
   gap: 10px;
   margin-bottom: 30px;
-  border-bottom: 3px solid #e0e0e0;
+  border-bottom: 3px solid rgba(255, 215, 0, 0.2);
   position: relative;
 }
 
@@ -27,7 +27,7 @@
   background: none;
   border: none;
   border-bottom: 3px solid transparent;
-  color: #666;
+  color: #b8c5d6;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -37,24 +37,24 @@
 }
 
 .tab-button:hover {
-  color: #004f9e;
-  background: rgba(0, 79, 158, 0.05);
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
   transform: translateY(-2px);
 }
 
 .tab-button.active {
-  color: #004f9e;
-  border-bottom-color: #0080d0;
-  background: linear-gradient(135deg, rgba(0, 79, 158, 0.08) 0%, rgba(0, 128, 208, 0.08) 100%);
+  color: #ffd700;
+  border-bottom-color: #ffd700;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0.05) 100%);
 }
 
 .team-section {
   margin-bottom: 60px;
-  background: white;
+  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
   padding: 30px;
   border-radius: 14px;
-  border: 2px solid #e8f0f7;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 79, 158, 0.1);
+  border: 2px solid rgba(255, 215, 0, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   position: relative;
   overflow: hidden;
 }
@@ -66,17 +66,17 @@
   left: 0;
   width: 100%;
   height: 5px;
-  background: linear-gradient(90deg, #004f9e 0%, #0080d0 100%);
+  background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%);
 }
 
 .team-header {
-  border-bottom: 3px solid #0080d0;
+  border-bottom: 3px solid #ffd700;
   padding-bottom: 20px;
   margin-bottom: 20px;
 }
 
 .team-header h2 {
-  color: #004f9e;
+  color: #ffd700;
   margin: 0 0 15px 0;
   font-size: 1.8rem;
   font-weight: 800;
@@ -96,7 +96,7 @@
 .stat .label {
   font-size: 12px;
   font-weight: 600;
-  color: #666;
+  color: #888a9b;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -104,23 +104,20 @@
 .stat .value {
   font-size: 20px;
   font-weight: bold;
-  background: linear-gradient(135deg, #004f9e 0%, #0080d0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffd700;
 }
 
 .coaching-staff {
-  background: linear-gradient(135deg, #f5f7fc 0%, #eff2f8 100%);
+  background: rgba(255, 215, 0, 0.05);
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 30px;
-  border: 2px solid #e0e8f0;
-  border-left: 5px solid #0080d0;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  border-left: 5px solid #ffd700;
 }
 
 .coaching-staff h3 {
-  color: #004f9e;
+  color: #ffd700;
   margin-top: 0;
   margin-bottom: 15px;
   font-weight: 700;
@@ -140,7 +137,7 @@
 }
 
 .coach strong {
-  color: #004f9e;
+  color: #ffd700;
   font-size: 16px;
   display: block;
   margin-bottom: 4px;
@@ -148,7 +145,7 @@
 }
 
 .coach p {
-  color: #555;
+  color: #b8c5d6;
   margin: 0;
   font-size: 14px;
   font-weight: 600;
@@ -157,23 +154,23 @@
 }
 
 .coach-bio {
-  color: #555;
+  color: #b8c5d6;
   line-height: 1.6;
   font-size: 14px;
   margin: 0;
 }
 
 .team-description {
-  background: linear-gradient(135deg, #f5f7fc 0%, #eff2f8 100%);
+  background: rgba(102, 187, 106, 0.05);
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 30px;
-  border: 2px solid #e0e8f0;
-  border-left: 5px solid #27ae60;
+  border: 1px solid rgba(102, 187, 106, 0.15);
+  border-left: 5px solid #66bb6a;
 }
 
 .team-description h3 {
-  color: #004f9e;
+  color: #ffd700;
   margin-top: 0;
   margin-bottom: 12px;
   font-weight: 700;
@@ -182,15 +179,15 @@
 
 .team-description p {
   line-height: 1.6;
-  color: #333;
+  color: #b8c5d6;
   margin: 0;
 }
 
 .team-motto {
   margin-top: 15px;
   padding-top: 15px;
-  border-top: 1px solid #ddd;
-  color: #004f9e;
+  border-top: 1px solid rgba(255, 215, 0, 0.2);
+  color: #ffd700;
   font-weight: 600;
 }
 
@@ -199,7 +196,7 @@
 }
 
 .schedule-section h3 {
-  color: #004f9e;
+  color: #ffd700;
   margin-bottom: 15px;
   font-weight: 700;
   font-size: 1.2rem;
@@ -208,7 +205,7 @@
 .schedule-table {
   display: flex;
   flex-direction: column;
-  border: 2px solid #e0e8f0;
+  border: 1px solid rgba(255, 215, 0, 0.12);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -218,8 +215,8 @@
   display: grid;
   grid-template-columns: 70px 100px 100px 100px 100px 1fr 80px;
   gap: 15px;
-  background: linear-gradient(135deg, #004f9e 0%, #0080d0 100%);
-  color: white;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
+  color: #ffd700;
   padding: 12px 15px;
   font-weight: 600;
   font-size: 13px;
@@ -230,7 +227,8 @@
   grid-template-columns: 70px 100px 100px 100px 100px 1fr 80px;
   gap: 15px;
   padding: 12px 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #b8c5d6;
   align-items: center;
   font-size: 13px;
   transition: all 0.2s ease;
@@ -241,31 +239,31 @@
 }
 
 .schedule-row.win {
-  background: linear-gradient(135deg, #f0f7f0 0%, #e8f5e9 100%);
-  border-left: 4px solid #27ae60;
+  background: rgba(102, 187, 106, 0.1);
+  border-left: 4px solid #66bb6a;
 }
 
 .schedule-row.loss {
-  background: linear-gradient(135deg, #fff0f0 0%, #ffe8e8 100%);
-  border-left: 4px solid #e74c3c;
+  background: rgba(239, 83, 80, 0.1);
+  border-left: 4px solid #ef5350;
 }
 
 .schedule-row.scheduled {
-  background: linear-gradient(135deg, #f9f9f9 0%, #f5f5f5 100%);
-  border-left: 4px solid #f39c12;
+  background: rgba(255, 193, 7, 0.1);
+  border-left: 4px solid #ffc107;
 }
 
 .schedule-row:hover {
-  background: linear-gradient(135deg, #f0f4f8 0%, #e8ecf2 100%);
+  background: rgba(255, 215, 0, 0.08);
 }
 
 .schedule-row .result {
   font-weight: 600;
-  color: #004f9e;
+  color: #ffd700;
 }
 
 .roster-section h3 {
-  color: #004f9e;
+  color: #ffd700;
   margin-bottom: 20px;
   font-weight: 700;
   font-size: 1.2rem;
@@ -278,18 +276,18 @@
 }
 
 .player-row {
-  background: linear-gradient(135deg, #fafafc 0%, #f5f7fc 100%);
+  background: rgba(255, 215, 0, 0.03);
   padding: 15px;
-  border-left: 5px solid #0080d0;
-  border: 2px solid #e8f0f7;
-  border-left: 5px solid #0080d0;
+  border: 1px solid rgba(255, 215, 0, 0.12);
+  border-left: 5px solid #ffd700;
   border-radius: 10px;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 .player-row:hover {
-  box-shadow: 0 4px 12px rgba(0, 79, 158, 0.1);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.15);
+  background: rgba(255, 215, 0, 0.08);
   transform: translateX(4px);
 }
 
@@ -303,20 +301,20 @@
 }
 
 .player-number {
-  background: linear-gradient(135deg, #004f9e 0%, #0080d0 100%);
-  color: white;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #0f1419;
   padding: 4px 10px;
   border-radius: 6px;
   font-size: 14px;
   min-width: 40px;
   text-align: center;
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0, 79, 158, 0.2);
+  box-shadow: 0 2px 6px rgba(255, 215, 0, 0.3);
 }
 
 .player-name {
   font-size: 18px;
-  color: #004f9e;
+  color: #ffd700;
   flex: 1;
   font-weight: 700;
 }
@@ -324,7 +322,7 @@
 .player-position,
 .player-grade,
 .player-height {
-  color: #666;
+  color: #888a9b;
   font-size: 13px;
   font-weight: normal;
 }
@@ -342,7 +340,7 @@
 }
 
 .player-bio {
-  color: #333;
+  color: #b8c5d6;
   font-size: 14px;
   line-height: 1.6;
   margin: 0;
