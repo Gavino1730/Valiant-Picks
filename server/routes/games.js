@@ -11,20 +11,53 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
   }
 
   try {
-    // Get team IDs from database
+    // Get team IDs from database, create if they don't exist
     const { supabase } = require('../supabase');
-    const { data: teams, error: teamsError } = await supabase
+    let { data: teams, error: teamsError } = await supabase
       .from('teams')
       .select('id, type')
       .in('type', ['Boys Basketball', 'Girls Basketball']);
 
     if (teamsError) throw teamsError;
     
-    const boysTeam = teams.find(t => t.type === 'Boys Basketball');
-    const girlsTeam = teams.find(t => t.type === 'Girls Basketball');
+    let boysTeam = teams?.find(t => t.type === 'Boys Basketball');
+    let girlsTeam = teams?.find(t => t.type === 'Girls Basketball');
 
-    if (!boysTeam || !girlsTeam) {
-      return res.status(400).json({ error: 'Teams not found in database. Please create teams first.' });
+    // Create teams if they don't exist
+    if (!boysTeam) {
+      const { data: newBoysTeam, error: boysError } = await supabase
+        .from('teams')
+        .insert([{
+          name: 'Valley Catholic Boys Basketball',
+          type: 'Boys Basketball',
+          record_wins: 4,
+          record_losses: 1,
+          ranking: 3,
+          coach_name: 'Bryan Fraser'
+        }])
+        .select()
+        .single();
+      
+      if (boysError) throw boysError;
+      boysTeam = newBoysTeam;
+    }
+
+    if (!girlsTeam) {
+      const { data: newGirlsTeam, error: girlsError } = await supabase
+        .from('teams')
+        .insert([{
+          name: 'Valley Catholic Girls Basketball',
+          type: 'Girls Basketball',
+          record_wins: 4,
+          record_losses: 1,
+          ranking: 7,
+          coach_name: 'Nick Blechman'
+        }])
+        .select()
+        .single();
+      
+      if (girlsError) throw girlsError;
+      girlsTeam = newGirlsTeam;
     }
 
     // Hardcoded schedule data matching what's in teamsAdmin.js
