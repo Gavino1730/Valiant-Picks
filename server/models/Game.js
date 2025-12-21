@@ -138,6 +138,20 @@ const Game = {
     } catch (err) {
       throw new Error(`Error deleting game: ${err.message}`);
     }
+  },
+
+  toggleVisibility: async (id, isVisible) => {
+    try {
+      const { error } = await supabase
+        .from('games')
+        .update({ is_visible: isVisible, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+      if (error) throw error;
+      return { changes: 1 };
+    } catch (err) {
+      throw new Error(`Error toggling game visibility: ${err.message}`);
+    }
   }
 };
 

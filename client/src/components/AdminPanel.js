@@ -200,6 +200,23 @@ function AdminPanel() {
     }));
   };
 
+  const handleToggleGameVisibility = async (gameId, currentVisibility) => {
+    const newVisibility = !currentVisibility;
+    const confirmMsg = newVisibility 
+      ? 'Show this game to users for betting?' 
+      : 'Hide this game from users?';
+    
+    if (!window.confirm(confirmMsg)) return;
+
+    try {
+      await apiClient.put(`/games/${gameId}/visibility`, { isVisible: newVisibility });
+      fetchGames();
+      alert(`Game ${newVisibility ? 'shown' : 'hidden'} successfully!`);
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to toggle visibility');
+    }
+  };
+
   const handlePropBetFormChange = (e) => {
     const { name, value } = e.target;
     setPropBetForm(prev => ({
@@ -576,7 +593,19 @@ function AdminPanel() {
             <div className="games-list">
               {games.map(game => (
                 <div key={game.id} className="game-card">
-                  <h4>{game.home_team} {game.away_team ? `vs ${game.away_team}` : ''}</h4>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '10px'}}>
+                    <h4 style={{margin: 0}}>{game.home_team} {game.away_team ? `vs ${game.away_team}` : ''}</h4>
+                    <span style={{
+                      padding: '4px 12px',
+                      borderRadius: '12px',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      background: game.is_visible === false ? '#ef5350' : '#66bb6a',
+                      color: 'white'
+                    }}>
+                      {game.is_visible === false ? 'HIDDEN' : 'VISIBLE'}
+                    </span>
+                  </div>
                   <p><strong>Sport:</strong> {game.team_type}</p>
                   <p><strong>Date:</strong> {game.game_date} {game.game_time ? `at ${game.game_time}` : ''}</p>
                   <p><strong>Location:</strong> {game.location || 'N/A'}</p>
@@ -587,6 +616,16 @@ function AdminPanel() {
                   <div style={{marginTop: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
                     {game.status !== 'completed' && (
                       <>
+                        <button 
+                          className="btn" 
+                          style={{
+                            background: game.is_visible === false ? '#66bb6a' : '#ef5350', 
+                            padding: '8px 12px'
+                          }}
+                          onClick={() => handleToggleGameVisibility(game.id, game.is_visible !== false)}
+                        >
+                          {game.is_visible === false ? '👁️ Show' : '🚫 Hide'}
+                        </button>
                         <button 
                           className="btn" 
                           style={{background: '#1e88e5', padding: '8px 12px'}}

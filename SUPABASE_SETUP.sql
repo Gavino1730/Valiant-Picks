@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS games (
   over_odds REAL,
   under_odds REAL,
   notes TEXT,
+  is_visible BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

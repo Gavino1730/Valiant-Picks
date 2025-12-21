@@ -231,11 +231,13 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
-// Get all upcoming games (public)
-router.get('/', async (req, res) => {
+// Get all upcoming games (public - only visible games for non-admins)
+router.get('/', authenticateToken, async (req, res) => {
   try {
     const games = await Game.getAll();
-    res.json(games);
+    // If not admin, filter to only visible games
+    const filteredGames = req.user?.is_admin ? games : games.filter(g => g.is_visible !== false);
+    res.json(filteredGames);
   } catch (err) {
     res.status(500).json({ error: 'Error fetching games: ' + err.message });
   }
@@ -274,6 +276,29 @@ router.put('/:id/status', authenticateToken, async (req, res) => {
     res.json({ message: 'Game status updated' });
   } catch (err) {
     res.status(500).json({ error: 'Error updating game: ' + err.message });
+  }
+});
+
+// Admin: Toggle game visibility
+router.put('/:id/visibility', authenticateToken, async (req, res) => {
+  const user = req.user;
+  if (!user.is_admin) {
+    return res.status(403).json({ error: 'Only admins can toggle game visibility' });
+  }
+
+  const { isVisible } = req.body;
+  if (typeof isVisible !== 'boolean') {
+    return res.status(400).json({ error: 'isVisible must be a boolean' });
+  }
+
+  try {
+    const result = await Game.toggleVisibility(req.params.id, isVisible);
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Game not found' });
+    }
+    res.json({ message: `Game ${isVisible ? 'shown' : 'hidden'} successfully` });
+  } catch (err) {
+    res.status(500).json({ error: 'Error toggling visibility: ' + err.message });
   }
 });
 
