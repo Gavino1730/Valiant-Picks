@@ -351,7 +351,7 @@ function AdminPanel() {
           Prop Bets
         </button>
         <button className={`tab-btn ${tab === 'bets' ? 'active' : ''}`} onClick={() => setTab('bets')}>
-          Manage Bets
+          View All Bets
         </button>
         <button className={`tab-btn ${tab === 'users' ? 'active' : ''}`} onClick={() => setTab('users')}>
           Manage Users
@@ -820,17 +820,21 @@ function AdminPanel() {
 
           <div className="card">
             <h3>All Bets</h3>
+            <p style={{marginBottom: '15px', color: '#b8c5d6'}}>
+              Bets are automatically resolved when you set game outcomes or prop bet results. This is a read-only view.
+            </p>
             <div className="bets-table-wrapper">
               <table className="bets-table">
                 <thead>
                   <tr>
                     <th>ID</th>
                     <th>User ID</th>
+                    <th>Game/Prop</th>
+                    <th>Selected</th>
                     <th>Amount</th>
                     <th>Odds</th>
                     <th>Status</th>
                     <th>Outcome</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -838,23 +842,33 @@ function AdminPanel() {
                     <tr key={bet.id}>
                       <td>{bet.id}</td>
                       <td>{bet.user_id}</td>
+                      <td>{bet.game_id}</td>
+                      <td>{bet.selected_team}</td>
                       <td>{formatCurrency(bet.amount)}</td>
                       <td>{bet.odds}x</td>
-                      <td>{bet.status}</td>
                       <td>
-                        <select
-                          value={bet.outcome || ''}
-                          onChange={(e) => handleUpdateBet(bet.id, bet.status, e.target.value || null)}
-                        >
-                          <option value="">Select outcome</option>
-                          <option value="won">Won</option>
-                          <option value="lost">Lost</option>
-                        </select>
+                        <span style={{
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          fontSize: '0.85em',
+                          background: bet.status === 'pending' ? '#ff9800' : '#66bb6a',
+                          color: 'white'
+                        }}>
+                          {bet.status}
+                        </span>
                       </td>
                       <td>
-                        <button onClick={() => handleUpdateBet(bet.id, 'resolved', bet.outcome)}>
-                          Resolve
-                        </button>
+                        {bet.outcome ? (
+                          <span style={{
+                            padding: '4px 8px',
+                            borderRadius: '4px',
+                            fontSize: '0.85em',
+                            background: bet.outcome === 'won' ? '#66bb6a' : '#ef5350',
+                            color: 'white'
+                          }}>
+                            {bet.outcome}
+                          </span>
+                        ) : '-'}
                       </td>
                     </tr>
                   ))}
