@@ -94,6 +94,38 @@ const Game = {
     }
   },
 
+  update: async (id, gameData) => {
+    try {
+      const updateFields = {
+        team_type: gameData.teamType,
+        home_team: gameData.homeTeam,
+        away_team: gameData.awayTeam,
+        game_date: gameData.gameDate,
+        game_time: gameData.gameTime,
+        location: gameData.location,
+        winning_odds: gameData.winningOdds,
+        losing_odds: gameData.losingOdds,
+        spread: gameData.spread,
+        spread_odds: gameData.spreadOdds,
+        over_under: gameData.overUnder,
+        over_odds: gameData.overOdds,
+        under_odds: gameData.underOdds,
+        notes: gameData.notes,
+        updated_at: new Date().toISOString()
+      };
+
+      const { error } = await supabase
+        .from('games')
+        .update(updateFields)
+        .eq('id', id);
+
+      if (error) throw error;
+      return { changes: 1 };
+    } catch (err) {
+      throw new Error(`Error updating game: ${err.message}`);
+    }
+  },
+
   delete: async (id) => {
     try {
       const { error } = await supabase

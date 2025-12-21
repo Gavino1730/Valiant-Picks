@@ -14,6 +14,7 @@ function AdminPanel() {
   const [tab, setTab] = useState('games');
   const [selectedUser, setSelectedUser] = useState(null);
   const [newBalance, setNewBalance] = useState('');
+  const [editingGame, setEditingGame] = useState(null);
   
   // Game creation form
   const [gameForm, setGameForm] = useState({
@@ -137,6 +138,59 @@ function AdminPanel() {
   const handleGameFormChange = (e) => {
     const { name, value } = e.target;
     setGameForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleEditGame = (game) => {
+    setEditingGame({
+      ...game,
+      teamType: game.team_type,
+      homeTeam: game.home_team,
+      awayTeam: game.away_team || '',
+      gameDate: game.game_date,
+      gameTime: game.game_time || '',
+      winningOdds: game.winning_odds || '',
+      losingOdds: game.losing_odds || '',
+      spreadOdds: game.spread_odds || '',
+      overUnder: game.over_under || '',
+      overOdds: game.over_odds || '',
+      underOdds: game.under_odds || '',
+      notes: game.notes || ''
+    });
+  };
+
+  const handleUpdateGame = async (e) => {
+    e.preventDefault();
+    try {
+      await apiClient.put(`/games/${editingGame.id}`, {
+        teamType: editingGame.teamType,
+        homeTeam: editingGame.homeTeam,
+        awayTeam: editingGame.awayTeam,
+        gameDate: editingGame.gameDate,
+        gameTime: editingGame.gameTime,
+        location: editingGame.location,
+        winningOdds: editingGame.winningOdds,
+        losingOdds: editingGame.losingOdds,
+        spread: editingGame.spread,
+        spreadOdds: editingGame.spreadOdds,
+        overUnder: editingGame.overUnder,
+        overOdds: editingGame.overOdds,
+        underOdds: editingGame.underOdds,
+        notes: editingGame.notes
+      });
+      alert('Game updated successfully!');
+      setEditingGame(null);
+      fetchGames();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to update game');
+    }
+  };
+
+  const handleEditingGameChange = (e) => {
+    const { name, value } = e.target;
+    setEditingGame(prev => ({
       ...prev,
       [name]: value
     }));
@@ -463,6 +517,55 @@ function AdminPanel() {
           </form>
 
           <h3>Active Games</h3>
+          {editingGame && (
+            <div className="game-card" style={{background: '#2a2f45', border: '2px solid #ffd700'}}>
+              <h4>Edit Game</h4>
+              <form onSubmit={handleUpdateGame} className="game-form">
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Team Type</label>
+                    <select name="teamType" value={editingGame.teamType} onChange={handleEditingGameChange} required>
+                      <option value="Boys Basketball">Boys Basketball</option>
+                      <option value="Girls Basketball">Girls Basketball</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Home Team</label>
+                    <input type="text" name="homeTeam" value={editingGame.homeTeam} onChange={handleEditingGameChange} required />
+                  </div>
+                  <div className="form-group">
+                    <label>Away Team</label>
+                    <input type="text" name="awayTeam" value={editingGame.awayTeam} onChange={handleEditingGameChange} />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Game Date</label>
+                    <input type="text" name="gameDate" value={editingGame.gameDate} onChange={handleEditingGameChange} required />
+                  </div>
+                  <div className="form-group">
+                    <label>Game Time</label>
+                    <input type="text" name="gameTime" value={editingGame.gameTime} onChange={handleEditingGameChange} />
+                  </div>
+                  <div className="form-group">
+                    <label>Location</label>
+                    <input type="text" name="location" value={editingGame.location} onChange={handleEditingGameChange} />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Notes</label>
+                    <textarea name="notes" value={editingGame.notes} onChange={handleEditingGameChange} rows="2" />
+                  </div>
+                </div>
+                <div style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
+                  <button type="submit" className="btn" style={{background: '#66bb6a'}}>Save Changes</button>
+                  <button type="button" className="btn" style={{background: '#757575'}} onClick={() => setEditingGame(null)}>Cancel</button>
+                </div>
+              </form>
+            </div>
+          )}
+          
           {games.length === 0 ? (
             <p>No games created yet</p>
           ) : (
@@ -477,23 +580,35 @@ function AdminPanel() {
                   {game.result && <p><strong>Winner:</strong> {game.result}</p>}
                   {game.notes && <p><strong>Notes:</strong> {game.notes}</p>}
                   
-                  {game.status !== 'completed' && (
-                    <div style={{marginTop: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
-                      <button 
-                        className="btn" 
-                        style={{background: '#66bb6a', padding: '8px 12px'}}
-                        onClick={() => handleSetGameOutcome(game.id, game.home_team)}
-                      >
-                        {game.home_team} Won
-                      </button>
-                      {game.away_team && (
+                  <div style={{marginTop: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+                    {game.status !== 'completed' && (
+                      <>
                         <button 
                           className="btn" 
-                          style={{background: '#ef5350', padding: '8px 12px'}}
-                          onClick={() => handleSetGameOutcome(game.id, game.away_team)}
+                          style={{background: '#1e88e5', padding: '8px 12px'}}
+                          onClick={() => handleEditGame(game)}
                         >
-                          {game.away_team} Won
+                          Edit
                         </button>
+                        <button 
+                          className="btn" 
+                          style={{background: '#66bb6a', padding: '8px 12px'}}
+                          onClick={() => handleSetGameOutcome(game.id, game.home_team)}
+                        >
+                          {game.home_team} Won
+                        </button>
+                        {game.away_team && (
+                          <button 
+                            className="btn" 
+                            style={{background: '#ef5350', padding: '8px 12px'}}
+                            onClick={() => handleSetGameOutcome(game.id, game.away_team)}
+                          >
+                            {game.away_team} Won
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
                       )}
                     </div>
                   )}

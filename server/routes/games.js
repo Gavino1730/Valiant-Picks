@@ -358,6 +358,58 @@ router.put('/:id/outcome', authenticateToken, async (req, res) => {
   }
 });
 
+// Admin: Update game details
+router.put('/:id', authenticateToken, async (req, res) => {
+  const user = req.user;
+  if (!user.is_admin) {
+    return res.status(403).json({ error: 'Only admins can update games' });
+  }
+
+  const {
+    teamType,
+    homeTeam,
+    awayTeam,
+    gameDate,
+    gameTime,
+    location,
+    winningOdds,
+    losingOdds,
+    spread,
+    spreadOdds,
+    overUnder,
+    overOdds,
+    underOdds,
+    notes
+  } = req.body;
+
+  if (!teamType || !homeTeam || !gameDate) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  try {
+    await Game.update(req.params.id, {
+      teamType,
+      homeTeam,
+      awayTeam,
+      gameDate,
+      gameTime,
+      location,
+      winningOdds: winningOdds ? parseFloat(winningOdds) : null,
+      losingOdds: losingOdds ? parseFloat(losingOdds) : null,
+      spread: spread ? parseFloat(spread) : null,
+      spreadOdds: spreadOdds ? parseFloat(spreadOdds) : null,
+      overUnder: overUnder ? parseFloat(overUnder) : null,
+      overOdds: overOdds ? parseFloat(overOdds) : null,
+      underOdds: underOdds ? parseFloat(underOdds) : null,
+      notes
+    });
+
+    res.json({ message: 'Game updated successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Error updating game: ' + err.message });
+  }
+});
+
 // Admin: Delete a game
 router.delete('/:id', authenticateToken, async (req, res) => {
   const user = req.user;
