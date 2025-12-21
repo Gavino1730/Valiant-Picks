@@ -71,8 +71,59 @@ router.put('/:id', authenticateToken, async (req, res) => {
   const { status, outcome } = req.body;
 
   try {
+    const { supabase } = require('../supabase');
+    const Bet = require('../models/Bet');
+    
+    // Update prop bet status
     await PropBet.updateStatus(req.params.id, status, outcome);
-    res.json({ message: 'Prop bet updated successfully' });
+
+    let betsResolved = 0;
+    let winningsDistributed = 0;
+
+    // If outcome is set (yes or no), resolve all associated bets
+    if (outcome && (outcome === 'yes' || outcome === 'no')) {
+      // Get all pending bets for this prop bet
+      const { data: bets, error: betsError } = await supabase
+        .from('bets')
+        .select('*')
+        .eq('game_id', req.params.id)
+        .eq('status', 'pending')
+        .like('bet_type', 'prop-%');
+
+      if (betsError) throw betsError;
+
+      // Process each bet
+      for (const bet of bets || []) {
+        // Extract the user's choice from bet_type (e.g., "prop-yes" -> "yes")
+        const betChoice = bet.bet_type.replace('prop-', '').toLowerCase();
+        const won = betChoice === outcome.toLowerCase();
+        const betOutcome = won ? 'won' : 'lost';
+
+        // Update bet status
+        await Bet.updateStatus(bet.id, 'resolved', betOutcome);
+
+        // Credit winnings if won
+        if (won) {
+          const winnings = bet.amount * bet.odds;
+          await User.updateBalance(bet.user_id, winnings);
+          await Transaction.create(
+            bet.user_id, 
+            'win', 
+            winnings, 
+            `Won prop bet: ${bet.selected_team}`
+          );
+          winningsDistributed += winnings;
+        }
+
+        betsResolved++;
+      }
+    }
+
+    res.json({ 
+      message: outcome ? 'Prop bet outcome set and bets resolved' : 'Prop bet updated successfully',
+      betsResolved,
+      winningsDistributed
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
