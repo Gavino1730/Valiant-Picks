@@ -270,8 +270,8 @@ router.post('/', authenticateToken, async (req, res) => {
 router.get('/', optionalAuth, async (req, res) => {
   try {
     const games = await Game.getAll();
-    // If not admin, filter to only visible games
-    const filteredGames = req.user?.is_admin ? games : games.filter(g => g.is_visible !== false);
+    // If not admin, filter to only visible games (explicitly true)
+    const filteredGames = req.user?.is_admin ? games : games.filter(g => g.is_visible === true);
     res.json(filteredGames);
   } catch (err) {
     res.status(500).json({ error: 'Error fetching games: ' + err.message });
