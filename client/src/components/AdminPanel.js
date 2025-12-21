@@ -39,6 +39,17 @@ function AdminPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const seedGamesFromSchedule = async () => {
+    try {
+      setError('');
+      const response = await apiClient.post('/games/seed-from-schedule');
+      alert(response.data.message || 'Games seeded successfully!');
+      fetchGames();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to seed games');
+    }
+  };
+
   const fetchAllBets = async () => {
     try {
       const response = await apiClient.get('/bets/all');
@@ -161,6 +172,17 @@ function AdminPanel() {
       {tab === 'games' && (
         <div className="admin-section">
           <h3>Create New Game</h3>
+          <div style={{marginBottom: '20px'}}>
+            <button 
+              type="button" 
+              className="btn" 
+              onClick={seedGamesFromSchedule}
+              style={{marginRight: '10px', background: '#66bb6a'}}
+            >
+              Seed Games from Team Schedules
+            </button>
+            <small style={{color: '#888'}}>Import upcoming scheduled games from both teams</small>
+          </div>
           <form onSubmit={handleCreateGame} className="game-form">
             <div className="form-row">
               <div className="form-group">
