@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/BetList.css';
+import { formatCurrency } from '../utils/currency';
 
 function BetList({ apiUrl }) {
   const [bets, setBets] = useState([]);
@@ -48,7 +49,7 @@ function BetList({ apiUrl }) {
               <div className="bet-details">
                 <div className="detail-item">
                   <span className="detail-label">Amount</span>
-                  <span className="detail-value">{bet.amount.toFixed(2)}</span>
+                  <span className="detail-value">{formatCurrency(bet.amount)}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Odds</span>
@@ -56,7 +57,7 @@ function BetList({ apiUrl }) {
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Potential Win</span>
-                  <span className="detail-value">{bet.potential_win.toFixed(2)}</span>
+                  <span className="detail-value">{formatCurrency(bet.potential_win)}</span>
                 </div>
                 {bet.outcome && (
                   <div className="detail-item">

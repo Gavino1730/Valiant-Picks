@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/Dashboard.css';
+import { formatCurrency, formatCurrencyText } from '../utils/currency';
 
 function Dashboard({ user, apiUrl }) {
   const [balance, setBalance] = useState(user?.balance || 0);
@@ -76,7 +77,7 @@ function Dashboard({ user, apiUrl }) {
         }
       });
 
-      setMessage(`Bet placed successfully on ${selectedGame.home_team}! Potential win: ${(amount * odds).toFixed(2)} Valiant Bucks`);
+      setMessage(`Bet placed successfully on ${selectedGame.home_team}! Potential win: ${formatCurrency(amount * odds)}`);
       setSelectedGameId('');
       setBetType('moneyline');
       setSelectedTeam('');
@@ -94,7 +95,7 @@ function Dashboard({ user, apiUrl }) {
     <div className="dashboard">
       <div className="card">
         <h2>Welcome back!</h2>
-        <p>Your current balance: <span className="balance">{balance.toFixed(2)} Valiant Bucks</span></p>
+        <p>Your current balance: <span className="balance">{formatCurrency(balance)}</span></p>
       </div>
 
       <div className="card">

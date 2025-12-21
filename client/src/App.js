@@ -41,6 +41,9 @@ function App() {
     return <Login onLogin={handleLogin} apiUrl={API_URL} />;
   }
 
+  // Get user data from state or localStorage
+  const currentUser = user || (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
+
   return (
     <div className="app">
       <nav className="navbar">
@@ -66,6 +69,9 @@ function App() {
               Admin
             </button>
           )}
+          <div className="user-info">
+            <span className="username">{currentUser?.username || 'User'}</span>
+          </div>
           <button onClick={handleLogout} className="logout-btn">
             Logout
           </button>

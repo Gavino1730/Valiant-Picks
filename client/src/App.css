@@ -101,6 +101,24 @@ body {
   background: rgba(255, 100, 100, 0.5) !important;
 }
 
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1.2rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  margin: 0 0.5rem;
+}
+
+.username {
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
 /* ===== CONTAINER ===== */
 .container {
   flex: 1;
@@ -482,6 +500,16 @@ table tbody tr:hover {
 
   .nav-links button.active {
     padding: 8px 12px;
+  }
+
+  .user-info {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  .username {
+    font-size: 0.85rem;
   }
 
   h1 {

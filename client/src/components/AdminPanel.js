@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminTeams from './AdminTeams';
 import '../styles/AdminPanel.css';
+import { formatCurrency } from '../utils/currency';
 
 function AdminPanel({ apiUrl }) {
   const [allBets, setAllBets] = useState([]);
@@ -410,7 +411,7 @@ function AdminPanel({ apiUrl }) {
                     <tr key={bet.id}>
                       <td>{bet.id}</td>
                       <td>{bet.user_id}</td>
-                      <td>{bet.amount.toFixed(2)} Valiant Bucks</td>
+                      <td>{formatCurrency(bet.amount)}</td>
                       <td>{bet.odds}x</td>
                       <td>{bet.status}</td>
                       <td>
@@ -456,7 +457,7 @@ function AdminPanel({ apiUrl }) {
                   <tr key={u.id}>
                     <td>{u.id}</td>
                     <td>{u.username}</td>
-                    <td>{u.balance.toFixed(2)} Valiant Bucks</td>
+                    <td>{formatCurrency(u.balance)}</td>
                     <td>{u.is_admin ? 'Yes' : 'No'}</td>
                     <td>
                       <button onClick={() => {

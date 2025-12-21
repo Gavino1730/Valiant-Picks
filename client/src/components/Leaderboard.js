@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/Leaderboard.css';
+import { formatCurrency } from '../utils/currency';
 
 function Leaderboard({ apiUrl }) {
   const [users, setUsers] = useState([]);
@@ -156,7 +157,7 @@ function Leaderboard({ apiUrl }) {
                   {user.is_admin && <span className="admin-badge">ADMIN</span>}
                 </td>
                 <td className="stat balance-stat">
-                  <strong>{user.balance.toFixed(2)}</strong>
+                  <strong>{formatCurrency(user.balance)}</strong>
                 </td>
                 <td className="stat">
                   <span className="stat-value">{user.stats.totalBets}</span>
@@ -195,12 +196,12 @@ function Leaderboard({ apiUrl }) {
         </div>
         <div className="overview-stat">
           <h4>Total Bucks in Circulation</h4>
-          <p className="value">{users.reduce((sum, u) => sum + u.balance, 0).toFixed(2)}</p>
+          <p className="value">{formatCurrency(users.reduce((sum, u) => sum + u.balance, 0))}</p>
         </div>
         <div className="overview-stat">
           <h4>Avg Balance</h4>
           <p className="value">
-            {users.length > 0 ? (users.reduce((sum, u) => sum + u.balance, 0) / users.length).toFixed(2) : 0}
+            {users.length > 0 ? formatCurrency(users.reduce((sum, u) => sum + u.balance, 0) / users.length) : formatCurrency(0)}
           </p>
         </div>
       </div>
