@@ -6,9 +6,14 @@ const User = require('../models/User');
 
 router.post('/register', async (req, res) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
-      return res.status(400).json({ error: 'Username and password required' });
+    const { username, email, password } = req.body;
+    if (!username || !email || !password) {
+      return res.status(400).json({ error: 'Username, email, and password required' });
+    }
+    
+    // Validate email
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
     }
     
     // Validate username
@@ -29,11 +34,11 @@ router.post('/register', async (req, res) => {
     
     let user;
     try {
-      user = await User.create(username.trim(), password);
+      user = await User.create(username.trim(), email.trim(), password);
     } catch (error) {
       console.error('Registration error:', error);
       if (error.message.includes('unique constraint') || error.message.includes('duplicate') || error.message.includes('already exists')) {
-        return res.status(400).json({ error: 'Username already exists' });
+        return res.status(400).json({ error: 'Username or email already exists' });
       }
       return res.status(400).json({ error: 'Registration failed' });
     }

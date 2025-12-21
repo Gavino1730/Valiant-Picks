@@ -6,6 +6,7 @@ function Login({ onLogin, apiUrl }) {
   const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
+    email: '',
     password: '',
   });
   const [error, setError] = useState('');
@@ -30,7 +31,7 @@ function Login({ onLogin, apiUrl }) {
       
       if (isRegister) {
         setError('');
-        setFormData({ username: '', password: '' });
+        setFormData({ username: '', email: '', password: '' });
         setIsRegister(false);
         alert('Registration successful! Please login.');
       } else {
@@ -78,6 +79,20 @@ function Login({ onLogin, apiUrl }) {
               required
             />
           </div>
+
+          {isRegister && (
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
 
           <div className="form-group">
             <label htmlFor="password">Password</label>

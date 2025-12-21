@@ -2,17 +2,17 @@ const { supabase } = require('../supabase');
 const bcrypt = require('bcryptjs');
 
 class User {
-  static async create(username, password) {
+  static async create(username, email, password) {
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
       const { data, error } = await supabase
         .from('users')
-        .insert([{ username, password: hashedPassword }])
+        .insert([{ username, email, password: hashedPassword }])
         .select()
         .single();
 
       if (error) throw error;
-      return { id: data.id, username: data.username };
+      return { id: data.id, username: data.username, email: data.email };
     } catch (err) {
       throw new Error(`Error creating user: ${err.message}`);
     }
