@@ -470,6 +470,12 @@
   font-family: inherit;
 }
 
+.bets-table select option {
+  background: #1e2139;
+  color: #e0e0e0;
+  padding: 8px;
+}
+
 .bets-table select:focus {
   outline: none;
   border-color: rgba(255, 215, 0, 0.5);
