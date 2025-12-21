@@ -35,7 +35,7 @@ body {
 }
 
 .nav-brand {
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -53,7 +53,7 @@ body {
 }
 
 .logo-img {
-  height: 24px;
+  height: 32px;
   width: auto;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
 }
@@ -123,7 +123,6 @@ body {
 .user-info {
   display: flex;
   align-items: center;
-  height: 100%;
   padding: 0.65rem 1.4rem;
   background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 237, 78, 0.1));
   border: 1px solid rgba(255, 215, 0, 0.4);
@@ -159,7 +158,6 @@ body {
 .balance-display {
   display: flex;
   align-items: center;
-  height: 100%;
   padding: 0.65rem 1.4rem;
   background: linear-gradient(135deg, rgba(102, 187, 106, 0.15), rgba(67, 160, 71, 0.1));
   border: 1px solid rgba(102, 187, 106, 0.4);
