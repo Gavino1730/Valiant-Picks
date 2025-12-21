@@ -69,7 +69,7 @@ function AdminTeams() {
         setFormData(hardcodedTeams[0]);
       }
     } catch (err) {
-      console.log('API fetch failed, using hardcoded teams:', err.message);
+      console.error('Failed to fetch teams from API:', err.message);
       const hardcodedTeams = getHardcodedTeams();
       setTeams(hardcodedTeams);
       setSelectedTeam(hardcodedTeams[0]);
