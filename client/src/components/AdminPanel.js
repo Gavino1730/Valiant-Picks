@@ -665,14 +665,14 @@ function AdminPanel() {
                         <span style={{fontSize: '0.85em', color: '#666', marginRight: '8px'}}>Visible</span>
                         <button 
                           className="btn" 
-                          style={{background: '#1e88e5', padding: '5px 10px', fontSize: '0.85em'}}
+                          style={{background: '#1e88e5', padding: '5px 10px', fontSize: '0.85em', minWidth: 'auto'}}
                           onClick={() => handleEditGame(game)}
                         >
                           Edit
                         </button>
                         <button 
                           className="btn" 
-                          style={{background: '#9c27b0', padding: '5px 10px', fontSize: '0.85em'}}
+                          style={{background: '#9c27b0', padding: '5px 10px', fontSize: '0.85em', minWidth: 'auto'}}
                           onClick={() => handleOpenGameStatus(game)}
                         >
                           Manage Status
