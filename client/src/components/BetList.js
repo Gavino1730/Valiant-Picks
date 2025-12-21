@@ -41,8 +41,9 @@ function BetList() {
             <div key={bet.id} className="card bet-card">
               <div className="bet-header">
                 <div>
-                  <h4>{bet.sport} - {bet.team}</h4>
-                  {bet.event_description && <p className="event-desc">{bet.event_description}</p>}
+                  <h4>{bet.games?.team_type || 'Game'}</h4>
+                  <p className="event-desc">{bet.selected_team} vs {bet.games?.home_team === bet.selected_team ? bet.games?.away_team : bet.games?.home_team}</p>
+                  <p className="bet-confidence">{bet.bet_type?.toUpperCase()} Confidence</p>
                 </div>
                 <span className={`status status-${bet.status}`}>{bet.status.toUpperCase()}</span>
               </div>
@@ -52,7 +53,7 @@ function BetList() {
                   <span className="detail-value">{formatCurrency(bet.amount)}</span>
                 </div>
                 <div className="detail-item">
-                  <span className="detail-label">Odds</span>
+                  <span className="detail-label">Multiplier</span>
                   <span className="detail-value">{bet.odds}x</span>
                 </div>
                 <div className="detail-item">

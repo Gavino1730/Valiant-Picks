@@ -317,6 +317,15 @@
   font-weight: 600;
 }
 
+.bet-confidence {
+  color: #ffd700;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 0.3rem;
+}
+
 .bet-actions {
   display: flex;
   gap: 0.8rem;
@@ -770,5 +779,109 @@
   button {
     padding: 10px 16px;
     font-size: 14px;
+  }
+}
+
+/* ===== TEAM SELECTION ===== */
+.team-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.team-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: #e0e0e0;
+  padding: 1.2rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.team-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 215, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.team-btn.active {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-color: #ffd700;
+  color: #0f1419;
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ===== CONFIDENCE SELECTION ===== */
+.confidence-selection {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.confidence-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: #e0e0e0;
+  padding: 1.5rem 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.confidence-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 215, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.confidence-btn.active {
+  border-color: #ffd700;
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.confidence-btn.low.active {
+  background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+  color: white;
+}
+
+.confidence-btn.medium.active {
+  background: linear-gradient(135deg, #ffc107 0%, #ffa000 100%);
+  color: white;
+}
+
+.confidence-btn.high.active {
+  background: linear-gradient(135deg, #ef5350 0%, #d32f2f 100%);
+  color: white;
+}
+
+.confidence-label {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.confidence-multiplier {
+  font-size: 1.4rem;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .team-selection,
+  .confidence-selection {
+    grid-template-columns: 1fr;
   }
 }

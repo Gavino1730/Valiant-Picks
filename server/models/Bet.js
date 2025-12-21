@@ -1,7 +1,7 @@
 const { supabase } = require('../supabase');
 
 class Bet {
-  static async create(userId, gameId, betType, selectedTeam, amount, odds) {
+  static async create(userId, gameId, confidence, selectedTeam, amount, odds) {
     const potentialWin = amount * odds;
     try {
       const { data, error } = await supabase
@@ -9,7 +9,7 @@ class Bet {
         .insert([{
           user_id: userId,
           game_id: gameId,
-          bet_type: betType,
+          bet_type: confidence,
           selected_team: selectedTeam,
           amount,
           odds,

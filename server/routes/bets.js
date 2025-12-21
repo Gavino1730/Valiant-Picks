@@ -9,10 +9,10 @@ const Game = require('../models/Game');
 // Place a bet on a game
 router.post('/', authenticateToken, async (req, res) => {
   try {
-    const { gameId, betType, selectedTeam, amount, odds } = req.body;
+    const { gameId, selectedTeam, confidence, amount, odds } = req.body;
     
     // Input validation
-    if (!gameId || !betType || !amount || !odds) {
+    if (!gameId || !selectedTeam || !confidence || !amount || !odds) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -32,10 +32,10 @@ router.post('/', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Invalid odds value' });
     }
 
-    // Validate bet type
-    const validBetTypes = ['moneyline', 'spread', 'over-under'];
-    if (!validBetTypes.includes(betType)) {
-      return res.status(400).json({ error: 'Invalid bet type' });
+    // Validate confidence level
+    const validConfidence = ['low', 'medium', 'high'];
+    if (!validConfidence.includes(confidence)) {
+      return res.status(400).json({ error: 'Invalid confidence level' });
     }
 
     // Check if game exists
@@ -55,9 +55,9 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     // Create bet and update balance atomically
-    const bet = await Bet.create(req.user.id, gameId, betType, selectedTeam || null, parsedAmount, parsedOdds);
+    const bet = await Bet.create(req.user.id, gameId, confidence, selectedTeam, parsedAmount, parsedOdds);
     await User.updateBalance(req.user.id, -parsedAmount);
-    await Transaction.create(req.user.id, 'bet', -parsedAmount, `${betType} bet on ${game.home_team}: ${parsedOdds}x odds`);
+    await Transaction.create(req.user.id, 'bet', -parsedAmount, `${confidence} confidence bet on ${selectedTeam}: ${parsedOdds}x odds`);
 
     res.status(201).json(bet);
   } catch (error) {
