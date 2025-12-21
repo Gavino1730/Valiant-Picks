@@ -607,7 +607,7 @@ function AdminPanel() {
                   {game.result && <p><strong>Winner:</strong> {game.result}</p>}
                   {game.notes && <p><strong>Notes:</strong> {game.notes}</p>}
                   
-                  <div style={{marginTop: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center'}}>
+                  <div style={{marginTop: '15px', display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center'}}>
                     {game.status !== 'completed' && (
                       <>
                         <label className="toggle-switch">
@@ -618,17 +618,17 @@ function AdminPanel() {
                           />
                           <span className="toggle-slider"></span>
                         </label>
-                        <span style={{fontSize: '0.9em', color: '#666'}}>Visible</span>
+                        <span style={{fontSize: '0.85em', color: '#666', marginRight: '8px'}}>Visible</span>
                         <button 
                           className="btn" 
-                          style={{background: '#1e88e5', padding: '8px 12px'}}
+                          style={{background: '#1e88e5', padding: '5px 10px', fontSize: '0.85em'}}
                           onClick={() => handleEditGame(game)}
                         >
                           Edit
                         </button>
                         <button 
                           className="btn" 
-                          style={{background: '#66bb6a', padding: '8px 12px'}}
+                          style={{background: '#66bb6a', padding: '5px 10px', fontSize: '0.85em'}}
                           onClick={() => handleSetGameOutcome(game.id, game.home_team)}
                         >
                           {game.home_team} Won
@@ -636,7 +636,7 @@ function AdminPanel() {
                         {game.away_team && (
                           <button 
                             className="btn" 
-                            style={{background: '#ef5350', padding: '8px 12px'}}
+                            style={{background: '#ef5350', padding: '5px 10px', fontSize: '0.85em'}}
                             onClick={() => handleSetGameOutcome(game.id, game.away_team)}
                           >
                             {game.away_team} Won
