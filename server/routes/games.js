@@ -120,6 +120,44 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
     let gamesCreated = 0;
     let gamesSkipped = 0;
 
+    // Helper function to convert various time formats to PostgreSQL TIME format
+    const formatTime = (timeStr) => {
+      if (!timeStr) return null;
+      
+      const str = timeStr.trim().toLowerCase();
+      
+      // Handle "Noon" or "12:00 PM"
+      if (str === 'noon' || str === '12:00 pm' || str === '12:00pm') {
+        return '12:00:00';
+      }
+      
+      // Handle "TBA" or "TBD"
+      if (str === 'tba' || str === 'tbd' || str === 'to be announced') {
+        return null;
+      }
+      
+      // If already in HH:MM or HH:MM:SS format, keep it
+      if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(timeStr)) {
+        return timeStr.includes(':') && timeStr.split(':').length === 2 ? `${timeStr}:00` : timeStr;
+      }
+      
+      // Handle AM/PM format (e.g., "3:30 PM", "3:30PM")
+      const ampmMatch = timeStr.match(/^(\d{1,2}):(\d{2})\s*(am|pm)$/i);
+      if (ampmMatch) {
+        let hours = parseInt(ampmMatch[1]);
+        const minutes = ampmMatch[2];
+        const period = ampmMatch[3].toLowerCase();
+        
+        if (period === 'pm' && hours !== 12) hours += 12;
+        if (period === 'am' && hours === 12) hours = 0;
+        
+        return `${String(hours).padStart(2, '0')}:${minutes}:00`;
+      }
+      
+      // Return as-is if none of the above match
+      return timeStr;
+    };
+
     // Get existing games to check for duplicates
     const { data: existingGames, error: gamesError } = await supabase
       .from('games')
@@ -142,8 +180,9 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
       if (game.result === 'Scheduled') {
         const homeTeam = game.location === 'Home' ? 'Valley Catholic' : game.opponent;
         const awayTeam = game.location === 'Home' ? game.opponent : 'Valley Catholic';
+        const formattedTime = formatTime(game.time);
         
-        if (gameExists('Boys Basketball', homeTeam, awayTeam, game.date, game.time)) {
+        if (gameExists('Boys Basketball', homeTeam, awayTeam, game.date, formattedTime)) {
           gamesSkipped++;
           continue;
         }
@@ -153,7 +192,7 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
           homeTeam,
           awayTeam,
           gameDate: game.date,
-          gameTime: game.time,
+          gameTime: formattedTime,
           location: game.location,
           winningOdds: 1.95,
           losingOdds: 1.95,
@@ -173,8 +212,9 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
       if (game.result === 'Scheduled') {
         const homeTeam = game.location === 'Home' ? 'Valley Catholic' : game.opponent;
         const awayTeam = game.location === 'Home' ? game.opponent : 'Valley Catholic';
+        const formattedTime = formatTime(game.time);
         
-        if (gameExists('Girls Basketball', homeTeam, awayTeam, game.date, game.time)) {
+        if (gameExists('Girls Basketball', homeTeam, awayTeam, game.date, formattedTime)) {
           gamesSkipped++;
           continue;
         }
@@ -184,7 +224,7 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
           homeTeam,
           awayTeam,
           gameDate: game.date,
-          gameTime: game.time,
+          gameTime: formattedTime,
           location: game.location,
           winningOdds: 1.95,
           losingOdds: 1.95,
