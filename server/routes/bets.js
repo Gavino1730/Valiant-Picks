@@ -77,8 +77,8 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 });
 
-// Admin: Get all bets
-router.get('/all', authenticateToken, adminOnly, async (req, res) => {
+// Get all bets (public for leaderboard)
+router.get('/all', async (req, res) => {
   try {
     const bets = await Bet.getAll();
     res.json(bets);
