@@ -439,6 +439,16 @@ table thead {
   border-bottom: 2px solid rgba(255, 215, 0, 0.3);
 }
 
+.mobile-close-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
+}
+
 table th {
   padding: 1rem;
   text-align: left;
@@ -568,6 +578,11 @@ table tbody tr:hover {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.mobile-close-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 .mobile-menu-nav {

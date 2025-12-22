@@ -157,6 +157,13 @@ function App() {
               💰 {formatCurrency(currentUser?.balance)} VB
             </div>
           </div>
+          <button
+            className="mobile-close-btn"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
         </div>
         
         <div className="mobile-menu-nav">
