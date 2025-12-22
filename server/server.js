@@ -13,13 +13,13 @@ app.set('trust proxy', 1);
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500, // Limit each IP to 500 requests per windowMs
+  max: 5000, // Relaxed: allow up to 5k requests per IP per window
   message: 'Too many requests, please try again later.'
 });
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10, // Limit login/register attempts
+  max: 100, // Relaxed: allow up to 100 auth attempts per IP per window
   message: 'Too many authentication attempts, please try again later.'
 });
 
