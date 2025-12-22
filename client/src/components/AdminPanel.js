@@ -1295,6 +1295,8 @@ function AdminPanel() {
                   fontSize: '1rem'
                 }}
               >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
