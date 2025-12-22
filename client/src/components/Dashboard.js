@@ -38,7 +38,8 @@ function Dashboard({ user }) {
   };
 
   useEffect(() => {
-    const intervalId = setInterval(() => setNow(Date.now()), 1000);
+    // Update less frequently to reduce re-renders and improve interaction latency
+    const intervalId = setInterval(() => setNow(Date.now()), 3000);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -245,10 +246,11 @@ function Dashboard({ user }) {
     }
   };
 
-  const upcomingGames = games.slice(0, 3); // Next 3 games
-  const recentActivity = [...bets]
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-    .slice(0, 6); // Last 6 events
+  const upcomingGames = React.useMemo(() => games.slice(0, 3), [games]);
+  const recentActivity = React.useMemo(
+    () => [...bets].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 6),
+    [bets]
+  );
 
   return (
     <div className="dashboard">
