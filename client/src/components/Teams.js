@@ -171,7 +171,7 @@ function Teams() {
           </div>
           <div className="stat">
             <span className="label">State Ranking</span>
-            <span className="value">#{team.ranking}</span>
+            <span className="value">{team.ranking}</span>
           </div>
         </div>
       </div>
