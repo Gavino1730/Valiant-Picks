@@ -275,7 +275,7 @@
 }
 
 .vs {
-  color: #ffd700;
+  color: #9fc5ff;
   font-weight: 700;
   font-size: 0.9rem;
 }
@@ -296,7 +296,7 @@
 
 .team-btn {
   background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
-  border: 2px solid rgba(255, 215, 0, 0.2);
+  border: 2px solid rgba(41, 182, 246, 0.25);
   color: white;
   padding: 1.2rem;
   border-radius: 12px;
