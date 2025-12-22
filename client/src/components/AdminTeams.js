@@ -92,6 +92,7 @@ function AdminTeams() {
   }, [fetchTeams]);
 
   const handleSelectTeam = (team) => {
+    console.log('Selecting team:', team);
     // Extract numeric ranking from "Rank #3" format
     let numericRanking = team.ranking;
     if (typeof numericRanking === 'string') {
@@ -245,7 +246,7 @@ function AdminTeams() {
           {teamsToDisplay.map(team => (
             <button
               key={team.id}
-              className={`team-btn ${selectedTeam?.id === team.id ? 'active' : ''}`}
+              className={`team-btn ${String(selectedTeam?.id) === String(team.id) ? 'active' : ''}`}
               onClick={() => handleSelectTeam(team)}
             >
               {team.name}
