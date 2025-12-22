@@ -15,6 +15,7 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [page, setPage] = useState(localStorage.getItem('currentPage') || 'dashboard');
   const [unreadCount, setUnreadCount] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     // Token is now handled by axios interceptor
@@ -64,6 +65,7 @@ function App() {
   const handlePageChange = (newPage) => {
     setPage(newPage);
     localStorage.setItem('currentPage', newPage);
+    setMobileMenuOpen(false); // Close mobile menu on navigation
   };
 
   if (!token) {
@@ -126,7 +128,100 @@ function App() {
             Logout
           </button>
         </div>
+        
+        {/* Mobile Menu Toggle */}
+        <button 
+          className="mobile-menu-toggle" 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span className={`hamburger ${mobileMenuOpen ? 'open' : ''}`}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={() => setMobileMenuOpen(false)} />
+      )}
+
+      {/* Mobile Slide-out Menu */}
+      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+        <div className="mobile-menu-header">
+          <div className="mobile-user-info">
+            <div className="mobile-user-name">👤 {currentUser?.username || 'User'}</div>
+            <div className="mobile-balance">
+              💰 {formatCurrency(currentUser?.balance)} VB
+            </div>
+          </div>
+        </div>
+        
+        <div className="mobile-menu-nav">
+          <button 
+            onClick={() => handlePageChange('dashboard')} 
+            className={page === 'dashboard' ? 'active' : ''}
+          >
+            <span className="menu-icon">📊</span>
+            Dashboard
+          </button>
+          <button 
+            onClick={() => handlePageChange('games')} 
+            className={page === 'games' ? 'active' : ''}
+          >
+            <span className="menu-icon">🎲</span>
+            Browse Bets
+          </button>
+          <button 
+            onClick={() => handlePageChange('teams')} 
+            className={page === 'teams' ? 'active' : ''}
+          >
+            <span className="menu-icon">🏀</span>
+            Teams
+          </button>
+          <button 
+            onClick={() => handlePageChange('bets')} 
+            className={page === 'bets' ? 'active' : ''}
+          >
+            <span className="menu-icon">📝</span>
+            My Bets
+          </button>
+          <button 
+            onClick={() => handlePageChange('leaderboard')} 
+            className={page === 'leaderboard' ? 'active' : ''}
+          >
+            <span className="menu-icon">🏆</span>
+            Leaderboard
+          </button>
+          <button 
+            onClick={() => handlePageChange('notifications')} 
+            className={page === 'notifications' ? 'active' : ''}
+          >
+            <span className="menu-icon">🔔</span>
+            Notifications
+            {unreadCount > 0 && (
+              <span className="mobile-badge">{unreadCount}</span>
+            )}
+          </button>
+          {user && (user.is_admin || user.isAdminUser) && (
+            <button 
+              onClick={() => handlePageChange('admin')} 
+              className={page === 'admin' ? 'active' : ''}
+            >
+              <span className="menu-icon">⚙️</span>
+              Admin Panel
+            </button>
+          )}
+        </div>
+
+        <div className="mobile-menu-footer">
+          <button onClick={handleLogout} className="mobile-logout-btn">
+            🚪 Logout
+          </button>
+        </div>
+      </div>
 
       <div className="container">
         {page === 'dashboard' && <Dashboard user={user} />}

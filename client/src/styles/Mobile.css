@@ -423,6 +423,22 @@
 }
 
 /* Additional mobile navbar improvements */
+@media (max-width: 768px) {
+  /* Ensure mobile menu is properly styled */
+  body.menu-open {
+    overflow: hidden;
+  }
+
+  /* Balance display in navbar for mobile */
+  .balance-display {
+    display: none;
+  }
+
+  .user-info {
+    display: none;
+  }
+}
+
 @media (max-width: 480px) {
   /* Make notification button more compact */
   .notification-icon-btn {
@@ -449,6 +465,21 @@
   /* Hide less critical nav items on very small screens */
   .nav-center button:nth-child(n+4) {
     display: none;
+  }
+
+  /* Mobile menu takes full width */
+  .mobile-menu {
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+
+  .mobile-menu-header {
+    padding: 1.25rem 1rem;
+  }
+
+  .mobile-menu-nav button {
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
   }
 }
 
