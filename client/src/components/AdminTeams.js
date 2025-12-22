@@ -56,9 +56,19 @@ function AdminTeams() {
         timeout: 3000
       });
       if (Array.isArray(response.data) && response.data.length > 0) {
-        setTeams(response.data);
-        setSelectedTeam(response.data[0]);
-        setFormData(response.data[0]);
+        // Clean up ranking format for all teams
+        const cleanedTeams = response.data.map(team => {
+          let numericRanking = team.ranking;
+          if (typeof numericRanking === 'string') {
+            const match = numericRanking.match(/\d+/);
+            numericRanking = match ? parseInt(match[0]) : numericRanking;
+          }
+          return { ...team, ranking: numericRanking };
+        });
+        
+        setTeams(cleanedTeams);
+        setSelectedTeam(cleanedTeams[0]);
+        setFormData(cleanedTeams[0]);
       } else {
         // API returned empty, use hardcoded
         const hardcodedTeams = getHardcodedTeams();
@@ -82,8 +92,20 @@ function AdminTeams() {
   }, [fetchTeams]);
 
   const handleSelectTeam = (team) => {
-    setSelectedTeam(team);
-    setFormData(team);
+    // Extract numeric ranking from "Rank #3" format
+    let numericRanking = team.ranking;
+    if (typeof numericRanking === 'string') {
+      const match = numericRanking.match(/\d+/);
+      numericRanking = match ? parseInt(match[0]) : numericRanking;
+    }
+    
+    const cleanedTeam = {
+      ...team,
+      ranking: numericRanking
+    };
+    
+    setSelectedTeam(cleanedTeam);
+    setFormData(cleanedTeam);
     setEditMode(false);
     setActiveTab('info');
   };
@@ -124,8 +146,8 @@ function AdminTeams() {
 
       await apiClient.put(`/teams-admin/${selectedTeam.id}`, updates);
 
-      // Update local state
-      const updatedTeam = { ...selectedTeam, ...updates, ranking: `Rank #${rankingValue}` };
+      // Update local state with numeric ranking
+      const updatedTeam = { ...selectedTeam, ...updates };
       setSelectedTeam(updatedTeam);
       setFormData(updatedTeam);
       setEditMode(false);
