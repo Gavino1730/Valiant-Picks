@@ -61,7 +61,13 @@ router.put('/:teamId', authenticateToken, adminOnly, async (req, res) => {
     // Build update object
     const updateData = {};
     updateKeys.forEach(key => {
-      updateData[key] = updates[key];
+      if (key === 'ranking') {
+        // Convert ranking to "Rank #N" format for storage
+        const rankNum = parseInt(updates[key]);
+        updateData[key] = isNaN(rankNum) ? updates[key] : `Rank #${rankNum}`;
+      } else {
+        updateData[key] = updates[key];
+      }
     });
 
     // Update in database
@@ -72,12 +78,15 @@ router.put('/:teamId', authenticateToken, adminOnly, async (req, res) => {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
 
     res.json({ message: 'Team updated successfully', team: data });
   } catch (error) {
     console.error('Error updating team:', error);
-    res.status(500).json({ error: 'Failed to update team' });
+    res.status(500).json({ error: error.message || 'Failed to update team' });
   }
 });
 
