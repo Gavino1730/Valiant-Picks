@@ -56,7 +56,7 @@ function BetList() {
       setBets(newBets);
       setError('');
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to fetch bets');
+      setError(err.response?.data?.error || 'Failed to fetch picks');
     } finally {
       setLoading(false);
     }
@@ -118,7 +118,7 @@ function BetList() {
       <div className="bet-list-container">
         <div className="loading-spinner">
           <div className="spinner"></div>
-          <p>Loading your bets...</p>
+          <p>Loading your picks...</p>
         </div>
       </div>
     );
@@ -149,7 +149,7 @@ function BetList() {
       <div className="bet-list-header">
         <div className="header-title">
           <h1>My Picks</h1>
-          <p className="subtitle">Track your betting history and performance</p>
+          <p className="subtitle">Track your picking history and performance</p>
         </div>
       </div>
 
@@ -158,7 +158,7 @@ function BetList() {
         <div className="bet-stat-card">
           <div className="stat-icon stat-icon-total">📊</div>
           <div className="stat-info">
-            <span className="stat-label">Total Bets</span>
+            <span className="stat-label">Total Picks</span>
             <span className="stat-value">{stats.total}</span>
           </div>
         </div>
@@ -235,11 +235,11 @@ function BetList() {
       {filteredBets.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">🎲</div>
-          <h3>No {filter !== 'all' ? filter : ''} bets found</h3>
+          <h3>No {filter !== 'all' ? filter : ''} picks found</h3>
           <p>
             {filter === 'all' 
-              ? "You haven't placed any bets yet. Head to the dashboard to get started!" 
-              : `You don't have any ${filter} bets at the moment.`}
+              ? "You haven't placed any picks yet. Head to the dashboard to get started!" 
+              : `You don't have any ${filter} picks at the moment.`}
           </p>
         </div>
       ) : (
@@ -264,7 +264,7 @@ function BetList() {
               {/* Bet Details Grid */}
               <div className="bet-item-details">
                 <div className="detail-box">
-                  <span className="detail-label">Bet Amount</span>
+                  <span className="detail-label">Pick Amount</span>
                   <span className="detail-amount">{formatCurrency(bet.amount)}</span>
                 </div>
                 <div className="detail-box">

@@ -109,7 +109,7 @@ function Leaderboard() {
               </div>
               
               <div className="stat-item">
-                <div className="stat-label">Total Bets</div>
+                <div className="stat-label">Total Picks</div>
                 <div className="stat-value">{user.stats.totalBets}</div>
               </div>
               

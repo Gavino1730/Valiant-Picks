@@ -1,5 +1,5 @@
 /**
- * Remove old Valley Catholic teams (keeping VC teams)
+ * Remove legacy Valley Catholic team rows now renamed to Valiants.
  */
 
 const path = require('path');
@@ -12,7 +12,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function cleanup() {
   try {
-    console.log('🗑️  Deleting old Valley Catholic teams...\n');
+    console.log('🗑️  Deleting legacy Valley Catholic teams (now Valiants)...\n');
 
     // Delete the old teams with full name
     const { error: deleteError } = await supabase
@@ -25,7 +25,7 @@ async function cleanup() {
     }
 
     console.log('✅ Old teams deleted successfully!\n');
-    console.log('✅ Only VC Boys Basketball and VC Girls Basketball remain.\n');
+    console.log('✅ Only Valiants Boys Basketball and Valiants Girls Basketball remain.\n');
 
     process.exit(0);
   } catch (error) {

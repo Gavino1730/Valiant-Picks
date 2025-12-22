@@ -38,7 +38,7 @@ function AdminPanel() {
     notes: ''
   });
 
-  // Prop bet creation form
+  // Prop pick creation form
   const [propBetForm, setPropBetForm] = useState({
     title: '',
     description: '',
@@ -51,7 +51,7 @@ function AdminPanel() {
 
   const adminTabs = [
     { key: 'games', label: 'Manage Games', icon: '🏀' },
-    { key: 'propbets', label: 'Prop Bets', icon: '🎯' },
+    { key: 'propbets', label: 'Prop Picks', icon: '🎯' },
     { key: 'bets', label: 'View All Picks', icon: '📋' },
     { key: 'users', label: 'Manage Users', icon: '🧑‍💼' },
     { key: 'teams', label: 'Manage Teams', icon: '🛠️' }
@@ -113,7 +113,7 @@ function AdminPanel() {
       setAllBets(response.data);
       setError('');
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to fetch bets');
+      setError(err.response?.data?.error || 'Failed to fetch picks');
     } finally {
       setLoading(false);
     }
@@ -151,8 +151,8 @@ function AdminPanel() {
       setPropBets(response.data);
       setError('');
     } catch (err) {
-      setError('Failed to fetch prop bets: ' + (err.response?.data?.error || err.message));
-      console.error('Failed to fetch prop bets:', err);
+      setError('Failed to fetch prop picks: ' + (err.response?.data?.error || err.message));
+      console.error('Failed to fetch prop picks:', err);
     }
   };
 
@@ -337,7 +337,7 @@ function AdminPanel() {
         expiresAt: propBetForm.expiresAt || null
       };
       await apiClient.post('/prop-bets', payload);
-      alert('Prop bet created successfully!');
+      alert('Prop pick created successfully!');
       setPropBetForm({
         title: '',
         description: '',
@@ -349,7 +349,7 @@ function AdminPanel() {
       });
       fetchPropBets();
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to create prop bet');
+      alert(err.response?.data?.error || 'Failed to create prop pick');
     }
   };
 
@@ -357,20 +357,20 @@ function AdminPanel() {
     try {
       await apiClient.put(`/prop-bets/${propBetId}`, { status, outcome });
       fetchPropBets();
-      alert('Prop bet updated successfully!');
+      alert('Prop pick updated successfully!');
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to update prop bet');
+      alert(err.response?.data?.error || 'Failed to update prop pick');
     }
   };
 
   const handleDeletePropBet = async (propBetId) => {
-    if (!window.confirm('Are you sure you want to delete this prop bet?')) return;
+    if (!window.confirm('Are you sure you want to delete this prop pick?')) return;
     try {
       await apiClient.delete(`/prop-bets/${propBetId}`);
       fetchPropBets();
-      alert('Prop bet deleted successfully!');
+      alert('Prop pick deleted successfully!');
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to delete prop bet');
+      alert(err.response?.data?.error || 'Failed to delete prop pick');
     }
   };
 
@@ -421,7 +421,7 @@ function AdminPanel() {
       const response = await apiClient.put(`/games/${id}/outcome`, updateData);
       
       if (response.data.betsResolved > 0) {
-        alert(`Game updated! ${response.data.betsResolved} bets completed, ${formatCurrency(response.data.winningsDistributed)} distributed.`);
+        alert(`Game updated! ${response.data.betsResolved} picks completed, ${formatCurrency(response.data.winningsDistributed)} distributed.`);
       } else {
         alert('Game status updated successfully!');
       }
@@ -460,7 +460,7 @@ function AdminPanel() {
           Manage Games
         </button>
         <button className={`tab-btn ${tab === 'propbets' ? 'active' : ''}`} onClick={() => setTab('propbets')}>
-          Prop Bets
+          Prop Picks
         </button>
         <button className={`tab-btn ${tab === 'bets' ? 'active' : ''}`} onClick={() => setTab('bets')}>
           View All Picks
@@ -841,7 +841,7 @@ function AdminPanel() {
 
       {tab === 'propbets' && (
         <div className="admin-section">
-          <h3>Create Prop Bet</h3>
+          <h3>Create Prop Pick</h3>
           <form onSubmit={handleCreatePropBet} className="game-form">
             <div className="form-row">
               <div className="form-group full-width">
@@ -866,7 +866,7 @@ function AdminPanel() {
                   name="description" 
                   value={propBetForm.description} 
                   onChange={handlePropBetFormChange}
-                  placeholder="Add details about this prop bet"
+                  placeholder="Add details about this prop pick"
                   rows="3"
                 />
               </div>
@@ -900,8 +900,8 @@ function AdminPanel() {
 
             <div className="form-row">
               <div className="form-group full-width">
-                <label>Betting Options *</label>
-                <p style={{fontSize: '0.9rem', color: '#888a9b', marginBottom: '1rem'}}>Define custom options users can bet on</p>
+                <label>Pick Options *</label>
+                <p style={{fontSize: '0.9rem', color: '#888a9b', marginBottom: '1rem'}}>Define custom options users can pick</p>
                 
                 {propBetForm.options.map((option, index) => (
                   <div key={index} style={{display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'flex-end'}}>
@@ -948,12 +948,12 @@ function AdminPanel() {
               </div>
             </div>
 
-            <button type="submit" className="btn">Create Prop Bet</button>
+            <button type="submit" className="btn">Create Prop Pick</button>
           </form>
 
-          <h3>Active Prop Bets</h3>
+          <h3>Active Prop Picks</h3>
           {propBets.length === 0 ? (
-            <p>No prop bets created yet</p>
+            <p>No prop picks created yet</p>
           ) : (
             <div className="games-list">
               {propBets.map(propBet => (
@@ -1005,7 +1005,7 @@ function AdminPanel() {
         <>
           <div className="stats">
             <div className="stat-card">
-              <h4>Total Bets</h4>
+              <h4>Total Picks</h4>
               <p>{allBets.length}</p>
             </div>
             <div className="stat-card">
@@ -1023,9 +1023,9 @@ function AdminPanel() {
           </div>
 
           <div className="card">
-            <h3>All Bets</h3>
+            <h3>All Picks</h3>
             <p style={{marginBottom: '15px', color: '#b8c5d6'}}>
-              Bets are automatically completed when you set game outcomes or prop bet results. This is a read-only view.
+              Picks are automatically completed when you set game outcomes or prop pick results. This is a read-only view.
             </p>
             <div className="bets-table-wrapper">
               <table className="bets-table">

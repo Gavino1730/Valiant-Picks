@@ -215,7 +215,7 @@ function Dashboard({ user }) {
       }
 
       if (isGameLocked(selectedGame)) {
-        setMessage('Betting closed for this game');
+        setMessage('Picking closed for this game');
         setLoading(false);
         return;
       }
@@ -224,7 +224,7 @@ function Dashboard({ user }) {
       
       // Validate bet amount against balance
       if (betAmount > balance) {
-        setMessage('Insufficient balance! You cannot bet more than you have.');
+        setMessage('Insufficient balance! You cannot stake more than you have.');
         setLoading(false);
         return;
       }
@@ -252,7 +252,7 @@ function Dashboard({ user }) {
       // Refresh bets to update stats
       fetchBets();
     } catch (err) {
-      setMessage(err.response?.data?.error || 'Error placing bet');
+      setMessage(err.response?.data?.error || 'Error placing pick');
     } finally {
       setLoading(false);
     }
@@ -326,7 +326,7 @@ function Dashboard({ user }) {
       <div className="dashboard-grid">
         {/* Left Column - Place Pick */}
         <div className="card bet-card">
-          <h3>🎲 Place a Bet</h3>
+          <h3>🎲 Place a Pick</h3>
           {message && (
             <div className={`alert ${message.includes('Error') || message.includes('error') || message.includes('Insufficient') ? 'alert-error' : 'alert-success'}`}>
               {message}
@@ -378,7 +378,7 @@ function Dashboard({ user }) {
                     </div>
                     {selectedGameCountdown && (
                       <div className={`countdown-chip ${selectedGameCountdown.isPast ? 'countdown-closed' : ''}`} style={{marginTop: '0.35rem'}}>
-                        {selectedGameCountdown.isPast ? 'Betting closed' : `Starts in ${selectedGameCountdown.label}`}
+                        {selectedGameCountdown.isPast ? 'Picking closed' : `Starts in ${selectedGameCountdown.label}`}
                       </div>
                     )}
                     <div className="matchup">
@@ -423,7 +423,7 @@ function Dashboard({ user }) {
                       >
                         <span className="confidence-label">Low Risk</span>
                         <span className="confidence-multiplier">1.2x</span>
-                        <span className="confidence-desc">Safe bet</span>
+                        <span className="confidence-desc">Safe pick</span>
                       </button>
                       <button
                         type="button"
@@ -447,7 +447,7 @@ function Dashboard({ user }) {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="amount">💵 Bet Amount</label>
+                    <label htmlFor="amount">💵 Pick Amount</label>
                     <div className="amount-input-wrapper">
                       <input
                         id="amount"

@@ -178,8 +178,8 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
     // Only add scheduled games (not already played)
     for (const game of boysSchedule) {
       if (game.result === 'Scheduled') {
-        const homeTeam = game.location === 'Home' ? 'Valley Catholic' : game.opponent;
-        const awayTeam = game.location === 'Home' ? game.opponent : 'Valley Catholic';
+        const homeTeam = game.location === 'Home' ? 'Valiants' : game.opponent;
+        const awayTeam = game.location === 'Home' ? game.opponent : 'Valiants';
         const formattedTime = formatTime(game.time);
         
         if (gameExists('Boys Basketball', homeTeam, awayTeam, game.date, formattedTime)) {
@@ -210,8 +210,8 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
 
     for (const game of girlsSchedule) {
       if (game.result === 'Scheduled') {
-        const homeTeam = game.location === 'Home' ? 'Valley Catholic' : game.opponent;
-        const awayTeam = game.location === 'Home' ? game.opponent : 'Valley Catholic';
+        const homeTeam = game.location === 'Home' ? 'Valiants' : game.opponent;
+        const awayTeam = game.location === 'Home' ? game.opponent : 'Valiants';
         const formattedTime = formatTime(game.time);
         
         if (gameExists('Girls Basketball', homeTeam, awayTeam, game.date, formattedTime)) {
