@@ -529,4 +529,144 @@
   .player-name {
     font-size: 15px;
   }
+
+  /* Teams page mobile improvements */
+  .teams-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .tabs {
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tab-button {
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 6px 6px 0 0;
+  }
+
+  .team-section {
+    padding: 1.2rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+  }
+
+  .team-stats {
+    gap: 1rem;
+  }
+
+  .stat {
+    min-width: 150px;
+  }
+
+  .team-description,
+  .coaching-staff {
+    padding: 0.8rem 0;
+  }
+
+  .coach-info {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .schedule-section,
+  .roster-section {
+    padding: 0.8rem 0;
+  }
+
+  .schedule-header,
+  .roster-list {
+    font-size: 0.9rem;
+  }
 }
+
+@media (max-width: 480px) {
+  .teams-page {
+    padding: 0.5rem;
+  }
+
+  .teams-page h1 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .tabs {
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .tab-button {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .team-section {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .team-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .team-stats {
+    gap: 0.8rem;
+  }
+
+  .stat {
+    min-width: 120px;
+  }
+
+  .stat .label {
+    font-size: 11px;
+  }
+
+  .stat .value {
+    font-size: 1.1rem;
+  }
+
+  .schedule-table {
+    font-size: 0.8rem;
+  }
+
+  .schedule-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .schedule-row {
+    display: block;
+    padding: 0.8rem;
+    margin-bottom: 0.8rem;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 6px;
+  }
+
+  .player-row {
+    padding: 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .player-number {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+
+  .player-name {
+    font-size: 0.95rem;
+  }
+
+  .coach-bio {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .team-description p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+}
+

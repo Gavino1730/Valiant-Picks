@@ -683,11 +683,45 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .dashboard {
+    padding: 0 1rem;
+  }
+
   .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid {
     grid-template-columns: 1fr;
   }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 0.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
   
+  .stat-card {
+    padding: 1.2rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 0.8rem;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-value {
+    font-size: 1.6rem;
+  }
+
   .confidence-selection {
     grid-template-columns: 1fr;
   }
@@ -695,12 +729,139 @@
   .amount-helpers {
     grid-template-columns: repeat(2, 1fr);
   }
-  
-  .stat-value {
-    font-size: 1.6rem;
+
+  .dashboard-grid {
+    gap: 1.5rem;
   }
-  
+
+  .bet-card {
+    padding: 1.2rem;
+  }
+
+  .bet-form {
+    gap: 1.2rem;
+  }
+
+  .active-bets {
+    padding: 1.2rem;
+  }
+
+  .bet-item {
+    padding: 1rem;
+  }
+
   .potential-amount {
     font-size: 1.8rem;
   }
+
+  .empty-state {
+    padding: 2rem 1rem;
+  }
 }
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 0.3rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+    gap: 0.6rem;
+  }
+
+  .stat-icon {
+    font-size: 1.6rem;
+  }
+
+  .stat-content h3 {
+    font-size: 0.75rem;
+  }
+
+  .stat-value {
+    font-size: 1.3rem;
+  }
+
+  .stat-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .bet-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .confidence-selection {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .confidence-btn {
+    padding: 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .amount-input {
+    font-size: 1rem;
+    padding: 0.9rem;
+  }
+
+  .amount-helpers {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .helper-btn {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .bet-form {
+    gap: 1rem;
+  }
+
+  .place-bet-btn {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+  }
+
+  .active-bets {
+    padding: 1rem;
+  }
+
+  .active-bets h3 {
+    font-size: 1.1rem;
+  }
+
+  .bet-item {
+    padding: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .bet-header {
+    font-size: 0.9rem;
+  }
+
+  .bet-details {
+    font-size: 0.85rem;
+  }
+
+  .potential-amount {
+    font-size: 1.4rem;
+  }
+
+  .empty-state {
+    padding: 1.5rem 0.5rem;
+  }
+
+  .empty-state p:first-child {
+    font-size: 1rem;
+  }
+
+  .empty-subtitle {
+    font-size: 0.8rem;
