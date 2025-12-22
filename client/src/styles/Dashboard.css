@@ -365,7 +365,7 @@
 
 .currency-symbol {
   position: absolute;
-  left: 1.2rem;
+  left: 1rem;
   color: #ffd700;
   font-size: 1.2rem;
   font-weight: 700;
@@ -374,7 +374,7 @@
 
 .amount-input {
   width: 100%;
-  padding: 1rem 4rem 1rem 2.5rem;
+  padding: 1rem 4rem 1rem 3rem;
   background: #1e2139;
   border: 2px solid rgba(255, 215, 0, 0.2);
   border-radius: 8px;
