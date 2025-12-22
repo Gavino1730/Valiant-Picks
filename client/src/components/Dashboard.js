@@ -294,14 +294,6 @@ function Dashboard({ user }) {
 
       {/* Stats Overview */}
       <div className="stats-grid">
-        <div className="stat-card balance-card">
-          <div className="stat-icon">💰</div>
-          <div className="stat-content">
-            <h3>Current Balance</h3>
-            <p className="stat-value">{formatCurrency(balance)}</p>
-          </div>
-        </div>
-        
         <div className="stat-card">
           <div className="stat-icon">📊</div>
           <div className="stat-content">
