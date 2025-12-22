@@ -92,6 +92,27 @@ function BetList() {
     return bet.games.home_team === bet.selected_team ? bet.games.away_team : bet.games.home_team;
   };
 
+  const parseLocalDateOnly = (dateStr) => {
+    const [year, month, day] = (dateStr || '').split('-').map(Number);
+    if (Number.isInteger(year) && Number.isInteger(month) && Number.isInteger(day)) {
+      return new Date(year, month - 1, day);
+    }
+    const parsed = new Date(dateStr);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  };
+
+  const formatPlacedAt = (createdAt) => {
+    const date = new Date(createdAt);
+    if (Number.isNaN(date.getTime())) return 'Placed date unknown';
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+  };
+
   if (loading) {
     return (
       <div className="bet-list-container">
@@ -270,18 +291,10 @@ function BetList() {
 
               {/* Bet Footer */}
               <div className="bet-item-footer">
-                <span className="bet-date">
-                  📅 {new Date(bet.created_at).toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </span>
+                <span className="bet-date">📅 {formatPlacedAt(bet.created_at)}</span>
                 {bet.games?.game_date && (
                   <span className="game-date">
-                    🏀 Game: {new Date(bet.games.game_date).toLocaleDateString('en-US', { 
+                    🏀 Game: {(parseLocalDateOnly(bet.games.game_date) || new Date(bet.games.game_date)).toLocaleDateString('en-US', { 
                       month: 'short', 
                       day: 'numeric'
                     })}
