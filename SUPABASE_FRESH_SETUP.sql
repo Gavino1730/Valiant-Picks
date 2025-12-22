@@ -32,6 +32,8 @@ CREATE TABLE IF NOT EXISTS teams (
   coach_name TEXT,
   coach_email TEXT,
   coach_bio TEXT,
+  assistant_coach TEXT,
+  team_motto TEXT,
   schedule JSONB, -- JSON array of games
   players JSONB, -- JSON array of player objects
   created_at TIMESTAMP DEFAULT NOW(),
