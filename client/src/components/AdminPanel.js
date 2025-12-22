@@ -441,7 +441,7 @@ function AdminPanel() {
           Prop Bets
         </button>
         <button className={`tab-btn ${tab === 'bets' ? 'active' : ''}`} onClick={() => setTab('bets')}>
-          View All Bets
+          View All Picks
         </button>
         <button className={`tab-btn ${tab === 'users' ? 'active' : ''}`} onClick={() => setTab('users')}>
           Manage Users
@@ -889,7 +889,7 @@ function AdminPanel() {
                         type="text" 
                         value={option} 
                         onChange={(e) => handleOptionChange(index, e.target.value)}
-                        placeholder="e.g., Valley Catholic wins"
+                        placeholder="e.g., Valiants win"
                         style={{width: '100%'}}
                       />
                     </div>

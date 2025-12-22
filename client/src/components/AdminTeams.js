@@ -18,7 +18,7 @@ function AdminTeams() {
     return [
       {
         id: 'boys',
-        name: 'Valley Catholic Boys Basketball',
+        name: 'Valiants Boys Basketball',
         record_wins: 4,
         record_losses: 1,
         league_record: '0-0',
@@ -33,7 +33,7 @@ function AdminTeams() {
       },
       {
         id: 'girls',
-        name: 'Valley Catholic Girls Basketball',
+        name: 'Valiants Girls Basketball',
         record_wins: 4,
         record_losses: 1,
         league_record: '0-0',

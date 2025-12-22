@@ -93,13 +93,13 @@ function Games() {
         amount
       });
       
-      setMessage(`Bet placed successfully on ${choice.toUpperCase()}!`);
+      setMessage(`Pick placed successfully on ${choice.toUpperCase()}!`);
       setPropBetAmounts({});
       fetchBalance();
       
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
-      setMessage(err.response?.data?.error || 'Failed to place bet');
+      setMessage(err.response?.data?.error || 'Failed to place pick');
     }
   };
 
@@ -134,7 +134,7 @@ function Games() {
         odds: confidenceMultipliers[confidence]
       });
 
-      setMessage(`Bet placed successfully on ${team}!`);
+      setMessage(`Pick placed successfully on ${team}!`);
       setSelectedTeams(prev => ({ ...prev, [gameId]: '' }));
       setSelectedConfidence(prev => ({ ...prev, [gameId]: '' }));
       setBetAmounts(prev => ({ ...prev, [gameId]: '' }));
@@ -142,7 +142,7 @@ function Games() {
 
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
-      setMessage(err.response?.data?.error || 'Failed to place bet');
+      setMessage(err.response?.data?.error || 'Failed to place pick');
     }
   };
 
@@ -151,8 +151,8 @@ function Games() {
   return (
     <div className="games-page">
       <div className="page-header">
-        <h2>Available Bets</h2>
-        <p className="page-subtitle">Browse all upcoming games and prop bets</p>
+        <h2>Available Picks</h2>
+        <p className="page-subtitle">Browse all upcoming games and prop picks</p>
         <p className="balance-display">Your Balance: {formatCurrency(balance)}</p>
       </div>
 

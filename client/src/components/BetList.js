@@ -73,7 +73,7 @@ function BetList() {
       {/* Header Section */}
       <div className="bet-list-header">
         <div className="header-title">
-          <h1>My Bets</h1>
+          <h1>My Picks</h1>
           <p className="subtitle">Track your betting history and performance</p>
         </div>
       </div>
@@ -134,7 +134,7 @@ function BetList() {
           className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
           onClick={() => setFilter('all')}
         >
-          All Bets ({stats.total})
+          All Picks ({stats.total})
         </button>
         <button 
           className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}

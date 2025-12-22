@@ -91,13 +91,13 @@ function App() {
             Dashboard
           </button>
           <button onClick={() => handlePageChange('games')} className={page === 'games' ? 'active' : ''}>
-            Browse Bets
+            Browse Picks
           </button>
           <button onClick={() => handlePageChange('teams')} className={page === 'teams' ? 'active' : ''}>
             Teams
           </button>
           <button onClick={() => handlePageChange('bets')} className={page === 'bets' ? 'active' : ''}>
-            My Bets
+            My Picks
           </button>
           <button onClick={() => handlePageChange('leaderboard')} className={page === 'leaderboard' ? 'active' : ''}>
             Leaderboard
@@ -172,7 +172,7 @@ function App() {
             className={page === 'games' ? 'active' : ''}
           >
             <span className="menu-icon">🎲</span>
-            Browse Bets
+            Browse Picks
           </button>
           <button 
             onClick={() => handlePageChange('teams')} 
@@ -186,7 +186,7 @@ function App() {
             className={page === 'bets' ? 'active' : ''}
           >
             <span className="menu-icon">📝</span>
-            My Bets
+            My Picks
           </button>
           <button 
             onClick={() => handlePageChange('leaderboard')} 

@@ -145,7 +145,7 @@ function Leaderboard() {
           <p className="value">{users.length}</p>
         </div>
         <div className="overview-stat">
-          <h4>Total Bets Placed</h4>
+          <h4>Total Picks Placed</h4>
           <p className="value">{bets.length}</p>
         </div>
       </div>

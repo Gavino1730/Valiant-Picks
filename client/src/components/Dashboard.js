@@ -116,7 +116,7 @@ function Dashboard({ user }) {
       const userResponse = await apiClient.get('/users/profile');
       setBalance(userResponse.data.balance);
 
-      setMessage(`Bet placed successfully on ${selectedTeam}! Potential win: ${formatCurrency(amount * confidenceMultipliers[confidence])}`);
+      setMessage(`Pick placed successfully on ${selectedTeam}! Potential win: ${formatCurrency(amount * confidenceMultipliers[confidence])}`);
       setSelectedGameId('');
       setSelectedTeam('');
       setConfidence('');
@@ -149,7 +149,7 @@ function Dashboard({ user }) {
         <div className="stat-card">
           <div className="stat-icon">📊</div>
           <div className="stat-content">
-            <h3>Active Bets</h3>
+            <h3>Active Picks</h3>
             <p className="stat-value">{stats.activeBets}</p>
           </div>
         </div>
@@ -176,7 +176,7 @@ function Dashboard({ user }) {
 
       {/* Two Column Layout */}
       <div className="dashboard-grid">
-        {/* Left Column - Place Bet */}
+        {/* Left Column - Place Pick */}
         <div className="card bet-card">
           <h3>🎲 Place a Bet</h3>
           {message && (
@@ -329,7 +329,7 @@ function Dashboard({ user }) {
                   )}
 
                   <button type="submit" className="btn btn-bet" disabled={loading || !selectedTeam || !confidence || !amount || parseFloat(amount) <= 0}>
-                    {loading ? '⏳ Processing...' : '🎯 Place Bet'}
+                    {loading ? '⏳ Processing...' : '🎯 Place Pick'}
                   </button>
                 </div>
               )}
@@ -386,7 +386,7 @@ function Dashboard({ user }) {
                 ))}
               </div>
             ) : (
-              <p className="empty-text">No bets placed yet</p>
+              <p className="empty-text">No picks placed yet</p>
             )}
           </div>
         </div>

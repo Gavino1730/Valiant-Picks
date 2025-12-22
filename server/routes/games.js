@@ -28,7 +28,7 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
       const { data: newBoysTeam, error: boysError } = await supabase
         .from('teams')
         .insert([{
-          name: 'Valley Catholic Boys Basketball',
+          name: 'Valiants Boys Basketball',
           type: 'Boys Basketball',
           record_wins: 4,
           record_losses: 1,
@@ -46,7 +46,7 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
       const { data: newGirlsTeam, error: girlsError } = await supabase
         .from('teams')
         .insert([{
-          name: 'Valley Catholic Girls Basketball',
+          name: 'Valiants Girls Basketball',
           type: 'Girls Basketball',
           record_wins: 4,
           record_losses: 1,

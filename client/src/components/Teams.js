@@ -11,7 +11,7 @@ function Teams() {
     return [
       {
         id: 'boys',
-        name: 'Valley Catholic Boys Basketball',
+        name: 'Valiants Boys Basketball',
         type: 'Boys Basketball',
         record_wins: 4,
         record_losses: 1,
@@ -65,7 +65,7 @@ function Teams() {
       },
       {
         id: 'girls',
-        name: 'Valley Catholic Girls Basketball',
+        name: 'Valiants Girls Basketball',
         type: 'Girls Basketball',
         record_wins: 4,
         record_losses: 1,
@@ -251,7 +251,7 @@ function Teams() {
 
   return (
     <div className="teams-page">
-      <h1>Valley Catholic Basketball</h1>
+      <h1>Valiant Basketball</h1>
       
       <div className="tabs">
         <button 
