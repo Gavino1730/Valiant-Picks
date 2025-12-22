@@ -42,9 +42,10 @@ function AdminPanel() {
     title: '',
     description: '',
     teamType: 'General',
-    yesOdds: '',
-    noOdds: '',
-    expiresAt: ''
+    options: ['Option 1', 'Option 2'],
+    optionOdds: { 'Option 1': '', 'Option 2': '' },
+    expiresAt: '',
+    useCustomOptions: true
   });
 
   useEffect(() => {
@@ -246,19 +247,84 @@ function AdminPanel() {
   };
 
   const handlePropBetFormChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setPropBetForm(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleOptionChange = (index, value) => {
+    const newOptions = [...propBetForm.options];
+    newOptions[index] = value;
+    const newOdds = { ...propBetForm.optionOdds };
+    // Rename the key in odds object
+    const oldName = propBetForm.options[index];
+    delete newOdds[oldName];
+    newOdds[value] = newOdds[oldName] || '';
+    setPropBetForm(prev => ({
+      ...prev,
+      options: newOptions,
+      optionOdds: newOdds
+    }));
+  };
+
+  const handleOddsChange = (option, value) => {
+    setPropBetForm(prev => ({
+      ...prev,
+      optionOdds: {
+        ...prev.optionOdds,
+        [option]: value
+      }
+    }));
+  };
+
+  const addPropBetOption = () => {
+    const newOptionName = `Option ${propBetForm.options.length + 1}`;
+    setPropBetForm(prev => ({
+      ...prev,
+      options: [...prev.options, newOptionName],
+      optionOdds: {
+        ...prev.optionOdds,
+        [newOptionName]: ''
+      }
+    }));
+  };
+
+  const removePropBetOption = (index) => {
+    if (propBetForm.options.length <= 2) {
+      alert('You must have at least 2 options');
+      return;
+    }
+    const optionToRemove = propBetForm.options[index];
+    const newOptions = propBetForm.options.filter((_, i) => i !== index);
+    const newOdds = { ...propBetForm.optionOdds };
+    delete newOdds[optionToRemove];
+    setPropBetForm(prev => ({
+      ...prev,
+      options: newOptions,
+      optionOdds: newOdds
     }));
   };
 
   const handleCreatePropBet = async (e) => {
     e.preventDefault();
     try {
+      // Validate that all options have odds
+      for (const option of propBetForm.options) {
+        if (!propBetForm.optionOdds[option]) {
+          alert(`Please enter odds for "${option}"`);
+          return;
+        }
+      }
+
       // Convert empty expiresAt to null for database
       const payload = {
-        ...propBetForm,
+        title: propBetForm.title,
+        description: propBetForm.description,
+        teamType: propBetForm.teamType,
+        options: propBetForm.options,
+        optionOdds: propBetForm.optionOdds,
         expiresAt: propBetForm.expiresAt || null
       };
       await apiClient.post('/prop-bets', payload);
@@ -267,9 +333,10 @@ function AdminPanel() {
         title: '',
         description: '',
         teamType: 'General',
-        yesOdds: '',
-        noOdds: '',
-        expiresAt: ''
+        options: ['Option 1', 'Option 2'],
+        optionOdds: { 'Option 1': '', 'Option 2': '' },
+        expiresAt: '',
+        useCustomOptions: true
       });
       fetchPropBets();
     } catch (err) {
@@ -763,7 +830,7 @@ function AdminPanel() {
                   name="title" 
                   value={propBetForm.title} 
                   onChange={handlePropBetFormChange}
-                  placeholder="e.g., Will Valley Catholic win by 10+ points?"
+                  placeholder="e.g., Which team will win?"
                   required 
                 />
               </div>
@@ -798,32 +865,6 @@ function AdminPanel() {
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="yesOdds">Yes Odds *</label>
-                <input 
-                  id="yesOdds" 
-                  type="number" 
-                  step="0.01" 
-                  name="yesOdds" 
-                  value={propBetForm.yesOdds} 
-                  onChange={handlePropBetFormChange}
-                  placeholder="e.g., 1.75"
-                  required 
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="noOdds">No Odds *</label>
-                <input 
-                  id="noOdds" 
-                  type="number" 
-                  step="0.01" 
-                  name="noOdds" 
-                  value={propBetForm.noOdds} 
-                  onChange={handlePropBetFormChange}
-                  placeholder="e.g., 2.10"
-                  required 
-                />
-              </div>
-              <div className="form-group">
                 <label htmlFor="expiresAt">Expires At</label>
                 <input 
                   id="expiresAt" 
@@ -832,6 +873,56 @@ function AdminPanel() {
                   value={propBetForm.expiresAt} 
                   onChange={handlePropBetFormChange}
                 />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group full-width">
+                <label>Betting Options *</label>
+                <p style={{fontSize: '0.9rem', color: '#888a9b', marginBottom: '1rem'}}>Define custom options users can bet on</p>
+                
+                {propBetForm.options.map((option, index) => (
+                  <div key={index} style={{display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'flex-end'}}>
+                    <div style={{flex: 1}}>
+                      <label style={{fontSize: '0.85rem'}}>Option {index + 1} Name</label>
+                      <input 
+                        type="text" 
+                        value={option} 
+                        onChange={(e) => handleOptionChange(index, e.target.value)}
+                        placeholder="e.g., Valley Catholic wins"
+                        style={{width: '100%'}}
+                      />
+                    </div>
+                    <div style={{minWidth: '150px'}}>
+                      <label style={{fontSize: '0.85rem'}}>Odds</label>
+                      <input 
+                        type="number" 
+                        step="0.01" 
+                        value={propBetForm.optionOdds[option] || ''} 
+                        onChange={(e) => handleOddsChange(option, e.target.value)}
+                        placeholder="e.g., 1.75"
+                        style={{width: '100%'}}
+                      />
+                    </div>
+                    {propBetForm.options.length > 2 && (
+                      <button 
+                        type="button" 
+                        onClick={() => removePropBetOption(index)}
+                        style={{padding: '0.5rem 1rem', background: '#ef5350', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                ))}
+                
+                <button 
+                  type="button" 
+                  onClick={addPropBetOption}
+                  style={{marginTop: '0.5rem', padding: '0.5rem 1rem', background: '#66bb6a', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
+                >
+                  + Add Option
+                </button>
               </div>
             </div>
 

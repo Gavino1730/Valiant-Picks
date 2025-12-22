@@ -7,10 +7,25 @@ const PropBet = {
         title,
         description,
         teamType,
+        options = [],
+        optionOdds = {},
+        expiresAt,
+        // Legacy support for yesOdds/noOdds
         yesOdds,
-        noOdds,
-        expiresAt
+        noOdds
       } = propBetData;
+
+      // If options not provided but yesOdds/noOdds are, use legacy format
+      let finalOptions = options;
+      let finalOptionOdds = optionOdds;
+
+      if (!options || options.length === 0) {
+        finalOptions = ['Yes', 'No'];
+        finalOptionOdds = {
+          'Yes': parseFloat(yesOdds || 1.5),
+          'No': parseFloat(noOdds || 1.5)
+        };
+      }
 
       const { data, error } = await supabase
         .from('prop_bets')
@@ -18,8 +33,8 @@ const PropBet = {
           title,
           description,
           team_type: teamType,
-          yes_odds: yesOdds,
-          no_odds: noOdds,
+          options: finalOptions,
+          option_odds: finalOptionOdds,
           expires_at: expiresAt,
           status: 'active'
         }])
