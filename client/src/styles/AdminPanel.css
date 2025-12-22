@@ -50,3 +50,52 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* Mobile admin tab pills */
+.admin-mobile-nav {
+  display: none;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+  margin-bottom: 0.75rem;
+}
+
+.mobile-admin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.mobile-admin-pill.active {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #0d47a1;
+  border-color: rgba(255, 215, 0, 0.6);
+}
+
+.pill-icon {
+  font-size: 1.1rem;
+}
+
+.pill-label {
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .admin-mobile-nav {
+    display: flex;
+  }
+
+  .tabs {
+    display: none;
+  }
+}
