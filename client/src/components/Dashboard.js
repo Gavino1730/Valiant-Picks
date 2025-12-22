@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/Dashboard.css';
+import '../styles/Confetti.css';
 import { formatCurrency } from '../utils/currency';
+import Confetti from './Confetti';
 
 function Dashboard({ user }) {
   const [balance, setBalance] = useState(user?.balance || 0);
@@ -14,6 +16,10 @@ function Dashboard({ user }) {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [gamesLoading, setGamesLoading] = useState(true);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [winNotification, setWinNotification] = useState(null);
+  const [lossNotification, setLossNotification] = useState(null);
+  const [previousBets, setPreviousBets] = useState([]);
   const [stats, setStats] = useState({
     totalBets: 0,
     activeBets: 0,
@@ -32,6 +38,9 @@ function Dashboard({ user }) {
   useEffect(() => {
     fetchGames();
     fetchBets();
+    // Poll for bet updates every 10 seconds
+    const interval = setInterval(fetchBets, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const fetchGames = async () => {
@@ -51,7 +60,33 @@ function Dashboard({ user }) {
   };
 
   const fetchBets = async () => {
-    try {
+    tr
+      // Check for newly resolved bets
+      if (previousBets.length > 0) {
+        userBets.forEach(newBet => {
+          const oldBet = previousBets.find(b => b.id === newBet.id);
+          if (oldBet && oldBet.status === 'pending' && newBet.status === 'resolved') {
+            // Bet was just resolved
+            if (newBet.outcome === 'won') {
+              const profit = parseFloat(newBet.potential_win) - parseFloat(newBet.amount);
+              setWinNotification({ team: newBet.selected_team, amount: profit });
+              setShowConfetti(true);
+              setTimeout(() => {
+                setWinNotification(null);
+                setShowConfetti(false);
+              }, 3000);
+            } else if (newBet.outcome === 'lost') {
+              setLossNotification({ team: newBet.selected_team, amount: newBet.amount });
+              setTimeout(() => {
+                setLossNotification(null);
+              }, 2500);
+            }
+          }
+        });
+      }
+      
+      setPreviousBets(userBets);
+      y {
       const response = await apiClient.get('/bets');
       const userBets = response.data || [];
       setBets(userBets);
@@ -107,6 +142,25 @@ function Dashboard({ user }) {
         selectedTeam,
         confidence,
         amount: betAmount,
+      <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
+      
+      {winNotification && (
+        <div className="win-notification">
+          <span className="win-notification-emoji">🎉</span>
+          <div>You Won!</div>
+          <div className="win-notification-amount">+{formatCurrency(winNotification.amount)}</div>
+          <div style={{fontSize: '1.2rem', marginTop: '0.5rem'}}>{winNotification.team}</div>
+        </div>
+      )}
+      
+      {lossNotification && (
+        <div className="loss-notification">
+          <span className="loss-notification-emoji">😔</span>
+          <div>Better luck next time!</div>
+          <div style={{fontSize: '1rem', marginTop: '0.5rem', opacity: 0.9}}>-{formatCurrency(lossNotification.amount)}</div>
+        </div>
+      )}
+      
         odds: confidenceMultipliers[confidence],
       };
 
@@ -320,7 +374,7 @@ function Dashboard({ user }) {
                   </div>
 
                   {confidence && amount && parseFloat(amount) > 0 && (
-                    <div className="potential-win-card">
+                    <div className="potential-{`recent-bet-item ${bet.outcome === 'won' ? 'win-animation' : ''} ${bet.outcome === 'lost' ? 'loss-animation' : ''}`}
                       <div className="potential-label">Potential Payout</div>
                       <div className="potential-amount">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</div>
                       <div className="potential-profit">Profit: {formatCurrency(parseFloat(amount) * (confidenceMultipliers[confidence] - 1))}</div>

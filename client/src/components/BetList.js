@@ -1,23 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/BetList.css';
+import '../styles/Confetti.css';
 import { formatCurrency } from '../utils/currency';
+import Confetti from './Confetti';
 
 function BetList() {
   const [bets, setBets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all'); // all, pending, won, lost
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [winNotification, setWinNotification] = useState(null);
+  const [lossNotification, setLossNotification] = useState(null);
+  const [previousBets, setPreviousBets] = useState([]);
 
   useEffect(() => {
     fetchBets();
+    // Poll for bet updates every 10 seconds
+    const interval = setInterval(fetchBets, 10000);
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchBets = async () => {
     try {
       const response = await apiClient.get('/bets');
-      setBets(response.data);
+      const newBets = response.data;
+      
+      // Check for newly resolved bets
+      if (previousBets.length > 0) {
+        newBets.forEach(newBet => {
+          const oldBet = previousBets.find(b => b.id === newBet.id);
+          if (oldBet && oldBet.status === 'pending' && newBet.status === 'resolved') {
+            // Bet was just resolved
+            if (newBet.outcome === 'won') {
+              const profit = parseFloat(newBet.potential_win) - parseFloat(newBet.amount);
+              setWinNotification({ team: newBet.selected_team, amount: profit });
+              setShowConfetti(true);
+              setTimeout(() => {
+                setWinNotification(null);
+                setShowConfetti(false);
+              }, 3000);
+            } else if (newBet.outcome === 'lost') {
+              setLossNotification({ team: newBet.selected_team, amount: newBet.amount });
+              setTimeout(() => {
+                setLossNotification(null);
+              }, 2500);
+            }
+          }
+        });
+      }
+      
+      setPreviousBets(newBets);
+      setBets(newBets);
       setError('');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to fetch bets');
@@ -43,7 +79,26 @@ function BetList() {
     totalWinnings: bets.filter(b => b.outcome === 'won').reduce((sum, b) => sum + (parseFloat(b.potential_win || 0) - parseFloat(b.amount || 0)), 0)
   };
 
-  const getConfidenceColor = (betType) => {
+  cons<Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
+      
+      {winNotification && (
+        <div className="win-notification">
+          <span className="win-notification-emoji">🎉</span>
+          <div>You Won!</div>
+          <div className="win-notification-amount">+{formatCurrency(winNotification.amount)}</div>
+          <div style={{fontSize: '1.2rem', marginTop: '0.5rem'}}>{winNotification.team}</div>
+        </div>
+      )}
+      
+      {lossNotification && (
+        <div className="loss-notification">
+          <span className="loss-notification-emoji">😔</span>
+          <div>Better luck next time!</div>
+          <div style={{fontSize: '1rem', marginTop: '0.5rem', opacity: 0.9}}>-{formatCurrency(lossNotification.amount)}</div>
+        </div>
+      )}
+      
+      t getConfidenceColor = (betType) => {
     switch(betType?.toLowerCase()) {
       case 'low': return 'confidence-low';
       case 'medium': return 'confidence-medium';
@@ -124,7 +179,7 @@ function BetList() {
             </span>
           </div>
         </div>
-      </div>
+      </div> ${bet.outcome === 'won' ? 'win-animation' : ''} ${bet.outcome === 'lost' ? 'loss-animation' : ''}
 
       {error && <div className="alert alert-error">{error}</div>}
 
