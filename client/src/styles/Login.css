@@ -205,28 +205,33 @@
 }
 
 .password-input-wrapper {
+  position: relative;
   display: flex;
-  gap: 0.5rem;
-  align-items: stretch;
+  align-items: center;
 }
 
 .password-input-wrapper input {
-  flex: 1;
-  padding: 1rem 1.2rem;
+  width: 100%;
+  padding: 1rem 3.25rem 1rem 1.2rem;
 }
 
 .password-toggle {
   background: rgba(0, 79, 158, 0.1);
   border: 2px solid #d0d8e0;
   cursor: pointer;
-  padding: 0 1rem;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   transition: all 0.3s ease;
-  border-radius: 10px;
-  min-width: 52px;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
   flex-shrink: 0;
 }
 
@@ -238,7 +243,7 @@
 .password-toggle:focus {
   outline: 2px solid #0080d0;
   outline-offset: 2px;
-  border-radius: 10px;
+  border-radius: 50%;
   background: rgba(0, 79, 158, 0.2);
 }
 
@@ -356,6 +361,17 @@ form {
     padding: 12px;
   }
 
+  .password-input-wrapper input {
+    padding: 0.95rem 3rem 0.95rem 1rem;
+  }
+
+  .password-toggle {
+    width: 42px;
+    height: 42px;
+    right: 0.55rem;
+    font-size: 1.1rem;
+  }
+
   .form-group label {
     font-size: 14px;
   }
@@ -445,6 +461,16 @@ form {
     padding: 11px 12px;
     font-size: 16px;
     border-radius: 8px;
+  }
+
+  .password-input-wrapper input {
+    padding: 0.9rem 3rem 0.9rem 0.9rem;
+  }
+
+  .password-toggle {
+    width: 40px;
+    height: 40px;
+    right: 0.5rem;
   }
 
   button {
