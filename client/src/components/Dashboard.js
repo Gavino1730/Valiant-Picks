@@ -454,9 +454,16 @@ function Dashboard({ user }) {
                         type="number"
                         step="1"
                         min={balance > 0 ? 1 : 0}
-                        max={balance}
                         value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          const numeric = parseFloat(val);
+                          if (balance > 0 && !Number.isNaN(numeric) && numeric > balance) {
+                            setAmount(balance.toString());
+                          } else {
+                            setAmount(val);
+                          }
+                        }}
                         placeholder={balance > 0 ? 'Enter amount' : 'Balance too low'}
                         required
                         className="amount-input"
@@ -472,10 +479,10 @@ function Dashboard({ user }) {
                       </button>
                     </div>
                     <div className="amount-helpers">
-                      <button type="button" className="quick-amount" onClick={() => setAmount('10')} disabled={balance < 10}>10</button>
-                      <button type="button" className="quick-amount" onClick={() => setAmount('25')} disabled={balance < 25}>25</button>
-                      <button type="button" className="quick-amount" onClick={() => setAmount('50')} disabled={balance < 50}>50</button>
-                      <button type="button" className="quick-amount" onClick={() => setAmount('100')} disabled={balance < 100}>100</button>
+                      <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 10).toString())} disabled={balance < 10}>10</button>
+                      <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 25).toString())} disabled={balance < 25}>25</button>
+                      <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 50).toString())} disabled={balance < 50}>50</button>
+                      <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 100).toString())} disabled={balance < 100}>100</button>
                     </div>
                   </div>
 
