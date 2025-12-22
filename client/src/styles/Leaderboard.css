@@ -258,37 +258,57 @@
 }
 
 @media (max-width: 768px) {
+  .leaderboard {
+    padding: 0 1rem;
+  }
+
   .leaderboard h2 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
   }
 
   .leaderboard-card {
-    grid-template-columns: 1fr;
+    grid-template-columns: 60px 1fr;
     gap: 1rem;
-    padding: 1.2rem;
+    padding: 1rem;
   }
 
   .rank-section {
-    justify-content: flex-start;
+    justify-content: center;
+    grid-row: 1 / 3;
   }
 
   .rank-badge {
     width: 50px;
     height: 50px;
+    font-size: 1.3rem;
   }
 
   .user-section {
-    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
-    padding-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+  }
+
+  .user-name {
+    font-size: 1.1rem;
   }
 
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 0.875rem;
+    grid-column: 2;
+  }
+
+  .stat-item {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.75rem;
+    border-radius: 8px;
   }
 
   .stat-label {
     font-size: 0.7rem;
+    margin-bottom: 0.25rem;
   }
 
   .stat-value {
@@ -296,7 +316,7 @@
   }
 
   .stat-value.balance {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
 
   .leaderboard-stats {
@@ -305,21 +325,84 @@
   }
 
   .overview-stat {
-    padding: 1.5rem;
+    padding: 1.25rem;
+  }
+
+  .overview-stat h4 {
+    font-size: 0.95rem;
   }
 
   .overview-stat .value {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
+  .leaderboard {
+    padding: 0 0.5rem;
+  }
+
+  .leaderboard h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .leaderboard-card {
+    padding: 0.875rem;
+    gap: 0.75rem;
+  }
+
+  .rank-badge {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
   }
 
   .user-name {
-    font-size: 1.1rem;
+    font-size: 1rem;
+  }
+
+  .admin-badge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+
+  .stat-item {
+    padding: 0.625rem 0.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+  }
+
+  .stat-value {
+    font-size: 0.95rem;
+  }
+
+  .stat-value.balance {
+    font-size: 1.2rem;
+  }
+
+  .record {
+    font-size: 0.9rem;
+  }
+
+  .overview-stat {
+    padding: 1rem;
+  }
+
+  .overview-stat h4 {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .overview-stat .value {
+    font-size: 1.3rem;
   }
 }
 
