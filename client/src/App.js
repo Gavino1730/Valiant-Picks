@@ -75,10 +75,6 @@ function App() {
   // Get user data from state or localStorage
   const currentUser = user || (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US').format(amount || 0);
-  };
-
   return (
     <div className="app">
       <nav className="navbar">
@@ -118,9 +114,6 @@ function App() {
               <span className="notification-badge">{unreadCount}</span>
             )}
           </button>
-          <div className="balance-display">
-            <span className="balance-amount">{formatCurrency(currentUser?.balance)}</span>
-          </div>
           <div className="user-info">
             <span className="username">{currentUser?.username || 'User'}</span>
           </div>
