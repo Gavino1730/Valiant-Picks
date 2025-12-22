@@ -447,10 +447,11 @@
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #e0e0e0;
-  padding: 0.8rem;
+  padding: 1rem;
   border-radius: 8px;
   font-size: 1rem;
   width: 100%;
+  min-height: 48px;
 }
 
 .prop-bet-input:focus {
@@ -459,15 +460,16 @@
 }
 
 .prop-bet-btn {
-  padding: 0.8rem;
+  padding: 1rem;
   border: none;
   border-radius: 8px;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  min-height: 48px;
 }
 
 .yes-btn {
