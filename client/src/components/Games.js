@@ -154,7 +154,6 @@ function Games() {
       <div className="page-header">
         <h2>Available Picks</h2>
         <p className="page-subtitle">Browse all upcoming games and prop picks</p>
-        <p className="balance-display">Your Balance: {formatCurrency(balance)}</p>
       </div>
 
       {message && (
