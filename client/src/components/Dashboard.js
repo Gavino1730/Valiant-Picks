@@ -45,7 +45,12 @@ function Dashboard({ user }) {
   const buildGameStartDate = (game) => {
     if (!game?.game_date) return null;
 
-    const date = new Date(game.game_date);
+    // Parse as local date to avoid UTC shifting that pushes the day forward/backward
+    const [year, month, day] = (game.game_date || '').split('-').map(Number);
+    const date = Number.isInteger(year) && Number.isInteger(month) && Number.isInteger(day)
+      ? new Date(year, month - 1, day)
+      : new Date(game.game_date);
+
     if (Number.isNaN(date.getTime())) return null;
 
     if (game.game_time) {
@@ -59,6 +64,15 @@ function Dashboard({ user }) {
     }
 
     return date;
+  };
+
+  const parseLocalDateOnly = (dateStr) => {
+    const [year, month, day] = (dateStr || '').split('-').map(Number);
+    if (Number.isInteger(year) && Number.isInteger(month) && Number.isInteger(day)) {
+      return new Date(year, month - 1, day);
+    }
+    const parsed = new Date(dateStr);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
   };
 
   const getCountdown = (targetDate) => {
@@ -343,7 +357,7 @@ function Dashboard({ user }) {
                   <option value="">Choose a game...</option>
                   {games.map(game => (
                     <option key={game.id} value={game.id}>
-                      {game.home_team} vs {game.away_team} • {new Date(game.game_date).toLocaleDateString()} {formatTime(game.game_time)}
+                      {game.home_team} vs {game.away_team} • {parseLocalDateOnly(game.game_date)?.toLocaleDateString() || 'Date TBD'} {formatTime(game.game_time)}
                     </option>
                   ))}
                 </select>
@@ -354,7 +368,7 @@ function Dashboard({ user }) {
                   <div className="game-info-card">
                     <div className="game-header">
                       <span className="game-badge">{selectedGame.team_type}</span>
-                      <span className="game-date">{new Date(selectedGame.game_date).toLocaleDateString()} • {formatTime(selectedGame.game_time)}</span>
+                      <span className="game-date">{parseLocalDateOnly(selectedGame.game_date)?.toLocaleDateString() || 'Date TBD'} • {formatTime(selectedGame.game_time)}</span>
                     </div>
                     {selectedGameCountdown && (
                       <div className={`countdown-chip ${selectedGameCountdown.isPast ? 'countdown-closed' : ''}`} style={{marginTop: '0.35rem'}}>
@@ -490,7 +504,7 @@ function Dashboard({ user }) {
                     </div>
                     <div className="game-meta">
                       <span className="game-type-badge">{game.team_type?.replace(' Basketball', '')}</span>
-                      <span>{new Date(game.game_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                      <span>{parseLocalDateOnly(game.game_date)?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) || 'TBD'}</span>
                     </div>
                   </div>
                 ))}
