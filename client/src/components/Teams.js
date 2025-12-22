@@ -130,7 +130,7 @@ function Teams() {
         // Map API data and add IDs for tab selection
         const teamsData = response.data.map(team => ({
           ...team,
-          id: team.type === 'Boys Basketball' ? 'boys' : 'girls',
+          id: team.type && team.type.toLowerCase().includes('boy') ? 'boys' : 'girls',
           // Parse schedule JSON if it's a string, fallback to empty array if null
           schedule: team.schedule 
             ? (typeof team.schedule === 'string' ? JSON.parse(team.schedule) : team.schedule)
