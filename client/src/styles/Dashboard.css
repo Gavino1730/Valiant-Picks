@@ -310,16 +310,16 @@
 }
 
 .team-btn:hover {
-  border-color: rgba(255, 215, 0, 0.5);
+  border-color: rgba(41, 182, 246, 0.6);
   transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .team-btn.active {
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-  border-color: #ffd700;
-  color: #0d47a1;
-  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4);
+  background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+  border-color: #29b6f6;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(33, 150, 243, 0.4);
   transform: translateY(-2px);
 }
 
