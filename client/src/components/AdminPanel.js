@@ -49,6 +49,14 @@ function AdminPanel() {
     useCustomOptions: true
   });
 
+  const adminTabs = [
+    { key: 'games', label: 'Manage Games', icon: '🏀' },
+    { key: 'propbets', label: 'Prop Bets', icon: '🎯' },
+    { key: 'bets', label: 'View All Picks', icon: '📋' },
+    { key: 'users', label: 'Manage Users', icon: '🧑‍💼' },
+    { key: 'teams', label: 'Manage Teams', icon: '🛠️' }
+  ];
+
   useEffect(() => {
     fetchAllBets();
     fetchUsers();
@@ -433,6 +441,19 @@ function AdminPanel() {
       <h2>Admin Panel</h2>
       
       {error && <div className="alert alert-error">{error}</div>}
+
+      <div className="admin-mobile-nav">
+        {adminTabs.map((t) => (
+          <button
+            key={t.key}
+            className={`mobile-admin-pill ${tab === t.key ? 'active' : ''}`}
+            onClick={() => setTab(t.key)}
+          >
+            <span className="pill-icon">{t.icon}</span>
+            <span className="pill-label">{t.label}</span>
+          </button>
+        ))}
+      </div>
 
       <div className="tabs">
         <button className={`tab-btn ${tab === 'games' ? 'active' : ''}`} onClick={() => setTab('games')}>
