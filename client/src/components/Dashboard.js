@@ -29,11 +29,67 @@ function Dashboard({ user }) {
     winRate: 0,
     totalWinnings: 0
   });
+  const [now, setNow] = useState(Date.now());
 
   const confidenceMultipliers = {
     low: 1.2,
     medium: 1.5,
     high: 2.0
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const buildGameStartDate = (game) => {
+    if (!game?.game_date) return null;
+
+    const date = new Date(game.game_date);
+    if (Number.isNaN(date.getTime())) return null;
+
+    if (game.game_time) {
+      const parts = game.game_time.split(':').map(Number);
+      if (parts.length >= 2 && !parts.some(Number.isNaN)) {
+        date.setHours(parts[0]);
+        date.setMinutes(parts[1]);
+        date.setSeconds(parts[2] || 0);
+        date.setMilliseconds(0);
+      }
+    }
+
+    return date;
+  };
+
+  const getCountdown = (targetDate) => {
+    if (!targetDate || Number.isNaN(targetDate.getTime())) {
+      return { label: 'Start time TBD', isPast: false };
+    }
+
+    const diff = targetDate.getTime() - now;
+    if (diff <= 0) return { label: 'In progress', isPast: true };
+
+    const totalSeconds = Math.floor(diff / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (days > 0) return { label: `${days}d ${hours}h`, isPast: false };
+    if (hours > 0) return { label: `${hours}h ${minutes}m`, isPast: false };
+    return { label: `${minutes}m ${seconds.toString().padStart(2, '0')}s`, isPast: false };
+  };
+
+  const isGameLocked = (game) => {
+    const startDate = buildGameStartDate(game);
+    const normalizedStatus = (game?.status || '').toLowerCase();
+    const statusClosed = ['in progress', 'live', 'completed', 'final', 'resolved', 'closed', 'cancelled'].some((keyword) =>
+      normalizedStatus.includes(keyword)
+    );
+
+    if (statusClosed) return true;
+    if (startDate && Date.now() >= startDate.getTime()) return true;
+    return false;
   };
 
   const fetchGames = useCallback(async () => {
@@ -116,6 +172,8 @@ function Dashboard({ user }) {
   }, [fetchGames, fetchBets]);
 
   const selectedGame = selectedGameId ? games.find(g => g.id === parseInt(selectedGameId)) : null;
+  const selectedGameLocked = selectedGame ? isGameLocked(selectedGame) : false;
+  const selectedGameCountdown = selectedGame ? getCountdown(buildGameStartDate(selectedGame)) : null;
 
   const handlePlaceBet = async (e) => {
     e.preventDefault();
@@ -125,6 +183,12 @@ function Dashboard({ user }) {
     try {
       if (!selectedGame) {
         setMessage('Please select a game');
+        setLoading(false);
+        return;
+      }
+
+      if (isGameLocked(selectedGame)) {
+        setMessage('Betting closed for this game');
         setLoading(false);
         return;
       }
@@ -196,7 +260,7 @@ function Dashboard({ user }) {
       <div className="dashboard-intro card">
         <h2 className="intro-title">Welcome to Valiant Picks</h2>
         <p className="intro-body">
-          Make friendly picks on Valiant games, back your teams, and stay up to date on how the Valiants are doing across sports. It’s all for fun—track your picks, climb the leaderboard, and maybe snag some prizes along the way.
+          Make friendly picks on Valiant games, support your Valiants, and stay up to date on how the Valiants are doing across sports. It’s all for fun track, climb the leaderboard, no real money, and not meant to cause any trouble. Enjoy the game!
         </p>
       </div>
 
@@ -287,6 +351,11 @@ function Dashboard({ user }) {
                       <span className="game-badge">{selectedGame.team_type}</span>
                       <span className="game-date">{new Date(selectedGame.game_date).toLocaleDateString()} • {formatTime(selectedGame.game_time)}</span>
                     </div>
+                    {selectedGameCountdown && (
+                      <div className={`countdown-chip ${selectedGameCountdown.isPast ? 'countdown-closed' : ''}`} style={{marginTop: '0.35rem'}}>
+                        {selectedGameCountdown.isPast ? 'Betting closed' : `Starts in ${selectedGameCountdown.label}`}
+                      </div>
+                    )}
                     <div className="matchup">
                       <div className="team-item">{selectedGame.home_team}</div>
                       <div className="vs">VS</div>
@@ -391,7 +460,7 @@ function Dashboard({ user }) {
                     </div>
                   )}
 
-                  <button type="submit" className="btn btn-bet" disabled={loading || !selectedTeam || !confidence || !amount || parseFloat(amount) <= 0}>
+                  <button type="submit" className="btn btn-bet" disabled={loading || !selectedTeam || !confidence || !amount || parseFloat(amount) <= 0 || selectedGameLocked}>
                     {loading ? '⏳ Processing...' : '🎯 Place Pick'}
                   </button>
                 </div>

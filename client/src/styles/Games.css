@@ -328,6 +328,25 @@
   font-size: 1.2rem;
 }
 
+.countdown-chip {
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(102, 187, 106, 0.12);
+  color: #66bb6a;
+  font-weight: 700;
+  font-size: 0.9rem;
+  width: fit-content;
+}
+
+.countdown-closed {
+  background: rgba(239, 83, 80, 0.15);
+  color: #ef5350;
+}
+
 .game-notes {
   margin: 1rem 0;
   padding: 0.8rem;
@@ -438,6 +457,26 @@
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   margin: 1.5rem 0;
+}
+
+.prop-expiry-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.prop-expiry {
+  padding: 0.4rem 0.75rem;
+  border-radius: 12px;
+  background: rgba(102, 187, 106, 0.12);
+  color: #66bb6a;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.prop-expiry.expired {
+  background: rgba(239, 83, 80, 0.15);
+  color: #ef5350;
 }
 
 .prop-option-bet {

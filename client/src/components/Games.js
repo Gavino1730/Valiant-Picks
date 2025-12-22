@@ -16,6 +16,7 @@ function Games() {
   const [selectedTeams, setSelectedTeams] = useState({});
   const [selectedConfidence, setSelectedConfidence] = useState({});
   const [betAmounts, setBetAmounts] = useState({});
+  const [now, setNow] = useState(Date.now());
 
   const confidenceMultipliers = {
     low: 1.2,
@@ -29,6 +30,11 @@ function Games() {
     fetchBalance();
   }, []);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   const fetchBalance = async () => {
     try {
       const response = await apiClient.get('/users/profile');
@@ -37,11 +43,6 @@ function Games() {
       console.error('Error fetching balance:', err);
     }
   };
-
-  useEffect(() => {
-    fetchGames();
-    fetchPropBets();
-  }, []);
 
   const fetchGames = async () => {
     try {
@@ -74,7 +75,57 @@ function Games() {
     return date.toLocaleDateString('en-US', options);
   };
 
-  const handlePlacePropBet = async (propId, choice) => {
+  const buildDateFromParts = (game) => {
+    if (!game?.game_date) return null;
+
+    const date = new Date(game.game_date);
+    if (Number.isNaN(date.getTime())) return null;
+
+    if (game.game_time) {
+      const parts = game.game_time.split(':').map(Number);
+      if (parts.length >= 2 && !parts.some(Number.isNaN)) {
+        date.setHours(parts[0]);
+        date.setMinutes(parts[1]);
+        date.setSeconds(parts[2] || 0);
+        date.setMilliseconds(0);
+      }
+    }
+
+    return date;
+  };
+
+  const getCountdown = (targetDate) => {
+    if (!targetDate || Number.isNaN(targetDate.getTime())) {
+      return { label: 'Start time TBD', isPast: false };
+    }
+
+    const diff = targetDate.getTime() - now;
+    if (diff <= 0) return { label: 'In progress', isPast: true };
+
+    const totalSeconds = Math.floor(diff / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (days > 0) return { label: `${days}d ${hours}h`, isPast: false };
+    if (hours > 0) return { label: `${hours}h ${minutes}m`, isPast: false };
+    return { label: `${minutes}m ${seconds.toString().padStart(2, '0')}s`, isPast: false };
+  };
+
+  const isClosedStatus = (statusText = '') => {
+    const normalized = statusText.toLowerCase();
+    return ['in progress', 'live', 'completed', 'final', 'resolved', 'closed', 'cancelled'].some((keyword) =>
+      normalized.includes(keyword)
+    );
+  };
+
+  const handlePlacePropBet = async (propId, choice, isLocked) => {
+    if (isLocked) {
+      setMessage('This prop bet is closed');
+      return;
+    }
+
     const amount = parseFloat(propBetAmounts[`${propId}-${choice}`]);
     
     if (!amount || amount <= 0) {
@@ -111,7 +162,12 @@ function Games() {
     }));
   };
 
-  const handlePlaceGameBet = async (gameId) => {
+  const handlePlaceGameBet = async (gameId, isLocked) => {
+    if (isLocked) {
+      setMessage('Betting closed for this game');
+      return;
+    }
+
     const team = selectedTeams[gameId];
     const confidence = selectedConfidence[gameId];
     const amount = parseFloat(betAmounts[gameId]);
@@ -221,7 +277,12 @@ function Games() {
                     if (teamFilter === 'girls') return game.team_type?.toLowerCase().includes('girls');
                     return true;
                   })
-                  .map(game => (
+                  .map(game => {
+                    const startDate = buildDateFromParts(game);
+                    const countdown = getCountdown(startDate);
+                    const gameLocked = countdown.isPast || isClosedStatus(game.status);
+
+                    return (
                   <div key={game.id} className="game-card-display">
                     <div className="game-header">
                       <span className="game-sport">{game.team_type}</span>
@@ -259,6 +320,9 @@ function Games() {
                           <span className="detail-text">{game.location}</span>
                         </div>
                       )}
+                      <div className={`countdown-chip ${gameLocked ? 'countdown-closed' : ''}`}>
+                        {countdown.isPast ? 'Betting closed' : `Starts in ${countdown.label}`}
+                      </div>
                     </div>
 
                     {game.notes && (
@@ -330,11 +394,11 @@ function Games() {
                           style={{flex: 1, padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', fontSize: '1em'}}
                         />
                         <button
-                          onClick={() => handlePlaceGameBet(game.id)}
-                          disabled={!selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]}
-                          style={{padding: '10px 20px', background: '#1e88e5', border: 'none', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: 'bold', opacity: (!selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]) ? 0.5 : 1}}
+                          onClick={() => handlePlaceGameBet(game.id, gameLocked)}
+                          disabled={gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]}
+                          style={{padding: '10px 20px', background: '#1e88e5', border: 'none', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: 'bold', opacity: (gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]) ? 0.5 : 1}}
                         >
-                          Bet
+                          {gameLocked ? 'Closed' : 'Bet'}
                         </button>
                       </div>
 
@@ -345,7 +409,8 @@ function Games() {
                       )}
                     </div>
                   </div>
-                ))
+                    );
+                })
               )}
             </div>
           )}
@@ -357,7 +422,12 @@ function Games() {
                   <p>No prop bets available at the moment</p>
                 </div>
               ) : (
-                activePropBets.map(prop => (
+                activePropBets.map(prop => {
+                  const expiresAt = prop.expires_at ? new Date(prop.expires_at) : null;
+                  const countdown = getCountdown(expiresAt);
+                  const propLocked = countdown.isPast || prop.status !== 'active';
+
+                  return (
                   <div key={prop.id} className="prop-card">
                     <div className="prop-header">
                       <h3>{prop.title}</h3>
@@ -367,6 +437,12 @@ function Games() {
                     {prop.description && (
                       <p className="prop-description">{prop.description}</p>
                     )}
+
+                    <div className="prop-expiry-row">
+                      <span className={`prop-expiry ${propLocked ? 'expired' : ''}`}>
+                        {prop.expires_at ? (countdown.isPast ? 'Expired' : `Expires in ${countdown.label}`) : 'No expiry set'}
+                      </span>
+                    </div>
 
                     <div className="prop-betting-section">
                       <div className="prop-option-bet yes">
@@ -382,12 +458,14 @@ function Games() {
                           value={propBetAmounts[`${prop.id}-yes`] || ''}
                           onChange={(e) => handlePropAmountChange(prop.id, 'yes', e.target.value)}
                           className="prop-bet-input"
+                          disabled={propLocked}
                         />
                         <button
                           className="prop-bet-btn yes-btn"
-                          onClick={() => handlePlacePropBet(prop.id, 'yes')}
+                          onClick={() => handlePlacePropBet(prop.id, 'yes', propLocked)}
+                          disabled={propLocked}
                         >
-                          Bet YES
+                          {propLocked ? 'Closed' : 'Bet YES'}
                         </button>
                       </div>
 
@@ -404,12 +482,14 @@ function Games() {
                           value={propBetAmounts[`${prop.id}-no`] || ''}
                           onChange={(e) => handlePropAmountChange(prop.id, 'no', e.target.value)}
                           className="prop-bet-input"
+                          disabled={propLocked}
                         />
                         <button
                           className="prop-bet-btn no-btn"
-                          onClick={() => handlePlacePropBet(prop.id, 'no')}
+                          onClick={() => handlePlacePropBet(prop.id, 'no', propLocked)}
+                          disabled={propLocked}
                         >
-                          Bet NO
+                          {propLocked ? 'Closed' : 'Bet NO'}
                         </button>
                       </div>
                     </div>
@@ -420,7 +500,7 @@ function Games() {
                       </div>
                     )}
                   </div>
-                ))
+                })
               )}
             </div>
           )}

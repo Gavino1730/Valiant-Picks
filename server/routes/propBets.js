@@ -205,6 +205,13 @@ router.post('/place', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'This prop bet is no longer active' });
     }
 
+    const expiresAt = propBet.expires_at ? new Date(propBet.expires_at) : null;
+    const hasExpired = expiresAt && !Number.isNaN(expiresAt.getTime()) && Date.now() >= expiresAt.getTime();
+
+    if (hasExpired) {
+      return res.status(400).json({ error: 'This prop bet has expired' });
+    }
+
     // Check user balance
     const user = await User.findById(req.user.id);
     if (!user) {

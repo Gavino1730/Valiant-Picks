@@ -44,6 +44,40 @@ router.post('/', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Game not found' });
     }
 
+    // Prevent bets after the game has started or when the game is closed
+    const getGameStartDate = (gameRecord) => {
+      if (!gameRecord?.game_date) return null;
+
+      const date = new Date(gameRecord.game_date);
+      if (Number.isNaN(date.getTime())) return null;
+
+      if (gameRecord.game_time) {
+        const timeParts = gameRecord.game_time.split(':').map(Number);
+        if (timeParts.length >= 2 && !timeParts.some(Number.isNaN)) {
+          date.setHours(timeParts[0]);
+          date.setMinutes(timeParts[1]);
+          date.setSeconds(timeParts[2] || 0);
+          date.setMilliseconds(0);
+        }
+      }
+
+      return date;
+    };
+
+    const startDate = getGameStartDate(game);
+    const normalizedStatus = (game.status || '').toLowerCase();
+    const isClosedStatus = ['in progress', 'live', 'completed', 'final', 'resolved', 'closed', 'cancelled'].some(
+      (keyword) => normalizedStatus.includes(keyword)
+    );
+
+    if (isClosedStatus) {
+      return res.status(400).json({ error: 'Betting closed: game already started or finished' });
+    }
+
+    if (startDate && Date.now() >= startDate.getTime()) {
+      return res.status(400).json({ error: 'Betting closed: game already started' });
+    }
+
     // Get fresh balance from database to prevent race conditions
     const user = await User.findById(req.user.id);
     if (!user) {
