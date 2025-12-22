@@ -248,6 +248,31 @@
     font-size: 0.8rem;
   }
 
+  /* Fix bet input and button sizing */
+  input[type="number"] {
+    padding: 1rem !important;
+    font-size: 1rem !important;
+    min-height: 48px;
+  }
+
+  button[type="submit"],
+  .bet-button,
+  .place-bet-btn {
+    padding: 1rem 1.5rem !important;
+    font-size: 1rem !important;
+    min-height: 48px;
+    font-weight: 600;
+  }
+
+  .confidence-selection {
+    gap: 0.5rem;
+  }
+
+  .confidence-btn {
+    padding: 0.75rem !important;
+    font-size: 0.85rem !important;
+  }
+
   .tabs {
     gap: 0.3rem;
     margin-bottom: 1rem;
