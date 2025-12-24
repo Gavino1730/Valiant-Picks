@@ -11,7 +11,7 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
   }
 
   try {
-    // Get team IDs from database, create if they don't exist
+    // Get existing teams from database
     const { supabase } = require('../supabase');
     let { data: teams, error: teamsError } = await supabase
       .from('teams')
@@ -23,41 +23,11 @@ router.post('/seed-from-schedule', authenticateToken, async (req, res) => {
     let boysTeam = teams?.find(t => t.type === 'Boys Basketball');
     let girlsTeam = teams?.find(t => t.type === 'Girls Basketball');
 
-    // Create teams if they don't exist
-    if (!boysTeam) {
-      const { data: newBoysTeam, error: boysError } = await supabase
-        .from('teams')
-        .insert([{
-          name: 'Valiants Boys Basketball',
-          type: 'Boys Basketball',
-          record_wins: 4,
-          record_losses: 1,
-          ranking: 3,
-          coach_name: 'Bryan Fraser'
-        }])
-        .select()
-        .single();
-      
-      if (boysError) throw boysError;
-      boysTeam = newBoysTeam;
-    }
-
-    if (!girlsTeam) {
-      const { data: newGirlsTeam, error: girlsError } = await supabase
-        .from('teams')
-        .insert([{
-          name: 'Valiants Girls Basketball',
-          type: 'Girls Basketball',
-          record_wins: 4,
-          record_losses: 1,
-          ranking: 7,
-          coach_name: 'Nick Blechman'
-        }])
-        .select()
-        .single();
-      
-      if (girlsError) throw girlsError;
-      girlsTeam = newGirlsTeam;
+    // Check if teams exist, don't auto-create
+    if (!boysTeam || !girlsTeam) {
+      return res.status(400).json({ 
+        error: 'Teams not found. Please create "Boys Basketball" and "Girls Basketball" teams first in Manage Teams.'
+      });
     }
 
     // Hardcoded schedule data matching what's in teamsAdmin.js
@@ -567,11 +537,73 @@ router.delete('/:id', authenticateToken, async (req, res) => {
   }
 
   try {
+    const { supabase } = require('../supabase');
+    
+    // Get all bets for this game
+    const { data: bets, error: betsError } = await supabase
+      .from('bets')
+      .select('id, user_id, amount')
+      .eq('game_id', req.params.id);
+    
+    if (betsError) throw betsError;
+    
+    // Refund all users
+    if (bets && bets.length > 0) {
+      // Group by user_id to sum refunds
+      const refundMap = {};
+      bets.forEach(bet => {
+        if (!refundMap[bet.user_id]) {
+          refundMap[bet.user_id] = 0;
+        }
+        refundMap[bet.user_id] += bet.amount;
+      });
+      
+      // Update user balances and create transactions
+      for (const [userId, refundAmount] of Object.entries(refundMap)) {
+        // Update user balance
+        const { data: currentUser, error: userError } = await supabase
+          .from('users')
+          .select('balance')
+          .eq('id', userId)
+          .single();
+        
+        if (userError) throw userError;
+        
+        const newBalance = (currentUser.balance || 0) + refundAmount;
+        
+        const { error: updateError } = await supabase
+          .from('users')
+          .update({ balance: newBalance })
+          .eq('id', userId);
+        
+        if (updateError) throw updateError;
+        
+        // Create transaction record
+        const { error: transError } = await supabase
+          .from('transactions')
+          .insert([{
+            user_id: userId,
+            type: 'refund',
+            amount: refundAmount,
+            description: 'Refund for deleted game',
+            status: 'completed'
+          }]);
+        
+        if (transError) throw transError;
+      }
+    }
+    
+    // Now delete the game (bets will be cascade deleted)
     const result = await Game.delete(req.params.id);
     if (result.changes === 0) {
       return res.status(404).json({ error: 'Game not found' });
     }
-    res.json({ message: 'Game deleted' });
+    
+    res.json({ 
+      message: 'Game deleted and bets refunded',
+      betsRefunded: bets?.length || 0,
+      totalRefunded: bets?.reduce((sum, b) => sum + b.amount, 0) || 0
+    });
   } catch (err) {
     res.status(500).json({ error: 'Error deleting game: ' + err.message });
   }
@@ -610,14 +642,74 @@ router.delete('/bulk/delete-all', authenticateToken, async (req, res) => {
 
   try {
     const { supabase } = require('../supabase');
+    
+    // Get all bets
+    const { data: allBets, error: betsError } = await supabase
+      .from('bets')
+      .select('id, user_id, amount');
+    
+    if (betsError) throw betsError;
+    
+    // Refund all users
+    if (allBets && allBets.length > 0) {
+      // Group by user_id to sum refunds
+      const refundMap = {};
+      allBets.forEach(bet => {
+        if (!refundMap[bet.user_id]) {
+          refundMap[bet.user_id] = 0;
+        }
+        refundMap[bet.user_id] += bet.amount;
+      });
+      
+      // Update user balances and create transactions
+      for (const [userId, refundAmount] of Object.entries(refundMap)) {
+        // Update user balance
+        const { data: currentUser, error: userError } = await supabase
+          .from('users')
+          .select('balance')
+          .eq('id', userId)
+          .single();
+        
+        if (userError) throw userError;
+        
+        const newBalance = (currentUser.balance || 0) + refundAmount;
+        
+        const { error: updateError } = await supabase
+          .from('users')
+          .update({ balance: newBalance })
+          .eq('id', userId);
+        
+        if (updateError) throw updateError;
+        
+        // Create transaction record
+        const { error: transError } = await supabase
+          .from('transactions')
+          .insert([{
+            user_id: userId,
+            type: 'refund',
+            amount: refundAmount,
+            description: 'Refund for deleted games',
+            status: 'completed'
+          }]);
+        
+        if (transError) throw transError;
+      }
+    }
+    
+    // Now delete all games
     const { data, error } = await supabase
       .from('games')
       .delete()
-      .neq('id', 0); // Delete all games
+      .neq('id', 0);
     
     if (error) throw error;
 
-    res.json({ message: 'All games deleted' });
+    res.json({ 
+      message: 'All games deleted and bets refunded',
+      betsRefunded: allBets?.length || 0,
+      usersRefunded: Object.keys(allBets?.reduce((map, b) => (map[b.user_id] = true, map), {}) || {}).length,
+      totalRefunded: allBets?.reduce((sum, b) => sum + b.amount, 0) || 0
+    });
   } catch (err) {
     res.status(500).json({ error: 'Error deleting games: ' + err.message });
   }

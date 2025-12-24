@@ -831,23 +831,22 @@ function AdminPanel() {
                     {game.result && <p style={{margin: '5px 0', color: '#66bb6a'}}><strong>Winner:</strong> {game.result}</p>}
                   </div>
                   
-                  {game.status !== 'completed' && (
-                    <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)'}}>
-                      <label className="toggle-switch">
-                        <input 
-                          type="checkbox" 
-                          checked={game.is_visible !== false}
-                          onChange={() => handleToggleGameVisibility(game.id, game.is_visible !== false)}
-                        />
-                        <span className="toggle-slider"></span>
-                      </label>
-                      <button 
-                        className="btn" 
-                        style={{background: '#1e88e5', padding: '8px 14px', fontSize: '0.85em', flex: '1'}}
-                        onClick={() => handleEditGame(game)}
-                      >
-                        ✏️ Edit
-                      </button>
+                  <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)'}}>
+                    <label className="toggle-switch">
+                      <input 
+                        type="checkbox" 
+                        checked={game.is_visible !== false}
+                        onChange={() => handleToggleGameVisibility(game.id, game.is_visible !== false)}
+                      />
+                      <span className="toggle-slider"></span>
+                    </label>
+                    <button 
+                      className="btn" 
+                      style={{background: '#1e88e5', padding: '8px 14px', fontSize: '0.85em', flex: '1'}}
+                      onClick={() => handleEditGame(game)}
+                    >
+                      ✏️ Edit
+                    </button>
                       <button 
                         className="btn" 
                         style={{background: '#9c27b0', padding: '8px 14px', fontSize: '0.85em', flex: '1'}}
@@ -856,7 +855,6 @@ function AdminPanel() {
                         ⚙️ Set Outcome
                       </button>
                     </div>
-                  )}
                 </div>
               ))}
             </div>
