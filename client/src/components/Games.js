@@ -275,6 +275,143 @@ function Games() {
         </div>
       ) : (
         <>
+          {/* Prop Bets Section - Now Featured First */}
+          <div style={{marginBottom: '4rem', padding: '0 1rem'}}>
+            <div style={{textAlign: 'center', marginBottom: '2rem'}}>
+              <h3 style={{fontSize: '2rem', marginBottom: '0.5rem', color: '#ffd700', fontWeight: 800}}>🎯 FEATURED PROP PICKS</h3>
+              <p style={{color: '#b8c5d6', fontSize: '1.1rem'}}>Special betting opportunities available now</p>
+            </div>
+            {activePropBets.length === 0 ? (
+              <div className="empty-state">
+                <p>No prop bets available at the moment</p>
+              </div>
+            ) : (
+              <div className="props-grid featured">
+                {activePropBets.map(prop => {
+                  const expiresAt = prop.expires_at ? new Date(prop.expires_at) : null;
+                  const countdown = getCountdown(expiresAt);
+                  const propLocked = countdown.isPast || prop.status !== 'active';
+
+                  return (
+                  <div key={prop.id} className="prop-card featured">
+                    <div className="prop-header">
+                      <h3>{prop.title}</h3>
+                      <span className="prop-category">{prop.team_type}</span>
+                    </div>
+                    
+                    {prop.description && (
+                      <p className="prop-description">{prop.description}</p>
+                    )}
+
+                    <div className="prop-expiry-row">
+                      <span className={`prop-expiry ${propLocked ? 'expired' : ''}`}>
+                        {prop.expires_at ? (countdown.isPast ? 'Expired' : `Expires in ${countdown.label}`) : 'No expiry set'}
+                      </span>
+                    </div>
+
+                    <div className="prop-betting-section featured">
+                      {/* Determine if this is a custom options prop or legacy yes/no */}
+                      {prop.options && prop.options.length > 0 ? (
+                        // Custom options
+                        prop.options.map((option, idx) => {
+                          const optionKey = option.toLowerCase().replace(/\s+/g, '-');
+                          const odds = prop.option_odds ? prop.option_odds[option] : null;
+                          
+                          return (
+                            <div key={idx} className={`prop-option-bet ${idx === 0 ? 'yes' : 'no'}`}>
+                              <div className="option-header">
+                                <span className="option-label">{option}</span>
+                                <span className="option-odds">{odds || 1.5}x</span>
+                              </div>
+                              <input
+                                type="number"
+                                placeholder="Bet amount"
+                                min="0.01"
+                                step="0.01"
+                                value={propBetAmounts[`${prop.id}-${optionKey}`] || ''}
+                                onChange={(e) => handlePropAmountChange(prop.id, optionKey, e.target.value)}
+                                className="prop-bet-input"
+                                disabled={propLocked}
+                              />
+                              <button
+                                className={`prop-bet-btn ${idx === 0 ? 'yes' : 'no'}-btn`}
+                                onClick={() => handlePlacePropBet(prop.id, optionKey, propLocked)}
+                                disabled={propLocked}
+                              >
+                                {propLocked ? 'Closed' : `Bet ${option}`}
+                              </button>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        // Legacy yes/no options
+                        <>
+                          <div className="prop-option-bet yes">
+                            <div className="option-header">
+                              <span className="option-label">YES</span>
+                              <span className="option-odds">{prop.yes_odds}x</span>
+                            </div>
+                            <input
+                              type="number"
+                              placeholder="Bet amount"
+                              min="0.01"
+                              step="0.01"
+                              value={propBetAmounts[`${prop.id}-yes`] || ''}
+                              onChange={(e) => handlePropAmountChange(prop.id, 'yes', e.target.value)}
+                              className="prop-bet-input"
+                              disabled={propLocked}
+                            />
+                            <button
+                              className="prop-bet-btn yes-btn"
+                              onClick={() => handlePlacePropBet(prop.id, 'yes', propLocked)}
+                              disabled={propLocked}
+                            >
+                              {propLocked ? 'Closed' : 'Bet YES'}
+                            </button>
+                          </div>
+
+                          <div className="prop-option-bet no">
+                            <div className="option-header">
+                              <span className="option-label">NO</span>
+                              <span className="option-odds">{prop.no_odds}x</span>
+                            </div>
+                            <input
+                              type="number"
+                              placeholder="Bet amount"
+                              min="0.01"
+                              step="0.01"
+                              value={propBetAmounts[`${prop.id}-no`] || ''}
+                              onChange={(e) => handlePropAmountChange(prop.id, 'no', e.target.value)}
+                              className="prop-bet-input"
+                              disabled={propLocked}
+                            />
+                            <button
+                              className="prop-bet-btn no-btn"
+                              onClick={() => handlePlacePropBet(prop.id, 'no', propLocked)}
+                              disabled={propLocked}
+                            >
+                              {propLocked ? 'Closed' : 'Bet NO'}
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {prop.expires_at && (
+                      <div className="prop-expires">
+                        Expires: {new Date(prop.expires_at).toLocaleDateString()}
+                      </div>
+                    )}
+                  </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div style={{height: '2px', background: 'linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent)', margin: '3rem 0'}} />
+
           {/* Games Section */}
           <div style={{marginBottom: '3rem'}}>
             <h3 style={{fontSize: '1.5rem', marginBottom: '1.5rem', color: '#ffd700'}}>🏀 Team Bets ({games.length})</h3>
@@ -427,137 +564,6 @@ function Games() {
                 })
               )}
             </div>
-          </div>
-
-          {/* Prop Bets Section */}
-          <div style={{marginBottom: '3rem'}}>
-            <h3 style={{fontSize: '1.5rem', marginBottom: '1.5rem', color: '#ffd700'}}>🎯 Prop Bets ({activePropBets.length})</h3>
-            {activePropBets.length === 0 ? (
-              <div className="empty-state">
-                <p>No prop bets available at the moment</p>
-              </div>
-            ) : (
-              <div className="props-grid">
-                {activePropBets.map(prop => {
-                  const expiresAt = prop.expires_at ? new Date(prop.expires_at) : null;
-                  const countdown = getCountdown(expiresAt);
-                  const propLocked = countdown.isPast || prop.status !== 'active';
-
-                  return (
-                  <div key={prop.id} className="prop-card">
-                    <div className="prop-header">
-                      <h3>{prop.title}</h3>
-                      <span className="prop-category">{prop.team_type}</span>
-                    </div>
-                    
-                    {prop.description && (
-                      <p className="prop-description">{prop.description}</p>
-                    )}
-
-                    <div className="prop-expiry-row">
-                      <span className={`prop-expiry ${propLocked ? 'expired' : ''}`}>
-                        {prop.expires_at ? (countdown.isPast ? 'Expired' : `Expires in ${countdown.label}`) : 'No expiry set'}
-                      </span>
-                    </div>
-
-                    <div className="prop-betting-section">
-                      {/* Determine if this is a custom options prop or legacy yes/no */}
-                      {prop.options && prop.options.length > 0 ? (
-                        // Custom options
-                        prop.options.map((option, idx) => {
-                          const optionKey = option.toLowerCase().replace(/\s+/g, '-');
-                          const odds = prop.option_odds ? prop.option_odds[option] : null;
-                          
-                          return (
-                            <div key={idx} className={`prop-option-bet ${idx === 0 ? 'yes' : 'no'}`}>
-                              <div className="option-header">
-                                <span className="option-label">{option}</span>
-                                <span className="option-odds">{odds || 1.5}x</span>
-                              </div>
-                              <input
-                                type="number"
-                                placeholder="Bet amount"
-                                min="0.01"
-                                step="0.01"
-                                value={propBetAmounts[`${prop.id}-${optionKey}`] || ''}
-                                onChange={(e) => handlePropAmountChange(prop.id, optionKey, e.target.value)}
-                                className="prop-bet-input"
-                                disabled={propLocked}
-                              />
-                              <button
-                                className={`prop-bet-btn ${idx === 0 ? 'yes' : 'no'}-btn`}
-                                onClick={() => handlePlacePropBet(prop.id, optionKey, propLocked)}
-                                disabled={propLocked}
-                              >
-                                {propLocked ? 'Closed' : `Bet ${option}`}
-                              </button>
-                            </div>
-                          );
-                        })
-                      ) : (
-                        // Legacy yes/no options
-                        <>
-                          <div className="prop-option-bet yes">
-                            <div className="option-header">
-                              <span className="option-label">YES</span>
-                              <span className="option-odds">{prop.yes_odds}x</span>
-                            </div>
-                            <input
-                              type="number"
-                              placeholder="Bet amount"
-                              min="0.01"
-                              step="0.01"
-                              value={propBetAmounts[`${prop.id}-yes`] || ''}
-                              onChange={(e) => handlePropAmountChange(prop.id, 'yes', e.target.value)}
-                              className="prop-bet-input"
-                              disabled={propLocked}
-                            />
-                            <button
-                              className="prop-bet-btn yes-btn"
-                              onClick={() => handlePlacePropBet(prop.id, 'yes', propLocked)}
-                              disabled={propLocked}
-                            >
-                              {propLocked ? 'Closed' : 'Bet YES'}
-                            </button>
-                          </div>
-
-                          <div className="prop-option-bet no">
-                            <div className="option-header">
-                              <span className="option-label">NO</span>
-                              <span className="option-odds">{prop.no_odds}x</span>
-                            </div>
-                            <input
-                              type="number"
-                              placeholder="Bet amount"
-                              min="0.01"
-                              step="0.01"
-                              value={propBetAmounts[`${prop.id}-no`] || ''}
-                              onChange={(e) => handlePropAmountChange(prop.id, 'no', e.target.value)}
-                              className="prop-bet-input"
-                              disabled={propLocked}
-                            />
-                            <button
-                              className="prop-bet-btn no-btn"
-                              onClick={() => handlePlacePropBet(prop.id, 'no', propLocked)}
-                              disabled={propLocked}
-                            >
-                              {propLocked ? 'Closed' : 'Bet NO'}
-                            </button>
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    {prop.expires_at && (
-                      <div className="prop-expires">
-                        Expires: {new Date(prop.expires_at).toLocaleDateString()}
-                      </div>
-                    )}
-                  </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         </>
       )}
