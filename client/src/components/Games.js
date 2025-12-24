@@ -555,8 +555,7 @@ function Games() {
                     )}
                   </div>
                   );
-                })
-              )}
+                })}
               </div>
             )}
           </div>
