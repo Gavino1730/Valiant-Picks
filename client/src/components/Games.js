@@ -432,12 +432,13 @@ function Games() {
           {/* Prop Bets Section */}
           <div style={{marginBottom: '3rem'}}>
             <h3 style={{fontSize: '1.5rem', marginBottom: '1.5rem', color: '#ffd700'}}>🎯 Prop Bets ({activePropBets.length})</h3>
-              {activePropBets.length === 0 ? (
-                <div className="empty-state">
-                  <p>No prop bets available at the moment</p>
-                </div>
-              ) : (
-                activePropBets.map(prop => {
+            {activePropBets.length === 0 ? (
+              <div className="empty-state">
+                <p>No prop bets available at the moment</p>
+              </div>
+            ) : (
+              <div className="props-grid">
+                {activePropBets.map(prop => {
                   const expiresAt = prop.expires_at ? new Date(prop.expires_at) : null;
                   const countdown = getCountdown(expiresAt);
                   const propLocked = countdown.isPast || prop.status !== 'active';
@@ -556,7 +557,8 @@ function Games() {
                   );
                 })
               )}
-            </div>
+              </div>
+            )}
           </div>
         </>
       )}
