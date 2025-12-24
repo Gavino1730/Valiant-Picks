@@ -323,13 +323,14 @@ form {
 }
 
 .modal-content {
-  background: white;
+  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   max-width: 400px;
   width: 90%;
   animation: slideUp 0.3s ease;
+  border: 1px solid rgba(255, 215, 0, 0.2);
 }
 
 @keyframes slideUp {
@@ -344,7 +345,7 @@ form {
 }
 
 .modal-content h3 {
-  color: #004f9e;
+  color: #ffd700;
   margin-bottom: 1.5rem;
   font-size: 1.3rem;
 }
