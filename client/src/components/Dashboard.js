@@ -321,7 +321,7 @@ function Dashboard({ user }) {
         <div style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '20px', borderRadius: '12px', border: '2px solid #9c27b0', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
           <div style={{fontSize: '1.8rem', marginBottom: '8px'}}>💰</div>
           <p style={{margin: '0 0 5px 0', color: '#ce93d8', fontSize: '0.8rem', fontWeight: '600', textTransform: 'uppercase'}}>Wagered</p>
-          <p style={{margin: '0', fontSize: '1.8rem', fontWeight: 'bold', color: '#ce93d8'}}>{formatCurrency(userBets.reduce((sum, b) => sum + (b.amount || 0), 0))}</p>
+          <p style={{margin: '0', fontSize: '1.8rem', fontWeight: 'bold', color: '#ce93d8'}}>{formatCurrency(bets.reduce((sum, b) => sum + (b.amount || 0), 0))}</p>
         </div>
         
         <div style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '20px', borderRadius: '12px', border: `2px solid ${stats.totalWinnings >= 0 ? '#66bb6a' : '#ef5350'}`, textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>

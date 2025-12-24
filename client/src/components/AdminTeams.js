@@ -12,6 +12,8 @@ function AdminTeams() {
   const [formData, setFormData] = useState({});
   const [newPlayer, setNewPlayer] = useState({ number: '', name: '', position: '', grade: '', height: '', bio: '' });
   const [editingPlayer, setEditingPlayer] = useState(null);
+  const [editingGameIdx, setEditingGameIdx] = useState(null);
+  const [editingGameData, setEditingGameData] = useState({ result: '', score: '' });
 
   // Hardcoded fallback teams data
   const getHardcodedTeams = useCallback(() => {
@@ -231,6 +233,44 @@ function AdminTeams() {
     setEditingPlayer(null);
   };
 
+  const handleEditScheduleGame = (idx) => {
+    const game = selectedTeam.schedule[idx];
+    setEditingGameIdx(idx);
+    setEditingGameData({ 
+      result: game.result || 'Scheduled', 
+      score: game.score || '-' 
+    });
+  };
+
+  const handleSaveScheduleGame = async () => {
+    if (editingGameIdx === null) return;
+
+    const updatedSchedule = [...selectedTeam.schedule];
+    updatedSchedule[editingGameIdx] = {
+      ...updatedSchedule[editingGameIdx],
+      result: editingGameData.result,
+      score: editingGameData.score
+    };
+
+    try {
+      const response = await apiClient.put(
+        `/teams/${selectedTeam.id}`,
+        { schedule: updatedSchedule }
+      );
+      
+      setSelectedTeam(response.data);
+      setEditingGameIdx(null);
+      alert('Game result updated!');
+    } catch (err) {
+      alert('Failed to update game: ' + err.message);
+    }
+  };
+
+  const handleCancelEditGame = () => {
+    setEditingGameIdx(null);
+    setEditingGameData({ result: '', score: '' });
+  };
+
   if (loading) return <div className="admin-teams"><p>Loading teams...</p></div>;
   
   // Ensure teams is always an array
@@ -410,10 +450,10 @@ function AdminTeams() {
 
           {activeTab === 'schedule' && (
             <div className="tab-content">
-              <h3>Game Schedule (View Only)</h3>
+              <h3>Game Schedule</h3>
               <div style={{background: 'rgba(33, 150, 243, 0.1)', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid rgba(33, 150, 243, 0.3)'}}>
                 <p style={{margin: 0, color: '#64b5f6'}}>
-                  📋 <strong>To manage games:</strong> Use the "Manage Games" tab to create, edit, and set betting odds for games.
+                  📋 <strong>Edit Schedule:</strong> Click on a game row to edit the result and score. Games are seeded from schedules or manually created.
                 </p>
               </div>
 
@@ -430,6 +470,7 @@ function AdminTeams() {
                         <th>Time</th>
                         <th>Opponent</th>
                         <th>Location</th>
+                        <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -442,6 +483,15 @@ function AdminTeams() {
                           <td>{game.time}</td>
                           <td>{game.opponent}</td>
                           <td>{game.location}</td>
+                          <td>
+                            <button 
+                              className="btn" 
+                              style={{background: '#1e88e5', padding: '6px 12px', fontSize: '0.8em'}}
+                              onClick={() => handleEditScheduleGame(idx)}
+                            >
+                              ✏️ Edit
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -540,6 +590,54 @@ function AdminTeams() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Edit Game Modal */}
+      {editingGameIdx !== null && selectedTeam && (
+        <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
+          <div style={{background: '#161b2e', padding: '30px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', minWidth: '350px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)'}}>
+            <h3 style={{marginTop: 0, marginBottom: '20px', color: '#ffd700'}}>Edit Game Result</h3>
+            
+            <div style={{marginBottom: '20px'}}>
+              <label style={{display: 'block', marginBottom: '8px', color: '#b8c5d6', fontWeight: '600'}}>Result</label>
+              <select 
+                value={editingGameData.result}
+                onChange={(e) => setEditingGameData({ ...editingGameData, result: e.target.value })}
+                style={{width: '100%', padding: '10px', background: '#1e2139', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '6px', color: '#fff', fontSize: '1em'}}
+              >
+                <option value="Scheduled">Scheduled</option>
+                <option value="W">Won (W)</option>
+                <option value="L">Lost (L)</option>
+              </select>
+            </div>
+
+            <div style={{marginBottom: '20px'}}>
+              <label style={{display: 'block', marginBottom: '8px', color: '#b8c5d6', fontWeight: '600'}}>Score</label>
+              <input 
+                type="text"
+                placeholder="e.g., 85-72"
+                value={editingGameData.score}
+                onChange={(e) => setEditingGameData({ ...editingGameData, score: e.target.value })}
+                style={{width: '100%', padding: '10px', background: '#1e2139', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '6px', color: '#fff', fontSize: '1em', boxSizing: 'border-box'}}
+              />
+            </div>
+
+            <div style={{display: 'flex', gap: '10px'}}>
+              <button 
+                onClick={handleSaveScheduleGame}
+                style={{flex: 1, padding: '10px', background: '#66bb6a', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1em'}}
+              >
+                ✅ Save
+              </button>
+              <button 
+                onClick={handleCancelEditGame}
+                style={{flex: 1, padding: '10px', background: '#ef5350', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1em'}}
+              >
+                ❌ Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
