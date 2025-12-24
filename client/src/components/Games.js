@@ -8,7 +8,6 @@ function Games() {
   const [games, setGames] = useState([]);
   const [propBets, setPropBets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('games');
   const [balance, setBalance] = useState(0);
   const [propBetAmounts, setPropBetAmounts] = useState({});
   const [message, setMessage] = useState('');
@@ -228,23 +227,7 @@ function Games() {
         </div>
       )}
 
-      <div className="tabs">
-        <button 
-          className={`tab-btn ${activeTab === 'games' ? 'active' : ''}`}
-          onClick={() => setActiveTab('games')}
-        >
-          Games ({games.length})
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'props' ? 'active' : ''}`}
-          onClick={() => setActiveTab('props')}
-        >
-          Prop Bets ({activePropBets.length})
-        </button>
-      </div>
-
-      {activeTab === 'games' && (
-        <div className="filter-buttons" style={{marginBottom: '20px', display: 'flex', gap: '10px', justifyContent: 'center'}}>
+      <div className="filter-buttons" style={{marginBottom: '20px', display: 'flex', gap: '10px', justifyContent: 'center'}}>
           <button 
             className={`btn ${teamFilter === 'all' ? 'active' : ''}`}
             style={{padding: '8px 16px', background: teamFilter === 'all' ? '#1e88e5' : 'rgba(255,255,255,0.1)'}}
@@ -267,7 +250,6 @@ function Games() {
             Girls Basketball
           </button>
         </div>
-      )}
 
       {loading ? (
         <div className="games-grid">
@@ -293,7 +275,9 @@ function Games() {
         </div>
       ) : (
         <>
-          {activeTab === 'games' && (
+          {/* Games Section */}
+          <div style={{marginBottom: '3rem'}}>
+            <h3 style={{fontSize: '1.5rem', marginBottom: '1.5rem', color: '#ffd700'}}>🏀 Team Bets ({games.length})</h3>
             <div className="games-grid">
               {games.length === 0 ? (
                 <div className="empty-state">
@@ -443,10 +427,11 @@ function Games() {
                 })
               )}
             </div>
-          )}
+          </div>
 
-          {activeTab === 'props' && (
-            <div className="props-grid">
+          {/* Prop Bets Section */}
+          <div style={{marginBottom: '3rem'}}>
+            <h3 style={{fontSize: '1.5rem', marginBottom: '1.5rem', color: '#ffd700'}}>🎯 Prop Bets ({activePropBets.length})</h3>
               {activePropBets.length === 0 ? (
                 <div className="empty-state">
                   <p>No prop bets available at the moment</p>
@@ -572,7 +557,7 @@ function Games() {
                 })
               )}
             </div>
-          )}
+          </div>
         </>
       )}
     </div>
