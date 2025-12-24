@@ -146,6 +146,28 @@ npm start
 Server: http://localhost:5000  
 Client: http://localhost:3000
 
+## 🔄 Auto-Commit to GitHub
+
+The project includes automatic commit functionality to keep GitHub in sync with your development.
+
+### Quick Start
+```bash
+# Using Node.js (cross-platform)
+npm run auto-commit
+
+# Using PowerShell (Windows)
+.\auto-commit.ps1
+```
+
+The auto-commit service:
+- ✅ Watches for file changes
+- ✅ Debounces to avoid incomplete commits (3 second wait)
+- ✅ Automatically commits and pushes every change
+- ✅ Ignores build files, dependencies, and environment files
+- ✅ Works in the background
+
+For detailed setup and troubleshooting, see [AUTO_COMMIT_GUIDE.md](AUTO_COMMIT_GUIDE.md).
+
 ## 🌐 Production Deployment
 
 ### Backend (Railway)
