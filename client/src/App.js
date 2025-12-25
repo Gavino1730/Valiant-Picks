@@ -8,6 +8,8 @@ import Leaderboard from './components/Leaderboard';
 import Teams from './components/Teams';
 import Games from './components/Games';
 import Notifications from './components/Notifications';
+import { ToastProvider } from './components/ToastProvider';
+import './styles/Toast.css';
 import apiClient from './utils/axios';
 
 function App() {
@@ -69,13 +71,18 @@ function App() {
   };
 
   if (!token) {
-    return <Login onLogin={handleLogin} />;
+    return (
+      <ToastProvider>
+        <Login onLogin={handleLogin} />
+      </ToastProvider>
+    );
   }
 
   // Get user data from state or localStorage
   const currentUser = user || (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
 
   return (
+    <ToastProvider>
     <div className="app">
       <nav className="navbar">
         <div className="nav-brand" onClick={() => handlePageChange('dashboard')} style={{ cursor: 'pointer' }}>
@@ -237,6 +244,7 @@ function App() {
         </div>
       </footer>
     </div>
+    </ToastProvider>
   );
 }
 

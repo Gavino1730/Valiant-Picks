@@ -536,3 +536,31 @@ form {
     font-size: 14px;
   }
 }
+
+/* Validation Styles */
+.input-error {
+  border-color: #ef5350 !important;
+  background: rgba(239, 83, 80, 0.05) !important;
+}
+
+.error-message {
+  display: block;
+  color: #ef5350;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.4rem;
+  animation: slideDown 0.2s ease;
+}
+
+.password-strength {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.strength-meter {
+  height: 4px;
+  flex: 1;
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}

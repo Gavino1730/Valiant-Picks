@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import apiClient from '../utils/axios';
+import { validateUsername, validatePassword, validateEmail, getPasswordStrength } from '../utils/validation';
 import '../styles/Login.css';
 
 function Login({ onLogin, apiUrl }) {
@@ -9,9 +10,11 @@ function Login({ onLogin, apiUrl }) {
     email: '',
     password: '',
   });
+  const [validationErrors, setValidationErrors] = useState({});
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(null);
 
   const EyeIcon = ({ crossed = false }) => (
     <svg
@@ -51,22 +54,63 @@ function Login({ onLogin, apiUrl }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Real-time validation
+    let error = '';
+    if (name === 'username') {
+      error = validateUsername(value);
+    } else if (name === 'email' && isRegister) {
+      error = validateEmail(value);
+    } else if (name === 'password') {
+      error = validatePassword(value);
+      if (isRegister && value) {
+        setPasswordStrength(getPasswordStrength(value));
+      }
+    }
+    
+    if (error) {
+      setValidationErrors(prev => ({ ...prev, [name]: error }));
+    } else {
+      setValidationErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    // Validate before submitting
+    const usernameError = validateUsername(formData.username);
+    const passwordError = validatePassword(formData.password);
+    const emailError = isRegister ? validateEmail(formData.email) : '';
+    
+    const errors = {
+      username: usernameError,
+      password: passwordError,
+      ...(isRegister && { email: emailError })
+    };
+    
+    setValidationErrors(errors);
+    
+    if (Object.values(errors).some(e => e)) {
+      return;
+    }
+    
     setLoading(true);
 
     try {
       // Regular user login
       const endpoint = isRegister ? '/auth/register' : '/auth/login';
       
-      const response = await apiClient.post(endpoint, formData);
+      const response = await apiClient.post(endpoint, formData, {
+        timeout: 10000
+      });
       
       if (isRegister) {
         setError('');
         setFormData({ username: '', email: '', password: '' });
+        setValidationErrors({});
+        setPasswordStrength(null);
         setIsRegister(false);
         alert('Registration successful! Please login.');
       } else {
@@ -74,11 +118,15 @@ function Login({ onLogin, apiUrl }) {
       }
     } catch (err) {
       if (err.code === 'ECONNABORTED' || err.message.includes('timeout')) {
-        setError('Request timeout. Please check your connection.');
+        setError('Request timeout. Please check your connection and try again.');
+      } else if (err.response?.status === 409) {
+        setError('Username already exists. Please choose another.');
+      } else if (err.response?.status === 401) {
+        setError('Invalid username or password. Please try again.');
       } else if (err.response) {
-        setError(err.response?.data?.error || 'An error occurred');
+        setError(err.response?.data?.error || 'An error occurred. Please try again.');
       } else if (err.message === 'Network Error') {
-        setError('Network error. Please check your connection.');
+        setError('Network error. Please check your internet connection.');
       } else {
         setError('An error occurred. Please try again.');
       }
@@ -111,8 +159,13 @@ function Login({ onLogin, apiUrl }) {
               name="username"
               value={formData.username}
               onChange={handleChange}
+              className={validationErrors.username ? 'input-error' : ''}
               required
+              aria-describedby={validationErrors.username ? 'username-error' : undefined}
             />
+            {validationErrors.username && (
+              <span id="username-error" className="error-message">{validationErrors.username}</span>
+            )}
           </div>
 
           {isRegister && (
@@ -124,8 +177,13 @@ function Login({ onLogin, apiUrl }) {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                className={validationErrors.email ? 'input-error' : ''}
                 required
+                aria-describedby={validationErrors.email ? 'email-error' : undefined}
               />
+              {validationErrors.email && (
+                <span id="email-error" className="error-message">{validationErrors.email}</span>
+              )}
             </div>
           )}
 
@@ -138,7 +196,9 @@ function Login({ onLogin, apiUrl }) {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                className={validationErrors.password ? 'input-error' : ''}
                 required
+                aria-describedby={validationErrors.password ? 'password-error' : undefined}
               />
               <button
                 type="button"
@@ -149,9 +209,25 @@ function Login({ onLogin, apiUrl }) {
                 <EyeIcon crossed={!showPassword} />
               </button>
             </div>
+            {validationErrors.password && (
+              <span id="password-error" className="error-message">{validationErrors.password}</span>
+            )}
+            {isRegister && passwordStrength && (
+              <div className="password-strength" style={{marginTop: '0.5rem'}}>
+                <div className="strength-meter" style={{background: passwordStrength.score < 2 ? '#ef5350' : passwordStrength.score < 4 ? '#ffb74d' : '#66bb6a'}}></div>
+                <span style={{fontSize: '0.85rem', color: passwordStrength.score < 2 ? '#ef5350' : passwordStrength.score < 4 ? '#ffb74d' : '#66bb6a'}}>
+                  Strength: {passwordStrength.label}
+                </span>
+              </div>
+            )}
           </div>
 
-          <button type="submit" className="btn" disabled={loading}>
+          <button 
+            type="submit" 
+            className="btn" 
+            disabled={loading || Object.values(validationErrors).some(e => e)}
+            aria-busy={loading}
+          >
             {loading ? 'Loading...' : (isRegister ? 'Register' : 'Login')}
           </button>
         </form>
