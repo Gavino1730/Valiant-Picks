@@ -18,7 +18,34 @@ class Team {
       .order('name');
 
     if (error) throw error;
-    return data;
+    
+    // Parse JSON fields for all teams
+    return data.map(team => {
+      let parsedSchedule = [];
+      let parsedPlayers = [];
+      
+      try {
+        if (team.schedule) {
+          parsedSchedule = typeof team.schedule === 'string' ? JSON.parse(team.schedule) : team.schedule;
+        }
+      } catch (e) {
+        console.error('Error parsing schedule for team', team.id, ':', e);
+      }
+      
+      try {
+        if (team.players) {
+          parsedPlayers = typeof team.players === 'string' ? JSON.parse(team.players) : team.players;
+        }
+      } catch (e) {
+        console.error('Error parsing players for team', team.id, ':', e);
+      }
+      
+      return {
+        ...team,
+        schedule: parsedSchedule,
+        players: parsedPlayers
+      };
+    });
   }
 
   static async getById(id) {
@@ -39,7 +66,22 @@ class Team {
 
     if (playersError) throw playersError;
 
-    return { ...team, players };
+    // Parse JSON fields
+    let parsedSchedule = [];
+    if (team.schedule) {
+      try {
+        parsedSchedule = typeof team.schedule === 'string' ? JSON.parse(team.schedule) : team.schedule;
+      } catch (e) {
+        console.error('Error parsing schedule:', e);
+        parsedSchedule = [];
+      }
+    }
+
+    return { 
+      ...team, 
+      schedule: parsedSchedule,
+      players 
+    };
   }
 
   static async update(id, updates) {
