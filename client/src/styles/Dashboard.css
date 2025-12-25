@@ -1008,7 +1008,6 @@
     font-size: 0.75rem;
     right: 0.5rem;
   }
-  }
 
   .amount-helpers {
     grid-template-columns: repeat(2, 1fr);
