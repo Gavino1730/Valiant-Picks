@@ -1,16 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import './App.css';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-import AdminPanel from './components/AdminPanel';
-import BetList from './components/BetList';
-import Leaderboard from './components/Leaderboard';
-import Teams from './components/Teams';
-import Games from './components/Games';
-import Notifications from './components/Notifications';
 import { ToastProvider } from './components/ToastProvider';
 import './styles/Toast.css';
 import apiClient from './utils/axios';
+
+// Lazy load admin and less-frequently-used components
+const AdminPanel = lazy(() => import('./components/AdminPanel'));
+const BetList = lazy(() => import('./components/BetList'));
+const Leaderboard = lazy(() => import('./components/Leaderboard'));
+const Teams = lazy(() => import('./components/Teams'));
+const Games = lazy(() => import('./components/Games'));
+const Notifications = lazy(() => import('./components/Notifications'));
+
+// Simple loading fallback
+const LoadingSpinner = () => (
+  <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
+    Loading...
+  </div>
+);
 
 function App() {
   const [user, setUser] = useState(null);
@@ -229,12 +238,14 @@ function App() {
 
       <div className="container">
         {page === 'dashboard' && <Dashboard user={user} />}
-        {page === 'games' && <Games />}
-        {page === 'teams' && <Teams />}
-        {page === 'bets' && <BetList />}
-        {page === 'leaderboard' && <Leaderboard />}
-        {page === 'notifications' && <Notifications />}
-        {page === 'admin' && user && user.is_admin && <AdminPanel />}
+        <Suspense fallback={<LoadingSpinner />}>
+          {page === 'games' && <Games />}
+          {page === 'teams' && <Teams />}
+          {page === 'bets' && <BetList />}
+          {page === 'leaderboard' && <Leaderboard />}
+          {page === 'notifications' && <Notifications />}
+          {page === 'admin' && user && user.is_admin && <AdminPanel />}
+        </Suspense>
       </div>
     </div>
     </ToastProvider>

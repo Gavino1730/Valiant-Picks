@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const compression = require('compression');
 require('dotenv').config();
 const bodyParser = require('body-parser');
 
@@ -14,6 +15,18 @@ const AUTH_RATE_LIMIT_MAX = parseInt(process.env.AUTH_RATE_LIMIT_MAX || '100', 1
 
 // Trust proxy - Required for Railway and other proxy services
 app.set('trust proxy', 1);
+
+// Enable gzip compression for all responses
+app.use(compression({
+  filter: (req, res) => {
+    // Compress responses larger than 1KB
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  },
+  level: 6 // Balance between speed and compression ratio (0-9, default is 6)
+}));
 
 // Rate limiting
 const limiter = RATE_LIMIT_ENABLED ? rateLimit({
