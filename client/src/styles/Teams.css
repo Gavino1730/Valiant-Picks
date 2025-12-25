@@ -360,16 +360,18 @@
   .team-section {
     padding: 1.25rem;
     margin-bottom: 2rem;
+    border-radius: 12px;
   }
 
   .tabs {
     gap: 0.75rem;
     margin-bottom: 1.5rem;
+    margin-top: 0.5rem;
     flex-wrap: wrap;
   }
 
   .tab-button {
-    padding: 0.75rem 1.25rem;
+    padding: 0.8rem 1.25rem;
     font-size: 0.95rem;
     flex: 1;
     min-width: 140px;
@@ -378,28 +380,30 @@
   .team-stats {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
   }
 
   .stat {
-    padding: 0.75rem;
+    padding: 0.9rem;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 8px;
   }
 
   .stat .label {
-    font-size: 0.75rem;
-    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.4rem;
   }
 
   .stat .value {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
 
   .coaching-staff,
   .team-description {
     padding: 1.25rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
   }
 
   .coaching-staff h3,
@@ -448,12 +452,13 @@
   .schedule-row {
     display: grid;
     gap: 6px;
+    margin-bottom: 0.5rem;
   }
 
   .schedule-row::before {
     content: "Game";
     font-weight: 600;
-    color: #004f9e;
+    color: #1f4e99;
     grid-column: 1 / -1;
   }
 
