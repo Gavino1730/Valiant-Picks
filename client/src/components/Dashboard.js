@@ -268,22 +268,25 @@ function Dashboard({ user }) {
     <div className="dashboard">
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
       
-      {winNotification && (
-        <div className="win-notification">
-          <span className="win-notification-emoji">🎉</span>
-          <div>You Won!</div>
-          <div className="win-notification-amount">+{formatCurrency(winNotification.amount)}</div>
-          <div style={{fontSize: '1.2rem', marginTop: '0.5rem'}}>{winNotification.team}</div>
-        </div>
-      )}
-      
-      {lossNotification && (
-        <div className="loss-notification">
-          <span className="loss-notification-emoji">😔</span>
-          <div>Better luck next time!</div>
-          <div style={{fontSize: '1rem', marginTop: '0.5rem', opacity: 0.9}}>-{formatCurrency(lossNotification.amount)}</div>
-        </div>
-      )}
+      {/* Reserve space for notifications to prevent layout shift */}
+      <div style={{minHeight: winNotification || lossNotification ? 'auto' : '80px', marginBottom: '1rem'}}>
+        {winNotification && (
+          <div className="win-notification">
+            <span className="win-notification-emoji">🎉</span>
+            <div>You Won!</div>
+            <div className="win-notification-amount">+{formatCurrency(winNotification.amount)}</div>
+            <div style={{fontSize: '1.2rem', marginTop: '0.5rem'}}>{winNotification.team}</div>
+          </div>
+        )}
+        
+        {lossNotification && (
+          <div className="loss-notification">
+            <span className="loss-notification-emoji">😔</span>
+            <div>Better luck next time!</div>
+            <div style={{fontSize: '1rem', marginTop: '0.5rem', opacity: 0.9}}>-{formatCurrency(lossNotification.amount)}</div>
+          </div>
+        )}
+      </div>
       
       <div className="dashboard-intro card">
         <h2 className="intro-title">Welcome to Valiant Picks</h2>
@@ -293,42 +296,41 @@ function Dashboard({ user }) {
       </div>
 
       {/* Stats Overview */}
-      <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '15px', marginBottom: '30px'}}>
-        <div style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '20px', borderRadius: '12px', border: '2px solid #2196f3', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}> 
-          <div style={{fontSize: '1.8rem', marginBottom: '8px'}}>📊</div>
-          <p style={{margin: '0 0 5px 0', color: '#64b5f6', fontSize: '0.8rem', fontWeight: '600', textTransform: 'uppercase'}}>Total Picks</p>
-          <p style={{margin: '0', fontSize: '1.8rem', fontWeight: 'bold', color: '#1f4e99'}}>{stats.totalBets}</p>
+      <div className="dashboard-stats-grid">
+        <div className="dashboard-stat-item total-picks">
+          <div className="stat-emoji">📊</div>
+          <p className="stat-label" style={{color: '#64b5f6'}}>Total Picks</p>
+          <p className="stat-value" style={{color: '#1f4e99'}}>{stats.totalBets}</p>
         </div>
         
-        <div style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '20px', borderRadius: '12px', border: '2px solid #ff9800', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-          <div style={{fontSize: '1.8rem', marginBottom: '8px'}}>⏳</div>
-          <p style={{margin: '0 0 5px 0', color: '#ffb74d', fontSize: '0.8rem', fontWeight: '600', textTransform: 'uppercase'}}>Pending</p>
-          <p style={{margin: '0', fontSize: '1.8rem', fontWeight: 'bold', color: '#ffb74d'}}>{stats.activeBets}</p>
+        <div className="dashboard-stat-item pending">
+          <div className="stat-emoji">⏳</div>
+          <p className="stat-label" style={{color: '#ffb74d'}}>Pending</p>
+          <p className="stat-value" style={{color: '#ffb74d'}}>{stats.activeBets}</p>
         </div>
         
-        <div style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '20px', borderRadius: '12px', border: '2px solid #66bb6a', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-          <div style={{fontSize: '1.8rem', marginBottom: '8px'}}>🏆</div>
-          <p style={{margin: '0 0 5px 0', color: '#81c784', fontSize: '0.8rem', fontWeight: '600', textTransform: 'uppercase'}}>Won</p>
-          <p style={{margin: '0', fontSize: '1.8rem', fontWeight: 'bold', color: '#81c784'}}>{stats.wonBets}</p>
+        <div className="dashboard-stat-item won">
+          <div className="stat-emoji">🏆</div>
+          <p className="stat-label" style={{color: '#81c784'}}>Won</p>
+          <p className="stat-value" style={{color: '#81c784'}}>{stats.wonBets}</p>
         </div>
         
-        <div style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '20px', borderRadius: '12px', border: '2px solid #ef5350', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-          <div style={{fontSize: '1.8rem', marginBottom: '8px'}}>❌</div>
-          <p style={{margin: '0 0 5px 0', color: '#e57373', fontSize: '0.8rem', fontWeight: '600', textTransform: 'uppercase'}}>Lost</p>
-          <p style={{margin: '0', fontSize: '1.8rem', fontWeight: 'bold', color: '#e57373'}}>{stats.lostBets}</p>
+        <div className="dashboard-stat-item lost">
+          <div className="stat-emoji">❌</div>
+          <p className="stat-label" style={{color: '#e57373'}}>Lost</p>
+          <p className="stat-value" style={{color: '#e57373'}}>{stats.lostBets}</p>
         </div>
         
-        <div style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '20px', borderRadius: '12px', border: '2px solid #9c27b0', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-          <div style={{fontSize: '1.8rem', marginBottom: '8px'}}>💰</div>
-          <p style={{margin: '0 0 5px 0', color: '#ce93d8', fontSize: '0.8rem', fontWeight: '600', textTransform: 'uppercase'}}>Wagered</p>
-          <p style={{margin: '0', fontSize: '1.8rem', fontWeight: 'bold', color: '#ce93d8'}}>{formatCurrency(bets.reduce((sum, b) => sum + (b.amount || 0), 0))}</p>
+        <div className="dashboard-stat-item wagered">
+          <div className="stat-emoji">💰</div>
+          <p className="stat-label" style={{color: '#ce93d8'}}>Wagered</p>
+          <p className="stat-value" style={{color: '#ce93d8'}}>{formatCurrency(bets.reduce((sum, b) => sum + (b.amount || 0), 0))}</p>
         </div>
         
-        <div style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '20px', borderRadius: '12px', border: `2px solid ${stats.totalWinnings >= 0 ? '#66bb6a' : '#ef5350'}`, textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-          <div style={{fontSize: '1.8rem', marginBottom: '8px'}}>💵</div>
-          <p style={{margin: '0 0 5px 0', color: stats.totalWinnings >= 0 ? '#81c784' : '#e57373', fontSize: '0.8rem', fontWeight: '600', textTransform: 'uppercase'}}>Profit</p>
-          <p style={{margin: '0', fontSize: '1.8rem', fontWeight: 'bold', color: stats.totalWinnings >= 0 ? '#81c784' : '#ef5350'}}>{stats.totalWinnings >= 0 ? '+' : ''}{formatCurrency(stats.totalWinnings)}</p>
-        </div>
+        <div className="dashboard-stat-item profit" style={{borderColor: stats.totalWinnings >= 0 ? '#66bb6a' : '#ef5350'}}>
+          <div className="stat-emoji">💵</div>
+          <p className="stat-label" style={{color: stats.totalWinnings >= 0 ? '#81c784' : '#e57373'}}>Profit</p>
+          <p className="stat-value" style={{color: stats.totalWinnings >= 0 ? '#81c784' : '#ef5350'}}>{stats.totalWinnings >= 0 ? '+' : ''}{formatCurrency(stats.totalWinnings)}</p>
       </div>
 
       {/* Two Column Layout */}
