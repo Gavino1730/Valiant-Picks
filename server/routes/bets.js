@@ -48,32 +48,27 @@ router.post('/', authenticateToken, async (req, res) => {
     const getGameStartDate = (gameRecord) => {
       if (!gameRecord?.game_date) return null;
 
-      // Parse as local date to avoid UTC shifting
-      const [year, month, day] = (gameRecord.game_date || '').split('-').map(Number);
-      const date = Number.isInteger(year) && Number.isInteger(month) && Number.isInteger(day)
-        ? new Date(year, month - 1, day)
-        : new Date(gameRecord.game_date);
-
-      if (Number.isNaN(date.getTime())) return null;
-
-      if (gameRecord.game_time) {
-        const timeParts = gameRecord.game_time.split(':').map(Number);
-        if (timeParts.length >= 2 && !timeParts.some(Number.isNaN)) {
-          date.setHours(timeParts[0]);
-          date.setMinutes(timeParts[1]);
-          date.setSeconds(timeParts[2] || 0);
-          date.setMilliseconds(0);
+      // Create date string in Pacific Time format (game times are Pacific Time)
+      const dateStr = `${gameRecord.game_date}T${gameRecord.game_time || '00:00:00'}-08:00`;
+      const date = new Date(dateStr);
+      
+      // Fallback: Parse manually if ISO string fails
+      if (Number.isNaN(date.getTime())) {
+        const [year, month, day] = (gameRecord.game_date || '').split('-').map(Number);
+        const fallbackDate = new Date(year, month - 1, day);
+        
+        if (gameRecord.game_time) {
+          const timeParts = gameRecord.game_time.split(':').map(Number);
+          if (timeParts.length >= 2 && !timeParts.some(Number.isNaN)) {
+            fallbackDate.setHours(timeParts[0]);
+            fallbackDate.setMinutes(timeParts[1]);
+            fallbackDate.setSeconds(timeParts[2] || 0);
+          }
         }
+        return fallbackDate;
       }
       
-      // Add timezone offset to convert from PST/PDT (assumed game time) to UTC
-      // Oregon is UTC-8 (PST) or UTC-7 (PDT)
-      // If server is in different timezone, this compensates
-      const localOffset = new Date().getTimezoneOffset(); // minutes difference from UTC
-      const oregonOffset = 480; // PST is UTC-8 (480 minutes)
-      const offsetDiff = (localOffset - oregonOffset) * 60 * 1000; // convert to milliseconds
-      
-      return new Date(date.getTime() + offsetDiff);
+      return date;
     };
 
     const startDate = getGameStartDate(game);
@@ -86,8 +81,8 @@ router.post('/', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Betting closed: game already started or finished' });
     }
 
-    // Allow betting until 5 minutes after scheduled start time (accounts for timezone issues and late starts)
-    const BETTING_GRACE_PERIOD = 5 * 60 * 1000; // 5 minutes in milliseconds
+    // Allow betting until 30 minutes AFTER scheduled start (games often start late, warmups, etc.)
+    const BETTING_GRACE_PERIOD = 30 * 60 * 1000; // 30 minutes
     if (startDate && Date.now() >= (startDate.getTime() + BETTING_GRACE_PERIOD)) {
       return res.status(400).json({ error: 'Betting closed: game already started' });
     }

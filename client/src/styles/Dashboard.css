@@ -391,6 +391,8 @@
   align-items: center;
   gap: 0.5rem;
   font-weight: 600;
+}
+
 .team-selection .team-btn:hover {
   border-color: rgba(41, 182, 246, 0.6);
   transform: translateY(-2px);
@@ -403,7 +405,6 @@
   color: #ffffff;
   box-shadow: 0 8px 24px rgba(33, 150, 243, 0.4);
   transform: translateY(-2px);
-}
 }
 
 .team-name {
