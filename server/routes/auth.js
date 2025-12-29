@@ -84,7 +84,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
       { id: user.id, username: user.username, is_admin: user.is_admin },
       process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '24h' }
+      { expiresIn: '30d' } // 30 days - users stay logged in for a month
     );
 
     res.json({ 
@@ -99,6 +99,52 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed. Please try again.' });
+  }
+});
+
+// Refresh token endpoint - get a new token without re-entering password
+router.post('/refresh', async (req, res) => {
+  try {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({ error: 'Token required' });
+    }
+
+    // Verify the token (even if expired, we can still decode it)
+    jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', async (err, decoded) => {
+      // If token is valid or just expired (not tampered), issue new token
+      if (err && err.name !== 'TokenExpiredError') {
+        return res.status(403).json({ error: 'Invalid token' });
+      }
+
+      // Get fresh user data
+      const user = await User.findById(decoded.id);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      // Issue new token
+      const newToken = jwt.sign(
+        { id: user.id, username: user.username, is_admin: user.is_admin },
+        process.env.JWT_SECRET || 'your-secret-key',
+        { expiresIn: '30d' }
+      );
+
+      res.json({ 
+        token: newToken, 
+        user: { 
+          id: user.id, 
+          username: user.username, 
+          balance: user.balance || 1000,
+          is_admin: user.is_admin || false 
+        } 
+      });
+    });
+  } catch (error) {
+    console.error('Token refresh error:', error);
+    res.status(500).json({ error: 'Token refresh failed' });
   }
 });
 
