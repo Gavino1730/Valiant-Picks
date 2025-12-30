@@ -150,6 +150,17 @@ function Login({ onLogin, apiUrl }) {
           <h2 className="brand-name">Valiant Picks</h2>
           <p className="brand-tagline">Your Premium Betting Platform</p>
         </div>
+
+        {!isRegister && (
+          <div className="toggle-form" style={{marginTop: '1.5rem', marginBottom: '1.5rem', paddingTop: 0, borderTop: 'none'}}>
+            <p className="toggle-text">
+              Don't have an account?
+            </p>
+            <button onClick={() => setIsRegister(true)} className="register-btn">
+              Create Account
+            </button>
+          </div>
+        )}
         
         <div className="login-header">
           <h1>{isRegister ? 'Register' : 'Login'}</h1>
@@ -239,14 +250,16 @@ function Login({ onLogin, apiUrl }) {
           </button>
         </form>
 
-        <div className="toggle-form">
-          <p className="toggle-text">
-            {isRegister ? 'Already have an account?' : "Don't have an account?"}
-          </p>
-          <button onClick={() => setIsRegister(!isRegister)} className="register-btn">
-            {isRegister ? 'Back to Login' : 'Create Account'}
-          </button>
-        </div>
+        {isRegister && (
+          <div className="toggle-form">
+            <p className="toggle-text">
+              Already have an account?
+            </p>
+            <button onClick={() => setIsRegister(false)} className="register-btn">
+              Back to Login
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

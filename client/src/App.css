@@ -34,7 +34,7 @@ body {
   gap: 1.5rem;
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 1100;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -515,7 +515,7 @@ table tbody tr:hover {
   bottom: 0;
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
-  z-index: 1000;
+  z-index: 1050;
   animation: fadeIn 0.3s ease;
 }
 
@@ -528,7 +528,7 @@ table tbody tr:hover {
   height: 100vh;
   background: linear-gradient(180deg, #0d47a1 0%, #1565c0 50%, #0d47a1 100%);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5);
-  z-index: 1001;
+  z-index: 1060;
   transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
@@ -661,7 +661,7 @@ table tbody tr:hover {
     justify-items: stretch;
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 1100;
   }
 
   .nav-brand {
@@ -755,7 +755,7 @@ table tbody tr:hover {
     grid-template-columns: 1fr auto;
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 1100;
   }
 
   .nav-brand {
