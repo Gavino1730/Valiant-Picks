@@ -577,26 +577,14 @@ function AdminPanel() {
                 Girls Basketball ({games.filter(g => g.team_type === 'Girls Basketball').length})
               </button>
             </div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                marginTop: '10px',
-                width: '100%',
-              }}
-            >
+            <div className="admin-game-actions">
               <button
                 type="button"
                 className="btn"
                 onClick={seedGamesFromSchedule}
                 style={{
                   background: 'linear-gradient(135deg, #66bb6a, #43a047)',
-                  padding: '12px 20px',
-                  width: '100%',
                   borderRadius: '999px',
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
                 }}
               >
                 📥 Seed from Schedules
@@ -607,11 +595,7 @@ function AdminPanel() {
                 onClick={() => toggleAllVisibility(true)}
                 style={{
                   background: 'linear-gradient(135deg, #29b6f6, #0288d1)',
-                  padding: '12px 20px',
-                  width: '100%',
                   borderRadius: '999px',
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
                 }}
               >
                 👁️ Show All
@@ -622,11 +606,7 @@ function AdminPanel() {
                 onClick={() => toggleAllVisibility(false)}
                 style={{
                   background: 'linear-gradient(135deg, #ffb300, #fb8c00)',
-                  padding: '12px 20px',
-                  width: '100%',
                   borderRadius: '999px',
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
                 }}
               >
                 🚫 Hide All
@@ -637,11 +617,7 @@ function AdminPanel() {
                 onClick={deleteAllGames}
                 style={{
                   background: 'linear-gradient(135deg, #ef5350, #e53935)',
-                  padding: '12px 20px',
-                  width: '100%',
                   borderRadius: '999px',
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
                 }}
               >
                 🗑️ Delete All
@@ -655,11 +631,7 @@ function AdminPanel() {
                     ? 'linear-gradient(135deg, #757575, #616161)'
                     : 'linear-gradient(135deg, #1e88e5, #1565c0)',
                   color: '#ffffff',
-                  padding: '12px 20px',
-                  width: '100%',
                   borderRadius: '999px',
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
                 }}
               >
                 {showCreateForm ? '✕ Close Form' : '+ Create Game'}
