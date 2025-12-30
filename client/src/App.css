@@ -21,6 +21,8 @@ body {
   background: linear-gradient(180deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
   /* Prevent scrollbar from causing layout shift */
   scrollbar-gutter: stable;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .navbar {
@@ -32,10 +34,12 @@ body {
   align-items: center;
   box-shadow: 0 8px 32px rgba(13, 71, 161, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);
   gap: 1.5rem;
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1100;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  width: 100%;
 }
 
 .nav-brand {
@@ -673,9 +677,11 @@ table tbody tr:hover {
     gap: 1rem;
     grid-template-columns: auto 1fr auto;
     justify-items: stretch;
+    position: -webkit-sticky;
     position: sticky;
     top: 0;
     z-index: 1100;
+    width: 100%;
   }
 
   .nav-brand {

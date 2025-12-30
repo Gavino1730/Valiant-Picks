@@ -432,7 +432,7 @@ function Games() {
                 })}
 
                 {/* Render Games */}
-                {                {/* Render Games */}                games
+                {games
                   .filter(game => {
                     if (teamFilter === 'all') return true;
                     if (teamFilter === 'boys') return game.team_type?.toLowerCase().includes('boys');
