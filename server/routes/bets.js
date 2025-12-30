@@ -44,6 +44,12 @@ router.post('/', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Game not found' });
     }
 
+    // Check if user already has a bet on this game
+    const existingBet = await Bet.findByUserAndGame(req.user.id, gameId);
+    if (existingBet) {
+      return res.status(400).json({ error: 'You have already placed a bet on this game' });
+    }
+
     // Prevent bets after the game has started or when the game is closed
     const getGameStartDate = (gameRecord) => {
       if (!gameRecord?.game_date) return null;

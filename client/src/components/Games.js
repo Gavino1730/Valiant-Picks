@@ -16,6 +16,7 @@ function Games() {
   const [selectedConfidence, setSelectedConfidence] = useState({});
   const [betAmounts, setBetAmounts] = useState({});
   const [now, setNow] = useState(Date.now());
+  const [userBets, setUserBets] = useState([]);
 
   const confidenceMultipliers = {
     low: 1.2,
@@ -27,6 +28,7 @@ function Games() {
     fetchGames();
     fetchPropBets();
     fetchBalance();
+    fetchUserBets();
   }, []);
 
   useEffect(() => {
@@ -40,6 +42,16 @@ function Games() {
       setBalance(response.data.balance);
     } catch (err) {
       console.error('Error fetching balance:', err);
+    }
+  };
+
+  const fetchUserBets = async () => {
+    try {
+      const response = await apiClient.get('/bets');
+      setUserBets(response.data || []);
+    } catch (err) {
+      console.error('Error fetching user bets:', err);
+      setUserBets([]);
     }
   };
 
@@ -66,6 +78,10 @@ function Games() {
       console.error('Error fetching prop bets:', err);
       setPropBets([]);
     }
+  };
+
+  const hasExistingBet = (gameId) => {
+    return userBets.some(bet => bet.game_id === gameId);
   };
 
   const parseLocalDateOnly = (dateStr) => {
@@ -177,6 +193,11 @@ function Games() {
       return;
     }
 
+    if (hasExistingBet(gameId)) {
+      setMessage('You have already placed a bet on this game');
+      return;
+    }
+
     const team = selectedTeams[gameId];
     const confidence = selectedConfidence[gameId];
     const amount = parseFloat(betAmounts[gameId]);
@@ -205,6 +226,7 @@ function Games() {
       setSelectedConfidence(prev => ({ ...prev, [gameId]: '' }));
       setBetAmounts(prev => ({ ...prev, [gameId]: '' }));
       fetchBalance();
+      fetchUserBets();
 
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
@@ -534,23 +556,30 @@ function Games() {
                         </button>
                       </div>
 
-                      <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
-                        <input
-                          type="number"
-                          placeholder="Bet amount"
-                          min="0.01"
-                          step="0.01"
-                          value={betAmounts[game.id] || ''}
-                          onChange={(e) => setBetAmounts({...betAmounts, [game.id]: e.target.value})}
-                          style={{flex: 1, padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', fontSize: '1em'}}
-                        />
-                        <button
-                          onClick={() => handlePlaceGameBet(game.id, gameLocked)}
-                          disabled={gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]}
-                          style={{padding: '10px 20px', background: '#1e88e5', border: 'none', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: 'bold', opacity: (gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]) ? 0.5 : 1}}
-                        >
-                          {gameLocked ? 'Closed' : 'Bet'}
-                        </button>
+                      {hasExistingBet(game.id) ? (
+                        <div style={{padding: '12px', background: 'rgba(102, 187, 106, 0.15)', border: '1px solid rgba(102, 187, 106, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#66bb6a', fontWeight: 'bold'}}>
+                          ✓ Bet Already Placed
+                        </div>
+                      ) : (
+                        <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+                          <input
+                            type="number"
+                            placeholder="Bet amount"
+                            min="0.01"
+                            step="0.01"
+                            value={betAmounts[game.id] || ''}
+                            onChange={(e) => setBetAmounts({...betAmounts, [game.id]: e.target.value})}
+                            style={{flex: 1, padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', fontSize: '1em'}}
+                          />
+                          <button
+                            onClick={() => handlePlaceGameBet(game.id, gameLocked)}
+                            disabled={gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]}
+                            style={{padding: '10px 20px', background: '#1e88e5', border: 'none', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: 'bold', opacity: (gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]) ? 0.5 : 1}}
+                          >
+                            {gameLocked ? 'Closed' : 'Bet'}
+                          </button>
+                        </div>
+                      )}
                       </div>
 
                       {selectedConfidence[game.id] && betAmounts[game.id] && (

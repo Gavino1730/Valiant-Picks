@@ -239,12 +239,14 @@ function Login({ onLogin, apiUrl }) {
           </button>
         </form>
 
-        <p className="toggle-form">
-          {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
-          <button onClick={() => setIsRegister(!isRegister)} className="link-btn">
-              {isRegister ? 'Login' : 'Register'}
-            </button>
+        <div className="toggle-form">
+          <p className="toggle-text">
+            {isRegister ? 'Already have an account?' : "Don't have an account?"}
           </p>
+          <button onClick={() => setIsRegister(!isRegister)} className="register-btn">
+            {isRegister ? 'Back to Login' : 'Create Account'}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard';
 import { ToastProvider } from './components/ToastProvider';
 import './styles/Toast.css';
 import apiClient from './utils/axios';
+import { formatCurrency } from './utils/currency';
 
 // Lazy load admin and less-frequently-used components
 const AdminPanel = lazy(() => import('./components/AdminPanel'));
@@ -128,6 +129,10 @@ function App() {
           )}
         </div>
         <div className="nav-right">
+          <div className="balance-display">
+            <span className="balance-label">Balance:</span>
+            <span className="balance-amount">{formatCurrency(currentUser?.balance || 0)}</span>
+          </div>
           <button 
             onClick={() => handlePageChange('notifications')} 
             className={`notification-icon-btn ${page === 'notifications' ? 'active' : ''}`}
@@ -169,6 +174,7 @@ function App() {
         <div className="mobile-menu-header">
           <div className="mobile-user-info">
             <div className="mobile-user-name">👤 {currentUser?.username || 'User'}</div>
+            <div className="mobile-balance">💰 {formatCurrency(currentUser?.balance || 0)}</div>
           </div>
           <button
             className="mobile-close-btn"

@@ -132,6 +132,22 @@ class Bet {
       throw new Error(`Error fetching all bets: ${err.message}`);
     }
   }
+
+  static async findByUserAndGame(userId, gameId) {
+    try {
+      const { data, error } = await supabase
+        .from('bets')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('game_id', gameId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+      return data;
+    } catch (err) {
+      throw new Error(`Error checking existing bet: ${err.message}`);
+    }
+  }
 }
 
 module.exports = Bet;

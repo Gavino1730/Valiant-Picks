@@ -32,7 +32,9 @@ body {
   align-items: center;
   box-shadow: 0 8px 32px rgba(13, 71, 161, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);
   gap: 1.5rem;
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -157,12 +159,20 @@ body {
 .balance-display {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
   padding: 0.65rem 1.4rem;
   background: linear-gradient(135deg, rgba(102, 187, 106, 0.15), rgba(67, 160, 71, 0.1));
   border: 1px solid rgba(102, 187, 106, 0.4);
   border-radius: 8px;
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 8px rgba(102, 187, 106, 0.15);
+}
+
+.balance-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .balance-amount {
@@ -649,6 +659,9 @@ table tbody tr:hover {
     gap: 1rem;
     grid-template-columns: auto 1fr auto;
     justify-items: stretch;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
 
   .nav-brand {
@@ -740,6 +753,9 @@ table tbody tr:hover {
   .navbar {
     padding: 0.7rem 0.75rem;
     grid-template-columns: 1fr auto;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
 
   .nav-brand {
