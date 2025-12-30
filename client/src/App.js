@@ -14,6 +14,7 @@ const Leaderboard = lazy(() => import('./components/Leaderboard'));
 const Teams = lazy(() => import('./components/Teams'));
 const Games = lazy(() => import('./components/Games'));
 const Notifications = lazy(() => import('./components/Notifications'));
+const HowToUse = lazy(() => import('./components/HowToUse'));
 
 // Simple loading fallback
 const LoadingSpinner = () => (
@@ -122,6 +123,9 @@ function App() {
           <button onClick={() => handlePageChange('leaderboard')} className={page === 'leaderboard' ? 'active' : ''}>
             Leaderboard
           </button>
+          <button onClick={() => handlePageChange('howto')} className={page === 'howto' ? 'active' : ''}>
+            How to Use
+          </button>
           {user && (user.is_admin || user.isAdminUser) && (
             <button onClick={() => handlePageChange('admin')} className={page === 'admin' ? 'active' : ''}>
               Admin
@@ -223,6 +227,20 @@ function App() {
             Leaderboard
           </button>
           <button 
+            onClick={() => handlePageChange('howto')} 
+            className={page === 'howto' ? 'active' : ''}
+          >
+            <span className="menu-icon">❓</span>
+            How to Use
+          </button>
+          <button 
+            onClick={() => handlePageChange('notifications')} 
+            className={page === 'notifications' ? 'active' : ''}
+          >
+            <span className="menu-icon">🏆</span>
+            Leaderboard
+          </button>
+          <button 
             onClick={() => handlePageChange('notifications')} 
             className={page === 'notifications' ? 'active' : ''}
           >
@@ -258,6 +276,7 @@ function App() {
           {page === 'bets' && <BetList />}
           {page === 'leaderboard' && <Leaderboard />}
           {page === 'notifications' && <Notifications />}
+          {page === 'howto' && <HowToUse onNavigate={handlePageChange} />}
           {page === 'admin' && user && user.is_admin && <AdminPanel />}
         </Suspense>
       </div>
