@@ -302,25 +302,23 @@ function Games() {
         </div>
       ) : (
         <>
-          {/* Prop Bets Section - Now Featured First */}
-          <div style={{marginBottom: '4rem', padding: '0 1rem'}}>
-            <div style={{textAlign: 'center', marginBottom: '2rem'}}>
-              <h3 style={{fontSize: '2rem', marginBottom: '0.5rem', color: '#1f4e99', fontWeight: 800}}>🎯 FEATURED PROP PICKS</h3>
-              <p style={{color: '#b8c5d6', fontSize: '1.1rem'}}>Special betting opportunities available now</p>
-            </div>
-            {activePropBets.length === 0 ? (
-              <div className="empty-state">
-                <p>No prop bets available at the moment</p>
-              </div>
-            ) : (
-              <div className="props-grid featured">
+          {/* All Picks - Games and Props Combined */}
+          <div style={{marginBottom: '3rem'}}>
+            <div className="games-grid">
+              {games.length === 0 && activePropBets.length === 0 ? (
+                <div className="empty-state">
+                  <p>No picks available at the moment</p>
+                </div>
+              ) : (
+                <>
+                {/* Render Prop Bets */}
                 {activePropBets.map(prop => {
                   const expiresAt = prop.expires_at ? new Date(prop.expires_at) : null;
                   const countdown = getCountdown(expiresAt);
                   const propLocked = countdown.isPast || prop.status !== 'active';
 
                   return (
-                  <div key={prop.id} className="prop-card featured">
+                  <div key={`prop-${prop.id}`} className="prop-card">
                     <div className="prop-header">
                       <h3>{prop.title}</h3>
                       <span className="prop-category">{prop.team_type}</span>
@@ -336,7 +334,7 @@ function Games() {
                       </span>
                     </div>
 
-                    <div className="prop-betting-section featured">
+                    <div className="prop-betting-section">
                       {/* Determine if this is a custom options prop or legacy yes/no */}
                       {prop.options && prop.options.length > 0 ? (
                         // Custom options
@@ -432,23 +430,9 @@ function Games() {
                   </div>
                   );
                 })}
-              </div>
-            )}
-          </div>
 
-          {/* Divider */}
-          <div style={{height: '2px', background: 'linear-gradient(90deg, transparent, rgba(31, 78, 153, 0.3), transparent)', margin: '3rem 0'}} />
-
-          {/* Games Section */}
-          <div style={{marginBottom: '3rem'}}>
-            <h3 style={{fontSize: '1.5rem', marginBottom: '1.5rem', color: '#1f4e99'}}>🏀 Team Bets ({games.length})</h3>
-            <div className="games-grid">
-              {games.length === 0 ? (
-                <div className="empty-state">
-                  <p>No games available at the moment</p>
-                </div>
-              ) : (
-                games
+                {/* Render Games */}
+                {                {/* Render Games */}                games
                   .filter(game => {
                     if (teamFilter === 'all') return true;
                     if (teamFilter === 'boys') return game.team_type?.toLowerCase().includes('boys');
@@ -601,7 +585,8 @@ function Games() {
                     </div>
                   </div>
                     );
-                })
+                })}
+                </>
               )}
             </div>
           </div>
