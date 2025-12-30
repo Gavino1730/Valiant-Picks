@@ -99,6 +99,90 @@
   letter-spacing: 0.5px;
 }
 
+/* Info Section */
+.info-section {
+  margin-bottom: 1.75rem;
+  margin-top: 0;
+  background: linear-gradient(135deg, rgba(31, 78, 153, 0.08), rgba(59, 130, 246, 0.05));
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(31, 78, 153, 0.2);
+}
+
+.info-card {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.info-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.info-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e9f1ff;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.3px;
+}
+
+.info-card p {
+  font-size: 0.9rem;
+  color: #b8c5d6;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.info-card p strong {
+  color: #66bb6a;
+  font-weight: 700;
+}
+
+.info-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(31, 78, 153, 0.06);
+  border-radius: 8px;
+  border: 1px solid rgba(31, 78, 153, 0.15);
+  transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+  background: rgba(31, 78, 153, 0.12);
+  border-color: rgba(31, 78, 153, 0.3);
+  transform: translateX(4px);
+}
+
+.feature-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.feature-item span:last-child {
+  color: #e9f1ff;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .login-header {
   display: flex;
   justify-content: space-between;
@@ -393,6 +477,32 @@ form {
     max-width: 95%;
   }
 
+  .info-section {
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .info-card h3 {
+    font-size: 1rem;
+  }
+
+  .info-card p {
+    font-size: 0.85rem;
+  }
+
+  .feature-item {
+    padding: 0.6rem;
+    gap: 0.6rem;
+  }
+
+  .feature-icon {
+    font-size: 1.15rem;
+  }
+
+  .feature-item span:last-child {
+    font-size: 0.85rem;
+  }
+
   .login-header h1 {
     font-size: 1.6rem;
   }
@@ -477,6 +587,47 @@ form {
   }
 
   .brand-tagline {
+    font-size: 0.8rem;
+  }
+
+  .info-section {
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .info-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .info-card {
+    margin-bottom: 1rem;
+  }
+
+  .info-card h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .info-card p {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .info-features {
+    gap: 0.6rem;
+  }
+
+  .feature-item {
+    padding: 0.5rem 0.6rem;
+    gap: 0.5rem;
+  }
+
+  .feature-icon {
+    font-size: 1rem;
+  }
+
+  .feature-item span:last-child {
     font-size: 0.8rem;
   }
 

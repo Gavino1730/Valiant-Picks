@@ -151,6 +151,31 @@ function Login({ onLogin, apiUrl }) {
           <p className="brand-tagline">Your Premium Betting Platform</p>
         </div>
 
+        {/* Info Section - What is Valiant Picks */}
+        <div className="info-section">
+          <div className="info-card">
+            <div className="info-icon">🎮</div>
+            <h3>Virtual Betting, Real Excitement</h3>
+            <p>
+              Place bets on Valiant Academy basketball games using virtual <strong>Valiant Bucks</strong> – no real money involved!
+            </p>
+          </div>
+          <div className="info-features">
+            <div className="feature-item">
+              <span className="feature-icon">💰</span>
+              <span>100% Free to Play</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">🏆</span>
+              <span>Compete on Leaderboards</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">🎯</span>
+              <span>Support Your Favorite Teams</span>
+            </div>
+          </div>
+        </div>
+
         {!isRegister && (
           <div className="toggle-form" style={{marginTop: '1.5rem', marginBottom: '1.5rem', paddingTop: 0, borderTop: 'none'}}>
             <p className="toggle-text">
