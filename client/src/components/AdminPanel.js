@@ -1509,7 +1509,7 @@ function AdminPanel() {
                       <td>
                         <button 
                           className="btn"
-                          style={{background: '#1e88e5', padding: '6px 12px', fontSize: '0.8em', marginRight: '5px'}}
+                          style={{background: '#1e88e5', padding: '10px 16px', fontSize: '0.9em', marginRight: '8px', minWidth: '110px'}}
                           onClick={() => {
                             setSelectedUser(u.id);
                             setNewBalance(u.balance.toString());
@@ -1519,7 +1519,7 @@ function AdminPanel() {
                         </button>
                         <button 
                           className="btn"
-                          style={{background: '#9c27b0', padding: '6px 12px', fontSize: '0.8em'}}
+                          style={{background: '#9c27b0', padding: '10px 16px', fontSize: '0.9em', minWidth: '110px'}}
                           onClick={() => {
                             setSelectedUser(u.id);
                           }}
