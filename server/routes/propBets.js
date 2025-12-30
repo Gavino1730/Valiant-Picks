@@ -35,15 +35,29 @@ router.post('/', authenticateToken, async (req, res) => {
     return res.status(403).json({ error: 'Only admins can create prop bets' });
   }
 
-  const { title, description, teamType, yesOdds, noOdds, expiresAt } = req.body;
+  const { title, description, teamType, yesOdds, noOdds, expiresAt, options, optionOdds } = req.body;
 
   // Validate required fields
   if (!title) {
     return res.status(400).json({ error: 'Missing required field: title' });
   }
 
-  if (!yesOdds || !noOdds) {
-    return res.status(400).json({ error: 'Both yesOdds and noOdds are required' });
+  // Support both old format (yesOdds/noOdds) and new format (options/optionOdds)
+  let finalYesOdds, finalNoOdds, finalOptionOdds;
+  
+  if (options && optionOdds) {
+    // New format: custom options
+    finalOptionOdds = optionOdds;
+    // Extract yes/no odds for backward compatibility
+    finalYesOdds = optionOdds[options[0]] || 1.5;
+    finalNoOdds = optionOdds[options[1]] || 1.5;
+  } else if (yesOdds && noOdds) {
+    // Old format: yesOdds/noOdds
+    finalYesOdds = yesOdds;
+    finalNoOdds = noOdds;
+    finalOptionOdds = { 'Yes': yesOdds, 'No': noOdds };
+  } else {
+    return res.status(400).json({ error: 'Please provide odds for all options' });
   }
 
   try {
@@ -51,8 +65,9 @@ router.post('/', authenticateToken, async (req, res) => {
       title,
       description,
       teamType: teamType || 'General',
-      yesOdds,
-      noOdds,
+      yesOdds: finalYesOdds,
+      noOdds: finalNoOdds,
+      optionOdds: finalOptionOdds,
       expiresAt
     });
 

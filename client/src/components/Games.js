@@ -580,7 +580,6 @@ function Games() {
                           </button>
                         </div>
                       )}
-                      </div>
 
                       {selectedConfidence[game.id] && betAmounts[game.id] && (
                         <div style={{marginTop: '10px', textAlign: 'center', color: '#1f4e99', fontWeight: 'bold'}}>

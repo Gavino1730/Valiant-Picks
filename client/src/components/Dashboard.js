@@ -491,10 +491,10 @@ function Dashboard({ user }) {
                       </button>
                     </div>
                     <div className="amount-helpers">
-                      <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 10).toString())} disabled={balance < 10}>10</button>
-                      <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 25).toString())} disabled={balance < 25}>25</button>
                       <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 50).toString())} disabled={balance < 50}>50</button>
                       <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 100).toString())} disabled={balance < 100}>100</button>
+                      <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 250).toString())} disabled={balance < 250}>250</button>
+                      <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 500).toString())} disabled={balance < 500}>500</button>
                     </div>
                   </div>
 

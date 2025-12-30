@@ -295,12 +295,13 @@ function AdminPanel() {
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...propBetForm.options];
+    const oldName = propBetForm.options[index];
     newOptions[index] = value;
     const newOdds = { ...propBetForm.optionOdds };
     // Rename the key in odds object
-    const oldName = propBetForm.options[index];
+    const oldOddsValue = newOdds[oldName] || '';
     delete newOdds[oldName];
-    newOdds[value] = newOdds[oldName] || '';
+    newOdds[value] = oldOddsValue;
     setPropBetForm(prev => ({
       ...prev,
       options: newOptions,
