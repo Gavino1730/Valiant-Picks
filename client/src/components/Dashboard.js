@@ -297,50 +297,30 @@ function Dashboard({ user }) {
           </div>
         )}
       </div>
-      
-      <div className="dashboard-intro card">
-        <h2 className="intro-title">Welcome to Valiant Picks</h2>
-        <p className="intro-body">
-          Make friendly picks on Valiant games, support your Valiants, and stay up to date on how the Valiants are doing across sports. It's all for fun—track your picks, climb the leaderboard, and compete. No real money involved, just friendly competition. Enjoy the game!
-        </p>
-      </div>
 
-      {/* Stats Overview */}
-      <div className="dashboard-stats-grid">
-        <div className="dashboard-stat-item total-picks">
-          <div className="stat-emoji">📊</div>
-          <p className="stat-label" style={{color: '#64b5f6'}}>Total Picks</p>
-          <p className="stat-value" style={{color: '#1f4e99'}}>{stats.totalBets}</p>
+      {/* Stats Overview - Compact */}
+      <div className="dashboard-stats-compact">
+        <div className="stat-compact">
+          <span className="stat-compact-value">{stats.totalBets}</span>
+          <span className="stat-compact-label">Total</span>
         </div>
-        
-        <div className="dashboard-stat-item pending">
-          <div className="stat-emoji">⏳</div>
-          <p className="stat-label" style={{color: '#ffb74d'}}>Pending</p>
-          <p className="stat-value" style={{color: '#ffb74d'}}>{stats.activeBets}</p>
+        <div className="stat-compact pending">
+          <span className="stat-compact-value">{stats.activeBets}</span>
+          <span className="stat-compact-label">Pending</span>
         </div>
-        
-        <div className="dashboard-stat-item won">
-          <div className="stat-emoji">🏆</div>
-          <p className="stat-label" style={{color: '#81c784'}}>Won</p>
-          <p className="stat-value" style={{color: '#81c784'}}>{stats.wonBets}</p>
+        <div className="stat-compact won">
+          <span className="stat-compact-value">{stats.wonBets}</span>
+          <span className="stat-compact-label">Won</span>
         </div>
-        
-        <div className="dashboard-stat-item lost">
-          <div className="stat-emoji">❌</div>
-          <p className="stat-label" style={{color: '#e57373'}}>Lost</p>
-          <p className="stat-value" style={{color: '#e57373'}}>{stats.lostBets}</p>
+        <div className="stat-compact lost">
+          <span className="stat-compact-value">{stats.lostBets}</span>
+          <span className="stat-compact-label">Lost</span>
         </div>
-        
-        <div className="dashboard-stat-item wagered">
-          <div className="stat-emoji">💰</div>
-          <p className="stat-label" style={{color: '#ce93d8'}}>Wagered</p>
-          <p className="stat-value" style={{color: '#ce93d8'}}>{formatCurrency(bets.reduce((sum, b) => sum + (b.amount || 0), 0))}</p>
-        </div>
-        
-        <div className="dashboard-stat-item profit" style={{borderColor: stats.totalWinnings >= 0 ? '#66bb6a' : '#ef5350'}}>
-          <div className="stat-emoji">💵</div>
-          <p className="stat-label" style={{color: stats.totalWinnings >= 0 ? '#81c784' : '#e57373'}}>Profit</p>
-          <p className="stat-value" style={{color: stats.totalWinnings >= 0 ? '#81c784' : '#ef5350'}}>{stats.totalWinnings >= 0 ? '+' : ''}{formatCurrency(stats.totalWinnings)}</p>
+        <div className="stat-compact profit" style={{borderColor: stats.totalWinnings >= 0 ? '#66bb6a' : '#ef5350'}}>
+          <span className="stat-compact-value" style={{color: stats.totalWinnings >= 0 ? '#81c784' : '#ef5350'}}>
+            {stats.totalWinnings >= 0 ? '+' : ''}{formatCurrency(stats.totalWinnings)}
+          </span>
+          <span className="stat-compact-label">Profit</span>
         </div>
       </div>
 

@@ -16,6 +16,71 @@
   }
 }
 
+/* Stats Compact - Single Row */
+.dashboard-stats-compact {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+  scrollbar-width: none;
+}
+
+.dashboard-stats-compact::-webkit-scrollbar {
+  display: none;
+}
+
+.stat-compact {
+  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  border: 2px solid #2196f3;
+  text-align: center;
+  min-width: 90px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.stat-compact:hover {
+  transform: translateY(-2px);
+}
+
+.stat-compact.pending {
+  border-color: #ff9800;
+}
+
+.stat-compact.won {
+  border-color: #66bb6a;
+}
+
+.stat-compact.lost {
+  border-color: #ef5350;
+}
+
+.stat-compact.profit {
+  border-color: #673ab7;
+  min-width: 110px;
+}
+
+.stat-compact-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.stat-compact-label {
+  font-size: 0.75rem;
+  color: #b8c5d6;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 /* Stats Grid - prevent layout shift */
 .dashboard-stats-grid {
   display: grid;
