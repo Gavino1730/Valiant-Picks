@@ -1509,6 +1509,82 @@ function AdminPanel() {
             </table>
           </div>
 
+          {/* Mobile Users List */}
+          <div className="users-mobile-list">
+            {users.map(u => {
+              const userBetsCount = allBets.filter(b => b.user_id === u.id).length;
+              const userWinnings = allBets
+                .filter(b => b.user_id === u.id && b.outcome === 'won')
+                .reduce((sum, b) => sum + (b.potential_win - b.amount), 0);
+              
+              return (
+                <div key={u.id} className={`user-card ${u.is_admin ? 'admin' : ''}`}>
+                  <div className="user-card-header">
+                    <div className="user-card-title">
+                      <h4 className="user-card-username">
+                        {u.is_admin && '👑 '}{u.username}
+                      </h4>
+                      <p className="user-card-email">{u.email}</p>
+                    </div>
+                    <span className={`user-card-badge ${u.is_admin ? 'admin' : 'user'}`}>
+                      {u.is_admin ? '👑 Admin' : '👤 User'}
+                    </span>
+                  </div>
+
+                  <div className="user-card-body">
+                    <div className="user-card-stat">
+                      <div className="user-card-stat-label">💰 Balance</div>
+                      <div className="user-card-stat-value balance">
+                        {formatCurrency(u.balance)}
+                      </div>
+                    </div>
+
+                    <div className="user-card-stat">
+                      <div className="user-card-stat-label">🎲 Bets Placed</div>
+                      <div className="user-card-stat-value">{userBetsCount}</div>
+                    </div>
+
+                    <div className="user-card-stat">
+                      <div className="user-card-stat-label">📈 Net Winnings</div>
+                      <div className={`user-card-stat-value ${userWinnings >= 0 ? 'positive' : 'negative'}`}>
+                        {userWinnings >= 0 ? '+' : ''}{formatCurrency(userWinnings)}
+                      </div>
+                    </div>
+
+                    <div className="user-card-stat">
+                      <div className="user-card-stat-label">📅 Joined</div>
+                      <div className="user-card-stat-value">
+                        {new Date(u.created_at).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="user-card-actions">
+                    <button 
+                      className="btn"
+                      style={{background: '#1e88e5'}}
+                      onClick={() => {
+                        setSelectedUser(u.id);
+                        setNewBalance(u.balance.toString());
+                      }}
+                    >
+                      💰 Balance
+                    </button>
+                    <button 
+                      className="btn"
+                      style={{background: '#9c27b0'}}
+                      onClick={() => {
+                        setSelectedUser(u.id);
+                      }}
+                    >
+                      ⚙️ Options
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
           {selectedUser && (
             <div className="modal-overlay" onClick={() => setSelectedUser(null)}>
               <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{minWidth: '400px'}}>
