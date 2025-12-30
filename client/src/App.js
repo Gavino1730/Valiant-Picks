@@ -161,6 +161,7 @@ function App() {
             <span></span>
             <span></span>
           </span>
+          <span className="menu-text">MENU</span>
         </button>
       </nav>
 
