@@ -577,44 +577,90 @@ function AdminPanel() {
                 Girls Basketball ({games.filter(g => g.team_type === 'Girls Basketball').length})
               </button>
             </div>
-            <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
-              <button 
-                type="button" 
-                className="btn" 
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                marginTop: '10px',
+                width: '100%',
+              }}
+            >
+              <button
+                type="button"
+                className="btn"
                 onClick={seedGamesFromSchedule}
-                style={{background: '#66bb6a', padding: '10px 20px'}}
+                style={{
+                  background: 'linear-gradient(135deg, #66bb6a, #43a047)',
+                  padding: '12px 20px',
+                  width: '100%',
+                  borderRadius: '999px',
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                }}
               >
                 📥 Seed from Schedules
               </button>
-              <button 
-                type="button" 
-                className="btn" 
+              <button
+                type="button"
+                className="btn"
                 onClick={() => toggleAllVisibility(true)}
-                style={{background: '#29b6f6', padding: '10px 20px'}}
+                style={{
+                  background: 'linear-gradient(135deg, #29b6f6, #0288d1)',
+                  padding: '12px 20px',
+                  width: '100%',
+                  borderRadius: '999px',
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                }}
               >
                 👁️ Show All
               </button>
-              <button 
-                type="button" 
-                className="btn" 
+              <button
+                type="button"
+                className="btn"
                 onClick={() => toggleAllVisibility(false)}
-                style={{background: '#ff9800', padding: '10px 20px'}}
+                style={{
+                  background: 'linear-gradient(135deg, #ffb300, #fb8c00)',
+                  padding: '12px 20px',
+                  width: '100%',
+                  borderRadius: '999px',
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                }}
               >
                 🚫 Hide All
               </button>
-              <button 
-                type="button" 
-                className="btn" 
+              <button
+                type="button"
+                className="btn"
                 onClick={deleteAllGames}
-                style={{background: '#ef5350', padding: '10px 20px'}}
+                style={{
+                  background: 'linear-gradient(135deg, #ef5350, #e53935)',
+                  padding: '12px 20px',
+                  width: '100%',
+                  borderRadius: '999px',
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                }}
               >
                 🗑️ Delete All
               </button>
-              <button 
-                type="button" 
-                className="btn" 
+              <button
+                type="button"
+                className="btn"
                 onClick={() => setShowCreateForm(!showCreateForm)}
-                style={{background: showCreateForm ? '#757575' : '#1f4e99', color: showCreateForm ? 'white' : '#ffffff', padding: '10px 20px'}}
+                style={{
+                  background: showCreateForm
+                    ? 'linear-gradient(135deg, #757575, #616161)'
+                    : 'linear-gradient(135deg, #1e88e5, #1565c0)',
+                  color: '#ffffff',
+                  padding: '12px 20px',
+                  width: '100%',
+                  borderRadius: '999px',
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                }}
               >
                 {showCreateForm ? '✕ Close Form' : '+ Create Game'}
               </button>
