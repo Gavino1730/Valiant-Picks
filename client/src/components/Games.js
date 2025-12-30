@@ -17,6 +17,7 @@ function Games() {
   const [betAmounts, setBetAmounts] = useState({});
   const [now, setNow] = useState(Date.now());
   const [userBets, setUserBets] = useState([]);
+  const [betSuccess, setBetSuccess] = useState({});
 
   const confidenceMultipliers = {
     low: 1.2,
@@ -221,7 +222,11 @@ function Games() {
         odds: confidenceMultipliers[confidence]
       });
 
-      setMessage(`Pick placed successfully on ${team}!`);
+      setBetSuccess(prev => ({ ...prev, [gameId]: true }));
+      setTimeout(() => {
+        setBetSuccess(prev => ({ ...prev, [gameId]: false }));
+      }, 3000);
+      
       setSelectedTeams(prev => ({ ...prev, [gameId]: '' }));
       setSelectedConfidence(prev => ({ ...prev, [gameId]: '' }));
       setBetAmounts(prev => ({ ...prev, [gameId]: '' }));
@@ -561,24 +566,31 @@ function Games() {
                           ✓ Bet Already Placed
                         </div>
                       ) : (
-                        <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
-                          <input
-                            type="number"
-                            placeholder="Bet amount"
-                            min="0.01"
-                            step="0.01"
-                            value={betAmounts[game.id] || ''}
-                            onChange={(e) => setBetAmounts({...betAmounts, [game.id]: e.target.value})}
-                            style={{flex: 1, padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', fontSize: '1em'}}
-                          />
-                          <button
-                            onClick={() => handlePlaceGameBet(game.id, gameLocked)}
-                            disabled={gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]}
-                            style={{padding: '10px 20px', background: '#1e88e5', border: 'none', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: 'bold', opacity: (gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]) ? 0.5 : 1}}
-                          >
-                            {gameLocked ? 'Closed' : 'Bet'}
-                          </button>
-                        </div>
+                        <>
+                          <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+                            <input
+                              type="number"
+                              placeholder="Bet amount"
+                              min="0.01"
+                              step="0.01"
+                              value={betAmounts[game.id] || ''}
+                              onChange={(e) => setBetAmounts({...betAmounts, [game.id]: e.target.value})}
+                              style={{flex: 1, padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', fontSize: '1em'}}
+                            />
+                            <button
+                              onClick={() => handlePlaceGameBet(game.id, gameLocked)}
+                              disabled={gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]}
+                              style={{padding: '10px 20px', background: betSuccess[game.id] ? '#66bb6a' : '#1e88e5', border: 'none', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: 'bold', opacity: (gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]) ? 0.5 : 1, transition: 'all 0.3s ease'}}
+                            >
+                              {betSuccess[game.id] ? '✓ Success!' : gameLocked ? 'Closed' : 'Bet'}
+                            </button>
+                          </div>
+                          {betSuccess[game.id] && (
+                            <div style={{marginTop: '10px', padding: '8px', background: 'rgba(102, 187, 106, 0.2)', border: '1px solid #66bb6a', borderRadius: '8px', textAlign: 'center', color: '#66bb6a', fontWeight: 'bold', animation: 'slideDown 0.3s ease'}}>
+                              ✓ Pick placed successfully on {selectedTeams[game.id]}!
+                            </div>
+                          )}
+                        </>
                       )}
 
                       {selectedConfidence[game.id] && betAmounts[game.id] && (

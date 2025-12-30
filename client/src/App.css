@@ -95,6 +95,16 @@ body {
   position: relative;
   font-size: 0.95rem !important;
   padding: 0.65rem 1rem !important;
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+}
+
+.notification-icon-btn:hover {
+  background: transparent !important;
+  border: none !important;
+  transform: scale(1.1) !important;
+  box-shadow: none !important;
 }
 
 .nav-center button:hover,
