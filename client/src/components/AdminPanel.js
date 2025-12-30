@@ -956,6 +956,16 @@ function AdminPanel() {
                             ✅ COMPLETED
                           </span>
                         </div>
+                        <span style={{
+                          padding: '5px 12px',
+                          borderRadius: '20px',
+                          fontSize: '0.7rem',
+                          fontWeight: 'bold',
+                          background: game.is_visible === false ? '#ef5350' : '#66bb6a',
+                          color: 'white'
+                        }}>
+                          {game.is_visible === false ? '👁️ HIDDEN' : '👁️ VISIBLE'}
+                        </span>
                       </div>
                       
                       <div style={{fontSize: '0.9rem', color: '#b8c5d6', marginBottom: '15px'}}>
@@ -965,6 +975,21 @@ function AdminPanel() {
                       </div>
                       
                       <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)'}}>
+                        <label className="toggle-switch">
+                          <input 
+                            type="checkbox" 
+                            checked={game.is_visible !== false}
+                            onChange={() => handleToggleGameVisibility(game.id, game.is_visible !== false)}
+                          />
+                          <span className="toggle-slider"></span>
+                        </label>
+                        <button 
+                          className="btn" 
+                          style={{background: '#1e88e5', padding: '8px 14px', fontSize: '0.85em', flex: '1'}}
+                          onClick={() => handleEditGame(game)}
+                        >
+                          ✏️ Edit
+                        </button>
                         <button 
                           className="btn" 
                           style={{background: '#757575', padding: '8px 14px', fontSize: '0.85em', flex: '1'}}

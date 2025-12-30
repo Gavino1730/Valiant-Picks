@@ -248,6 +248,16 @@ function Games() {
         <p className="page-subtitle">Browse all upcoming games and prop picks</p>
       </div>
 
+      {/* Beginner Help Section */}
+      <div className="help-banner">
+        <div className="help-icon">📖</div>
+        <div className="help-content">
+          <h3>Quick Guide</h3>
+          <p><strong>Game Picks:</strong> Predict which team wins. Choose your confidence level (Low 1.2x, Medium 1.5x, High 2.0x) to multiply your winnings!</p>
+          <p><strong>Prop Bets:</strong> Special predictions like "Will the team score over 50 points?" Simple YES or NO picks with custom odds.</p>
+        </div>
+      </div>
+
       {message && (
         <div className={`alert ${message.includes('Error') || message.includes('Insufficient') ? 'alert-error' : 'alert-success'}`}>
           {message}

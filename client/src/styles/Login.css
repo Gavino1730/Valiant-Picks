@@ -411,6 +411,82 @@ form {
   box-shadow: 0 2px 8px rgba(102, 187, 106, 0.2);
 }
 
+/* How to Use Link/Button */
+.how-to-use-link {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.12), rgba(13, 71, 161, 0.08));
+  border: 2px solid rgba(33, 150, 243, 0.4);
+  color: #64b5f6;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.how-to-use-link:hover {
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.2), rgba(13, 71, 161, 0.15));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.25);
+  border-color: #64b5f6;
+}
+
+.how-to-use-link:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.15);
+}
+
+/* How to Use Wrapper */
+.howto-wrapper {
+  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 1200px;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(31, 78, 153, 0.15);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.back-to-login-btn {
+  background: linear-gradient(135deg, #0d47a1, #1565c0);
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3);
+}
+
+.back-to-login-btn:hover {
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(13, 71, 161, 0.4);
+}
+
+.back-to-login-btn:active {
+  transform: translateY(0);
+}
+
 .link-btn {
   background: none;
   border: none;
@@ -557,6 +633,24 @@ form {
     max-width: 100%;
     margin: 0 12px;
     border-radius: 12px;
+  }
+
+  .howto-wrapper {
+    padding: 1rem;
+    max-width: 100%;
+    margin: 0 12px;
+    border-radius: 12px;
+    max-height: 95vh;
+  }
+
+  .back-to-login-btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .how-to-use-link {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
   }
 
   .login-header {

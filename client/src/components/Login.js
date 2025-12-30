@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import apiClient from '../utils/axios';
 import { validateUsername, validatePassword, validateEmail, getPasswordStrength } from '../utils/validation';
 import '../styles/Login.css';
+import HowToUse from './HowToUse';
 
 function Login({ onLogin, apiUrl }) {
   const [isRegister, setIsRegister] = useState(false);
+  const [showHowToUse, setShowHowToUse] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -135,6 +137,23 @@ function Login({ onLogin, apiUrl }) {
     }
   };
 
+  // If showing How to Use page, render that instead
+  if (showHowToUse) {
+    return (
+      <div className="login-container">
+        <div className="howto-wrapper">
+          <button 
+            className="back-to-login-btn"
+            onClick={() => setShowHowToUse(false)}
+          >
+            ← Back to Login
+          </button>
+          <HowToUse onNavigate={() => setShowHowToUse(false)} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="login-container">
       <div className="login-box">
@@ -175,6 +194,15 @@ function Login({ onLogin, apiUrl }) {
             </div>
           </div>
         </div>
+
+        {/* How to Use Button */}
+        <button 
+          className="how-to-use-link"
+          onClick={() => setShowHowToUse(true)}
+          type="button"
+        >
+          📖 How to Use Valiant Picks
+        </button>
 
         {!isRegister && (
           <div className="toggle-form" style={{marginTop: '1.5rem', marginBottom: '1.5rem', paddingTop: 0, borderTop: 'none'}}>

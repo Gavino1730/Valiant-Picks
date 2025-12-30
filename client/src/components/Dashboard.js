@@ -279,6 +279,15 @@ function Dashboard({ user }) {
     <div className="dashboard">
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
       
+      {/* Beginner Help Banner */}
+      <div className="beginner-banner">
+        <div className="banner-icon">💡</div>
+        <div className="banner-content">
+          <h3>How It Works</h3>
+          <p>Pick which team you think will win, choose how confident you are, and decide how many Valiant Bucks to stake. If you're right, you win back your stake multiplied by your confidence level!</p>
+        </div>
+      </div>
+      
       {/* Reserve space for notifications to prevent layout shift */}
       <div style={{minHeight: winNotification || lossNotification ? 'auto' : '0px', marginBottom: winNotification || lossNotification ? '1rem' : '0'}}>
         {winNotification && (
@@ -351,7 +360,8 @@ function Dashboard({ user }) {
           ) : (
             <form onSubmit={handlePlaceBet} className="bet-form">
               <div className="form-group">
-                <label htmlFor="game">🏀 Select Game</label>
+                <label htmlFor="game">🏀 Step 1: Choose a Game</label>
+                <p className="field-help">Pick an upcoming game you want to predict the winner for</p>
                 <select
                   id="game"
                   value={selectedGameId}
@@ -397,7 +407,8 @@ function Dashboard({ user }) {
                   </div>
 
                   <div className="form-group">
-                    <label>👥 Pick Your Winner</label>
+                    <label>👥 Step 2: Who Will Win?</label>
+                    <p className="field-help">Click on the team you think will win this game</p>
                     <div className="team-selection">
                       <button
                         type="button"
@@ -419,16 +430,17 @@ function Dashboard({ user }) {
                   </div>
 
                   <div className="form-group">
-                    <label>💪 Confidence Level</label>
+                    <label>💪 Step 3: How Sure Are You?</label>
+                    <p className="field-help">Choose your confidence level - higher confidence = bigger rewards if you win!</p>
                     <div className="confidence-selection">
                       <button
                         type="button"
                         className={`confidence-btn low ${confidence === 'low' ? 'active' : ''}`}
                         onClick={() => setConfidence('low')}
                       >
-                        <span className="confidence-label">Low Risk</span>
+                        <span className="confidence-label">Low</span>
                         <span className="confidence-multiplier">1.2x</span>
-                        <span className="confidence-desc">Safe pick</span>
+                        <span className="confidence-desc">Win 20% more</span>
                       </button>
                       <button
                         type="button"
@@ -437,16 +449,16 @@ function Dashboard({ user }) {
                       >
                         <span className="confidence-label">Medium</span>
                         <span className="confidence-multiplier">1.5x</span>
-                        <span className="confidence-desc">Balanced</span>
+                        <span className="confidence-desc">Win 50% more</span>
                       </button>
                       <button
                         type="button"
                         className={`confidence-btn high ${confidence === 'high' ? 'active' : ''}`}
                         onClick={() => setConfidence('high')}
                       >
-                        <span className="confidence-label">High Risk</span>
+                        <span className="confidence-label">High</span>
                         <span className="confidence-multiplier">2.0x</span>
-                        <span className="confidence-desc">Go big!</span>
+                        <span className="confidence-desc">Double your stake!</span>
                       </button>
                     </div>
                   </div>
@@ -468,7 +480,8 @@ function Dashboard({ user }) {
                   ) : (
                     <>
                       <div className="form-group">
-                        <label htmlFor="amount">💵 Pick Amount</label>
+                        <label htmlFor="amount">💵 Step 4: How Much to Stake?</label>
+                        <p className="field-help">Enter how many Valiant Bucks you want to stake • Your balance: <strong>{formatCurrency(balance)}</strong></p>
                         <div className="amount-input-wrapper">
                           <input
                             id="amount"
