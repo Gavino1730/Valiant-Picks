@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+  const [userBets, setUserBets] = useState([]);
+  const [userTransactions, setUserTransactions] = useState([]);
+  const [userHistoryLoading, setUserHistoryLoading] = useState(false);
 import apiClient from '../utils/axios';
 import AdminTeams from './AdminTeams';
 import '../styles/AdminPanel.css';
@@ -1630,9 +1633,8 @@ function AdminPanel() {
 
           {selectedUser && (
             <div className="modal-overlay" onClick={() => setSelectedUser(null)}>
-              <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{minWidth: '400px'}}>
+              <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{minWidth: '500px', maxWidth: '90vw'}}>
                 <h3 style={{marginBottom: '20px', color: '#1f4e99'}}>⚙️ User Options</h3>
-                
                 <div style={{marginBottom: '20px', background: 'rgba(30, 136, 229, 0.1)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(30, 136, 229, 0.3)'}}>
                   <p style={{margin: '5px 0', color: '#b8c5d6'}}>
                     <strong>Username:</strong> {users.find(u => u.id === selectedUser)?.username}
@@ -1644,7 +1646,6 @@ function AdminPanel() {
                     <strong>Status:</strong> {users.find(u => u.id === selectedUser)?.is_admin ? '👑 Admin' : '👤 Regular User'}
                   </p>
                 </div>
-
                 <div className="form-group">
                   <label htmlFor="balance">💰 Update Balance</label>
                   <input
@@ -1656,8 +1657,7 @@ function AdminPanel() {
                     style={{width: '100%', padding: '10px', background: '#1e2139', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '6px', color: '#fff'}}
                   />
                 </div>
-
-                <div className="modal-buttons" style={{display: 'flex', gap: '10px'}}>
+                <div className="modal-buttons" style={{display: 'flex', gap: '10px', marginBottom: 24}}>
                   <button 
                     className="btn" 
                     style={{flex: 1, background: '#66bb6a'}}
@@ -1673,9 +1673,99 @@ function AdminPanel() {
                     ❌ Close
                   </button>
                 </div>
+
+                {/* User Bets and Actions */}
+                <div style={{marginTop: 10}}>
+                  <h4 style={{color: '#1f4e99', marginBottom: 8}}>🎲 Bets & Actions</h4>
+                  {userHistoryLoading ? (
+                    <div style={{color: '#b8c5d6'}}>Loading bet and action history...</div>
+                  ) : (
+                    <>
+                      <div style={{marginBottom: 16}}>
+                        <strong>Bets:</strong>
+                        <div style={{maxHeight: 180, overflowY: 'auto', background: '#181c2f', borderRadius: 6, padding: 8, marginTop: 4}}>
+                          {userBets.length === 0 ? (
+                            <div style={{color: '#b8c5d6'}}>No bets found.</div>
+                          ) : (
+                            <table style={{width: '100%', fontSize: '0.95em'}}>
+                              <thead>
+                                <tr style={{color: '#64b5f6'}}>
+                                  <th>Date</th>
+                                  <th>Game/Prop</th>
+                                  <th>Selection</th>
+                                  <th>Amount</th>
+                                  <th>Odds</th>
+                                  <th>Status</th>
+                                  <th>Outcome</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {userBets.map(bet => (
+                                  <tr key={bet.id}>
+                                    <td>{new Date(bet.created_at).toLocaleString()}</td>
+                                    <td>{bet.game_id || 'Prop'}</td>
+                                    <td>{bet.selected_team}</td>
+                                    <td>{formatCurrency(bet.amount)}</td>
+                                    <td>{bet.odds}x</td>
+                                    <td>{bet.status}</td>
+                                    <td>{bet.outcome || '—'}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <strong>Actions:</strong>
+                        <div style={{maxHeight: 120, overflowY: 'auto', background: '#181c2f', borderRadius: 6, padding: 8, marginTop: 4}}>
+                          {userTransactions.length === 0 ? (
+                            <div style={{color: '#b8c5d6'}}>No actions found.</div>
+                          ) : (
+                            <table style={{width: '100%', fontSize: '0.95em'}}>
+                              <thead>
+                                <tr style={{color: '#64b5f6'}}>
+                                  <th>Date</th>
+                                  <th>Type</th>
+                                  <th>Amount</th>
+                                  <th>Description</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {userTransactions.map(tx => (
+                                  <tr key={tx.id}>
+                                    <td>{new Date(tx.created_at).toLocaleString()}</td>
+                                    <td>{tx.type}</td>
+                                    <td>{formatCurrency(tx.amount)}</td>
+                                    <td>{tx.description}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           )}
+          // Fetch user bets and transactions when selectedUser changes
+          useEffect(() => {
+            if (!selectedUser) return;
+            setUserHistoryLoading(true);
+            Promise.all([
+              apiClient.get('/bets/all').then(res => res.data.filter(b => b.user_id === selectedUser)),
+              apiClient.get('/transactions', { params: { userId: selectedUser } })
+                .then(res => Array.isArray(res.data) ? res.data : [])
+                .catch(() => [])
+            ]).then(([bets, txs]) => {
+              setUserBets(bets);
+              setUserTransactions(txs);
+              setUserHistoryLoading(false);
+            });
+          }, [selectedUser]);
         </div>
       )}
 
