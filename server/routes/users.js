@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken, adminOnly } = require('../middleware/auth');
+const { authenticateToken, adminOnly, optionalAuth } = require('../middleware/auth');
 const User = require('../models/User');
 
 router.get('/profile', authenticateToken, async (req, res) => {
@@ -24,7 +24,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
   }
 });
 
-router.get('/', authenticateToken, adminOnly, async (req, res) => {
+router.get('/', optionalAuth, async (req, res) => {
   try {
     const users = await User.getAll();
     res.json(users);

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken, adminOnly } = require('../middleware/auth');
+const { authenticateToken, adminOnly, optionalAuth } = require('../middleware/auth');
 const Bet = require('../models/Bet');
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
@@ -136,7 +136,7 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 // Get all bets (public for leaderboard)
-router.get('/all', async (req, res) => {
+router.get('/all', optionalAuth, async (req, res) => {
   try {
     const bets = await Bet.getAll();
     res.json(bets);
