@@ -180,11 +180,10 @@ function Teams() {
 
       <div className="team-info-section">
         <div className="coaching-staff">
-          <h3>Coaching Staff</h3>
+          <h3>Head Coach</h3>
           <div className="coach-info">
             <div className="coach">
               <strong>{team.coach_name}</strong>
-              <p>Head Coach</p>
             </div>
           </div>
           {team.coach_bio && (
@@ -273,19 +272,25 @@ function Teams() {
               <div>Opponent</div>
               <div>Location</div>
             </div>
-            {(team.schedule || []).map((game, idx) => (
+            {(team.schedule || []).map((game, idx) => {
+              const formatDate = (dateStr) => {
+                const [m, d, y] = dateStr.split('/');
+                return `${m.padStart(2, '0')}/${d.padStart(2, '0')}/${y}`;
+              };
+              return (
               <div key={idx} className={`schedule-row ${game.result === 'W' ? 'win' : game.result === 'L' ? 'loss' : 'scheduled'}`}>
                 <div className="result">{game.result}</div>
                 <div className="mobile-content">
                   <div className="opponent-main">vs. {game.opponent}</div>
-                  <div className="game-date">{game.date}</div>
+                  <div className="game-date">{formatDate(game.date)}</div>
                 </div>
                 <div className="location-badge">{game.location}</div>
                 <div className="desktop-only">{game.score}</div>
                 <div className="desktop-only">{game.type}</div>
                 <div className="desktop-only">{game.time}</div>
               </div>
-            ))}
+            );
+            })}
           </div>
         </div>
       )}

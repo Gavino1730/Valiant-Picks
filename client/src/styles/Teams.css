@@ -615,10 +615,7 @@
   .location-badge {
     text-align: right;
     font-size: 11px;
-    padding: 4px 6px;
-    background: rgba(31, 78, 153, 0.3);
-    border-radius: 4px;
-    color: #a0a0ff;
+    color: #909090;
     white-space: nowrap;
   }
 
