@@ -13,13 +13,12 @@ function Footer({ onNavigate }) {
             About
           </button>
           <span className="footer-divider">•</span>
-          <a href="https://valiantpicks.com" className="footer-link" target="_blank" rel="noopener noreferrer">
-            Website
-          </a>
-          <span className="footer-divider">•</span>
-          <a href="mailto:support@valiantpicks.com" className="footer-link">
-            Contact
-          </a>
+          <button 
+            className="footer-link"
+            onClick={() => onNavigate('terms')}
+          >
+            Terms
+          </button>
         </div>
         <div className="footer-credit">
           <p>© 2026 Valiant Picks. Built by Gavin Galan.</p>

@@ -18,6 +18,7 @@ const Games = lazy(() => import('./components/Games'));
 const Notifications = lazy(() => import('./components/Notifications'));
 const HowToUse = lazy(() => import('./components/HowToUse'));
 const About = lazy(() => import('./components/About'));
+const Terms = lazy(() => import('./components/Terms'));
 
 // Simple loading fallback
 const LoadingSpinner = () => (
@@ -267,6 +268,7 @@ function App() {
           {page === 'notifications' && <Notifications />}
           {page === 'howto' && <HowToUse onNavigate={handlePageChange} />}
           {page === 'about' && <About />}
+          {page === 'terms' && <Terms />}
           {page === 'admin' && user && user.is_admin && <AdminPanel />}
         </Suspense>
       </div>
