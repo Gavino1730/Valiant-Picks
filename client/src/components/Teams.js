@@ -193,25 +193,47 @@ function Teams() {
         </div>
 
         <div className="team-description">
-          <h3>Team Philosophy</h3>
+          <h3>About the Team</h3>
           <p>{team.description}</p>
         </div>
       </div>
 
       <div className="content-tabs">
         <button 
-          className={`content-tab-btn ${contentTab === 'schedule' ? 'active' : ''}`}
-          onClick={() => setContentTab('schedule')}
-        >
-          📅 Schedule
-        </button>
-        <button 
           className={`content-tab-btn ${contentTab === 'roster' ? 'active' : ''}`}
           onClick={() => setContentTab('roster')}
         >
           👥 Roster
         </button>
+        <button 
+          className={`content-tab-btn ${contentTab === 'schedule' ? 'active' : ''}`}
+          onClick={() => setContentTab('schedule')}
+        >
+          📅 Schedule
+        </button>
       </div>
+
+      {contentTab === 'roster' && (
+        <div className="roster-section mobile-roster">
+          <h3>Varsity Roster</h3>
+          <div className="roster-table">
+            {(team.players || []).map(player => (
+              <div key={player.number} className="player-row">
+                <div className="player-header">
+                  <span className="player-number">#{player.number}</span>
+                  <span className="player-name">{player.name}</span>
+                  <span className="player-position">{player.position}</span>
+                  <span className="player-grade">Grade {player.grade}</span>
+                  <span className="player-height">{player.height}</span>
+                </div>
+                <div className="player-bio">
+                  {player.bio}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {contentTab === 'schedule' && (
         <div className="schedule-section">
@@ -235,28 +257,6 @@ function Teams() {
                 <div>{game.time}</div>
                 <div>{game.opponent}</div>
                 <div>{game.location}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {contentTab === 'roster' && (
-        <div className="roster-section mobile-roster">
-          <h3>Varsity Roster</h3>
-          <div className="roster-table">
-            {(team.players || []).map(player => (
-              <div key={player.number} className="player-row">
-                <div className="player-header">
-                  <span className="player-number">#{player.number}</span>
-                  <span className="player-name">{player.name}</span>
-                  <span className="player-position">{player.position}</span>
-                  <span className="player-grade">Grade {player.grade}</span>
-                  <span className="player-height">{player.height}</span>
-                </div>
-                <div className="player-bio">
-                  {player.bio}
-                </div>
               </div>
             ))}
           </div>
