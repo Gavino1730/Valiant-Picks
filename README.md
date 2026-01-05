@@ -1,6 +1,8 @@
 # Valiant Picks
 
-A sports betting app for Valiant Academy basketball. Users create accounts, get virtual money (Valiant Bucks), and place bets on games. Admins manage games and resolve bets.
+A sports betting app for your highschool or whatever you want. I made for my own school feel free to rebrand to whatever you want. I have mine deployed on a local server, but you can host locally or using supabase and cloudflare or anything. Instructions below are AI so I don't know how good they are.
+
+Users create accounts, get virtual money (Valiant Bucks), and place bets on games. Admins manage games and resolve bets.
 
 ## Quick Start
 
