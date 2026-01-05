@@ -47,4 +47,18 @@ router.put('/:id/balance', authenticateToken, adminOnly, async (req, res) => {
   }
 });
 
+router.put('/:id/admin', authenticateToken, adminOnly, async (req, res) => {
+  try {
+    const { isAdmin } = req.body;
+    if (isAdmin === undefined) {
+      return res.status(400).json({ error: 'isAdmin flag required' });
+    }
+    await User.setAdminStatus(req.params.id, isAdmin);
+    const user = await User.findById(req.params.id);
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

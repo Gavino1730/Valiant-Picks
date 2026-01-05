@@ -97,6 +97,20 @@ class User {
       throw new Error(`Error fetching users: ${err.message}`);
     }
   }
+
+  static async setAdminStatus(userId, isAdmin) {
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ is_admin: isAdmin })
+        .eq('id', userId);
+
+      if (error) throw error;
+      return { changes: 1 };
+    } catch (err) {
+      throw new Error(`Error updating admin status: ${err.message}`);
+    }
+  }
 }
 
 module.exports = User;

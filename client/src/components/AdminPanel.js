@@ -15,6 +15,7 @@ function AdminPanel() {
   const [tab, setTab] = useState('games');
   const [selectedUser, setSelectedUser] = useState(null);
   const [newBalance, setNewBalance] = useState('');
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [editingGame, setEditingGame] = useState(null);
   const [gameStatusModal, setGameStatusModal] = useState(null);
   const [gameFilter, setGameFilter] = useState('all'); // 'all', 'boys', 'girls'
@@ -447,6 +448,16 @@ function AdminPanel() {
       alert('User balance updated!');
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to update balance');
+    }
+  };
+
+  const handleToggleAdminStatus = async (userId, currentAdminStatus) => {
+    try {
+      await apiClient.put(`/users/${userId}/admin`, { isAdmin: !currentAdminStatus });
+      fetchUsers();
+      alert(`User ${!currentAdminStatus ? 'promoted to' : 'demoted from'} admin status!`);
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to update admin status');
     }
   };
 
@@ -1633,19 +1644,12 @@ function AdminPanel() {
                   <div className="user-card-actions">
                     <button 
                       className="btn"
-                      style={{background: '#1e88e5', flex: '1'}}
-                      onClick={() => {
+                      style={{background: '#9c27b0', flex: '1'}}
+                      onClick={(e) => {
                         setSelectedUser(u.id);
                         setNewBalance(u.balance.toString());
-                      }}
-                    >
-                      💰 Balance
-                    </button>
-                    <button 
-                      className="btn"
-                      style={{background: '#9c27b0', flex: '1'}}
-                      onClick={() => {
-                        setSelectedUser(u.id);
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        setMenuPosition({ x: rect.left, y: rect.bottom + 10 });
                       }}
                     >
                       ⚙️ Options
@@ -1658,7 +1662,7 @@ function AdminPanel() {
 
           {selectedUser && (
             <div className="modal-overlay" onClick={() => setSelectedUser(null)}>
-              <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{minWidth: '500px', maxWidth: '90vw'}}>
+              <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{minWidth: '500px', maxWidth: '90vw', position: 'absolute', top: `${menuPosition.y}px`, left: `${menuPosition.x}px`, margin: 0}}>
                 <h3 style={{marginBottom: '20px', color: '#1f4e99'}}>⚙️ User Options</h3>
                 <div style={{marginBottom: '20px', background: 'rgba(30, 136, 229, 0.1)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(30, 136, 229, 0.3)'}}>
                   <p style={{margin: '5px 0', color: '#b8c5d6'}}>
@@ -1671,6 +1675,7 @@ function AdminPanel() {
                     <strong>Status:</strong> {users.find(u => u.id === selectedUser)?.is_admin ? '👑 Admin' : '👤 Regular User'}
                   </p>
                 </div>
+
                 <div className="form-group">
                   <label htmlFor="balance">💰 Update Balance</label>
                   <input
@@ -1682,6 +1687,19 @@ function AdminPanel() {
                     style={{width: '100%', padding: '10px', background: '#1e2139', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '6px', color: '#fff'}}
                   />
                 </div>
+
+                <div className="form-group" style={{marginBottom: '20px'}}>
+                  <label style={{display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer'}}>
+                    <input 
+                      type="checkbox" 
+                      checked={users.find(u => u.id === selectedUser)?.is_admin || false}
+                      onChange={() => handleToggleAdminStatus(selectedUser, users.find(u => u.id === selectedUser)?.is_admin || false)}
+                      style={{width: '18px', height: '18px', cursor: 'pointer'}}
+                    />
+                    <span style={{color: '#b8c5d6', fontWeight: '500'}}>👑 Make Admin</span>
+                  </label>
+                </div>
+
                 <div className="modal-buttons" style={{display: 'flex', gap: '10px', marginBottom: 24}}>
                   <button 
                     className="btn" 
