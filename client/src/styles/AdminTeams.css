@@ -1,7 +1,7 @@
 .admin-teams {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 2rem 2rem;
   background: transparent;
 }
 
@@ -476,6 +476,19 @@
 }
 
 @media (max-width: 768px) {
+  .admin-teams {
+    padding: 1.5rem 1rem;
+  }
+
+  .admin-teams h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tab-content {
+    padding: 1.5rem 1rem;
+  }
+
   .edit-form {
     grid-template-columns: 1fr;
   }
@@ -496,5 +509,64 @@
 
   .players-grid {
     grid-template-columns: 1fr;
+  }
+
+  .schedule-list,
+  .roster-list {
+    padding: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  .schedule-list table {
+    font-size: 0.75rem;
+  }
+
+  .schedule-list th {
+    padding: 8px 4px;
+    font-size: 11px;
+  }
+
+  .schedule-list td {
+    padding: 6px 4px;
+    font-size: 11px;
+  }
+
+  .schedule-list td input {
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+
+  .schedule-list .delete-btn {
+    padding: 4px 6px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-teams {
+    padding: 1rem 0.75rem;
+  }
+
+  .tab-content {
+    padding: 1rem;
+  }
+
+  .schedule-list table {
+    font-size: 0.7rem;
+  }
+
+  .schedule-list th {
+    padding: 6px 3px;
+    font-size: 10px;
+  }
+
+  .schedule-list td {
+    padding: 4px 3px;
+    font-size: 10px;
+  }
+
+  .schedule-list td input {
+    padding: 3px 4px;
+    font-size: 10px;
   }
 }

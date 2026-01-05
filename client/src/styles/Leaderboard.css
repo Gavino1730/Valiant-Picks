@@ -3,7 +3,7 @@
   animation: fadeIn 0.4s ease;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0;
+  padding: 2rem;
 }
 
 .leaderboard-header {
@@ -378,10 +378,14 @@
 }
 
 @media (max-width: 900px) {
+  .leaderboard-page {
+    padding: 1.5rem 1rem;
+  }
+
   .leaderboard-row {
     grid-template-columns: 50px 1fr;
     gap: 1rem;
-    padding: 1rem;
+    padding: 1.2rem;
   }
 
   .rank-cell {
@@ -450,10 +454,14 @@
 }
 
 @media (max-width: 600px) {
+  .leaderboard-page {
+    padding: 1rem 0.75rem;
+  }
+
   .leaderboard-row {
     grid-template-columns: 45px 1fr;
-    gap: 0.8rem;
-    padding: 0.9rem;
+    gap: 1rem;
+    padding: 1.2rem;
   }
 
   .rank-number {
@@ -463,7 +471,7 @@
   }
 
   .user-name {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
 
   .cell-label {
@@ -472,35 +480,36 @@
   }
 
   .cell-value {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
 
   .balance-cell .cell-value {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   .leaderboard-header h1 {
-    font-size: 1.5rem;
-    margin-bottom: 0.3rem;
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
   }
 
   .leaderboard-header .subtitle {
     font-size: 0.95rem;
-  }
-
-  .overview-stats {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
     margin-bottom: 1.5rem;
   }
 
+  .overview-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
   .stat-card {
-    padding: 1rem 0.8rem;
+    padding: 1.2rem 1rem;
     border-radius: 12px;
   }
 
   .stat-card-value {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
   .stat-card-label {
@@ -519,16 +528,12 @@
   }
 
   .sort-btn {
-    padding: 0.5rem 0.9rem;
-    font-size: 0.75rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
   }
 
   .picks-cell {
     display: none;
-  }
-
-  .leaderboard-row {
-    grid-template-columns: 45px 1fr;
   }
 
   /* Show hidden cells at mobile on first visible row */

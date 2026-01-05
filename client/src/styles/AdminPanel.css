@@ -1,5 +1,12 @@
 /* AdminPanel styles are in Dashboard.css for consistency */
 
+/* Admin Panel Container */
+.admin-panel {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 2rem;
+}
+
 /* Desktop Tab Navigation */
 .tabs {
   display: flex;
@@ -219,6 +226,24 @@
   .bets-mobile-list {
     display: block;
   }
+
+  .bet-card {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+
+  .bet-card-row {
+    margin-bottom: 4px;
+    gap: 6px;
+  }
+
+  .bet-label {
+    font-size: 0.75rem;
+  }
+
+  .bet-value {
+    font-size: 0.9rem;
+  }
 }
 
 /* Mobile admin tab pills */
@@ -269,6 +294,10 @@
 }
 
 @media (max-width: 768px) {
+  .admin-panel {
+    padding: 1.5rem 1rem;
+  }
+
   .admin-mobile-nav {
     display: flex;
   }
@@ -290,6 +319,10 @@
 }
 
 @media (max-width: 520px) {
+  .admin-panel {
+    padding: 1rem 0.75rem;
+  }
+
   .mobile-admin-pill {
     padding: 8px 10px;
     font-size: 0.85rem;

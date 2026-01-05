@@ -4,8 +4,8 @@ import '../styles/Teams.css';
 
 function Teams() {
   const [activeTab, setActiveTab] = useState('boys');
-  const [contentTab, setContentTab] = useState('schedule'); // 'schedule' or 'roster'
-  const [rosterExpanded, setRosterExpanded] = useState(false);
+  const [contentTab, setContentTab] = useState('roster'); // 'schedule' or 'roster'
+  const [rosterExpanded, setRosterExpanded] = useState(true);
   const [teams, setTeams] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -172,8 +172,8 @@ function Teams() {
             <span className="value">{team.league_record}</span>
           </div>
           <div className="stat">
-            <span className="label">State Ranking</span>
-            <span className="value">{team.ranking}</span>
+            <span className="label">Rank</span>
+            <span className="value">#{team.ranking}</span>
           </div>
         </div>
       </div>

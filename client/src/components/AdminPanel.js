@@ -1293,7 +1293,7 @@ function AdminPanel() {
                   {allBets.map(bet => (
                     <tr key={bet.id}>
                       <td>{bet.id}</td>
-                      <td>{bet.user_id}</td>
+                      <td>{bet.users?.username || bet.user_id}</td>
                       <td>{bet.game_id || 'Prop'}</td>
                       <td>{bet.selected_team}</td>
                       <td>{formatCurrency(bet.amount)}</td>
@@ -1336,7 +1336,7 @@ function AdminPanel() {
                 <div key={bet.id} className="bet-card">
                   <div className="bet-card-row">
                     <span className="bet-label">User</span>
-                    <span className="bet-value">{bet.user_id}</span>
+                    <span className="bet-value">{bet.users?.username || bet.user_id}</span>
                   </div>
                   <div className="bet-card-row">
                     <span className="bet-label">Game / Prop</span>

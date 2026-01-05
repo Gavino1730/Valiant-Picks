@@ -115,6 +115,9 @@ class Bet {
         .from('bets')
         .select(`
           *,
+          users (
+            username
+          ),
           games (
             home_team,
             away_team,
