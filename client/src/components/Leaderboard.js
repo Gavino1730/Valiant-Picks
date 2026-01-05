@@ -171,7 +171,7 @@ function Leaderboard() {
                 </div>
               </div>
 
-              <div className="stats-cell">
+              <div className="stats-cell profit-cell">
                 <div className="cell-label">Profit</div>
                 <div className={`cell-value profit ${user.stats.netProfit >= 0 ? 'positive' : 'negative'}`}>
                   {user.stats.netProfit >= 0 ? '+' : ''}{formatCurrency(user.stats.netProfit)}

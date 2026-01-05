@@ -418,6 +418,13 @@
   .stats-cell {
     grid-column: 2;
     font-size: 0.85rem;
+    flex-direction: row;
+    gap: 0.3rem;
+    align-items: center;
+  }
+
+  .profit-cell {
+    display: none;
   }
 
   .balance-cell {
@@ -426,6 +433,7 @@
 
   .cell-label {
     font-size: 0.6rem;
+    display: none;
   }
 
   .cell-value {
