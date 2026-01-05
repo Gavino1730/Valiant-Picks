@@ -115,6 +115,10 @@
   color: #ffffff;
 }
 
+.stat:nth-child(3) {
+  justify-content: center;
+}
+
 .team-info-section {
   grid-column: 1 / -1;
   display: grid;
