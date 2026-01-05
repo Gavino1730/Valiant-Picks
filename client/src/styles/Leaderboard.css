@@ -396,8 +396,8 @@
 
   .leaderboard-row {
     grid-template-columns: 50px 1fr;
-    gap: 1rem;
-    padding: 1.2rem;
+    gap: 0.7rem;
+    padding: 0.8rem;
   }
 
   .rank-cell {
@@ -549,6 +549,10 @@
   }
 
   .picks-cell {
+    display: none;
+  }
+
+  .leaderboard-row .stats-cell:last-child {
     display: none;
   }
 
