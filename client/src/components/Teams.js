@@ -4,6 +4,8 @@ import '../styles/Teams.css';
 
 function Teams() {
   const [activeTab, setActiveTab] = useState('boys');
+  const [contentTab, setContentTab] = useState('schedule'); // 'schedule' or 'roster'
+  const [rosterExpanded, setRosterExpanded] = useState(false);
   const [teams, setTeams] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -176,68 +178,116 @@ function Teams() {
         </div>
       </div>
 
-      <div className="coaching-staff">
-        <h3>Coaching Staff</h3>
-        <div className="coach-info">
-          <div className="coach">
-            <strong>{team.coach_name}</strong>
-            <p>Head Coach</p>
+      <div className="team-info-section">
+        <div className="coaching-staff">
+          <h3>Coaching Staff</h3>
+          <div className="coach-info">
+            <div className="coach">
+              <strong>{team.coach_name}</strong>
+              <p>Head Coach</p>
+            </div>
+          </div>
+          {team.coach_bio && (
+            <p className="coach-bio">{team.coach_bio}</p>
+          )}
+        </div>
+
+        <div className="team-description">
+          <h3>Team Philosophy</h3>
+          <p>{team.description}</p>
+        </div>
+      </div>
+
+      <div className="content-tabs">
+        <button 
+          className={`content-tab-btn ${contentTab === 'schedule' ? 'active' : ''}`}
+          onClick={() => setContentTab('schedule')}
+        >
+          📅 Schedule
+        </button>
+        <button 
+          className={`content-tab-btn ${contentTab === 'roster' ? 'active' : ''}`}
+          onClick={() => setContentTab('roster')}
+        >
+          👥 Roster
+        </button>
+      </div>
+
+      {contentTab === 'schedule' && (
+        <div className="schedule-section">
+          <h3>Varsity Schedule</h3>
+          <div className="schedule-table">
+            <div className="schedule-header">
+              <div>Result</div>
+              <div>Score</div>
+              <div>Type</div>
+              <div>Date</div>
+              <div>Time</div>
+              <div>Opponent</div>
+              <div>Location</div>
+            </div>
+            {(team.schedule || []).map((game, idx) => (
+              <div key={idx} className={`schedule-row ${game.result === 'W' ? 'win' : game.result === 'L' ? 'loss' : 'scheduled'}`}>
+                <div className="result">{game.result}</div>
+                <div>{game.score}</div>
+                <div>{game.type}</div>
+                <div>{game.date}</div>
+                <div>{game.time}</div>
+                <div>{game.opponent}</div>
+                <div>{game.location}</div>
+              </div>
+            ))}
           </div>
         </div>
-        {team.coach_bio && (
-          <p className="coach-bio">{team.coach_bio}</p>
+      )}
+
+      {contentTab === 'roster' && (
+        <div className="roster-section mobile-roster">
+          <h3>Varsity Roster</h3>
+          <div className="roster-table">
+            {(team.players || []).map(player => (
+              <div key={player.number} className="player-row">
+                <div className="player-header">
+                  <span className="player-number">#{player.number}</span>
+                  <span className="player-name">{player.name}</span>
+                  <span className="player-position">{player.position}</span>
+                  <span className="player-grade">Grade {player.grade}</span>
+                  <span className="player-height">{player.height}</span>
+                </div>
+                <div className="player-bio">
+                  {player.bio}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="desktop-roster-section">
+        <button 
+          className="expand-roster-btn"
+          onClick={() => setRosterExpanded(!rosterExpanded)}
+        >
+          {rosterExpanded ? '▼' : '▶'} Varsity Roster
+        </button>
+        {rosterExpanded && (
+          <div className="roster-table">
+            {(team.players || []).map(player => (
+              <div key={player.number} className="player-row">
+                <div className="player-header">
+                  <span className="player-number">#{player.number}</span>
+                  <span className="player-name">{player.name}</span>
+                  <span className="player-position">{player.position}</span>
+                  <span className="player-grade">Grade {player.grade}</span>
+                  <span className="player-height">{player.height}</span>
+                </div>
+                <div className="player-bio">
+                  {player.bio}
+                </div>
+              </div>
+            ))}
+          </div>
         )}
-      </div>
-
-      <div className="team-description">
-        <h3>Team Philosophy</h3>
-        <p>{team.description}</p>
-      </div>
-
-      <div className="schedule-section">
-        <h3>Varsity Schedule</h3>
-        <div className="schedule-table">
-          <div className="schedule-header">
-            <div>Result</div>
-            <div>Score</div>
-            <div>Type</div>
-            <div>Date</div>
-            <div>Time</div>
-            <div>Opponent</div>
-            <div>Location</div>
-          </div>
-          {(team.schedule || []).map((game, idx) => (
-            <div key={idx} className={`schedule-row ${game.result === 'W' ? 'win' : game.result === 'L' ? 'loss' : 'scheduled'}`}>
-              <div className="result">{game.result}</div>
-              <div>{game.score}</div>
-              <div>{game.type}</div>
-              <div>{game.date}</div>
-              <div>{game.time}</div>
-              <div>{game.opponent}</div>
-              <div>{game.location}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="roster-section">
-        <h3>Varsity Roster</h3>
-        <div className="roster-table">
-          {(team.players || []).map(player => (
-            <div key={player.number} className="player-row">
-              <div className="player-header">
-                <span className="player-number">#{player.number}</span>
-                <span className="player-name">{player.name}</span>
-                <span className="player-position">{player.position}</span>
-                <span className="player-grade">Grade {player.grade}</span>
-                <span className="player-height">{player.height}</span>
-              </div>
-              <div className="player-bio">
-                {player.bio}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
