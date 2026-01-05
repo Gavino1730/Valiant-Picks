@@ -26,6 +26,7 @@ function AdminPanel() {
   const [userBets, setUserBets] = useState([]);
   const [userTransactions, setUserTransactions] = useState([]);
   const [userHistoryLoading, setUserHistoryLoading] = useState(false);
+  const [showEmailList, setShowEmailList] = useState(false);
   
   // Game creation form
   const [showCompletedGames, setShowCompletedGames] = useState(false);
@@ -1514,6 +1515,23 @@ function AdminPanel() {
             </p>
           </div>
 
+          <button 
+            onClick={() => setShowEmailList(true)}
+            style={{
+              marginBottom: '20px',
+              padding: '10px 20px',
+              background: 'linear-gradient(135deg, #66bb6a, #4caf50)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            📧 Export All Emails
+          </button>
+
           <div className="users-table-wrapper">
             <table className="users-table">
               <thead>
@@ -1973,6 +1991,96 @@ function AdminPanel() {
                 }}
               >
                 Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Email List Modal */}
+      {showEmailList && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: '#1a1f2e',
+            borderRadius: '12px',
+            padding: '2rem',
+            maxWidth: '600px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto',
+            border: '1px solid rgba(31, 78, 153, 0.3)',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)'
+          }}>
+            <h2 style={{marginTop: 0, color: '#1f4e99', marginBottom: '1rem'}}>📧 All User Emails</h2>
+            <p style={{color: '#888a9b', marginBottom: '1.5rem', fontSize: '0.9rem'}}>
+              {users.length} email{users.length !== 1 ? 's' : ''} ready to copy
+            </p>
+            
+            <textarea 
+              readOnly
+              value={users.map(u => u.email).join('\n')}
+              style={{
+                width: '100%',
+                height: '300px',
+                padding: '1rem',
+                background: 'rgba(0, 0, 0, 0.3)',
+                border: '1px solid rgba(31, 78, 153, 0.2)',
+                borderRadius: '8px',
+                color: '#e9f1ff',
+                fontFamily: 'monospace',
+                fontSize: '0.95rem',
+                resize: 'none',
+                boxSizing: 'border-box'
+              }}
+            />
+            
+            <div style={{display: 'flex', gap: '10px', marginTop: '1.5rem', flexWrap: 'wrap'}}>
+              <button
+                onClick={() => {
+                  const text = users.map(u => u.email).join('\n');
+                  navigator.clipboard.writeText(text);
+                  alert('Emails copied to clipboard!');
+                }}
+                style={{
+                  flex: 1,
+                  padding: '10px 20px',
+                  background: 'linear-gradient(135deg, #1f4e99, #3b82f6)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  minWidth: '120px'
+                }}
+              >
+                📋 Copy All
+              </button>
+              <button
+                onClick={() => setShowEmailList(false)}
+                style={{
+                  flex: 1,
+                  padding: '10px 20px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  color: '#b8c5d6',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  minWidth: '120px'
+                }}
+              >
+                Close
               </button>
             </div>
           </div>
