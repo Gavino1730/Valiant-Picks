@@ -8,7 +8,6 @@ function Leaderboard() {
   const [bets, setBets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [sortBy, setSortBy] = useState('balance'); // balance, wins, winRate
 
 
   useEffect(() => {
@@ -72,19 +71,7 @@ function Leaderboard() {
 
   const getSortedUsers = () => {
     const usersWithStats = getUsersWithStats();
-    const sorted = [...usersWithStats];
-    
-    switch(sortBy) {
-      case 'wins':
-        return sorted.sort((a, b) => b.stats.wonBets - a.stats.wonBets);
-      case 'winRate':
-        return sorted.sort((a, b) => parseFloat(b.stats.winRate) - parseFloat(a.stats.winRate));
-      case 'profit':
-        return sorted.sort((a, b) => b.stats.netProfit - a.stats.netProfit);
-      case 'balance':
-      default:
-        return sorted.sort((a, b) => b.balance - a.balance);
-    }
+    return usersWithStats.sort((a, b) => b.balance - a.balance);
   };
 
   if (loading) {
@@ -136,34 +123,6 @@ function Leaderboard() {
           <div className="stat-card-label">Total Winnings</div>
           <div className="stat-card-icon">🎉</div>
         </div>
-      </div>
-
-      {/* Sort Controls */}
-      <div className="sort-controls">
-        <button 
-          className={`sort-btn ${sortBy === 'balance' ? 'active' : ''}`}
-          onClick={() => setSortBy('balance')}
-        >
-          💵 Balance
-        </button>
-        <button 
-          className={`sort-btn ${sortBy === 'wins' ? 'active' : ''}`}
-          onClick={() => setSortBy('wins')}
-        >
-          ✅ Wins
-        </button>
-        <button 
-          className={`sort-btn ${sortBy === 'winRate' ? 'active' : ''}`}
-          onClick={() => setSortBy('winRate')}
-        >
-          📊 Win Rate
-        </button>
-        <button 
-          className={`sort-btn ${sortBy === 'profit' ? 'active' : ''}`}
-          onClick={() => setSortBy('profit')}
-        >
-          📈 Profit
-        </button>
       </div>
 
       {/* Leaderboard Table/Cards */}

@@ -1566,19 +1566,12 @@ function AdminPanel() {
                       <td>
                         <button 
                           className="btn"
-                          style={{background: '#1e88e5', padding: '6px 10px', fontSize: '0.8em', marginRight: '6px', whiteSpace: 'nowrap'}}
-                          onClick={() => {
-                            setSelectedUser(u.id);
-                            setNewBalance(u.balance.toString());
-                          }}
-                        >
-                          💰 Balance
-                        </button>
-                        <button 
-                          className="btn"
                           style={{background: '#9c27b0', padding: '6px 10px', fontSize: '0.8em', whiteSpace: 'nowrap'}}
                           onClick={() => {
                             setSelectedUser(u.id);
+                            setNewBalance(u.balance.toString());
+                            const rect = event.currentTarget.getBoundingClientRect();
+                            setMenuPosition({ x: rect.left, y: rect.bottom + 10 });
                           }}
                         >
                           ⚙️ Options
