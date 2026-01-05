@@ -2,9 +2,12 @@
 
 /* Admin Panel Container */
 .admin-panel {
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
   padding: 2rem 2rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* Desktop Tab Navigation */
@@ -295,7 +298,7 @@
 
 @media (max-width: 768px) {
   .admin-panel {
-    padding: 1.5rem 1rem;
+    padding: 1rem 0.75rem;
   }
 
   .admin-mobile-nav {
@@ -320,7 +323,7 @@
 
 @media (max-width: 520px) {
   .admin-panel {
-    padding: 1rem 0.75rem;
+    padding: 0.75rem 0.5rem;
   }
 
   .mobile-admin-pill {

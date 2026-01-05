@@ -574,10 +574,13 @@ table thead {
   background: transparent;
   border: none;
   color: #fff;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
   line-height: 1;
+  flex-shrink: 0;
+  min-width: 32px;
+  text-align: center;
 }
 
 table th {
@@ -713,25 +716,30 @@ table tbody tr:hover {
 }
 
 .mobile-menu-header {
-  padding: 1.5rem 1.25rem;
+  padding: 1rem 1rem;
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
   border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .mobile-user-info {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.3rem;
+  flex: 1;
 }
 
 .mobile-user-name {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: white;
 }
 
 .mobile-balance {
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 800;
   color: #66bb6a;
 }

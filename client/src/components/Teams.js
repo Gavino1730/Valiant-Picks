@@ -172,8 +172,7 @@ function Teams() {
             <span className="value">{team.league_record}</span>
           </div>
           <div className="stat">
-            <span className="label">Rank</span>
-            <span className="value">#{team.ranking}</span>
+            <span className="value" style={{fontSize: '1.2rem'}}>#{team.ranking}</span>
           </div>
         </div>
       </div>

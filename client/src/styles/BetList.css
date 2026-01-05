@@ -1,10 +1,13 @@
 /* My Bets Page - Dark Theme */
 
 .bet-list-container {
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
   padding: 2rem;
   animation: fadeIn 0.4s ease;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 @keyframes fadeIn {
@@ -409,7 +412,7 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .bet-list-container {
-    padding: 1.5rem 1rem;
+    padding: 1rem 0.75rem;
   }
 
   .header-title h1 {
