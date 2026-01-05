@@ -274,8 +274,11 @@ function Teams() {
             </div>
             {(team.schedule || []).map((game, idx) => {
               const formatDate = (dateStr) => {
-                const [m, d, y] = dateStr.split('/');
-                return `${m.padStart(2, '0')}/${d.padStart(2, '0')}/${y}`;
+                if (!dateStr) return '';
+                const parts = dateStr.split('/');
+                if (parts.length !== 3) return dateStr;
+                const [m, d, y] = parts;
+                return `${(m || '').padStart(2, '0')}/${(d || '').padStart(2, '0')}/${y}`;
               };
               return (
               <div key={idx} className={`schedule-row ${game.result === 'W' ? 'win' : game.result === 'L' ? 'loss' : 'scheduled'}`}>
