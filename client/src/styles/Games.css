@@ -818,14 +818,14 @@
 .prop-card {
   background: linear-gradient(135deg, #1e2139 0%, #252945 100%);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 1.2rem;
   transition: all 0.3s ease;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .prop-card.featured {
-  padding: 2rem;
+  padding: 1.5rem;
   border: 2px solid rgba(31, 78, 153, 0.2);
   box-shadow: 0 8px 32px rgba(31, 78, 153, 0.15);
   background: linear-gradient(135deg, #1e2139 0%, #252945 100%);
@@ -853,27 +853,28 @@
   display: flex;
   justify-content: space-between;
   align-items: start;
-  margin-bottom: 1rem;
-  gap: 1rem;
+  margin-bottom: 0.8rem;
+  gap: 0.8rem;
 }
 
 .prop-card.featured .prop-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   align-items: flex-start;
   flex-wrap: wrap;
 }
 
 .prop-header h3 {
   color: #e0e0e0;
-  font-size: 1.2rem;
+  font-size: 1rem;
   margin: 0;
   flex: 1;
+  line-height: 1.3;
 }
 
 .prop-card.featured .prop-header h3 {
-  font-size: 1.4rem;
+  font-size: 1.15rem;
   color: #1f4e99;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .prop-category {
@@ -900,29 +901,29 @@
 
 .prop-description {
   color: #b0b2c3;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin: 1rem 0 1.5rem 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0.5rem 0 1rem 0;
 }
 
 .prop-card.featured .prop-description {
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 0.9rem;
+  line-height: 1.5;
   color: #c8d4e6;
-  margin: 1.2rem 0 1.8rem 0;
+  margin: 0.8rem 0 1.2rem 0;
 }
 
 .prop-betting-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin: 1.5rem 0;
+  gap: 0.8rem;
+  margin: 1rem 0;
 }
 
 .prop-betting-section.featured {
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin: 2rem 0;
+  gap: 1rem;
+  margin: 1.2rem 0;
 }
 
 .prop-expiry-row {
@@ -932,12 +933,12 @@
 }
 
 .prop-expiry {
-  padding: 0.4rem 0.75rem;
-  border-radius: 12px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
   background: rgba(102, 187, 106, 0.12);
   color: #66bb6a;
-  font-weight: 700;
-  font-size: 0.9rem;
+  font-weight: 600;
+  font-size: 0.75rem;
 }
 
 .prop-expiry.expired {
@@ -946,16 +947,16 @@
 }
 
 .prop-option-bet {
-  padding: 1.2rem;
-  border-radius: 12px;
+  padding: 0.8rem;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.6rem;
 }
 
 .prop-card.featured .prop-option-bet {
-  padding: 1.5rem;
-  gap: 1rem;
+  padding: 1rem;
+  gap: 0.8rem;
 }
 
 .prop-option-bet.yes {
@@ -978,11 +979,11 @@
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #e0e0e0;
-  padding: 1rem;
+  padding: 0.7rem;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   width: 100%;
-  min-height: 48px;
+  min-height: 40px;
 }
 
 .prop-bet-input:focus {
@@ -991,22 +992,22 @@
 }
 
 .prop-bet-btn {
-  padding: 1rem;
+  padding: 0.7rem;
   border: none;
   border-radius: 8px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  min-height: 48px;
+  letter-spacing: 0.3px;
+  min-height: 40px;
 }
 
 .prop-card.featured .prop-bet-btn {
-  padding: 1.2rem;
-  font-size: 1.05rem;
-  min-height: 52px;
+  padding: 0.8rem;
+  font-size: 0.9rem;
+  min-height: 44px;
 }
 
 .yes-btn {
@@ -1069,17 +1070,17 @@
 .option-label {
   display: block;
   color: #e0e0e0;
-  font-size: 1.4rem;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 0.5px;
 }
 
 .option-odds {
   display: block;
   color: #1f4e99;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 

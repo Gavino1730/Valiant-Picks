@@ -466,27 +466,21 @@ function AdminPanel() {
     if (!user) return;
 
     const confirmDelete = window.confirm(
-      `⚠️ WARNING: This will permanently delete the user "${user.username}" and ALL their data including:\n\n` +
+      `⚠️ WARNING: Permanently delete "${user.username}"?\n\n` +
+      `This will delete ALL their data:\n` +
       `• All bets\n` +
       `• All transactions\n` +
       `• All notifications\n\n` +
-      `This action CANNOT be undone!\n\n` +
-      `Type the username "${user.username}" to confirm deletion.`
+      `This CANNOT be undone!`
     );
 
     if (!confirmDelete) return;
-
-    const typedUsername = window.prompt(`Type "${user.username}" to confirm:`);
-    if (typedUsername !== user.username) {
-      alert('Username does not match. Deletion cancelled.');
-      return;
-    }
 
     try {
       await apiClient.delete(`/users/${userId}`);
       fetchUsers();
       setSelectedUser(null);
-      alert('✅ User account deleted successfully');
+      alert('✅ User deleted successfully');
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to delete user');
     }

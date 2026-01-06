@@ -64,7 +64,7 @@ router.put('/:id/admin', authenticateToken, adminOnly, async (req, res) => {
 router.delete('/:id', authenticateToken, adminOnly, async (req, res) => {
   try {
     // Prevent deleting yourself
-    if (req.params.id === req.user.id) {
+    if (String(req.params.id) === String(req.user.id)) {
       return res.status(400).json({ error: 'Cannot delete your own account' });
     }
     await User.delete(req.params.id);
