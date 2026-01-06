@@ -244,7 +244,7 @@
 }
 
 .user-name {
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #1f4e99;
   white-space: nowrap;
@@ -254,6 +254,9 @@
   border: none;
   padding: 0;
   margin: 0;
+  outline: none;
+  box-shadow: none;
+  text-shadow: none;
 }
 
 .admin-badge {
@@ -373,7 +376,7 @@
   }
 
   .user-name {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .cell-value {
@@ -493,11 +496,14 @@
   }
 
   .user-name {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     background: none;
     border: none;
     padding: 0;
     color: #1f4e99;
+    outline: none;
+    box-shadow: none;
+    text-shadow: none;
   }
 
   .cell-label {

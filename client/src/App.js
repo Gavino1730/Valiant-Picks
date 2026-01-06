@@ -48,9 +48,15 @@ function App() {
   useEffect(() => {
     if (token) {
       fetchUnreadCount();
+      fetchUserProfile(); // Initial fetch
       // Lighten load: poll notifications every 2 minutes instead of 30s
-      const interval = setInterval(fetchUnreadCount, 120000);
-      return () => clearInterval(interval);
+      const notificationInterval = setInterval(fetchUnreadCount, 120000);
+      // Refresh user balance every 30 seconds to catch bet resolutions
+      const balanceInterval = setInterval(fetchUserProfile, 30000);
+      return () => {
+        clearInterval(notificationInterval);
+        clearInterval(balanceInterval);
+      };
     }
   }, [token]);
 
@@ -61,6 +67,22 @@ function App() {
     } catch (err) {
       console.error('Error fetching unread count:', err);
     }
+  };
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await apiClient.get('/users/profile');
+      const updatedUser = response.data;
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    } catch (err) {
+      console.error('Error fetching user profile:', err);
+    }
+  };
+
+  const updateUser = (userData) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
   };
 
   const handleLogin = (newToken, userData) => {
@@ -273,7 +295,7 @@ function App() {
       </div>
 
       <div className="container">
-        {page === 'dashboard' && <Dashboard user={user} onNavigate={handlePageChange} />}
+        {page === 'dashboard' && <Dashboard user={user} onNavigate={handlePageChange} updateUser={updateUser} fetchUserProfile={fetchUserProfile} />}
         <Suspense fallback={<LoadingSpinner />}>
           {page === 'games' && <Games />}
           {page === 'teams' && <Teams />}

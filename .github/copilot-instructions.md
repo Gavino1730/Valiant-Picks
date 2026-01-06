@@ -1,7 +1,7 @@
 # Valiant Picks - Copilot Instructions
 
 ## Project Overview
-Full-stack sports betting website for Valiant Academy basketball. Users bet with virtual Valiant Bucks on games and prop bets. Admins manage games, teams, players, and resolve bets.
+Full-stack sports betting website for Valiant sports. Users bet with virtual Valiant Bucks on games and prop bets. Admins manage games, teams, players, and resolve bets.
 
 ## Live Deployment
 - **Domain**: https://valiantpicks.com

@@ -1585,11 +1585,9 @@ function AdminPanel() {
                         <button 
                           className="btn"
                           style={{background: '#9c27b0', padding: '6px 10px', fontSize: '0.8em', whiteSpace: 'nowrap'}}
-                          onClick={(e) => {
+                          onClick={() => {
                             setSelectedUser(u.id);
                             setNewBalance(u.balance.toString());
-                            const rect = e.currentTarget.getBoundingClientRect();
-                            setMenuPosition({ x: rect.left, y: rect.bottom + 10 });
                           }}
                         >
                           ⚙️ Options
@@ -1656,11 +1654,9 @@ function AdminPanel() {
                     <button 
                       className="btn"
                       style={{background: '#9c27b0', flex: '1'}}
-                      onClick={(e) => {
+                      onClick={() => {
                         setSelectedUser(u.id);
                         setNewBalance(u.balance.toString());
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setMenuPosition({ x: rect.left, y: rect.bottom + 10 });
                       }}
                     >
                       ⚙️ Options
@@ -1673,7 +1669,7 @@ function AdminPanel() {
 
           {selectedUser && (
             <div className="modal-overlay" onClick={() => setSelectedUser(null)}>
-              <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{minWidth: '500px', maxWidth: '90vw', position: 'absolute', top: `${menuPosition.y}px`, left: `${menuPosition.x}px`, margin: 0}}>
+              <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{minWidth: '500px', maxWidth: '90vw'}}>
                 <h3 style={{marginBottom: '20px', color: '#1f4e99'}}>⚙️ User Options</h3>
                 <div style={{marginBottom: '20px', background: 'rgba(30, 136, 229, 0.1)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(30, 136, 229, 0.3)'}}>
                   <p style={{margin: '5px 0', color: '#b8c5d6'}}>
