@@ -13,6 +13,7 @@ const RATE_LIMIT_ENABLED = process.env.RATE_LIMIT_ENABLED === 'true';
 const RATE_LIMIT_WINDOW_MS = parseInt(process.env.RATE_LIMIT_WINDOW_MS || `${15 * 60 * 1000}`, 10);
 const RATE_LIMIT_MAX = parseInt(process.env.RATE_LIMIT_MAX || '5000', 10);
 const AUTH_RATE_LIMIT_MAX = parseInt(process.env.AUTH_RATE_LIMIT_MAX || '100', 10);
+const GAME_VISIBILITY_SCHEDULER_ENABLED = process.env.GAME_VISIBILITY_SCHEDULER_ENABLED === 'true';
 
 // Trust proxy - Required for Railway and other proxy services
 app.set('trust proxy', 1);
@@ -85,7 +86,11 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  startScheduler();
+  if (GAME_VISIBILITY_SCHEDULER_ENABLED) {
+    startScheduler();
+  } else {
+    console.log('Game visibility scheduler disabled.');
+  }
 });
 
 module.exports = app;
