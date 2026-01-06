@@ -289,6 +289,22 @@
   color: #6b7280;
 }
 
+/* Autofill styling for all browsers */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus,
+.form-group input:-webkit-autofill:active,
+.password-input-wrapper input:-webkit-autofill,
+.password-input-wrapper input:-webkit-autofill:hover,
+.password-input-wrapper input:-webkit-autofill:focus,
+.password-input-wrapper input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: #ffffff;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px #0f172a;
+  border-color: #004f9e;
+}
+
 .password-input-wrapper {
   position: relative;
   display: flex;

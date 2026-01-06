@@ -15,7 +15,6 @@ function AdminPanel() {
   const [tab, setTab] = useState('games');
   const [selectedUser, setSelectedUser] = useState(null);
   const [newBalance, setNewBalance] = useState('');
-  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [editingGame, setEditingGame] = useState(null);
   const [gameStatusModal, setGameStatusModal] = useState(null);
   const [gameFilter, setGameFilter] = useState('all'); // 'all', 'boys', 'girls'

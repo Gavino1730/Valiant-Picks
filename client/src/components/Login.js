@@ -298,7 +298,7 @@ function Login({ onLogin, apiUrl }) {
         
         {error && <div className="alert alert-error">{error}</div>}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} name={isRegister ? 'register' : 'login'} method="post" autoComplete="on">
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input
@@ -308,6 +308,7 @@ function Login({ onLogin, apiUrl }) {
               value={formData.username}
               onChange={handleChange}
               className={validationErrors.username ? 'input-error' : ''}
+              autoComplete="username"
               required
               aria-describedby={validationErrors.username ? 'username-error' : undefined}
             />
@@ -326,6 +327,7 @@ function Login({ onLogin, apiUrl }) {
                 value={formData.email}
                 onChange={handleChange}
                 className={validationErrors.email ? 'input-error' : ''}
+                autoComplete="email"
                 required
                 aria-describedby={validationErrors.email ? 'email-error' : undefined}
               />
@@ -345,6 +347,7 @@ function Login({ onLogin, apiUrl }) {
                 value={formData.password}
                 onChange={handleChange}
                 className={validationErrors.password ? 'input-error' : ''}
+                autoComplete={isRegister ? "new-password" : "current-password"}
                 required
                 aria-describedby={validationErrors.password ? 'password-error' : undefined}
               />
