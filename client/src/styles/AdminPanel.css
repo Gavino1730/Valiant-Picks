@@ -895,4 +895,170 @@
   .user-card-body {
     grid-template-columns: 1fr;
   }
+
+  /* Mobile-optimized User Options Modal */
+  .user-options-modal {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    min-width: unset !important;
+    padding: 1.25rem !important;
+    max-height: 90vh;
+  }
+
+  .user-options-modal h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem !important;
+  }
+
+  .mobile-input {
+    width: 100%;
+    padding: 14px;
+    background: #1e2139;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    transition: border-color 0.2s ease;
+  }
+
+  .mobile-input:focus {
+    outline: none;
+    border-color: #1f4e99;
+  }
+
+  .mobile-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 12px;
+    background: rgba(31, 78, 153, 0.1);
+    border-radius: 8px;
+    transition: background 0.2s ease;
+  }
+
+  .mobile-checkbox-label:active {
+    background: rgba(31, 78, 153, 0.2);
+  }
+
+  .mobile-checkbox {
+    width: 24px !important;
+    height: 24px !important;
+    cursor: pointer;
+  }
+
+  .modal-buttons-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .btn-mobile {
+    width: 100%;
+    padding: 14px !important;
+    font-size: 1rem !important;
+    font-weight: 600;
+    border-radius: 8px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .delete-section-mobile {
+    margin-bottom: 20px;
+    padding-top: 20px;
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-delete-mobile {
+    width: 100%;
+    padding: 14px !important;
+    background: linear-gradient(135deg, #d32f2f, #b71c1c) !important;
+    border: 2px solid #d32f2f !important;
+    font-weight: 700;
+    font-size: 0.95rem !important;
+    border-radius: 8px;
+    min-height: 50px;
+    color: white;
+  }
+
+  .delete-warning-mobile {
+    font-size: 0.85rem;
+    color: #ef5350;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: 500;
+  }
+}
+
+@media (min-width: 769px) {
+  .modal-buttons-mobile {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .btn-mobile {
+    flex: 1;
+    padding: 12px !important;
+    font-size: 0.95rem !important;
+  }
+
+  .user-options-modal {
+    min-width: 500px;
+    max-width: 600px;
+  }
+
+  .mobile-input {
+    width: 100%;
+    padding: 12px;
+    background: #1e2139;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    color: #fff;
+    font-size: 15px;
+  }
+
+  .mobile-input:focus {
+    outline: none;
+    border-color: #1f4e99;
+  }
+
+  .mobile-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+
+  .mobile-checkbox {
+    width: 20px !important;
+    height: 20px !important;
+    cursor: pointer;
+  }
+
+  .delete-section-mobile {
+    margin-bottom: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-delete-mobile {
+    width: 100%;
+    padding: 12px !important;
+    background: linear-gradient(135deg, #d32f2f, #b71c1c) !important;
+    border: 2px solid #d32f2f !important;
+    font-weight: 700;
+  }
+
+  .delete-warning-mobile {
+    font-size: 0.8rem;
+    color: #ef5350;
+    margin-top: 8px;
+    text-align: center;
+  }
 }

@@ -114,15 +114,23 @@ class User {
 
   static async delete(userId) {
     try {
-      // With CASCADE on user_id foreign keys, just delete the user
-      // Database will automatically delete: bets, transactions, notifications
-      const { error } = await supabase
-        .from('users')
-        .delete()
-        .eq('id', userId);
+      // Use RPC function to delete user with CASCADE
+      // This bypasses RLS policies while maintaining security at the app layer
+      const { data, error } = await supabase
+        .rpc('delete_user_cascade', { p_user_id: userId });
 
-      if (error) throw error;
-      return { changes: 1 };
+      if (error) {
+        console.error('RPC delete error:', error);
+        // Fallback to direct delete if RPC doesn't exist
+        const { error: directError } = await supabase
+          .from('users')
+          .delete()
+          .eq('id', userId);
+        
+        if (directError) throw directError;
+      }
+
+      return { success: true, data };
     } catch (err) {
       throw new Error(`Error deleting user: ${err.message}`);
     }

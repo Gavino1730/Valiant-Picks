@@ -1718,7 +1718,7 @@ function AdminPanel() {
 
           {selectedUser && (
             <div className="modal-overlay" onClick={() => setSelectedUser(null)}>
-              <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{minWidth: '500px', maxWidth: '90vw'}}>
+              <div className="modal-content user-options-modal" onClick={(e) => e.stopPropagation()}>
                 <h3 style={{marginBottom: '20px', color: '#1f4e99'}}>⚙️ User Options</h3>
                 <div style={{marginBottom: '20px', background: 'rgba(30, 136, 229, 0.1)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(30, 136, 229, 0.3)'}}>
                   <p style={{margin: '5px 0', color: '#b8c5d6'}}>
@@ -1740,33 +1740,33 @@ function AdminPanel() {
                     step="0.01"
                     value={newBalance}
                     onChange={(e) => setNewBalance(e.target.value)}
-                    style={{width: '100%', padding: '10px', background: '#1e2139', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '6px', color: '#fff'}}
+                    className="mobile-input"
                   />
                 </div>
 
                 <div className="form-group" style={{marginBottom: '20px'}}>
-                  <label style={{display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer'}}>
+                  <label className="mobile-checkbox-label">
                     <input 
                       type="checkbox" 
                       checked={users.find(u => u.id === selectedUser)?.is_admin || false}
                       onChange={() => handleToggleAdminStatus(selectedUser, users.find(u => u.id === selectedUser)?.is_admin || false)}
-                      style={{width: '18px', height: '18px', cursor: 'pointer'}}
+                      className="mobile-checkbox"
                     />
                     <span style={{color: '#b8c5d6', fontWeight: '500'}}>👑 Make Admin</span>
                   </label>
                 </div>
 
-                <div className="modal-buttons" style={{display: 'flex', gap: '10px', marginBottom: 24}}>
+                <div className="modal-buttons-mobile">
                   <button 
-                    className="btn" 
-                    style={{flex: 1, background: '#66bb6a'}}
+                    className="btn btn-mobile" 
+                    style={{background: '#66bb6a'}}
                     onClick={() => handleUpdateUserBalance(selectedUser)}
                   >
                     ✅ Save Balance
                   </button>
                   <button 
-                    className="btn btn-secondary"
-                    style={{flex: 1, background: '#ef5350'}}
+                    className="btn btn-mobile btn-secondary"
+                    style={{background: '#ef5350'}}
                     onClick={() => setSelectedUser(null)}
                   >
                     ❌ Close
@@ -1774,20 +1774,14 @@ function AdminPanel() {
                 </div>
 
                 {/* Delete User Button */}
-                <div style={{marginBottom: '20px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)'}}>
+                <div className="delete-section-mobile">
                   <button 
-                    className="btn"
-                    style={{
-                      width: '100%',
-                      background: 'linear-gradient(135deg, #d32f2f, #b71c1c)',
-                      border: '2px solid #d32f2f',
-                      fontWeight: '700'
-                    }}
+                    className="btn btn-delete-mobile"
                     onClick={() => handleDeleteUser(selectedUser)}
                   >
                     🗑️ Delete Account Permanently
                   </button>
-                  <p style={{fontSize: '0.8rem', color: '#ef5350', marginTop: '8px', textAlign: 'center'}}>
+                  <p className="delete-warning-mobile">
                     ⚠️ This action cannot be undone!
                   </p>
                 </div>
