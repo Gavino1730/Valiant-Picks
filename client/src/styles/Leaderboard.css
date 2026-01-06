@@ -526,23 +526,28 @@
 
 @media (max-width: 600px) {
   .leaderboard-page {
-    padding: 1rem 0.75rem;
+    padding: 0.75rem 0.5rem;
   }
 
   .leaderboard-row {
-    grid-template-columns: 45px 1fr;
-    gap: 1rem;
-    padding: 1.2rem;
+    grid-template-columns: 40px 1fr;
+    gap: 0.5rem;
+    padding: 0.75rem 0.5rem;
+    border-radius: 8px;
   }
 
   .rank-number {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+
+  .user-cell {
+    grid-column: span 1;
   }
 
   .user-name {
-    font-size: 1.05rem;
+    font-size: 0.95rem;
     background: none !important;
     border: none !important;
     padding: 0 !important;
@@ -553,52 +558,73 @@
     border-radius: 0 !important;
   }
 
+  .admin-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+  }
+
+  .stats-cell {
+    display: none !important;
+  }
+
+  /* Only show balance below username */
+  .balance-cell {
+    display: flex !important;
+    grid-column: 2;
+    margin-top: 0.25rem;
+  }
+
+  .balance-cell .cell-label {
+    display: none;
+  }
+
+  .balance-cell .cell-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
   .cell-label {
     font-size: 0.55rem;
     letter-spacing: 0.5px;
   }
 
   .cell-value {
-    font-size: 0.9rem;
-  }
-
-  .balance-cell .cell-value {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
 
   .leaderboard-header h1 {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     margin-bottom: 0.5rem;
   }
 
   .leaderboard-header .subtitle {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     margin-bottom: 1.5rem;
   }
 
   .overview-stats {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
   }
 
   .stat-card {
-    padding: 1.2rem 1rem;
-    border-radius: 12px;
+    padding: 1rem 0.75rem;
+    border-radius: 10px;
   }
 
   .stat-card-value {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
 
   .stat-card-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     letter-spacing: 0.5px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
   }
 
   .stat-card-icon {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 
   .sort-controls {
@@ -612,16 +638,29 @@
   }
 
   .picks-cell {
-    display: none;
+    display: none !important;
   }
 
-  .leaderboard-row .stats-cell:last-child {
-    display: none;
+  .profit-cell {
+    display: none !important;
   }
 
-  /* Show hidden cells at mobile on first visible row */
-  .leaderboard-row.rank-1 .balance-cell {
+  /* Restructure the layout */
+  .leaderboard-row {
+    grid-template-rows: auto auto;
+  }
+
+  .user-cell {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 }
 

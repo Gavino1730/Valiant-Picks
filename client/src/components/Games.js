@@ -348,9 +348,11 @@ function Games() {
                   const expiresAt = prop.expires_at ? new Date(prop.expires_at) : null;
                   const countdown = getCountdown(expiresAt);
                   const propLocked = countdown.isPast || prop.status !== 'active';
+                  const isBoys = prop.team_type?.toLowerCase().includes('boys');
+                  const isGirls = prop.team_type?.toLowerCase().includes('girls');
 
                   return (
-                  <div key={`prop-${prop.id}`} className="prop-card">
+                  <div key={`prop-${prop.id}`} className={`prop-card ${isBoys ? 'boys-prop' : isGirls ? 'girls-prop' : ''}`}>
                     <div className="prop-header">
                       <h3>{prop.title}</h3>
                       <span className={`prop-category ${prop.team_type?.toLowerCase().includes('boys') ? 'boys' : prop.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>

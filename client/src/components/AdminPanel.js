@@ -51,8 +51,8 @@ function AdminPanel() {
     title: '',
     description: '',
     teamType: 'General',
-    options: ['Option 1', 'Option 2'],
-    optionOdds: { 'Option 1': '', 'Option 2': '' },
+    options: ['', ''],
+    optionOdds: {},
     expiresAt: '',
     useCustomOptions: true
   });
@@ -402,8 +402,8 @@ function AdminPanel() {
         title: '',
         description: '',
         teamType: 'General',
-        options: ['Option 1', 'Option 2'],
-        optionOdds: { 'Option 1': '', 'Option 2': '' },
+        options: ['', ''],
+        optionOdds: {},
         expiresAt: '',
         useCustomOptions: true
       });
@@ -1160,22 +1160,23 @@ function AdminPanel() {
             <div className="form-row">
               <div className="form-group full-width">
                 <label>Pick Options *</label>
-                <p style={{fontSize: '0.9rem', color: '#888a9b', marginBottom: '1rem'}}>Define custom options users can pick</p>
+                <p style={{fontSize: '0.9rem', color: '#888a9b', marginBottom: '1rem'}}>Define custom options users can pick (e.g., "Valiants win", "Opponent wins")</p>
                 
                 {propBetForm.options.map((option, index) => (
                   <div key={index} style={{display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'flex-end'}}>
                     <div style={{flex: 1}}>
-                      <label style={{fontSize: '0.85rem'}}>Option {index + 1} Name</label>
+                      <label style={{fontSize: '0.85rem'}}>Option {index + 1} Name *</label>
                       <input 
                         type="text" 
                         value={option} 
                         onChange={(e) => handleOptionChange(index, e.target.value)}
-                        placeholder="e.g., Valiants win"
+                        placeholder={index === 0 ? "e.g., Valiants win" : "e.g., Opponent wins"}
                         style={{width: '100%'}}
+                        required
                       />
                     </div>
                     <div style={{minWidth: '150px'}}>
-                      <label style={{fontSize: '0.85rem'}}>Odds</label>
+                      <label style={{fontSize: '0.85rem'}}>Odds *</label>
                       <input 
                         type="number" 
                         step="0.01" 
@@ -1218,32 +1219,61 @@ function AdminPanel() {
               {propBets.map(propBet => (
                 <div key={propBet.id} className="prop-bet-card">
                   <div className="prop-card-header">
-                    <h4 style={{margin: '0 0 8px 0', color: '#1f4e99', fontSize: '1.2rem'}}>{propBet.title}</h4>
-                    <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-                      <div className="prop-status-badge" style={{background: propBet.status === 'active' ? 'rgba(102, 187, 106, 0.2)' : 'rgba(239, 83, 80, 0.2)', color: propBet.status === 'active' ? '#66bb6a' : '#ef5350', padding: '4px 12px', borderRadius: '999px', fontSize: '0.85rem', fontWeight: 600}}>
-                        {propBet.status.toUpperCase()}
+                    <div>
+                      <h4 style={{margin: '0 0 8px 0', color: '#1f4e99', fontSize: '1.3rem', fontWeight: '700'}}>{propBet.title}</h4>
+                      {propBet.description && <p style={{color: '#b8c5d6', margin: '0', fontSize: '0.95rem', lineHeight: '1.4'}}>{propBet.description}</p>}
+                    </div>
+                    <div style={{display: 'flex', gap: '8px', alignItems: 'flex-start', flexShrink: 0}}>
+                      <div className="prop-status-badge" style={{background: propBet.status === 'active' ? 'rgba(102, 187, 106, 0.2)' : 'rgba(239, 83, 80, 0.2)', color: propBet.status === 'active' ? '#66bb6a' : '#ef5350', padding: '6px 14px', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase'}}>
+                        {propBet.status}
                       </div>
-                      <div className="prop-status-badge" style={{background: propBet.is_visible ? 'rgba(33, 150, 243, 0.2)' : 'rgba(158, 158, 158, 0.2)', color: propBet.is_visible ? '#2196f3' : '#9e9e9e', padding: '4px 12px', borderRadius: '999px', fontSize: '0.85rem', fontWeight: 600}}>
+                      <div className="prop-status-badge" style={{background: propBet.is_visible ? 'rgba(33, 150, 243, 0.2)' : 'rgba(158, 158, 158, 0.2)', color: propBet.is_visible ? '#2196f3' : '#9e9e9e', padding: '6px 14px', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700}}>
                         {propBet.is_visible ? '👁️ VISIBLE' : '🚫 HIDDEN'}
                       </div>
                     </div>
                   </div>
                   
-                  {propBet.description && <p style={{color: '#b8c5d6', marginBottom: '12px', fontSize: '0.95rem'}}>{propBet.description}</p>}
-                  
                   <div className="prop-card-info">
                     <div className="info-row">
-                      <span className="info-label">Category:</span>
-                      <span className="info-value">{propBet.team_type}</span>
+                      <span className="info-label">📂 Category</span>
+                      <span className="info-value" style={{fontWeight: '600', color: '#e0e0e0'}}>{propBet.team_type}</span>
                     </div>
                     <div className="info-row">
-                      <span className="info-label">Odds:</span>
-                      <span className="info-value">YES: <strong style={{color: '#66bb6a'}}>{propBet.yes_odds}x</strong> | NO: <strong style={{color: '#ef5350'}}>{propBet.no_odds}x</strong></span>
+                      <span className="info-label">🎲 Options & Odds</span>
+                      <div className="info-value" style={{display: 'flex', gap: '12px', flexWrap: 'wrap'}}>
+                        {propBet.options && propBet.options.length > 0 ? (
+                          propBet.options.map((option, idx) => {
+                            const odds = propBet.option_odds ? propBet.option_odds[option] : null;
+                            return (
+                              <span key={idx} style={{
+                                background: idx === 0 ? 'rgba(102, 187, 106, 0.15)' : 'rgba(239, 83, 80, 0.15)',
+                                padding: '4px 12px',
+                                borderRadius: '6px',
+                                border: `1px solid ${idx === 0 ? 'rgba(102, 187, 106, 0.4)' : 'rgba(239, 83, 80, 0.4)'}`,
+                                color: idx === 0 ? '#66bb6a' : '#ef5350',
+                                fontWeight: '600',
+                                fontSize: '0.9rem'
+                              }}>
+                                {option}: {odds || propBet.yes_odds}x
+                              </span>
+                            );
+                          })
+                        ) : (
+                          <>
+                            <span style={{background: 'rgba(102, 187, 106, 0.15)', padding: '4px 12px', borderRadius: '6px', border: '1px solid rgba(102, 187, 106, 0.4)', color: '#66bb6a', fontWeight: '600', fontSize: '0.9rem'}}>
+                              YES: {propBet.yes_odds}x
+                            </span>
+                            <span style={{background: 'rgba(239, 83, 80, 0.15)', padding: '4px 12px', borderRadius: '6px', border: '1px solid rgba(239, 83, 80, 0.4)', color: '#ef5350', fontWeight: '600', fontSize: '0.9rem'}}>
+                              NO: {propBet.no_odds}x
+                            </span>
+                          </>
+                        )}
+                      </div>
                     </div>
                     {propBet.expires_at && (
                       <div className="info-row">
-                        <span className="info-label">Expires:</span>
-                        <span className="info-value">
+                        <span className="info-label">⏰ Expires</span>
+                        <span className="info-value" style={{color: '#ffb74d', fontWeight: '500'}}>
                           {new Date(propBet.expires_at).toLocaleString('en-US', {
                             month: 'short',
                             day: 'numeric',
@@ -1256,14 +1286,24 @@ function AdminPanel() {
                     )}
                     {propBet.outcome && (
                       <div className="info-row">
-                        <span className="info-label">Outcome:</span>
-                        <span className="info-value" style={{color: propBet.outcome === 'yes' ? '#66bb6a' : '#ef5350', fontWeight: 600}}>{propBet.outcome.toUpperCase()}</span>
+                        <span className="info-label">🏆 Outcome</span>
+                        <span className="info-value" style={{
+                          color: propBet.outcome === 'yes' ? '#66bb6a' : '#ef5350',
+                          fontWeight: '700',
+                          fontSize: '1rem',
+                          textTransform: 'uppercase',
+                          background: propBet.outcome === 'yes' ? 'rgba(102, 187, 106, 0.15)' : 'rgba(239, 83, 80, 0.15)',
+                          padding: '4px 12px',
+                          borderRadius: '6px'
+                        }}>
+                          {propBet.options && propBet.options[propBet.outcome === 'yes' ? 0 : 1] || propBet.outcome.toUpperCase()}
+                        </span>
                       </div>
                     )}
                   </div>
                   
-                  <div className="prop-card-actions">
-                    <div className="visibility-toggle-container">
+                  <div className="prop-card-actions-improved">
+                    <div className="visibility-toggle-section">
                       <label className="toggle-switch">
                         <input 
                           type="checkbox" 
@@ -1272,23 +1312,37 @@ function AdminPanel() {
                         />
                         <span className="toggle-slider"></span>
                       </label>
-                      <span className="toggle-label">{propBet.is_visible ? 'Visible' : 'Hidden'}</span>
+                      <span className="toggle-label-improved">{propBet.is_visible ? 'Visible to Users' : 'Hidden from Users'}</span>
                     </div>
                     {propBet.status === 'active' && (
-                      <>
-                        <button className="prop-action-btn resolve-yes" onClick={() => handleUpdatePropBet(propBet.id, 'resolved', 'yes')}>
-                          ✅ Resolve YES
+                      <div className="prop-action-buttons-grid">
+                        {propBet.options && propBet.options.length > 0 ? (
+                          propBet.options.map((option, idx) => (
+                            <button 
+                              key={idx}
+                              className={`prop-action-btn-new ${idx === 0 ? 'resolve-yes' : 'resolve-no'}`}
+                              onClick={() => handleUpdatePropBet(propBet.id, 'resolved', idx === 0 ? 'yes' : 'no')}
+                            >
+                              {idx === 0 ? '✅' : '❌'} Resolve: {option}
+                            </button>
+                          ))
+                        ) : (
+                          <>
+                            <button className="prop-action-btn-new resolve-yes" onClick={() => handleUpdatePropBet(propBet.id, 'resolved', 'yes')}>
+                              ✅ Resolve: YES
+                            </button>
+                            <button className="prop-action-btn-new resolve-no" onClick={() => handleUpdatePropBet(propBet.id, 'resolved', 'no')}>
+                              ❌ Resolve: NO
+                            </button>
+                          </>
+                        )}
+                        <button className="prop-action-btn-new cancel" onClick={() => handleUpdatePropBet(propBet.id, 'cancelled', null)}>
+                          ⚠️ Cancel Prop
                         </button>
-                        <button className="prop-action-btn resolve-no" onClick={() => handleUpdatePropBet(propBet.id, 'resolved', 'no')}>
-                          ❌ Resolve NO
-                        </button>
-                        <button className="prop-action-btn cancel" onClick={() => handleUpdatePropBet(propBet.id, 'cancelled', null)}>
-                          ⚠️ Cancel
-                        </button>
-                      </>
+                      </div>
                     )}
-                    <button className="prop-action-btn delete" onClick={() => handleDeletePropBet(propBet.id)}>
-                      🗑️ Delete
+                    <button className="prop-action-btn-new delete" onClick={() => handleDeletePropBet(propBet.id)}>
+                      🗑️ Delete Permanently
                     </button>
                   </div>
                 </div>

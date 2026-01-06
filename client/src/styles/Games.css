@@ -396,6 +396,8 @@
   /* Team button styling - Valiants vs Opponents */
   .team-btn {
     flex: 1;
+    min-width: 0;
+    max-width: 50%;
     padding: 12px;
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
@@ -405,6 +407,9 @@
     font-weight: 600;
     font-size: 1em;
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .team-btn.valiant {
@@ -892,6 +897,28 @@
   padding: 1.2rem;
   transition: all 0.3s ease;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Boys Prop - Blue Hue */
+.prop-card.boys-prop {
+  background: linear-gradient(135deg, rgba(30, 136, 229, 0.1) 0%, rgba(21, 101, 192, 0.08) 100%);
+  border-color: rgba(30, 136, 229, 0.25);
+}
+
+.prop-card.boys-prop:hover {
+  border-color: rgba(30, 136, 229, 0.4);
+  box-shadow: 0 8px 24px rgba(30, 136, 229, 0.2);
+}
+
+/* Girls Prop - Pink Hue */
+.prop-card.girls-prop {
+  background: linear-gradient(135deg, rgba(233, 30, 99, 0.1) 0%, rgba(194, 24, 91, 0.08) 100%);
+  border-color: rgba(233, 30, 99, 0.25);
+}
+
+.prop-card.girls-prop:hover {
+  border-color: rgba(233, 30, 99, 0.4);
+  box-shadow: 0 8px 24px rgba(233, 30, 99, 0.2);
 }
 
 .prop-card.featured {

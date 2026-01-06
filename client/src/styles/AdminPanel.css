@@ -547,19 +547,20 @@
 }
 
 .prop-card-info {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.3);
   border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 16px;
+  padding: 18px;
+  margin: 16px 0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .info-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -572,10 +573,11 @@
 .info-label {
   color: #9fb3c8;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  min-width: 85px;
+  letter-spacing: 0.8px;
+  min-width: 120px;
+  flex-shrink: 0;
 }
 
 .info-value {
@@ -583,6 +585,104 @@
   font-size: 0.95rem;
   font-weight: 600;
   text-align: right;
+  flex: 1;
+}
+
+/* New improved actions layout */
+.prop-card-actions-improved {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.visibility-toggle-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(31, 78, 153, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(31, 78, 153, 0.2);
+}
+
+.toggle-label-improved {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.prop-action-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.prop-action-btn-new {
+  padding: 14px 18px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+}
+
+.prop-action-btn-new.resolve-yes {
+  background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.3);
+}
+
+.prop-action-btn-new.resolve-yes:hover {
+  background: linear-gradient(135deg, #81c784 0%, #66bb6a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 187, 106, 0.4);
+}
+
+.prop-action-btn-new.resolve-no {
+  background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 83, 80, 0.3);
+}
+
+.prop-action-btn-new.resolve-no:hover {
+  background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 83, 80, 0.4);
+}
+
+.prop-action-btn-new.cancel {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+}
+
+.prop-action-btn-new.cancel:hover {
+  background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+}
+
+.prop-action-btn-new.delete {
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+  grid-column: 1 / -1;
+}
+
+.prop-action-btn-new.delete:hover {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
 }
 
 .prop-card-actions {
