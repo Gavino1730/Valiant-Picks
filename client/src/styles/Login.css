@@ -34,7 +34,7 @@
 
 .login-box {
   background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
-  padding: 3.5rem 2.8rem;
+  padding: 2rem 1.75rem;
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   width: 100%;
@@ -59,15 +59,15 @@
 
 .logo-section {
   text-align: center;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid rgba(31, 78, 153, 0.2);
 }
 
 .login-logo {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 1rem;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 0.75rem;
   filter: drop-shadow(0 4px 8px rgba(31, 78, 153, 0.2));
   animation: logoFloat 3s ease-in-out infinite;
 }
@@ -82,8 +82,8 @@
 }
 
 .brand-name {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.8rem;
+  margin: 0 0 0.3rem 0;
+  font-size: 1.5rem;
   font-weight: 800;
   background: linear-gradient(135deg, #1f4e99, #3b82f6);
   -webkit-background-clip: text;
@@ -93,20 +93,42 @@
 
 .brand-tagline {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #b8c5d6;
   font-weight: 500;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
-/* Info Section */
+/* Info Links */
+.info-links {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.info-link-btn {
+  background: rgba(31, 78, 153, 0.1);
+  border: 1px solid rgba(31, 78, 153, 0.3);
+  color: #3b82f6;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.info-link-btn:hover {
+  background: rgba(31, 78, 153, 0.2);
+  border-color: rgba(31, 78, 153, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Info Section - REMOVED, keeping for backward compat */
 .info-section {
-  margin-bottom: 1.75rem;
-  margin-top: 0;
-  background: linear-gradient(135deg, rgba(31, 78, 153, 0.08), rgba(59, 130, 246, 0.05));
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid rgba(31, 78, 153, 0.2);
+  display: none;
 }
 
 .info-card {
@@ -184,20 +206,19 @@
 }
 
 .login-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  position: relative;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .login-header h1 {
   margin: 0;
-  flex: 1;
-  text-align: center;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   background: linear-gradient(90deg, #004f9e, #003d7a);
   -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 700;
@@ -255,22 +276,22 @@
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.8rem;
-  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
   color: #ffffff;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .form-group input {
   width: 100%;
-  padding: 1rem 1.2rem;
+  padding: 0.85rem 1rem;
   border: 2px solid #004f9e;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 1rem;
   font-family: inherit;
   transition: all 0.3s ease;
@@ -362,13 +383,14 @@ form {
   background: linear-gradient(90deg, #004f9e 0%, #003d7a 100%);
   color: white;
   border: none;
-  padding: 0.95rem;
+  padding: 0.85rem;
   border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 79, 158, 0.2);
+  margin-top: 0.5rem;
 }
 
 .btn:hover:not(:disabled) {
@@ -387,16 +409,32 @@ form {
 
 .toggle-form {
   text-align: center;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
   border-top: 1px solid rgba(31, 78, 153, 0.2);
 }
 
 .toggle-text {
   color: #b8c5d6;
-  font-size: 0.95rem;
-  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem 0;
   font-weight: 500;
+}
+
+.toggle-link-btn {
+  background: transparent;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: all 0.2s ease;
+}
+
+.toggle-link-btn:hover {
+  color: #1f4e99;
 }
 
 .register-btn {
@@ -763,100 +801,70 @@ form {
     font-size: 0.8rem;
   }
 
-  .info-section {
-    padding: 1rem;
-    margin-bottom: 1.25rem;
+  .login-logo {
+    width: 50px;
+    height: 50px;
   }
 
-  .info-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+  .brand-name {
+    font-size: 1.3rem;
   }
 
-  .info-card {
-    margin-bottom: 1rem;
+  .info-links {
+    gap: 0.4rem;
   }
 
-  .info-card h3 {
-    font-size: 0.95rem;
-    margin-bottom: 0.4rem;
-  }
-
-  .info-card p {
-    font-size: 0.8rem;
-    line-height: 1.4;
-  }
-
-  .info-features {
-    gap: 0.6rem;
-  }
-
-  .feature-item {
-    padding: 0.5rem 0.6rem;
-    gap: 0.5rem;
-  }
-
-  .feature-icon {
-    font-size: 1rem;
-  }
-
-  .feature-item span:last-child {
+  .info-link-btn {
+    padding: 0.4rem 0.75rem;
     font-size: 0.8rem;
   }
 
-  .admin-link {
-    position: static;
-    width: 100%;
-    text-align: center;
-    padding: 10px 12px;
-    font-size: 13px;
+  .login-header h1 {
+    font-size: 1.2rem;
   }
 
   .form-group {
-    margin-bottom: 12px;
+    margin-bottom: 1rem;
   }
 
   .form-group label {
-    font-size: 13px;
-    margin-bottom: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
   }
 
-  .form-group input,
-  .form-group select {
-    width: 100%;
-    padding: 11px 12px;
+  .form-group input {
+    padding: 0.75rem 0.85rem;
     font-size: 16px;
     border-radius: 8px;
   }
 
   .password-input-wrapper input {
-    padding: 0.9rem 3rem 0.9rem 0.9rem;
+    padding: 0.75rem 2.8rem 0.75rem 0.85rem;
   }
 
   .password-toggle {
     width: 40px;
     height: 40px;
-    right: 0.5rem;
+    right: 0.4rem;
   }
 
-  button {
-    width: 100%;
-    padding: 11px 12px;
-    font-size: 14px;
-    border-radius: 8px;
+  .btn {
+    padding: 0.75rem;
+    font-size: 0.95rem;
   }
 
   .toggle-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 6px;
-    font-size: 13px;
-    margin-top: 12px;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
   }
 
-  .link-btn {
-    font-size: 13px;
+  .toggle-text {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .toggle-link-btn {
+    font-size: 0.9rem;
   }
 
   .alert {

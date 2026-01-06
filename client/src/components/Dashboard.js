@@ -380,7 +380,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                       <button
                         key={game.id}
                         type="button"
-                        className={`game-card-btn ${selectedGameId === game.id.toString() ? 'active' : ''} ${isLocked ? 'locked' : ''}`}
+                        className={`game-card-btn ${selectedGameId === game.id.toString() ? 'active' : ''} ${isLocked ? 'locked' : ''} ${game.team_type?.toLowerCase().includes('boys') ? 'boys-game' : game.team_type?.toLowerCase().includes('girls') ? 'girls-game' : ''}`}
                         onClick={() => {
                           if (!isLocked) {
                             setSelectedGameId(game.id.toString());

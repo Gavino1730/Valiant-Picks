@@ -434,6 +434,15 @@ function AdminPanel() {
     }
   };
 
+  const handleTogglePropVisibility = async (propBetId) => {
+    try {
+      await apiClient.put(`/prop-bets/${propBetId}/visibility`);
+      fetchPropBets();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to toggle visibility');
+    }
+  };
+
   const handleUpdateUserBalance = async (userId) => {
     try {
       const balance = parseFloat(newBalance);
@@ -1210,8 +1219,13 @@ function AdminPanel() {
                 <div key={propBet.id} className="prop-bet-card">
                   <div className="prop-card-header">
                     <h4 style={{margin: '0 0 8px 0', color: '#1f4e99', fontSize: '1.2rem'}}>{propBet.title}</h4>
-                    <div className="prop-status-badge" style={{background: propBet.status === 'active' ? 'rgba(102, 187, 106, 0.2)' : 'rgba(239, 83, 80, 0.2)', color: propBet.status === 'active' ? '#66bb6a' : '#ef5350', padding: '4px 12px', borderRadius: '999px', fontSize: '0.85rem', fontWeight: 600}}>
-                      {propBet.status.toUpperCase()}
+                    <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+                      <div className="prop-status-badge" style={{background: propBet.status === 'active' ? 'rgba(102, 187, 106, 0.2)' : 'rgba(239, 83, 80, 0.2)', color: propBet.status === 'active' ? '#66bb6a' : '#ef5350', padding: '4px 12px', borderRadius: '999px', fontSize: '0.85rem', fontWeight: 600}}>
+                        {propBet.status.toUpperCase()}
+                      </div>
+                      <div className="prop-status-badge" style={{background: propBet.is_visible ? 'rgba(33, 150, 243, 0.2)' : 'rgba(158, 158, 158, 0.2)', color: propBet.is_visible ? '#2196f3' : '#9e9e9e', padding: '4px 12px', borderRadius: '999px', fontSize: '0.85rem', fontWeight: 600}}>
+                        {propBet.is_visible ? '👁️ VISIBLE' : '🚫 HIDDEN'}
+                      </div>
                     </div>
                   </div>
                   
@@ -1249,6 +1263,13 @@ function AdminPanel() {
                   </div>
                   
                   <div className="prop-card-actions">
+                    <button 
+                      className="prop-action-btn" 
+                      style={{background: propBet.is_visible ? 'linear-gradient(135deg, #9e9e9e 0%, #757575 100%)' : 'linear-gradient(135deg, #2196f3 0%, #1976d2 100%)', color: 'white'}}
+                      onClick={() => handleTogglePropVisibility(propBet.id)}
+                    >
+                      {propBet.is_visible ? '🚫 Hide' : '👁️ Show'}
+                    </button>
                     {propBet.status === 'active' && (
                       <>
                         <button className="prop-action-btn resolve-yes" onClick={() => handleUpdatePropBet(propBet.id, 'resolved', 'yes')}>

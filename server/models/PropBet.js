@@ -37,7 +37,8 @@ const PropBet = {
           options: options && options.length ? options : null,
           option_odds: optionOdds && Object.keys(optionOdds).length ? optionOdds : null,
           expires_at: expiresAt,
-          status: 'active'
+          status: 'active',
+          is_visible: true
         }])
         .select()
         .single();
@@ -54,13 +55,28 @@ const PropBet = {
       const { data, error } = await supabase
         .from('prop_bets')
         .select('*')
-        .eq('status', 'active')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data || [];
     } catch (err) {
       throw new Error(`Error fetching prop bets: ${err.message}`);
+    }
+  },
+
+  getVisible: async () => {
+    try {
+      const { data, error } = await supabase
+        .from('prop_bets')
+        .select('*')
+        .eq('status', 'active')
+        .eq('is_visible', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      throw new Error(`Error fetching visible prop bets: ${err.message}`);
     }
   },
 
@@ -99,6 +115,30 @@ const PropBet = {
       return { changes: 1 };
     } catch (err) {
       throw new Error(`Error updating prop bet: ${err.message}`);
+    }
+  },
+
+  toggleVisibility: async (id) => {
+    try {
+      // First get the current visibility state
+      const { data: propBet, error: fetchError } = await supabase
+        .from('prop_bets')
+        .select('is_visible')
+        .eq('id', id)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Toggle the visibility
+      const { error } = await supabase
+        .from('prop_bets')
+        .update({ is_visible: !propBet.is_visible })
+        .eq('id', id);
+
+      if (error) throw error;
+      return { changes: 1, is_visible: !propBet.is_visible };
+    } catch (err) {
+      throw new Error(`Error toggling visibility: ${err.message}`);
     }
   },
 

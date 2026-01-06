@@ -479,7 +479,7 @@ function Games() {
                     const gameLocked = countdown.isPast || isClosedStatus(game.status);
 
                     return (
-                  <div key={game.id} className="game-card-display">
+                  <div key={game.id} className={`game-card-display ${game.team_type?.toLowerCase().includes('boys') ? 'boys-game' : game.team_type?.toLowerCase().includes('girls') ? 'girls-game' : ''}`}>
                     <div className="game-header">
                       <span className={`game-sport ${game.team_type?.toLowerCase().includes('boys') ? 'boys' : game.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
                         {game.team_type?.toLowerCase().includes('boys') ? '🏀 ' : game.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{game.team_type}
@@ -531,23 +531,47 @@ function Games() {
 
                     <div className="betting-section">
                       <div className="team-selection" style={{display: 'flex', gap: '10px', marginBottom: '15px', width: '100%'}}>
-                        <button
-                          type="button"
-                          className={`team-btn ${selectedTeams[game.id] === game.home_team ? 'active' : ''}`}
-                          style={{flex: 1, padding: '12px', background: selectedTeams[game.id] === game.home_team ? '#1e88e5' : 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', cursor: 'pointer', transition: 'all 0.3s', fontWeight: '600', fontSize: '1em', textAlign: 'center'}}
-                          onClick={() => setSelectedTeams({...selectedTeams, [game.id]: game.home_team})}
-                        >
-                          {game.home_team}
-                        </button>
-                        {game.away_team && (
-                          <button
-                            type="button"
-                            className={`team-btn ${selectedTeams[game.id] === game.away_team ? 'active' : ''}`}
-                            style={{flex: 1, padding: '12px', background: selectedTeams[game.id] === game.away_team ? '#1e88e5' : 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', cursor: 'pointer', transition: 'all 0.3s', fontWeight: '600', fontSize: '1em', textAlign: 'center'}}
-                            onClick={() => setSelectedTeams({...selectedTeams, [game.id]: game.away_team})}
-                          >
-                            {game.away_team}
-                          </button>
+                        {/* Always show Valiants on the left */}
+                        {game.home_team.toLowerCase().includes('valiant') ? (
+                          <>
+                            <button
+                              type="button"
+                              className={`team-btn valiant ${selectedTeams[game.id] === game.home_team ? 'active' : ''}`}
+                              onClick={() => setSelectedTeams({...selectedTeams, [game.id]: game.home_team})}
+                            >
+                              {game.home_team}
+                            </button>
+                            {game.away_team && (
+                              <button
+                                type="button"
+                                className={`team-btn opponent ${selectedTeams[game.id] === game.away_team ? 'active' : ''}`}
+                                onClick={() => setSelectedTeams({...selectedTeams, [game.id]: game.away_team})}
+                              >
+                                {game.away_team}
+                              </button>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {game.away_team && game.away_team.toLowerCase().includes('valiant') && (
+                              <button
+                                type="button"
+                                className={`team-btn valiant ${selectedTeams[game.id] === game.away_team ? 'active' : ''}`}
+                                onClick={() => setSelectedTeams({...selectedTeams, [game.id]: game.away_team})}
+                              >
+                                {game.away_team}
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              className={`team-btn opponent ${selectedTeams[game.id] === game.home_team ? 'active' : ''}`}
+                              onClick={() => setSelectedTeams({...selectedTeams, [game.id]: game.home_team})}
+                            >
+                              {game.home_team}
+                            </button>
+                          </>
+                        )}
+                          </>
                         )}
                       </div>
 

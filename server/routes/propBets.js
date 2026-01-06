@@ -5,10 +5,12 @@ const User = require('../models/User');
 const Transaction = require('../models/Transaction');
 const { authenticateToken } = require('../middleware/auth');
 
-// Get all active prop bets (public)
+// Get all active prop bets (public - visible only, admin - all)
 router.get('/', authenticateToken, async (req, res) => {
   try {
-    const propBets = await PropBet.getAll();
+    const user = req.user;
+    // Admins see all prop bets, regular users only see visible ones
+    const propBets = user.is_admin ? await PropBet.getAll() : await PropBet.getVisible();
     res.json(propBets);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -98,6 +100,24 @@ router.put('/:id', authenticateToken, async (req, res) => {
     await PropBet.updateStatus(req.params.id, status, outcome);
 
     let betsResolved = 0;
+
+// Toggle prop bet visibility (admin only)
+router.put('/:id/visibility', authenticateToken, async (req, res) => {
+  const user = req.user;
+  if (!user.is_admin) {
+    return res.status(403).json({ error: 'Only admins can toggle visibility' });
+  }
+
+  try {
+    const result = await PropBet.toggleVisibility(req.params.id);
+    res.json({ 
+      message: 'Visibility toggled successfully',
+      is_visible: result.is_visible 
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
     let winningsDistributed = 0;
 
     // If outcome is set (yes or no), resolve all associated bets

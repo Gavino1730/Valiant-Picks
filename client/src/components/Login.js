@@ -226,74 +226,36 @@ function Login({ onLogin, apiUrl }) {
             loading="eager"
           />
           <h2 className="brand-name">Valiant Picks</h2>
-          <p className="brand-tagline">Your Premium Betting Platform</p>
+          <p className="brand-tagline">Make Picks, Win Virtual Bucks</p>
         </div>
 
-        {/* Info Section - What is Valiant Picks */}
-        <div className="info-section">
-          <div className="info-card">
-            <div className="info-icon">🎮</div>
-            <h3>Virtual Picks, Real Excitement</h3>
-            <p>
-              Make predictions on Valiants sports games using virtual <strong>Valiant Bucks</strong> – no real money involved!
-            </p>
-          </div>
-          <div className="info-features">
-            <div className="feature-item">
-              <span className="feature-icon">💰</span>
-              <span>100% Free to Play</span>
-            </div>
-            <div className="feature-item">
-              <span className="feature-icon">🏆</span>
-              <span>Compete on Leaderboards</span>
-            </div>
-            <div className="feature-item">
-              <span className="feature-icon">🎯</span>
-              <span>Support Your Favorite Teams</span>
-            </div>
-          </div>
+        {/* Quick Info Links */}
+        <div className="info-links">
+          <button 
+            className="info-link-btn"
+            onClick={() => setShowHowToUse(true)}
+            type="button"
+          >
+            How It Works
+          </button>
+          <button 
+            className="info-link-btn"
+            onClick={() => setShowAbout(true)}
+            type="button"
+          >
+            About
+          </button>
+          <button 
+            className="info-link-btn"
+            onClick={() => setShowTerms(true)}
+            type="button"
+          >
+            Terms
+          </button>
         </div>
-
-        {/* How to Use Button */}
-        <button 
-          className="how-to-use-link"
-          onClick={() => setShowHowToUse(true)}
-          type="button"
-        >
-          📚 How to Use Valiant Picks
-        </button>
-
-        <button 
-          className="how-to-use-link"
-          onClick={() => setShowAbout(true)}
-          type="button"
-          style={{marginTop: '0.5rem'}}
-        >
-          ℹ️ About Valiant Picks
-        </button>
-
-        <button 
-          className="how-to-use-link"
-          onClick={() => setShowTerms(true)}
-          type="button"
-          style={{marginTop: '0.5rem'}}
-        >
-          ⚖️ Terms & Guidelines
-        </button>
-
-        {!isRegister && (
-          <div className="toggle-form" style={{marginTop: '1.5rem', marginBottom: '1.5rem', paddingTop: 0, borderTop: 'none'}}>
-            <p className="toggle-text">
-              Don't have an account?
-            </p>
-            <button onClick={() => setIsRegister(true)} className="register-btn">
-              Create Account
-            </button>
-          </div>
-        )}
         
         <div className="login-header">
-          <h1>{isRegister ? 'Register' : 'Login'}</h1>
+          <h1>{isRegister ? 'Create Account' : 'Sign In'}</h1>
         </div>
         
         {error && <div className="alert alert-error">{error}</div>}
@@ -383,13 +345,22 @@ function Login({ onLogin, apiUrl }) {
           </button>
         </form>
 
-        {isRegister && (
+        {isRegister ? (
           <div className="toggle-form">
             <p className="toggle-text">
               Already have an account?
             </p>
-            <button onClick={() => setIsRegister(false)} className="register-btn">
-              Back to Login
+            <button onClick={() => { setIsRegister(false); setError(''); setValidationErrors({}); }} className="toggle-link-btn">
+              Sign In Instead
+            </button>
+          </div>
+        ) : (
+          <div className="toggle-form">
+            <p className="toggle-text">
+              Don't have an account?
+            </p>
+            <button onClick={() => { setIsRegister(true); setError(''); setValidationErrors({}); }} className="toggle-link-btn">
+              Create Account
             </button>
           </div>
         )}
