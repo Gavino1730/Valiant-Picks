@@ -371,52 +371,56 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
           ) : (
             <form onSubmit={handlePlaceBet} className="bet-form">
               <div className="form-group">
-                <label htmlFor="game">🏀 Step 1: Choose a Game</label>
-                <p className="field-help">Pick an upcoming game you want to predict the winner for</p>
-                <select
-                  id="game"
-                  value={selectedGameId}
-                  onChange={(e) => {
-                    setSelectedGameId(e.target.value);
-                    setSelectedTeam('');
-                    setConfidence('');
-                  }}
-                  required
-                  className="game-select"
-                >
-                  <option value="">Choose a game...</option>
-                  {games.map(game => (
-                    <option key={game.id} value={game.id}>
-                      {game.home_team} vs {game.away_team} • {parseLocalDateOnly(game.game_date)?.toLocaleDateString() || 'Date TBD'} {formatTime(game.game_time)}
-                    </option>
-                  ))}
-                </select>
+                <label>🏀 Step 1: Choose a Game</label>
+                <p className="field-help">Select the game you want to predict the winner for</p>
+                <div className="game-cards-selection">
+                  {games.map(game => {
+                    const gameCountdown = getCountdown(buildGameStartDate(game));
+                    const isLocked = isGameLocked(game);
+                    return (
+                      <button
+                        key={game.id}
+                        type="button"
+                        className={`game-card-btn ${selectedGameId === game.id.toString() ? 'active' : ''} ${isLocked ? 'locked' : ''}`}
+                        onClick={() => {
+                          if (!isLocked) {
+                            setSelectedGameId(game.id.toString());
+                            setSelectedTeam('');
+                            setConfidence('');
+                          }
+                        }}
+                        disabled={isLocked}
+                      >
+                        <div className="game-card-header">
+                          <span className={`game-badge ${game.team_type?.toLowerCase().includes('boys') ? 'boys' : game.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
+                            {game.team_type?.toLowerCase().includes('boys') ? '🏀 ' : game.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{game.team_type}
+                          </span>
+                          {gameCountdown && (
+                            <span className={`countdown-chip ${gameCountdown.isPast ? 'countdown-closed' : ''}`}>
+                              {gameCountdown.isPast ? '🔒 Closed' : `⏰ ${gameCountdown.label}`}
+                            </span>
+                          )}
+                        </div>
+                        <div className="game-card-matchup">
+                          <div className="game-card-team">{game.home_team}</div>
+                          <div className="game-card-vs">VS</div>
+                          <div className="game-card-team">{game.away_team}</div>
+                        </div>
+                        <div className="game-card-details">
+                          <span className="game-card-date">📅 {parseLocalDateOnly(game.game_date)?.toLocaleDateString() || 'Date TBD'}</span>
+                          <span className="game-card-time">🕐 {formatTime(game.game_time)}</span>
+                        </div>
+                        {game.location && (
+                          <div className="game-card-location">📍 {game.location}</div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               {selectedGame && (
                 <div className="bet-details">
-                  <div className="game-info-card">
-                    <div className="game-header">
-                      <span className={`game-badge ${selectedGame.team_type?.toLowerCase().includes('boys') ? 'boys' : selectedGame.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
-                        {selectedGame.team_type?.toLowerCase().includes('boys') ? '🏀 ' : selectedGame.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{selectedGame.team_type}
-                      </span>
-                      <span className="game-date">{parseLocalDateOnly(selectedGame.game_date)?.toLocaleDateString() || 'Date TBD'} • {formatTime(selectedGame.game_time)}</span>
-                    </div>
-                    {selectedGameCountdown && (
-                      <div className={`countdown-chip ${selectedGameCountdown.isPast ? 'countdown-closed' : ''}`} style={{marginTop: '0.35rem'}}>
-                        {selectedGameCountdown.isPast ? 'Picking closed' : `Starts in ${selectedGameCountdown.label}`}
-                      </div>
-                    )}
-                    <div className="matchup">
-                      <div className="team-item">{selectedGame.home_team}</div>
-                      <div className="vs">VS</div>
-                      <div className="team-item">{selectedGame.away_team}</div>
-                    </div>
-                    {selectedGame.location && (
-                      <div className="game-location">📍 {selectedGame.location}</div>
-                    )}
-                  </div>
-
                   <div className="form-group">
                     <label>👥 Step 2: Who Will Win?</label>
                     <p className="field-help">Click on the team you think will win this game</p>
