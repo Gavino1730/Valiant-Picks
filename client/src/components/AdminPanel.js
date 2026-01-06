@@ -1263,13 +1263,17 @@ function AdminPanel() {
                   </div>
                   
                   <div className="prop-card-actions">
-                    <button 
-                      className="prop-action-btn" 
-                      style={{background: propBet.is_visible ? 'linear-gradient(135deg, #9e9e9e 0%, #757575 100%)' : 'linear-gradient(135deg, #2196f3 0%, #1976d2 100%)', color: 'white'}}
-                      onClick={() => handleTogglePropVisibility(propBet.id)}
-                    >
-                      {propBet.is_visible ? '🚫 Hide' : '👁️ Show'}
-                    </button>
+                    <div className="visibility-toggle-container">
+                      <label className="toggle-switch">
+                        <input 
+                          type="checkbox" 
+                          checked={propBet.is_visible}
+                          onChange={() => handleTogglePropVisibility(propBet.id)}
+                        />
+                        <span className="toggle-slider"></span>
+                      </label>
+                      <span className="toggle-label">{propBet.is_visible ? 'Visible' : 'Hidden'}</span>
+                    </div>
                     {propBet.status === 'active' && (
                       <>
                         <button className="prop-action-btn resolve-yes" onClick={() => handleUpdatePropBet(propBet.id, 'resolved', 'yes')}>
