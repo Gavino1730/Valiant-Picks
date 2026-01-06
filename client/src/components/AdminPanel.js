@@ -1296,7 +1296,7 @@ function AdminPanel() {
                           padding: '4px 12px',
                           borderRadius: '6px'
                         }}>
-                          {propBet.options && propBet.options[propBet.outcome === 'yes' ? 0 : 1] || propBet.outcome.toUpperCase()}
+                          {(propBet.options && propBet.options[propBet.outcome === 'yes' ? 0 : 1]) || propBet.outcome.toUpperCase()}
                         </span>
                       </div>
                     )}
