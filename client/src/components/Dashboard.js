@@ -279,6 +279,168 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     }
   };
 
+  const renderBetDetails = () => (
+    <>
+      <div className="form-group">
+        <label>👥 Step 2: Who Will Win?</label>
+        <p className="field-help">Click on the team you think will win this game</p>
+        <div className="team-selection">
+          {/* Always show Valiants first (left) */}
+          {selectedGame.home_team.toLowerCase().includes('valiant') ? (
+            <>
+              <button
+                type="button"
+                className={`team-btn valiant ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
+                onClick={() => setSelectedTeam(selectedGame.home_team)}
+              >
+                <span className="team-name">{selectedGame.home_team}</span>
+                <span className="team-label">Home</span>
+              </button>
+              <button
+                type="button"
+                className={`team-btn opponent ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
+                onClick={() => setSelectedTeam(selectedGame.away_team)}
+              >
+                <span className="team-name">{selectedGame.away_team}</span>
+                <span className="team-label">Away</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                className={`team-btn valiant ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
+                onClick={() => setSelectedTeam(selectedGame.away_team)}
+              >
+                <span className="team-name">{selectedGame.away_team}</span>
+                <span className="team-label">Away</span>
+              </button>
+              <button
+                type="button"
+                className={`team-btn opponent ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
+                onClick={() => setSelectedTeam(selectedGame.home_team)}
+              >
+                <span className="team-name">{selectedGame.home_team}</span>
+                <span className="team-label">Home</span>
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label>💪 Step 3: How Sure Are You?</label>
+        <p className="field-help">Choose your confidence level - higher confidence = bigger rewards if you win!</p>
+        <div className="confidence-selection">
+          <button
+            type="button"
+            className={`confidence-btn low ${confidence === 'low' ? 'active' : ''}`}
+            onClick={() => setConfidence('low')}
+          >
+            <span className="confidence-label">Low</span>
+            <span className="confidence-multiplier">1.2x</span>
+            <span className="confidence-desc">Win 20% more</span>
+          </button>
+          <button
+            type="button"
+            className={`confidence-btn medium ${confidence === 'medium' ? 'active' : ''}`}
+            onClick={() => setConfidence('medium')}
+          >
+            <span className="confidence-label">Medium</span>
+            <span className="confidence-multiplier">1.5x</span>
+            <span className="confidence-desc">Win 50% more</span>
+          </button>
+          <button
+            type="button"
+            className={`confidence-btn high ${confidence === 'high' ? 'active' : ''}`}
+            onClick={() => setConfidence('high')}
+          >
+            <span className="confidence-label">High</span>
+            <span className="confidence-multiplier">2.0x</span>
+            <span className="confidence-desc">Double your stake!</span>
+          </button>
+        </div>
+      </div>
+
+      {hasExistingBetOnSelectedGame ? (
+        <div className="form-group">
+          <label htmlFor="amount">💵 Pick Amount</label>
+          <div style={{padding: '12px', background: 'rgba(102, 187, 106, 0.15)', border: '1px solid rgba(102, 187, 106, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#66bb6a', fontWeight: 'bold'}}>
+            ✓ Bet Already Placed
+          </div>
+        </div>
+      ) : selectedGameLocked ? (
+        <div className="form-group">
+          <label htmlFor="amount">💵 Pick Amount</label>
+          <div style={{padding: '12px', background: 'rgba(239, 83, 80, 0.15)', border: '1px solid rgba(239, 83, 80, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#ef5350', fontWeight: 'bold'}}>
+            🔒 Betting Closed
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="form-group">
+            <label htmlFor="amount">💵 Step 4: How Much to Stake?</label>
+            <p className="field-help">Enter how many Valiant Bucks you want to stake • Your balance: <strong>{formatCurrency(balance)}</strong></p>
+            <div className="amount-input-wrapper">
+              <input
+                id="amount"
+                type="number"
+                step="1"
+                min={balance > 0 ? 1 : 0}
+                value={amount}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const numeric = parseFloat(val);
+                  if (balance > 0 && !Number.isNaN(numeric) && numeric > balance) {
+                    setAmount(balance.toString());
+                  } else {
+                    setAmount(val);
+                  }
+                }}
+                placeholder={balance > 0 ? 'Enter amount' : 'Balance too low'}
+                required
+                className="amount-input"
+                disabled={balance <= 0}
+              />
+              <button 
+                type="button" 
+                className="max-btn"
+                onClick={() => balance > 0 && setAmount(balance.toString())}
+                disabled={balance <= 0}
+              >
+                MAX
+              </button>
+            </div>
+            {amount && selectedTeam && confidence && (
+              <div className="bet-preview">
+                <div className="bet-preview-row">
+                  <span className="bet-preview-label">Stake</span>
+                  <span className="bet-preview-value">{formatCurrency(parseFloat(amount))}</span>
+                </div>
+                <div className="bet-preview-row">
+                  <span className="bet-preview-label">Multiplier</span>
+                  <span className="bet-preview-value">{confidenceMultipliers[confidence]}x</span>
+                </div>
+                <div className="bet-preview-row highlight">
+                  <span className="bet-preview-label">Potential Win</span>
+                  <span className="bet-preview-value">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <button 
+            type="submit" 
+            className="btn btn-primary" 
+            disabled={loading || !selectedGameId || !selectedTeam || !confidence || !amount || balance <= 0 || selectedGameLocked}
+          >
+            {loading ? 'Placing Pick...' : `✅ Lock In Pick for ${formatCurrency(parseFloat(amount || 0))}`}
+          </button>
+        </>
+      )}
+    </>
+  );
+
   const upcomingGames = React.useMemo(() => games.slice(0, 3), [games]);
   const recentActivity = React.useMemo(
     () => [...bets].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 6),
@@ -373,206 +535,58 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                 <label>🏀 Step 1: Choose a Game</label>
                 <p className="field-help">Select the game you want to predict the winner for</p>
                 <div className="game-cards-selection">
-                  {games.map(game => {
+                  {games.map((game, index) => {
                     const gameCountdown = getCountdown(buildGameStartDate(game));
                     const isLocked = isGameLocked(game);
+                    const isSelected = selectedGameId === game.id.toString();
                     return (
-                      <button
-                        key={game.id}
-                        type="button"
-                        className={`game-card-btn ${selectedGameId === game.id.toString() ? 'active' : ''} ${isLocked ? 'locked' : ''} ${game.team_type?.toLowerCase().includes('boys') ? 'boys-game' : game.team_type?.toLowerCase().includes('girls') ? 'girls-game' : ''}`}
-                        onClick={() => {
-                          if (!isLocked) {
-                            setSelectedGameId(game.id.toString());
-                            setSelectedTeam('');
-                            setConfidence('');
-                          }
-                        }}
-                        disabled={isLocked}
-                      >
-                        <div className="game-card-header">
-                          <span className={`game-badge ${game.team_type?.toLowerCase().includes('boys') ? 'boys' : game.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
-                            {game.team_type?.toLowerCase().includes('boys') ? '🏀 ' : game.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{game.team_type}
-                          </span>
-                          {gameCountdown && (
-                            <span className={`countdown-chip ${gameCountdown.isPast ? 'countdown-closed' : ''}`}>
-                              {gameCountdown.isPast ? '🔒 Closed' : `⏰ ${gameCountdown.label}`}
+                      <React.Fragment key={game.id}>
+                        <button
+                          type="button"
+                          className={`game-card-btn ${isSelected ? 'active' : ''} ${isLocked ? 'locked' : ''} ${game.team_type?.toLowerCase().includes('boys') ? 'boys-game' : game.team_type?.toLowerCase().includes('girls') ? 'girls-game' : ''}`}
+                          onClick={() => {
+                            if (!isLocked) {
+                              setSelectedGameId(game.id.toString());
+                              setSelectedTeam('');
+                              setConfidence('');
+                            }
+                          }}
+                          disabled={isLocked}
+                        >
+                          <div className="game-card-header">
+                            <span className={`game-badge ${game.team_type?.toLowerCase().includes('boys') ? 'boys' : game.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
+                              {game.team_type?.toLowerCase().includes('boys') ? '🏀 ' : game.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{game.team_type}
                             </span>
+                            {gameCountdown && (
+                              <span className={`countdown-chip ${gameCountdown.isPast ? 'countdown-closed' : ''}`}>
+                                {gameCountdown.isPast ? '🔒 Closed' : `⏰ ${gameCountdown.label}`}
+                              </span>
+                            )}
+                          </div>
+                          <div className="game-card-matchup">
+                            <div className="game-card-team">{game.home_team}</div>
+                            <div className="game-card-vs">VS</div>
+                            <div className="game-card-team">{game.away_team}</div>
+                          </div>
+                          <div className="game-card-details">
+                            <span className="game-card-date">📅 {parseLocalDateOnly(game.game_date)?.toLocaleDateString() || 'Date TBD'}</span>
+                            <span className="game-card-time">🕐 {formatTime(game.game_time)}</span>
+                          </div>
+                          {game.location && (
+                            <div className="game-card-location">📍 {game.location}</div>
                           )}
-                        </div>
-                        <div className="game-card-matchup">
-                          <div className="game-card-team">{game.home_team}</div>
-                          <div className="game-card-vs">VS</div>
-                          <div className="game-card-team">{game.away_team}</div>
-                        </div>
-                        <div className="game-card-details">
-                          <span className="game-card-date">📅 {parseLocalDateOnly(game.game_date)?.toLocaleDateString() || 'Date TBD'}</span>
-                          <span className="game-card-time">🕐 {formatTime(game.game_time)}</span>
-                        </div>
-                        {game.location && (
-                          <div className="game-card-location">📍 {game.location}</div>
+                        </button>
+                        
+                        {isSelected && selectedGame && (
+                          <div className="bet-details-expanded">
+                            {renderBetDetails()}
+                          </div>
                         )}
-                      </button>
+                      </React.Fragment>
                     );
                   })}
                 </div>
               </div>
-
-              {selectedGame && (
-                <div className="bet-details">
-                  <div className="form-group">
-                    <label>👥 Step 2: Who Will Win?</label>
-                    <p className="field-help">Click on the team you think will win this game</p>
-                    <div className="team-selection">
-                      {/* Always show Valiants first (left) */}
-                      {selectedGame.home_team.toLowerCase().includes('valiant') ? (
-                        <>
-                          <button
-                            type="button"
-                            className={`team-btn valiant ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
-                            onClick={() => setSelectedTeam(selectedGame.home_team)}
-                          >
-                            <span className="team-name">{selectedGame.home_team}</span>
-                            <span className="team-label">Home</span>
-                          </button>
-                          <button
-                            type="button"
-                            className={`team-btn opponent ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
-                            onClick={() => setSelectedTeam(selectedGame.away_team)}
-                          >
-                            <span className="team-name">{selectedGame.away_team}</span>
-                            <span className="team-label">Away</span>
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            type="button"
-                            className={`team-btn valiant ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
-                            onClick={() => setSelectedTeam(selectedGame.away_team)}
-                          >
-                            <span className="team-name">{selectedGame.away_team}</span>
-                            <span className="team-label">Away</span>
-                          </button>
-                          <button
-                            type="button"
-                            className={`team-btn opponent ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
-                            onClick={() => setSelectedTeam(selectedGame.home_team)}
-                          >
-                            <span className="team-name">{selectedGame.home_team}</span>
-                            <span className="team-label">Home</span>
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label>💪 Step 3: How Sure Are You?</label>
-                    <p className="field-help">Choose your confidence level - higher confidence = bigger rewards if you win!</p>
-                    <div className="confidence-selection">
-                      <button
-                        type="button"
-                        className={`confidence-btn low ${confidence === 'low' ? 'active' : ''}`}
-                        onClick={() => setConfidence('low')}
-                      >
-                        <span className="confidence-label">Low</span>
-                        <span className="confidence-multiplier">1.2x</span>
-                        <span className="confidence-desc">Win 20% more</span>
-                      </button>
-                      <button
-                        type="button"
-                        className={`confidence-btn medium ${confidence === 'medium' ? 'active' : ''}`}
-                        onClick={() => setConfidence('medium')}
-                      >
-                        <span className="confidence-label">Medium</span>
-                        <span className="confidence-multiplier">1.5x</span>
-                        <span className="confidence-desc">Win 50% more</span>
-                      </button>
-                      <button
-                        type="button"
-                        className={`confidence-btn high ${confidence === 'high' ? 'active' : ''}`}
-                        onClick={() => setConfidence('high')}
-                      >
-                        <span className="confidence-label">High</span>
-                        <span className="confidence-multiplier">2.0x</span>
-                        <span className="confidence-desc">Double your stake!</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {hasExistingBetOnSelectedGame ? (
-                    <div className="form-group">
-                      <label htmlFor="amount">💵 Pick Amount</label>
-                      <div style={{padding: '12px', background: 'rgba(102, 187, 106, 0.15)', border: '1px solid rgba(102, 187, 106, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#66bb6a', fontWeight: 'bold'}}>
-                        ✓ Bet Already Placed
-                      </div>
-                    </div>
-                  ) : selectedGameLocked ? (
-                    <div className="form-group">
-                      <label htmlFor="amount">💵 Pick Amount</label>
-                      <div style={{padding: '12px', background: 'rgba(239, 83, 80, 0.15)', border: '1px solid rgba(239, 83, 80, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#ef5350', fontWeight: 'bold'}}>
-                        🔒 Betting Closed
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="form-group">
-                        <label htmlFor="amount">💵 Step 4: How Much to Stake?</label>
-                        <p className="field-help">Enter how many Valiant Bucks you want to stake • Your balance: <strong>{formatCurrency(balance)}</strong></p>
-                        <div className="amount-input-wrapper">
-                          <input
-                            id="amount"
-                            type="number"
-                            step="1"
-                            min={balance > 0 ? 1 : 0}
-                            value={amount}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              const numeric = parseFloat(val);
-                              if (balance > 0 && !Number.isNaN(numeric) && numeric > balance) {
-                                setAmount(balance.toString());
-                              } else {
-                                setAmount(val);
-                              }
-                            }}
-                            placeholder={balance > 0 ? 'Enter amount' : 'Balance too low'}
-                            required
-                            className="amount-input"
-                            disabled={balance <= 0}
-                          />
-                          <button 
-                            type="button" 
-                            className="max-btn"
-                            onClick={() => balance > 0 && setAmount(balance.toString())}
-                            disabled={balance <= 0}
-                          >
-                            MAX
-                          </button>
-                        </div>
-                        <div className="amount-helpers">
-                          <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 50).toString())} disabled={balance < 50}>50</button>
-                          <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 100).toString())} disabled={balance < 100}>100</button>
-                          <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 250).toString())} disabled={balance < 250}>250</button>
-                          <button type="button" className="quick-amount" onClick={() => setAmount(Math.min(balance, 500).toString())} disabled={balance < 500}>500</button>
-                        </div>
-                      </div>
-
-                      {confidence && amount && parseFloat(amount) > 0 && balance > 0 && (
-                        <div className="potential-win-card">
-                          <div className="potential-label">Potential Payout</div>
-                          <div className="potential-amount">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</div>
-                          <div className="potential-profit">Profit: {formatCurrency(parseFloat(amount) * (confidenceMultipliers[confidence] - 1))}</div>
-                        </div>
-                      )}
-
-                      <button type="submit" className="btn btn-bet" disabled={loading || !selectedTeam || !confidence || !amount || parseFloat(amount) <= 0 || balance <= 0}>
-                        {loading ? '⏳ Processing...' : '🎯 Place Pick'}
-                      </button>
-                    </>
-                  )}
-                </div>
-              )}
             </form>
           )}
         </div>
