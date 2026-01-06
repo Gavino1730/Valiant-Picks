@@ -1223,3 +1223,18 @@ table tbody tr:hover {
     -webkit-tap-highlight-color: rgba(31, 78, 153, 0.1);
   }
 }
+
+/* Hide logo and brand text on very small screens */
+@media (max-width: 380px) {
+  .navbar {
+    grid-template-columns: auto 1fr;
+  }
+
+  .nav-brand {
+    display: none;
+  }
+
+  .logo-img {
+    display: none;
+  }
+}

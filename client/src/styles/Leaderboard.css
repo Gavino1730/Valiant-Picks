@@ -228,6 +228,9 @@
   align-items: center;
   gap: 0.8rem;
   min-width: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
 }
 
 .user-info {
@@ -241,6 +244,8 @@
   border: none;
   padding: 0;
   margin: 0;
+  box-shadow: none;
+  outline: none;
 }
 
 .user-name {
@@ -250,13 +255,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  outline: none;
-  box-shadow: none;
-  text-shadow: none;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  border-radius: 0 !important;
 }
 
 .admin-badge {
@@ -537,13 +543,14 @@
 
   .user-name {
     font-size: 1.05rem;
-    background: none;
-    border: none;
-    padding: 0;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
     color: #1f4e99;
-    outline: none;
-    box-shadow: none;
-    text-shadow: none;
+    outline: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    border-radius: 0 !important;
   }
 
   .cell-label {

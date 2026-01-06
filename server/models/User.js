@@ -114,25 +114,8 @@ class User {
 
   static async delete(userId) {
     try {
-      // Delete user's bets first (cascade)
-      await supabase
-        .from('bets')
-        .delete()
-        .eq('user_id', userId);
-
-      // Delete user's transactions
-      await supabase
-        .from('transactions')
-        .delete()
-        .eq('user_id', userId);
-
-      // Delete user's notifications
-      await supabase
-        .from('notifications')
-        .delete()
-        .eq('user_id', userId);
-
-      // Finally delete the user
+      // With CASCADE on user_id foreign keys, just delete the user
+      // Database will automatically delete: bets, transactions, notifications
       const { error } = await supabase
         .from('users')
         .delete()

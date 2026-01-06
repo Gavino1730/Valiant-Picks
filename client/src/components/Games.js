@@ -571,8 +571,7 @@ function Games() {
                             </button>
                           </>
                         )}
-                          </>
-                        )}
+
                       </div>
 
                       <div className="confidence-options" style={{display: 'flex', gap: '10px', marginBottom: '15px', justifyContent: 'center'}}>
