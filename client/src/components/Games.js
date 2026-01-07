@@ -86,7 +86,7 @@ function Games() {
   }, []);
 
   const hasExistingBet = (gameId) => {
-    return userBets.some(bet => bet.game_id === gameId);
+    return userBets.some(bet => bet.game_id === gameId && bet.games && !bet.bet_type?.startsWith('prop-'));
   };
 
   const parseLocalDateOnly = (dateStr) => {

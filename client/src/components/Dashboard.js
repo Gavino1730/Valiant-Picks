@@ -207,7 +207,10 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
 
   const selectedGame = selectedGameId ? games.find(g => g.id === parseInt(selectedGameId)) : null;
   const selectedGameLocked = selectedGame ? isGameLocked(selectedGame) : false;
-  const hasExistingBetOnSelectedGame = selectedGame ? bets.some(bet => bet.game_id === selectedGame.id) : false;
+  const isGameBet = (bet) => Boolean(bet?.games) && !bet?.bet_type?.startsWith('prop-');
+  const hasExistingBetOnSelectedGame = selectedGame
+    ? bets.some(bet => isGameBet(bet) && bet.game_id === selectedGame.id)
+    : false;
 
   const handlePlaceBet = async (e) => {
     e.preventDefault();
