@@ -12,7 +12,7 @@ router.post('/', authenticateToken, async (req, res) => {
     const { gameId, selectedTeam, confidence, amount, odds } = req.body;
     
     // Input validation
-    if (!gameId || !selectedTeam || !confidence || !amount || !odds) {
+    if (!gameId || !selectedTeam || !confidence || !amount) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -20,7 +20,7 @@ router.post('/', authenticateToken, async (req, res) => {
     const parsedAmount = parseFloat(amount);
     const parsedOdds = parseFloat(odds);
     
-    if (isNaN(parsedAmount) || isNaN(parsedOdds)) {
+    if (isNaN(parsedAmount)) {
       return res.status(400).json({ error: 'Invalid numeric values' });
     }
     
@@ -28,14 +28,31 @@ router.post('/', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Bet amount must be between $0.01 and $10,000' });
     }
     
-    if (parsedOdds <= 0 || parsedOdds > 100) {
-      return res.status(400).json({ error: 'Invalid odds value' });
-    }
-
     // Validate confidence level
     const validConfidence = ['low', 'medium', 'high'];
     if (!validConfidence.includes(confidence)) {
       return res.status(400).json({ error: 'Invalid confidence level' });
+    }
+
+    const oddsByConfidence = {
+      low: 1.2,
+      medium: 1.5,
+      high: 2.0
+    };
+
+    const resolvedOdds = oddsByConfidence[confidence];
+    if (!resolvedOdds) {
+      return res.status(400).json({ error: 'Invalid confidence odds' });
+    }
+
+    if (!isNaN(parsedOdds) && parsedOdds !== resolvedOdds) {
+      console.warn('Client odds mismatch; using server odds', {
+        userId: req.user?.id,
+        gameId,
+        confidence,
+        clientOdds: parsedOdds,
+        serverOdds: resolvedOdds
+      });
     }
 
     // Check if game exists
@@ -104,16 +121,16 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     // Create bet and update balance atomically
-    const bet = await Bet.create(req.user.id, gameId, confidence, selectedTeam, parsedAmount, parsedOdds);
+    const bet = await Bet.create(req.user.id, gameId, confidence, selectedTeam, parsedAmount, resolvedOdds);
     await User.updateBalance(req.user.id, -parsedAmount);
-    await Transaction.create(req.user.id, 'bet', -parsedAmount, `${confidence} confidence bet on ${selectedTeam}: ${parsedOdds}x odds`);
+    await Transaction.create(req.user.id, 'bet', -parsedAmount, `${confidence} confidence bet on ${selectedTeam}: ${resolvedOdds}x odds`);
 
     // Create notification
     const Notification = require('../models/Notification');
     await Notification.create(
       req.user.id,
       '✅ Bet Placed',
-      `${confidence.charAt(0).toUpperCase() + confidence.slice(1)} confidence bet on ${selectedTeam} for ${parsedAmount} Valiant Bucks at ${parsedOdds}x odds`,
+      `${confidence.charAt(0).toUpperCase() + confidence.slice(1)} confidence bet on ${selectedTeam} for ${parsedAmount} Valiant Bucks at ${resolvedOdds}x odds`,
       'bet_placed'
     );
 
