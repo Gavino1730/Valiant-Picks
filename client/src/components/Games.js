@@ -6,7 +6,7 @@ import { formatTime } from '../utils/time';
 import Tooltip from './Tooltip';
 import BetConfirmation from './BetConfirmation';
 
-function Games() {
+function Games({ onBalanceRefresh }) {
   const [games, setGames] = useState([]);
   const [propBets, setPropBets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,6 +45,9 @@ function Games() {
     try {
       const response = await apiClient.get('/users/profile');
       setBalance(response.data.balance);
+      if (onBalanceRefresh) {
+        onBalanceRefresh();
+      }
     } catch (err) {
       console.error('Error fetching balance:', err);
     }

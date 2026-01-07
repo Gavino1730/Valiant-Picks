@@ -1,11 +1,11 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, Suspense, lazy, useRef } from 'react';
 import './App.css';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import OnboardingModal from './components/OnboardingModal';
 import RivalryWeekPopup from './components/RivalryWeekPopup';
 import Footer from './components/Footer';
-import { ToastProvider } from './components/ToastProvider';
+import { ToastProvider, useToast } from './components/ToastProvider';
 import './styles/Toast.css';
 import apiClient from './utils/axios';
 import { formatCurrency } from './utils/currency';
@@ -27,6 +27,57 @@ const LoadingSpinner = () => (
     Loading...
   </div>
 );
+
+function GiftBalanceWatcher({ user, updateUser }) {
+  const { showToast } = useToast();
+  const giftRequestRef = useRef(false);
+
+  useEffect(() => {
+    if (!user || giftRequestRef.current) {
+      return undefined;
+    }
+    const currentBalance = Number(user.balance ?? 0);
+    if (currentBalance > 0) {
+      return undefined;
+    }
+
+    let isMounted = true;
+    giftRequestRef.current = true;
+
+    const grantGift = async () => {
+      try {
+        const response = await apiClient.post('/users/gift-balance');
+        if (!isMounted) {
+          return;
+        }
+        if (response.data?.user) {
+          updateUser(response.data.user);
+        }
+        if (response.data?.gifted) {
+          showToast(
+            'Your balance hit 0 — just for fun, here’s a 500 Valiant Bucks gift to keep playing!',
+            'info',
+            6000
+          );
+        }
+      } catch (err) {
+        console.error('Error gifting balance:', err);
+      } finally {
+        if (isMounted) {
+          giftRequestRef.current = false;
+        }
+      }
+    };
+
+    grantGift();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [showToast, updateUser, user]);
+
+  return null;
+}
 
 function App() {
   const [user, setUser] = useState(null);
@@ -134,6 +185,7 @@ function App() {
   return (
     <ToastProvider>
     <div className="app">
+      <GiftBalanceWatcher user={currentUser} updateUser={updateUser} />
       {/* Rivalry Week Popup */}
       <RivalryWeekPopup 
         enabled={rivalryWeekConfig.enabled}
@@ -315,7 +367,7 @@ function App() {
       <div className="container">
         {page === 'dashboard' && <Dashboard user={user} onNavigate={handlePageChange} updateUser={updateUser} fetchUserProfile={fetchUserProfile} />}
         <Suspense fallback={<LoadingSpinner />}>
-          {page === 'games' && <Games />}
+          {page === 'games' && <Games onBalanceRefresh={fetchUserProfile} />}
           {page === 'teams' && <Teams />}
           {page === 'bets' && <BetList />}
           {page === 'leaderboard' && <Leaderboard />}

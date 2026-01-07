@@ -48,6 +48,36 @@ class User {
     }
   }
 
+  static async findByUsernameCaseInsensitive(username) {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .ilike('username', username)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+      return data;
+    } catch (err) {
+      throw new Error(`Error finding user: ${err.message}`);
+    }
+  }
+
+  static async findByEmailCaseInsensitive(email) {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .ilike('email', email)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+      return data;
+    } catch (err) {
+      throw new Error(`Error finding user: ${err.message}`);
+    }
+  }
+
   static async updateBalance(userId, amount) {
     try {
       const { error } = await supabase

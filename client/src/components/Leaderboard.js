@@ -74,6 +74,13 @@ function Leaderboard() {
     return getUsersWithStats().sort((a, b) => b.balance - a.balance);
   };
 
+  const formatWinRate = (winRate) => {
+    if (!Number.isFinite(winRate)) {
+      return '0';
+    }
+    return winRate.toFixed(2).replace(/\.00$/, '');
+  };
+
   if (loading) {
     return (
       <div className="leaderboard-page">
@@ -169,7 +176,7 @@ function Leaderboard() {
                 <div className="stats-cell">
                   <div className="cell-label">Win Rate</div>
                   <div className={`cell-value win-rate ${parseFloat(user.stats.winRate) >= 50 ? 'positive' : parseFloat(user.stats.winRate) === 0 ? 'neutral' : 'negative'}`}>
-                    {user.stats.winRate}%
+                    {formatWinRate(user.stats.winRate)}%
                   </div>
                 </div>
 

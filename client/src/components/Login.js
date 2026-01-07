@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import apiClient from '../utils/axios';
-import { validateUsername, validatePassword, validateEmail, getPasswordStrength } from '../utils/validation';
+import { validateUsername, validatePassword, validateEmail } from '../utils/validation';
 import '../styles/Login.css';
 import HowToUse from './HowToUse';
 import About from './About';
@@ -20,7 +20,6 @@ function Login({ onLogin, apiUrl }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState(null);
 
   const EyeIcon = ({ crossed = false }) => (
     <svg
@@ -69,9 +68,7 @@ function Login({ onLogin, apiUrl }) {
       error = validateEmail(value);
     } else if (name === 'password') {
       error = validatePassword(value);
-      if (isRegister && value) {
-        setPasswordStrength(getPasswordStrength(value));
-      }
+      // No password strength requirements
     }
     
     if (error) {
@@ -116,7 +113,6 @@ function Login({ onLogin, apiUrl }) {
         setError('');
         setFormData({ username: '', email: '', password: '' });
         setValidationErrors({});
-        setPasswordStrength(null);
         setIsRegister(false);
         alert('Registration successful! Please login.');
       } else {
@@ -126,7 +122,7 @@ function Login({ onLogin, apiUrl }) {
       if (err.code === 'ECONNABORTED' || err.message.includes('timeout')) {
         setError('Request timeout. Please check your connection and try again.');
       } else if (err.response?.status === 409) {
-        setError('Username already exists. Please choose another.');
+        setError(err.response?.data?.error || 'That username or email is already in use.');
       } else if (err.response?.status === 401) {
         setError('Invalid username or password. Please try again.');
       } else if (err.response) {
@@ -324,14 +320,6 @@ function Login({ onLogin, apiUrl }) {
             </div>
             {validationErrors.password && (
               <span id="password-error" className="error-message">{validationErrors.password}</span>
-            )}
-            {isRegister && passwordStrength && (
-              <div className="password-strength" style={{marginTop: '0.5rem'}}>
-                <div className="strength-meter" style={{background: passwordStrength.score < 2 ? '#ef5350' : passwordStrength.score < 4 ? '#ffb74d' : '#66bb6a'}}></div>
-                <span style={{fontSize: '0.85rem', color: passwordStrength.score < 2 ? '#ef5350' : passwordStrength.score < 4 ? '#ffb74d' : '#66bb6a'}}>
-                  Strength: {passwordStrength.label}
-                </span>
-              </div>
             )}
           </div>
 

@@ -10,7 +10,6 @@ export const validateUsername = (username) => {
 
 export const validatePassword = (password) => {
   if (!password) return 'Password is required';
-  if (password.length < 6) return 'Password must be at least 6 characters';
   return '';
 };
 
@@ -31,16 +30,4 @@ export const validateBetAmount = (amount, balance) => {
   return '';
 };
 
-export const getPasswordStrength = (password) => {
-  let strength = 0;
-  if (password.length >= 8) strength++;
-  if (password.length >= 12) strength++;
-  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-  if (/[0-9]/.test(password)) strength++;
-  if (/[^a-zA-Z0-9]/.test(password)) strength++;
-  
-  return {
-    score: strength,
-    label: strength < 2 ? 'Weak' : strength < 4 ? 'Good' : 'Strong'
-  };
-};
+export const getPasswordStrength = () => null;

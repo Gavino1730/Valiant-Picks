@@ -33,6 +33,24 @@ router.get('/', optionalAuth, async (req, res) => {
   }
 });
 
+router.post('/gift-balance', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    if ((user.balance ?? 0) > 0) {
+      return res.json({ gifted: false, user });
+    }
+    const giftAmount = 500;
+    await User.updateBalance(user.id, giftAmount);
+    const updatedUser = await User.findById(user.id);
+    return res.json({ gifted: true, giftAmount, user: updatedUser });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 router.put('/:id/balance', authenticateToken, adminOnly, async (req, res) => {
   try {
     const { balance } = req.body;
