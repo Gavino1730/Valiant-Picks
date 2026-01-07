@@ -22,6 +22,7 @@ function Games() {
   const [betSuccess, setBetSuccess] = useState({});
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [pendingBet, setPendingBet] = useState(null);
+  const [isSubmittingBet, setIsSubmittingBet] = useState(false);
 
   const confidenceMultipliers = {
     low: 1.2,
@@ -229,9 +230,10 @@ function Games() {
   };
 
   const handleConfirmBet = async () => {
-    if (!pendingBet) return;
+    if (!pendingBet || isSubmittingBet) return;
 
     try {
+      setIsSubmittingBet(true);
       await apiClient.post('/bets', {
         gameId: pendingBet.gameId,
         selectedTeam: pendingBet.team,
@@ -258,6 +260,8 @@ function Games() {
       setMessage(err.response?.data?.error || 'Failed to place pick');
       setConfirmationOpen(false);
       setPendingBet(null);
+    } finally {
+      setIsSubmittingBet(false);
     }
   };
 
@@ -673,8 +677,12 @@ function Games() {
           odds: pendingBet.odds
         } : null}
         potentialWin={pendingBet ? pendingBet.amount * pendingBet.odds : 0}
+        isSubmitting={isSubmittingBet}
         onConfirm={handleConfirmBet}
         onCancel={() => {
+          if (isSubmittingBet) {
+            return;
+          }
           setConfirmationOpen(false);
           setPendingBet(null);
         }}

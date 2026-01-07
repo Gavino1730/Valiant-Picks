@@ -2,15 +2,15 @@ import React from 'react';
 import '../styles/BetConfirmation.css';
 import { formatCurrency } from '../utils/currency';
 
-function BetConfirmation({ isOpen, bet, onConfirm, onCancel, potentialWin }) {
+function BetConfirmation({ isOpen, bet, onConfirm, onCancel, potentialWin, isSubmitting }) {
   if (!isOpen || !bet) return null;
 
   return (
-    <div className="confirmation-overlay" onClick={onCancel}>
+    <div className="confirmation-overlay" onClick={isSubmitting ? undefined : onCancel}>
       <div className="confirmation-modal" onClick={(e) => e.stopPropagation()}>
         <div className="confirmation-header">
           <h2>📋 Confirm Your Pick</h2>
-          <button className="confirmation-close" onClick={onCancel}>✕</button>
+          <button className="confirmation-close" onClick={onCancel} disabled={isSubmitting}>✕</button>
         </div>
 
         <div className="confirmation-content">
@@ -61,11 +61,11 @@ function BetConfirmation({ isOpen, bet, onConfirm, onCancel, potentialWin }) {
         </div>
 
         <div className="confirmation-footer">
-          <button className="btn-cancel" onClick={onCancel}>
+          <button className="btn-cancel" onClick={onCancel} disabled={isSubmitting}>
             Cancel
           </button>
-          <button className="btn-confirm" onClick={onConfirm}>
-            Confirm Pick ✓
+          <button className="btn-confirm" onClick={onConfirm} disabled={isSubmitting}>
+            {isSubmitting ? 'Placing...' : 'Confirm Pick ✓'}
           </button>
         </div>
       </div>
