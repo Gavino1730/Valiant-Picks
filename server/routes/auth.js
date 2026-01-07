@@ -10,6 +10,9 @@ router.post('/register', async (req, res) => {
     if (!username || !email || !password) {
       return res.status(400).json({ error: 'Username, email, and password required' });
     }
+
+    const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim().toLowerCase();
     
     // Validate email
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -17,10 +20,10 @@ router.post('/register', async (req, res) => {
     }
     
     // Validate username
-    if (username.length < 3 || username.length > 20) {
+    if (trimmedUsername.length < 3 || trimmedUsername.length > 20) {
       return res.status(400).json({ error: 'Username must be 3-20 characters' });
     }
-    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+    if (!/^[a-zA-Z0-9_]+$/.test(trimmedUsername)) {
       return res.status(400).json({ error: 'Username can only contain letters, numbers, and underscores' });
     }
 
@@ -32,13 +35,27 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Password must contain uppercase, lowercase, and number' });
     }
     
+    try {
+      const existingUsername = await User.findByUsernameCaseInsensitive(trimmedUsername);
+      if (existingUsername) {
+        return res.status(409).json({ error: 'Username already exists' });
+      }
+      const existingEmail = await User.findByEmailCaseInsensitive(trimmedEmail);
+      if (existingEmail) {
+        return res.status(409).json({ error: 'Email already exists' });
+      }
+    } catch (error) {
+      console.error('Registration lookup error:', error);
+      return res.status(500).json({ error: 'Server error' });
+    }
+
     let user;
     try {
-      user = await User.create(username.trim(), email.trim(), password);
+      user = await User.create(trimmedUsername, trimmedEmail, password);
     } catch (error) {
       console.error('Registration error:', error);
       if (error.message.includes('unique constraint') || error.message.includes('duplicate') || error.message.includes('already exists')) {
-        return res.status(400).json({ error: 'Username or email already exists' });
+        return res.status(409).json({ error: 'Username or email already exists' });
       }
       return res.status(400).json({ error: 'Registration failed' });
     }
@@ -59,7 +76,7 @@ router.post('/login', async (req, res) => {
 
     let user;
     try {
-      user = await User.findByUsername(username);
+      user = await User.findByUsernameCaseInsensitive(username.trim());
     } catch (err) {
       console.error('Error finding user:', err);
       return res.status(500).json({ error: 'Database error. Please try again.' });

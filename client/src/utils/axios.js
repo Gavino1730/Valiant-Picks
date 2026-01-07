@@ -148,6 +148,11 @@ apiClient.interceptors.response.use(
     
     // Handle 401 errors (token expired or invalid)
     if (error.response?.status === 401) {
+      const requestUrl = error.config?.url || '';
+      const isAuthRequest = requestUrl.includes('/auth/login') || requestUrl.includes('/auth/register');
+      if (isAuthRequest) {
+        return Promise.reject(error);
+      }
       // Try to refresh the token
       return refreshToken().then(newToken => {
         if (newToken) {

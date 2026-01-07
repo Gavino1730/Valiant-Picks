@@ -126,7 +126,7 @@ function Login({ onLogin, apiUrl }) {
       if (err.code === 'ECONNABORTED' || err.message.includes('timeout')) {
         setError('Request timeout. Please check your connection and try again.');
       } else if (err.response?.status === 409) {
-        setError('Username already exists. Please choose another.');
+        setError(err.response?.data?.error || 'That username or email is already in use.');
       } else if (err.response?.status === 401) {
         setError('Invalid username or password. Please try again.');
       } else if (err.response) {
