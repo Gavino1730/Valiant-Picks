@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { authenticateToken, adminOnly, optionalAuth } = require('../middleware/auth');
 const User = require('../models/User');
+const Transaction = require('../models/Transaction');
 
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
@@ -42,8 +43,20 @@ router.post('/gift-balance', authenticateToken, async (req, res) => {
     if ((user.balance ?? 0) > 0) {
       return res.json({ gifted: false, user });
     }
+    const latestGift = await Transaction.findLatestGiftForUser(user.id);
+    if (latestGift) {
+      const giftTimestamp = new Date(latestGift.created_at).getTime();
+      if (!Number.isNaN(giftTimestamp)) {
+        const now = Date.now();
+        const daysSinceGift = (now - giftTimestamp) / (1000 * 60 * 60 * 24);
+        if (daysSinceGift < 7) {
+          return res.json({ gifted: false, user });
+        }
+      }
+    }
     const giftAmount = 500;
     await User.updateBalance(user.id, giftAmount);
+    await Transaction.create(user.id, 'gift', giftAmount, 'Zero-balance courtesy gift');
     const updatedUser = await User.findById(user.id);
     return res.json({ gifted: true, giftAmount, user: updatedUser });
   } catch (error) {

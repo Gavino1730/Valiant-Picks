@@ -30,6 +30,23 @@ class Transaction {
       throw new Error(`Error fetching transactions: ${err.message}`);
     }
   }
+
+  static async findLatestGiftForUser(userId) {
+    try {
+      const { data, error } = await supabase
+        .from('transactions')
+        .select('id, created_at')
+        .eq('user_id', userId)
+        .eq('type', 'gift')
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      if (error) throw error;
+      return data && data.length ? data[0] : null;
+    } catch (err) {
+      throw new Error(`Error fetching gift transactions: ${err.message}`);
+    }
+  }
 }
 
 module.exports = Transaction;
