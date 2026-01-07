@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/Games.css';
 import { formatCurrency } from '../utils/currency';
@@ -29,28 +29,16 @@ function Games() {
     high: 2.0
   };
 
-  useEffect(() => {
-    fetchGames();
-    fetchPropBets();
-    fetchBalance();
-    fetchUserBets();
-  }, []);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => setNow(Date.now()), 3000);
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const fetchBalance = async () => {
+  const fetchBalance = useCallback(async () => {
     try {
       const response = await apiClient.get('/users/profile');
       setBalance(response.data.balance);
     } catch (err) {
       console.error('Error fetching balance:', err);
     }
-  };
+  }, []);
 
-  const fetchUserBets = async () => {
+  const fetchUserBets = useCallback(async () => {
     try {
       const response = await apiClient.get('/bets');
       setUserBets(response.data || []);
@@ -58,9 +46,9 @@ function Games() {
       console.error('Error fetching user bets:', err);
       setUserBets([]);
     }
-  };
+  }, []);
 
-  const fetchGames = async () => {
+  const fetchGames = useCallback(async () => {
     try {
       const response = await apiClient.get('/games');
       const sortedGames = (response.data || []).sort((a, b) => {
@@ -73,9 +61,9 @@ function Games() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchPropBets = async () => {
+  const fetchPropBets = useCallback(async () => {
     try {
       const response = await apiClient.get('/prop-bets');
       setPropBets(response.data || []);
@@ -83,7 +71,19 @@ function Games() {
       console.error('Error fetching prop bets:', err);
       setPropBets([]);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchGames();
+    fetchPropBets();
+    fetchBalance();
+    fetchUserBets();
+  }, [fetchGames, fetchPropBets, fetchBalance, fetchUserBets]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => setNow(Date.now()), 3000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   const hasExistingBet = (gameId) => {
     return userBets.some(bet => bet.game_id === gameId);
