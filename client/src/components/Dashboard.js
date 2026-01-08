@@ -133,13 +133,19 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
 
   const fetchProfile = useCallback(async () => {
     try {
+      if (fetchUserProfile) {
+        const updatedUser = await fetchUserProfile();
+        if (updatedUser?.balance !== undefined) {
+          setBalance(updatedUser.balance);
+        }
+        return;
+      }
+
       const response = await apiClient.get('/users/profile');
       if (response?.data?.balance !== undefined) {
         setBalance(response.data.balance);
         // Update parent component's user state and localStorage
-        if (fetchUserProfile) {
-          fetchUserProfile();
-        } else if (updateUser) {
+        if (updateUser) {
           updateUser(response.data);
         }
       }
