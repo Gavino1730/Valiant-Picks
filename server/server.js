@@ -72,13 +72,18 @@ app.use('/api/teams', require('./routes/teams'));
 app.use('/api/teams-admin', require('./routes/teamsAdmin'));
 app.use('/api/transactions', require('./routes/transactions'));
 app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/error-logs', require('./routes/errorLogs'));
 
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date() });
 });
 
+// Error logging middleware (logs all errors)
+const { errorLogger } = require('./middleware/errorLogger');
+
 // Error handling middleware
+app.use(errorLogger);
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Internal server error' });

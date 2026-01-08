@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logError } from './errorLogging';
 
 // Prefer environment override; otherwise use same-origin /api in prod and localhost:5000 in dev
 const API_URL = process.env.REACT_APP_API_URL || (
@@ -144,6 +145,18 @@ apiClient.interceptors.response.use(
     // If it's a cached response, return it immediately
     if (error.isCached) {
       return Promise.resolve(error.response);
+    }
+    
+    // Log API errors (except auth failures which are normal)
+    if (error.response?.status >= 500) {
+      logError(error, {
+        severity: 'error',
+        type: 'apiError',
+        endpoint: error.config?.url,
+        method: error.config?.method,
+        statusCode: error.response?.status,
+        responseData: error.response?.data
+      });
     }
     
     // Handle 401 errors (token expired or invalid)
