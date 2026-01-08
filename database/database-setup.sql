@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS games (
 CREATE TABLE IF NOT EXISTS bets (
   id SERIAL PRIMARY KEY,
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  game_id INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+  game_id INTEGER REFERENCES games(id) ON DELETE CASCADE,
   bet_type TEXT NOT NULL, -- 'low', 'medium', 'high'
   selected_team TEXT NOT NULL,
   amount DECIMAL(10, 2) NOT NULL,
@@ -98,6 +98,15 @@ CREATE TABLE IF NOT EXISTS prop_bets (
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
+
+ALTER TABLE bets
+  ADD COLUMN IF NOT EXISTS prop_bet_id INTEGER REFERENCES prop_bets(id) ON DELETE CASCADE;
+
+ALTER TABLE bets
+  ADD CONSTRAINT bets_game_or_prop_check CHECK (
+    (game_id IS NOT NULL AND prop_bet_id IS NULL)
+    OR (game_id IS NULL AND prop_bet_id IS NOT NULL)
+  );
 
 -- Transactions table
 CREATE TABLE IF NOT EXISTS transactions (
@@ -127,6 +136,7 @@ CREATE TABLE IF NOT EXISTS notifications (
 
 CREATE INDEX IF NOT EXISTS idx_bets_user_id ON bets(user_id);
 CREATE INDEX IF NOT EXISTS idx_bets_game_id ON bets(game_id);
+CREATE INDEX IF NOT EXISTS idx_bets_prop_bet_id ON bets(prop_bet_id);
 CREATE INDEX IF NOT EXISTS idx_bets_status ON bets(status);
 CREATE INDEX IF NOT EXISTS idx_games_visible ON games(is_visible);
 CREATE INDEX IF NOT EXISTS idx_games_date ON games(game_date);

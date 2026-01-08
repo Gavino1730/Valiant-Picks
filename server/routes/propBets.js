@@ -129,7 +129,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
       const { data: bets, error: betsError } = await supabase
         .from('bets')
         .select('*')
-        .eq('game_id', req.params.id)
+        .eq('prop_bet_id', req.params.id)
         .eq('status', 'pending')
         .like('bet_type', 'prop-%');
 
@@ -255,7 +255,7 @@ router.post('/place', authenticateToken, async (req, res) => {
       .from('bets')
       .select('id')
       .eq('user_id', req.user.id)
-      .eq('game_id', propBetId)
+      .eq('prop_bet_id', propBetId)
       .like('bet_type', 'prop-%');
     
     if (existingBets && existingBets.length > 0) {
@@ -300,7 +300,7 @@ router.post('/place', authenticateToken, async (req, res) => {
       .from('bets')
       .insert({
         user_id: req.user.id,
-        game_id: propBetId, // Store prop bet ID in game_id field
+        prop_bet_id: propBetId,
         bet_type: `prop-${normalizedChoice}`, // Mark as prop bet with choice
         selected_team: choice, // Store original choice (preserves case and formatting)
         amount: parsedAmount,
