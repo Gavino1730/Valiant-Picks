@@ -3,6 +3,7 @@ const router = express.Router();
 const PropBet = require('../models/PropBet');
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
+const { supabase } = require('../supabase');
 const { authenticateToken } = require('../middleware/auth');
 
 // Get all active prop bets (public - visible only, admin - all)
