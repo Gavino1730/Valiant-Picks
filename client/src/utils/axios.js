@@ -8,10 +8,6 @@ const API_URL = process.env.REACT_APP_API_URL || (
     : '/api'
 );
 
-// Simple cache for GET requests (in-memory)
-const responseCache = new Map();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-
 // Token refresh tracking
 let tokenRefreshPromise = null;
 
@@ -90,7 +86,7 @@ const apiClient = axios.create({
   }
 });
 
-// Request interceptor to add auth token and implement caching
+// Request interceptor to add auth token
 apiClient.interceptors.request.use(
   async (config) => {
     // Check if token needs refresh before making request
@@ -103,50 +99,19 @@ apiClient.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
     
-    // Check cache for GET requests
-    if (config.method === 'get') {
-      const cacheKey = config.url;
-      const cached = responseCache.get(cacheKey);
-      
-      if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-        // Return cached response immediately
-        return Promise.reject({
-          isCached: true,
-          response: cached.data,
-          config
-        });
-      }
-    }
-    
     return config;
   },
   (error) => {
-    // If it's a cached response, return it
-    if (error.isCached) {
-      return Promise.resolve(error.response);
-    }
     return Promise.reject(error);
   }
 );
 
-// Response interceptor to cache GET responses and handle token expiration
+// Response interceptor to handle token expiration
 apiClient.interceptors.response.use(
   (response) => {
-    // Cache successful GET responses
-    if (response.config.method === 'get') {
-      responseCache.set(response.config.url, {
-        data: response,
-        timestamp: Date.now()
-      });
-    }
     return response;
   },
   (error) => {
-    // If it's a cached response, return it immediately
-    if (error.isCached) {
-      return Promise.resolve(error.response);
-    }
-    
     // Log API errors (except auth failures which are normal)
     if (error.response?.status >= 500) {
       logError(error, {
