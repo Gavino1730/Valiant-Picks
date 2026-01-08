@@ -5,6 +5,7 @@ const Bet = require('../models/Bet');
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
 const Game = require('../models/Game');
+const Notification = require('../models/Notification');
 
 // Place a bet on a game
 router.post('/', authenticateToken, async (req, res) => {
@@ -61,6 +62,12 @@ router.post('/', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Game not found' });
     }
 
+    const normalizedSelectedTeam = String(selectedTeam).trim();
+    const validTeams = [game.home_team, game.away_team].filter(Boolean);
+    if (!validTeams.includes(normalizedSelectedTeam)) {
+      return res.status(400).json({ error: 'Selected team does not match this game' });
+    }
+
     // Check if user already has a bet on this game
     const existingBet = await Bet.findByUserAndGame(req.user.id, gameId);
     if (existingBet) {
@@ -68,30 +75,80 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     // Prevent bets after the game has started or when the game is closed
-    const getGameStartDate = (gameRecord) => {
-      if (!gameRecord?.game_date) return null;
-
-      // Create date string in Pacific Time format (game times are Pacific Time)
-      const dateStr = `${gameRecord.game_date}T${gameRecord.game_time || '00:00:00'}-08:00`;
-      const date = new Date(dateStr);
-      
-      // Fallback: Parse manually if ISO string fails
-      if (Number.isNaN(date.getTime())) {
-        const [year, month, day] = (gameRecord.game_date || '').split('-').map(Number);
-        const fallbackDate = new Date(year, month - 1, day);
-        
-        if (gameRecord.game_time) {
-          const timeParts = gameRecord.game_time.split(':').map(Number);
-          if (timeParts.length >= 2 && !timeParts.some(Number.isNaN)) {
-            fallbackDate.setHours(timeParts[0]);
-            fallbackDate.setMinutes(timeParts[1]);
-            fallbackDate.setSeconds(timeParts[2] || 0);
-          }
-        }
-        return fallbackDate;
+    const parseGameDate = (dateValue) => {
+      if (!dateValue) return null;
+      const isoMatch = String(dateValue).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (isoMatch) {
+        return {
+          year: Number(isoMatch[1]),
+          month: Number(isoMatch[2]),
+          day: Number(isoMatch[3])
+        };
       }
-      
-      return date;
+
+      const slashMatch = String(dateValue).match(/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/);
+      if (slashMatch) {
+        const month = Number(slashMatch[1]);
+        const day = Number(slashMatch[2]);
+        const yearValue = slashMatch[3];
+        const year = yearValue.length === 2 ? Number(`20${yearValue}`) : Number(yearValue);
+        return { year, month, day };
+      }
+
+      return null;
+    };
+
+    const parseGameTime = (timeValue) => {
+      if (!timeValue) return { hour: 0, minute: 0, second: 0 };
+      const trimmed = String(timeValue).trim().toLowerCase();
+
+      if (trimmed === 'noon') return { hour: 12, minute: 0, second: 0 };
+      if (trimmed === 'midnight') return { hour: 0, minute: 0, second: 0 };
+
+      const ampmMatch = trimmed.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(am|pm)$/);
+      if (ampmMatch) {
+        let hour = Number(ampmMatch[1]);
+        const minute = Number(ampmMatch[2]);
+        const second = Number(ampmMatch[3] || 0);
+        const period = ampmMatch[4];
+        if (period === 'pm' && hour !== 12) hour += 12;
+        if (period === 'am' && hour === 12) hour = 0;
+        return { hour, minute, second };
+      }
+
+      const timeMatch = trimmed.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+      if (timeMatch) {
+        return {
+          hour: Number(timeMatch[1]),
+          minute: Number(timeMatch[2]),
+          second: Number(timeMatch[3] || 0)
+        };
+      }
+
+      return { hour: 0, minute: 0, second: 0 };
+    };
+
+    const buildPacificDate = (year, month, day, hour, minute, second) => {
+      const utcDate = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+      const pacificDate = new Date(utcDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+      const offset = utcDate.getTime() - pacificDate.getTime();
+      return new Date(Date.UTC(year, month - 1, day, hour, minute, second) + offset);
+    };
+
+    const getGameStartDate = (gameRecord) => {
+      const dateParts = parseGameDate(gameRecord?.game_date);
+      if (!dateParts) return null;
+      const timeParts = parseGameTime(gameRecord?.game_time);
+      if ([dateParts.year, dateParts.month, dateParts.day].some(Number.isNaN)) return null;
+      if ([timeParts.hour, timeParts.minute, timeParts.second].some(Number.isNaN)) return null;
+      return buildPacificDate(
+        dateParts.year,
+        dateParts.month,
+        dateParts.day,
+        timeParts.hour,
+        timeParts.minute,
+        timeParts.second
+      );
     };
 
     const startDate = getGameStartDate(game);
@@ -121,20 +178,19 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     // Create bet and update balance atomically
-    const bet = await Bet.create(req.user.id, gameId, confidence, selectedTeam, parsedAmount, resolvedOdds);
+    const bet = await Bet.create(req.user.id, gameId, confidence, normalizedSelectedTeam, parsedAmount, resolvedOdds);
     
     // Create transaction record first (before balance update)
-    await Transaction.create(req.user.id, 'bet', -parsedAmount, `${confidence} confidence bet on ${selectedTeam}: ${resolvedOdds}x odds`);
+    await Transaction.create(req.user.id, 'bet', -parsedAmount, `${confidence} confidence bet on ${normalizedSelectedTeam}: ${resolvedOdds}x odds`);
     
     // Then deduct balance
     await User.updateBalance(req.user.id, -parsedAmount);
 
     // Create notification
-    const Notification = require('../models/Notification');
     await Notification.create(
       req.user.id,
       '✅ Bet Placed',
-      `${confidence.charAt(0).toUpperCase() + confidence.slice(1)} confidence bet on ${selectedTeam} for ${parsedAmount} Valiant Bucks at ${resolvedOdds}x odds`,
+      `${confidence.charAt(0).toUpperCase() + confidence.slice(1)} confidence bet on ${normalizedSelectedTeam} for ${parsedAmount} Valiant Bucks at ${resolvedOdds}x odds`,
       'bet_placed'
     );
 
