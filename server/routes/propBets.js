@@ -101,21 +101,23 @@ router.put('/:id/visibility', authenticateToken, async (req, res) => {
   }
 });
 
-// Update prop bet status/outcome (admin only)
+// Update prop bet status/outcome OR full edit (admin only)
 router.put('/:id', authenticateToken, async (req, res) => {
   const user = req.user;
   if (!user.is_admin) {
     return res.status(403).json({ error: 'Only admins can update prop bets' });
   }
 
-  const { status, outcome } = req.body;
+  const { status, outcome, title, description, teamType, yesOdds, noOdds, expiresAt, options, optionOdds } = req.body;
 
   try {
     const { supabase } = require('../supabase');
     const Bet = require('../models/Bet');
     
-    // Update prop bet status
-    await PropBet.updateStatus(req.params.id, status, outcome);
+    // If status/outcome are provided, handle bet resolution
+    if (status !== undefined || outcome !== undefined) {
+      // Update prop bet status
+      await PropBet.updateStatus(req.params.id, status, outcome);
 
     let betsResolved = 0;
     let winningsDistributed = 0;
@@ -175,11 +177,26 @@ router.put('/:id', authenticateToken, async (req, res) => {
       }
     }
 
-    res.json({ 
-      message: outcome ? 'Prop bet outcome set and bets resolved' : 'Prop bet updated successfully',
-      betsResolved,
-      winningsDistributed
-    });
+      res.json({ 
+        message: outcome ? 'Prop bet outcome set and bets resolved' : 'Prop bet updated successfully',
+        betsResolved,
+        winningsDistributed
+      });
+    } else {
+      // Full prop bet edit (title, description, odds, etc.)
+      await PropBet.update(req.params.id, {
+        title,
+        description,
+        teamType,
+        yesOdds,
+        noOdds,
+        expiresAt,
+        options,
+        optionOdds
+      });
+      
+      res.json({ message: 'Prop bet updated successfully' });
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

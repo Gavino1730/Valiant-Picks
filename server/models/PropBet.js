@@ -121,6 +121,46 @@ const PropBet = {
     }
   },
 
+  update: async (id, propBetData) => {
+    try {
+      const {
+        title,
+        description,
+        teamType,
+        options,
+        optionOdds,
+        expiresAt,
+        yesOdds,
+        noOdds
+      } = propBetData;
+
+      const updateData = {
+        updated_at: new Date().toISOString()
+      };
+
+      if (title !== undefined) updateData.title = title;
+      if (description !== undefined) updateData.description = description;
+      if (teamType !== undefined) updateData.team_type = teamType;
+      if (expiresAt !== undefined) updateData.expires_at = expiresAt;
+      
+      // Handle odds - support both old format (yes/no) and new format (custom options)
+      if (yesOdds !== undefined) updateData.yes_odds = parseFloat(yesOdds);
+      if (noOdds !== undefined) updateData.no_odds = parseFloat(noOdds);
+      if (options !== undefined) updateData.options = options;
+      if (optionOdds !== undefined) updateData.option_odds = optionOdds;
+
+      const { error } = await supabase
+        .from('prop_bets')
+        .update(updateData)
+        .eq('id', id);
+
+      if (error) throw error;
+      return { changes: 1 };
+    } catch (err) {
+      throw new Error(`Error updating prop bet: ${err.message}`);
+    }
+  },
+
   toggleVisibility: async (id) => {
     try {
       // First get the current visibility state

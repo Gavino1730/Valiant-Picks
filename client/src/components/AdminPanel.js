@@ -26,6 +26,7 @@ function AdminPanel() {
   const [userTransactions, setUserTransactions] = useState([]);
   const [userHistoryLoading, setUserHistoryLoading] = useState(false);
   const [showEmailList, setShowEmailList] = useState(false);
+  const [editingPropBet, setEditingPropBet] = useState(null);
   
   // Game creation form
   const [showCompletedGames, setShowCompletedGames] = useState(false);
@@ -440,6 +441,73 @@ function AdminPanel() {
       alert('Prop pick deleted successfully!');
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to delete prop pick');
+    }
+  };
+
+  const handleEditPropBet = (propBet) => {
+    setEditingPropBet(propBet);
+    // Pre-fill the form with existing prop bet data
+    setPropBetForm({
+      title: propBet.title,
+      description: propBet.description || '',
+      teamType: propBet.team_type || 'General',
+      options: propBet.options && propBet.options.length > 0 ? propBet.options : ['', ''],
+      optionOdds: propBet.option_odds || {},
+      expiresAt: propBet.expires_at ? new Date(propBet.expires_at).toISOString().slice(0, 16) : '',
+      useCustomOptions: propBet.options && propBet.options.length > 0
+    });
+    // Scroll to form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancelEditPropBet = () => {
+    setEditingPropBet(null);
+    setPropBetForm({
+      title: '',
+      description: '',
+      teamType: 'General',
+      options: ['', ''],
+      optionOdds: {},
+      expiresAt: '',
+      useCustomOptions: true
+    });
+  };
+
+  const handleUpdatePropBetDetails = async (e) => {
+    e.preventDefault();
+    
+    if (!editingPropBet) return;
+
+    // Validate options and odds
+    const filledOptions = propBetForm.options.filter(opt => opt.trim() !== '');
+    if (filledOptions.length < 2) {
+      alert('Please provide at least 2 options');
+      return;
+    }
+
+    const missingOdds = filledOptions.some(opt => !propBetForm.optionOdds[opt] || propBetForm.optionOdds[opt] <= 0);
+    if (missingOdds) {
+      alert('Please provide odds for all options');
+      return;
+    }
+
+    try {
+      await apiClient.put(`/prop-bets/${editingPropBet.id}`, {
+        title: propBetForm.title,
+        description: propBetForm.description,
+        teamType: propBetForm.teamType,
+        options: filledOptions,
+        optionOdds: propBetForm.optionOdds,
+        expiresAt: propBetForm.expiresAt || null,
+        yesOdds: propBetForm.optionOdds[filledOptions[0]],
+        noOdds: propBetForm.optionOdds[filledOptions[1]]
+      });
+
+      alert('Prop pick updated successfully!');
+      handleCancelEditPropBet();
+      fetchPropBets();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to update prop pick');
     }
   };
 
@@ -1109,8 +1177,20 @@ function AdminPanel() {
 
       {tab === 'propbets' && (
         <div className="admin-section">
-          <h3>Create Prop Pick</h3>
-          <form onSubmit={handleCreatePropBet} className="game-form">
+          <h3>{editingPropBet ? 'Edit Prop Pick' : 'Create Prop Pick'}</h3>
+          {editingPropBet && (
+            <div style={{background: '#2196f3', color: 'white', padding: '12px 20px', borderRadius: '8px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <span>✏️ Editing: {editingPropBet.title}</span>
+              <button 
+                type="button" 
+                onClick={handleCancelEditPropBet}
+                style={{background: 'white', color: '#2196f3', border: 'none', padding: '6px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: '600'}}
+              >
+                Cancel Edit
+              </button>
+            </div>
+          )}
+          <form onSubmit={editingPropBet ? handleUpdatePropBetDetails : handleCreatePropBet} className="game-form">
             <div className="form-row">
               <div className="form-group full-width">
                 <label htmlFor="propTitle">Title *</label>
@@ -1217,7 +1297,7 @@ function AdminPanel() {
               </div>
             </div>
 
-            <button type="submit" className="btn">Create Prop Pick</button>
+            <button type="submit" className="btn">{editingPropBet ? 'Update Prop Pick' : 'Create Prop Pick'}</button>
           </form>
 
           <h3>Active Prop Picks</h3>
@@ -1323,6 +1403,13 @@ function AdminPanel() {
                       </label>
                       <span className="toggle-label-improved">{propBet.is_visible ? 'Visible to Users' : 'Hidden from Users'}</span>
                     </div>
+                    <button 
+                      className="prop-action-btn-new edit"
+                      onClick={() => handleEditPropBet(propBet)}
+                      style={{background: '#2196f3', color: 'white', marginBottom: '8px'}}
+                    >
+                      ✏️ Edit Prop
+                    </button>
                     {propBet.status === 'active' && (
                       <div className="prop-action-buttons-grid">
                         {propBet.options && propBet.options.length > 0 ? (
