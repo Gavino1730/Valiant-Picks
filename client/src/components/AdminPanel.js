@@ -445,17 +445,33 @@ function AdminPanel() {
   };
 
   const handleEditPropBet = (propBet) => {
+    console.log('Editing prop bet:', propBet);
     setEditingPropBet(propBet);
+    
+    // Handle legacy props that use yes_odds/no_odds without custom options
+    let editOptions = ['Yes', 'No'];
+    let editOptionOdds = { 'Yes': propBet.yes_odds, 'No': propBet.no_odds };
+    
+    // If custom options exist, use them
+    if (propBet.options && propBet.options.length > 0) {
+      editOptions = [...propBet.options];
+      editOptionOdds = propBet.option_odds || {};
+      // Fill in missing odds from yes_odds/no_odds
+      if (!editOptionOdds[editOptions[0]]) editOptionOdds[editOptions[0]] = propBet.yes_odds;
+      if (!editOptionOdds[editOptions[1]]) editOptionOdds[editOptions[1]] = propBet.no_odds;
+    }
+    
     // Pre-fill the form with existing prop bet data
     setPropBetForm({
       title: propBet.title,
       description: propBet.description || '',
       teamType: propBet.team_type || 'General',
-      options: propBet.options && propBet.options.length > 0 ? propBet.options : ['', ''],
-      optionOdds: propBet.option_odds || {},
+      options: editOptions,
+      optionOdds: editOptionOdds,
       expiresAt: propBet.expires_at ? new Date(propBet.expires_at).toISOString().slice(0, 16) : '',
-      useCustomOptions: propBet.options && propBet.options.length > 0
+      useCustomOptions: true
     });
+    
     // Scroll to form
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
