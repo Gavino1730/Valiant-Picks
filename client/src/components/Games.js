@@ -6,11 +6,11 @@ import { formatTime } from '../utils/time';
 import Tooltip from './Tooltip';
 import BetConfirmation from './BetConfirmation';
 
-function Games() {
+function Games({ user, updateUser }) {
   const [games, setGames] = useState([]);
   const [propBets, setPropBets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState(user?.balance || 0);
   const [propBetAmounts, setPropBetAmounts] = useState({});
   const [message, setMessage] = useState('');
   const [teamFilter, setTeamFilter] = useState('all');
@@ -23,6 +23,14 @@ function Games() {
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [pendingBet, setPendingBet] = useState(null);
   const [isSubmittingBet, setIsSubmittingBet] = useState(false);
+  const [propBetLoading, setPropBetLoading] = useState({});
+
+  // Sync balance immediately when user prop changes
+  useEffect(() => {
+    if (user?.balance !== undefined) {
+      setBalance(user.balance);
+    }
+  }, [user?.balance]);
 
   const confidenceMultipliers = {
     low: 1.2,
