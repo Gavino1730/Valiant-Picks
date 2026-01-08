@@ -123,6 +123,7 @@ function App() {
       const scheduleNextProfileFetch = (delay) => {
         if (!isMounted) return;
         profilePollState.timeoutId = setTimeout(runProfileFetch, delay);
+        profilePollRef.current.timeoutId = setTimeout(runProfileFetch, delay);
       };
 
       const runProfileFetch = async () => {
@@ -143,6 +144,22 @@ function App() {
 
         profilePollState.inFlight = false;
         scheduleNextProfileFetch(profilePollState.delay);
+        if (profilePollRef.current.inFlight) {
+          scheduleNextProfileFetch(profilePollRef.current.delay);
+          return;
+        }
+
+        profilePollRef.current.inFlight = true;
+        const updatedUser = await fetchUserProfile();
+
+        if (updatedUser) {
+          profilePollRef.current.delay = 5000;
+        } else {
+          profilePollRef.current.delay = Math.min(profilePollRef.current.delay * 2, 60000);
+        }
+
+        profilePollRef.current.inFlight = false;
+        scheduleNextProfileFetch(profilePollRef.current.delay);
       };
 
       runProfileFetch();
@@ -155,6 +172,11 @@ function App() {
         }
         profilePollState.inFlight = false;
         profilePollState.delay = 5000;
+        if (profilePollRef.current.timeoutId) {
+          clearTimeout(profilePollRef.current.timeoutId);
+        }
+        profilePollRef.current.inFlight = false;
+        profilePollRef.current.delay = 5000;
       };
     }
   }, [token]);
