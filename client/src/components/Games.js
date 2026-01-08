@@ -416,7 +416,7 @@ function Games({ user, updateUser }) {
                       </span>
                     </div>
 
-                    <div className="prop-betting-section">
+                    <div className={`prop-betting-section ${prop.options && prop.options.length === 1 ? 'single-option' : ''}`}>
                       {/* Determine if this is a custom options prop or legacy yes/no */}
                       {prop.options && prop.options.length > 0 ? (
                         // Custom options
