@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Stats AI Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏀 Sports Stats AI Analyzer</h1>
+            <p class="subtitle">AI-powered game predictions, coaching insights, and betting analysis</p>
+        </header>
+
+        <main>
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <h2>Upload Stats PDF</h2>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="file-input-wrapper">
+                        <input type="file" id="pdfFile" name="pdf_file" accept=".pdf" required>
+                        <label for="pdfFile" class="file-label">
+                            <span class="file-icon">📄</span>
+                            <span id="fileName">Choose PDF File</span>
+                        </label>
+                    </div>
+
+                    <!-- Optional Game Info -->
+                    <details class="game-info-details">
+                        <summary>Optional: Add Game Information</summary>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="homeTeam">Home Team</label>
+                                <input type="text" id="homeTeam" name="home_team" placeholder="e.g., Valley Catholic Valiants">
+                            </div>
+                            <div class="form-group">
+                                <label for="awayTeam">Away Team</label>
+                                <input type="text" id="awayTeam" name="away_team" placeholder="e.g., Banks Braves">
+                            </div>
+                            <div class="form-group">
+                                <label for="gameDate">Game Date</label>
+                                <input type="date" id="gameDate" name="game_date">
+                            </div>
+                            <div class="form-group">
+                                <label for="gameTime">Game Time</label>
+                                <input type="time" id="gameTime" name="game_time">
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Location</label>
+                                <input type="text" id="location" name="location" placeholder="e.g., Valley Catholic HS">
+                            </div>
+                            <div class="form-group">
+                                <label for="gameType">Game Type</label>
+                                <select id="gameType" name="game_type">
+                                    <option value="regular">Regular Season</option>
+                                    <option value="playoff">Playoff</option>
+                                    <option value="tournament">Tournament</option>
+                                    <option value="rivalry">Rivalry</option>
+                                </select>
+                            </div>
+                        </div>
+                    </details>
+
+                    <button type="submit" class="btn-primary" id="analyzeBtn">
+                        <span class="btn-text">Analyze Stats with AI</span>
+                        <span class="spinner hidden"></span>
+                    </button>
+                </form>
+
+                <div id="uploadStatus" class="status-message hidden"></div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="resultsSection" class="results-section hidden">
+                <div class="results-header">
+                    <h2>📊 Analysis Results</h2>
+                    <button id="exportBtn" class="btn-export">
+                        <span>📥 Download JSON</span>
+                    </button>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="prediction">Game Prediction</button>
+                    <button class="tab-btn" data-tab="coaching">Coaching Insights</button>
+                    <button class="tab-btn" data-tab="players">Player Analysis</button>
+                    <button class="tab-btn" data-tab="betting">Betting Recommendations</button>
+                    <button class="tab-btn" data-tab="insights">Game Insights</button>
+                    <button class="tab-btn" data-tab="preparation">Preparation</button>
+                    <button class="tab-btn" data-tab="history">Historical Context</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <div id="prediction" class="tab-panel active">
+                        <div class="content-box" id="predictionContent"></div>
+                    </div>
+                    <div id="coaching" class="tab-panel">
+                        <div class="content-box" id="coachingContent"></div>
+                    </div>
+                    <div id="players" class="tab-panel">
+                        <div class="content-box" id="playersContent"></div>
+                    </div>
+                    <div id="betting" class="tab-panel">
+                        <div class="content-box" id="bettingContent"></div>
+                    </div>
+                    <div id="insights" class="tab-panel">
+                        <div class="content-box" id="insightsContent"></div>
+                    </div>
+                    <div id="preparation" class="tab-panel">
+                        <div class="content-box" id="preparationContent"></div>
+                    </div>
+                    <div id="history" class="tab-panel">
+                        <div class="content-box" id="historyContent">
+                            <p id="memoryStats">Loading historical data...</p>
+                        </div>
+                        <div class="add-insight-section">
+                            <h3>Add Your Insight</h3>
+                            <form id="insightForm">
+                                <select id="insightType" name="type">
+                                    <option value="coaching">Coaching Note</option>
+                                    <option value="player">Player Observation</option>
+         !-- History Section -->
+        <section class="history-sidebar">
+            <h3>📊 Game History</h3>
+            <div id="gameHistory">
+                <p class="loading">Loading...</p>
+            </div>
+        </section>
+
+        <                           <option value="strategy">Strategy Tip</option>
+                                    <option value="betting">Betting Insight</option>
+                                    <option value="general">General Note</option>
+                                </select>
+                                <textarea id="insightContent" name="content" placeholder="Add your observations, notes, or insights..." rows="4"></textarea>
+                                <button type="submit" class="btn-primary">Save Insight</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Preview -->
+                <details class="export-preview">
+                    <summary>View Export Data (for Valiant Picks)</summary>
+                    <pre id="exportPreview"></pre>
+                </details>
+            </section>
+        </main>
+
+        <footer>
+            <p>Powered by OpenAI GPT-4 | Local Analysis Only</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
