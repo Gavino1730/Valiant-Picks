@@ -8,6 +8,11 @@ function Notifications({ onUnreadChange }) {
 
   useEffect(() => {
     fetchNotifications();
+    
+    // Poll for new notifications every 20 seconds
+    const pollInterval = setInterval(fetchNotifications, 20000);
+    
+    return () => clearInterval(pollInterval);
   }, []);
 
   const fetchNotifications = async () => {

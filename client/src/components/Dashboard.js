@@ -213,9 +213,13 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     fetchProfile();
     fetchGames();
     fetchBets();
-    // Lighten load: poll for bet updates every 30 seconds
-    const interval = setInterval(fetchBets, 30000);
-    return () => clearInterval(interval);
+    // Poll aggressively: bets every 5 seconds, games every 10 seconds
+    const betsInterval = setInterval(fetchBets, 5000);
+    const gamesInterval = setInterval(fetchGames, 10000);
+    return () => {
+      clearInterval(betsInterval);
+      clearInterval(gamesInterval);
+    };
   }, [fetchGames, fetchBets, fetchProfile]);
 
   const selectedGame = selectedGameId ? games.find(g => g.id === parseInt(selectedGameId)) : null;
@@ -298,8 +302,9 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         messageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }, 100);
       
-      // Refresh bets to update stats
+      // Refresh bets and games to update stats and show bet placed
       fetchBets();
+      fetchGames();
     } catch (err) {
       setMessage(err.response?.data?.error || 'Error placing pick');
       // Scroll to message on error too

@@ -11,8 +11,8 @@ function Leaderboard() {
 
   useEffect(() => {
     fetchData();
-    // Poll for leaderboard updates every 10 seconds
-    const interval = setInterval(fetchData, 10000);
+    // Poll for leaderboard updates every 5 seconds
+    const interval = setInterval(fetchData, 5000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

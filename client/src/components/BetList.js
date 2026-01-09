@@ -17,8 +17,8 @@ function BetList() {
 
   useEffect(() => {
     fetchBets();
-    // Poll for bet updates every 10 seconds
-    const interval = setInterval(fetchBets, 10000);
+    // Poll for bet updates every 5 seconds
+    const interval = setInterval(fetchBets, 5000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -87,11 +87,6 @@ function BetList() {
       case 'high': return 'confidence-high';
       default: return '';
     }
-  };
-
-  const getOpponent = (bet) => {
-    if (!bet.games) return '';
-    return bet.games.home_team === bet.selected_team ? bet.games.away_team : bet.games.home_team;
   };
 
   const parseLocalDateOnly = (dateStr) => {

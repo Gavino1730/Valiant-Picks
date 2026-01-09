@@ -87,6 +87,16 @@ function Games({ user, updateUser }) {
     fetchPropBets();
     fetchBalance();
     fetchUserBets();
+    
+    // Poll for updates every 5 seconds for near real-time experience
+    const pollInterval = setInterval(() => {
+      fetchGames();
+      fetchPropBets();
+      fetchBalance();
+      fetchUserBets();
+    }, 5000);
+    
+    return () => clearInterval(pollInterval);
   }, [fetchGames, fetchPropBets, fetchBalance, fetchUserBets]);
 
   useEffect(() => {
@@ -217,6 +227,10 @@ function Games({ user, updateUser }) {
         delete updated[loadingKey];
         return updated;
       });
+      
+      // Refetch data to update UI
+      fetchUserBets();
+      fetchPropBets();
       
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {

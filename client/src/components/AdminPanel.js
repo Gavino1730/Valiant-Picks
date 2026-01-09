@@ -12,7 +12,10 @@ function AdminPanel() {
   const [propBets, setPropBets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [tab, setTab] = useState('games');
+  const [tab, setTab] = useState(() => {
+    // Load saved tab from localStorage, default to 'games'
+    return localStorage.getItem('adminPanelTab') || 'games';
+  });
   const [selectedUser, setSelectedUser] = useState(null);
   const [newBalance, setNewBalance] = useState('');
   const [editingGame, setEditingGame] = useState(null);
@@ -73,6 +76,11 @@ function AdminPanel() {
     fetchPropBets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Save current tab to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('adminPanelTab', tab);
+  }, [tab]);
 
   // Fetch user bets and transactions when selectedUser changes
   useEffect(() => {

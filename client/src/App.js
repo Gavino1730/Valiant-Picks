@@ -149,11 +149,13 @@ function App() {
       return () => {
         isMounted = false;
         clearInterval(notificationInterval);
-        if (profilePollRef.current.timeoutId) {
-          clearTimeout(profilePollRef.current.timeoutId);
+        // Copy ref to local variable for cleanup
+        const pollRef = profilePollRef.current;
+        if (pollRef.timeoutId) {
+          clearTimeout(pollRef.timeoutId);
         }
-        profilePollRef.current.inFlight = false;
-        profilePollRef.current.delay = 5000;
+        pollRef.inFlight = false;
+        pollRef.delay = 5000;
       };
     }
   }, [token]);
