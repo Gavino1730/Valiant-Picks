@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#004f9e" />
     <meta name="description" content="Valiant Picks - Premium Picks Platform" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -36,7 +36,8 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         -webkit-text-size-adjust: 100%;
-        text-size-adjust: 100%;
+        /* Prevent zoom on iOS */
+        zoom: 1 !important;
       }
       body {
         overscroll-behavior-y: contain;
@@ -49,5 +50,56 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Prevent zoom on input focus on iOS
+      // This is a workaround for the iOS Safari issue where inputs zoom in
+      const inputs = document.querySelectorAll('input, textarea, select');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          document.body.style.zoom = 1;
+        });
+        input.addEventListener('blur', function() {
+          document.body.style.zoom = 1;
+        });
+      });
+
+      // Listen for dynamic input elements
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.addedNodes.length) {
+            mutation.addedNodes.forEach(function(node) {
+              if (node.querySelectorAll) {
+                const newInputs = node.querySelectorAll('input, textarea, select');
+                newInputs.forEach(input => {
+                  input.addEventListener('focus', function() {
+                    document.body.style.zoom = 1;
+                  });
+                  input.addEventListener('blur', function() {
+                    document.body.style.zoom = 1;
+                  });
+                });
+              }
+            });
+          }
+        });
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      // Prevent pinch zoom
+      document.addEventListener('gesturestart', function(e) {
+        e.preventDefault();
+      });
+
+      // Prevent double-tap zoom
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', function(event) {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+          event.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
+    </script>
   </body>
 </html>

@@ -80,7 +80,7 @@ if (typeof window !== 'undefined') {
 // Create axios instance with base configuration
 const apiClient = axios.create({
   baseURL: API_URL,
-  timeout: 10000,
+  timeout: 30000, // Increased to 30 seconds for slower networks and polling
   headers: {
     'Content-Type': 'application/json'
   }

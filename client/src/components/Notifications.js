@@ -9,8 +9,8 @@ function Notifications({ onUnreadChange }) {
   useEffect(() => {
     fetchNotifications();
     
-    // Poll for new notifications every 20 seconds
-    const pollInterval = setInterval(fetchNotifications, 20000);
+    // Poll for new notifications every 5 seconds for faster updates
+    const pollInterval = setInterval(fetchNotifications, 5000);
     
     return () => clearInterval(pollInterval);
   }, []);
@@ -19,6 +19,24 @@ function Notifications({ onUnreadChange }) {
     try {
       const response = await apiClient.get('/notifications');
       setNotifications(response.data);
+      
+      // Auto-mark unread notifications as read when viewing this page
+      const unreadNotifications = response.data.filter(n => !n.is_read);
+      if (unreadNotifications.length > 0) {
+        // Batch mark all unread as read
+        try {
+          await apiClient.put('/notifications/mark-all-read');
+          // Update local state to reflect all as read
+          const updated = response.data.map(n => ({ ...n, is_read: true }));
+          setNotifications(updated);
+          updateUnreadCount(updated);
+        } catch (err) {
+          console.error('Error auto-marking notifications as read:', err);
+        }
+      } else {
+        // Even if no unread, update the unread count
+        updateUnreadCount(response.data);
+      }
     } catch (err) {
       console.error('Error fetching notifications:', err);
     } finally {

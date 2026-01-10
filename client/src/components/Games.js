@@ -59,14 +59,20 @@ function Games({ user, updateUser }) {
 
   const fetchGames = useCallback(async () => {
     try {
+      console.log('[Games] Fetching games...');
       const response = await apiClient.get('/games');
       const sortedGames = (response.data || []).sort((a, b) => {
         return new Date(a.game_date) - new Date(b.game_date);
       });
+      console.log(`[Games] Games fetched successfully: ${sortedGames.length} games`);
       setGames(sortedGames);
     } catch (err) {
-      console.error('Error fetching games:', err);
-      setGames([]);
+      console.error('[Games] Error fetching games:', err.message || err);
+      // Don't clear games on error - keep showing what we had before
+      setGames(prevGames => {
+        console.log(`[Games] Error fetching games, keeping ${prevGames.length} previous games`);
+        return prevGames.length === 0 ? [] : prevGames;
+      });
     } finally {
       setLoading(false);
     }
@@ -85,25 +91,43 @@ function Games({ user, updateUser }) {
   useEffect(() => {
     // Initial fetch on mount
     const loadData = async () => {
-      await Promise.all([
-        fetchGames(),
-        fetchPropBets(),
-        fetchBalance(),
-        fetchUserBets()
-      ]);
+      try {
+        await Promise.all([
+          fetchGames(),
+          fetchPropBets(),
+          fetchBalance(),
+          fetchUserBets()
+        ]);
+      } catch (err) {
+        console.error('Error during initial load:', err);
+      }
     };
     
     loadData();
     
+    // Create flag to prevent polling after unmount
+    let isActive = true;
+    
     // Poll for updates every 5 seconds for near real-time experience
-    const pollInterval = setInterval(() => {
-      fetchGames();
-      fetchPropBets();
-      fetchBalance();
-      fetchUserBets();
+    const pollInterval = setInterval(async () => {
+      if (isActive) {
+        try {
+          await Promise.all([
+            fetchGames(),
+            fetchPropBets(),
+            fetchBalance(),
+            fetchUserBets()
+          ]);
+        } catch (err) {
+          console.error('Error during polling:', err);
+        }
+      }
     }, 5000);
     
-    return () => clearInterval(pollInterval);
+    return () => {
+      isActive = false;
+      clearInterval(pollInterval);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array - only run on mount
 

@@ -82,6 +82,18 @@ function AdminPanel() {
     localStorage.setItem('adminPanelTab', tab);
   }, [tab]);
 
+  // Scroll modal into view when it opens
+  useEffect(() => {
+    if (selectedUser) {
+      const modalContent = document.querySelector('.user-options-modal');
+      if (modalContent) {
+        setTimeout(() => {
+          modalContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      }
+    }
+  }, [selectedUser]);
+
   // Fetch user bets and transactions when selectedUser changes
   useEffect(() => {
     if (!selectedUser) {
@@ -537,10 +549,21 @@ function AdminPanel() {
 
   const handleTogglePropVisibility = async (propBetId) => {
     try {
+      // Optimistic update - update UI immediately
+      const updatedPropBets = propBets.map(pb => 
+        pb.id === propBetId ? { ...pb, is_visible: !pb.is_visible } : pb
+      );
+      setPropBets(updatedPropBets);
+      
+      // Then sync with server
       await apiClient.put(`/prop-bets/${propBetId}/visibility`);
+      
+      // Fetch to ensure server state matches
       fetchPropBets();
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to toggle visibility');
+      // Revert on error by fetching fresh data
+      fetchPropBets();
     }
   };
 
@@ -1555,7 +1578,18 @@ function AdminPanel() {
                     <tr key={bet.id}>
                       <td>{bet.id}</td>
                       <td>{bet.users?.username || bet.user_id}</td>
-                      <td>{bet.game_id || 'Prop'}</td>
+                      <td>
+                        {bet.games ? (
+                          <div style={{fontSize: '0.9em'}}>
+                            <div style={{fontWeight: '500'}}>{bet.games.home_team} vs {bet.games.away_team}</div>
+                            <div style={{fontSize: '0.8em', color: '#66bb6a', marginTop: '3px', fontWeight: '600'}}>
+                              {bet.games.team_type?.includes('Girls') ? '🏀 Girls' : '🏀 Boys'}
+                            </div>
+                          </div>
+                        ) : (
+                          'Prop Bet'
+                        )}
+                      </td>
                       <td>{bet.selected_team}</td>
                       <td>{formatCurrency(bet.amount)}</td>
                       <td>{bet.odds}x</td>
@@ -1601,7 +1635,18 @@ function AdminPanel() {
                   </div>
                   <div className="bet-card-row">
                     <span className="bet-label">Game / Prop</span>
-                    <span className="bet-value">{bet.game_id || 'Prop'}</span>
+                    <span className="bet-value">
+                      {bet.games ? (
+                        <div>
+                          <div style={{fontWeight: '500'}}>{bet.games.home_team} vs {bet.games.away_team}</div>
+                          <div style={{fontSize: '0.8em', color: '#66bb6a', marginTop: '3px', fontWeight: '600'}}>
+                            {bet.games.team_type?.includes('Girls') ? '🏀 Girls' : '🏀 Boys'}
+                          </div>
+                        </div>
+                      ) : (
+                        'Prop Bet'
+                      )}
+                    </span>
                   </div>
                   <div className="bet-card-row">
                     <span className="bet-label">Selection</span>

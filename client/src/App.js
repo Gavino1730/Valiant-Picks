@@ -32,13 +32,33 @@ const LoadingSpinner = () => (
 function GiftBalanceWatcher({ user, updateUser }) {
   const { showToast } = useToast();
   const giftRequestRef = useRef(false);
+  const lastUserBalanceRef = useRef(null);
 
   useEffect(() => {
-    if (!user || giftRequestRef.current) {
+    if (!user) {
       return undefined;
     }
+
     const currentBalance = Number(user.balance ?? 0);
+    
+    // Only trigger if balance just hit 0 (changed from > 0 to 0)
+    // Prevents spam when balance stays at 0
     if (currentBalance > 0) {
+      lastUserBalanceRef.current = currentBalance;
+      return undefined;
+    }
+    
+    // Check if this is the first time we're seeing balance = 0
+    const balanceJustHitZero = lastUserBalanceRef.current !== null && lastUserBalanceRef.current > 0;
+    lastUserBalanceRef.current = currentBalance;
+    
+    // Only call gift-balance if balance just hit 0, or if we have a pending refill to check
+    if (!balanceJustHitZero && giftRequestRef.current) {
+      return undefined;
+    }
+    
+    if (giftRequestRef.current && !balanceJustHitZero) {
+      // Don't spam - only check if balance just hit zero or was already at 0 and hasn't been checked
       return undefined;
     }
 
@@ -56,14 +76,14 @@ function GiftBalanceWatcher({ user, updateUser }) {
         }
         if (response.data?.gifted) {
           showToast(
-            '🎁 Your 48-hour wait is complete! We\'ve added 500 Valiant Bucks to your account - spendable immediately!',
+            '🎁 Your 72-hour wait is complete! We\'ve added 500 Valiant Bucks to your account - spendable immediately!',
             'success',
             8000
           );
         } else if (response.data?.pending) {
-          if (response.data.hoursRemaining === 48) {
+          if (response.data.hoursRemaining === 72) {
             showToast(
-              '⏳ Your balance hit $0.00. You will receive 500 Valiant Bucks in 48 hours. Check your notifications for details.',
+              '⏳ Your balance hit $0.00. You will receive 500 Valiant Bucks in 72 hours. Check your notifications for details.',
               'info',
               7000
             );
@@ -89,7 +109,7 @@ function GiftBalanceWatcher({ user, updateUser }) {
     return () => {
       isMounted = false;
     };
-  }, [showToast, updateUser, user]);
+  }, [user?.balance, showToast, updateUser]);
 
   return null;
 }
@@ -120,8 +140,8 @@ function AppContent() {
   useEffect(() => {
     if (token) {
       fetchUnreadCount();
-      // Poll notifications every 2 minutes
-      const notificationInterval = setInterval(fetchUnreadCount, 120000);
+      // Poll notifications every 10 seconds for faster updates
+      const notificationInterval = setInterval(fetchUnreadCount, 10000);
       let isMounted = true;
       // Copy ref to local variable at effect start for cleanup
       const pollRef = profilePollRef.current;

@@ -117,15 +117,22 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
 
   const fetchGames = useCallback(async () => {
     try {
+      console.log('[Dashboard] Fetching games...');
       const response = await apiClient.get('/games');
       // Sort games by date (earliest first)
       const sortedGames = (response.data || []).sort((a, b) => {
         return new Date(a.game_date) - new Date(b.game_date);
       });
+      console.log(`[Dashboard] Games fetched successfully: ${sortedGames.length} games`);
       setGames(sortedGames);
     } catch (err) {
-      console.error('Error fetching games:', err);
-      setGames([]);
+      console.error('Error fetching games:', err.message || err);
+      // Don't clear games on error - keep showing what we had before
+      // Only set empty if it's the initial load and we had no games
+      setGames(prevGames => {
+        console.log(`[Dashboard] Error fetching games, keeping ${prevGames.length} previous games`);
+        return prevGames.length === 0 ? [] : prevGames;
+      });
     } finally {
       setGamesLoading(false);
     }
@@ -210,13 +217,37 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   }, [previousBets]);
 
   useEffect(() => {
+    // Fetch data immediately on mount
     fetchProfile();
     fetchGames();
     fetchBets();
-    // Poll aggressively: bets every 5 seconds, games every 10 seconds
-    const betsInterval = setInterval(fetchBets, 5000);
-    const gamesInterval = setInterval(fetchGames, 10000);
+    
+    // Create abort controller to handle unmounting gracefully
+    let isActive = true;
+    
+    // Poll with proper cleanup: bets every 5 seconds, games every 10 seconds
+    const betsInterval = setInterval(async () => {
+      if (isActive) {
+        try {
+          await fetchBets();
+        } catch (err) {
+          console.error('Error in bets polling:', err);
+        }
+      }
+    }, 5000);
+    
+    const gamesInterval = setInterval(async () => {
+      if (isActive) {
+        try {
+          await fetchGames();
+        } catch (err) {
+          console.error('Error in games polling:', err);
+        }
+      }
+    }, 10000);
+    
     return () => {
+      isActive = false;
       clearInterval(betsInterval);
       clearInterval(gamesInterval);
     };

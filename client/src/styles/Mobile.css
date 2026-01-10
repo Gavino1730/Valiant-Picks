@@ -51,7 +51,6 @@
 
   /* Scrollable areas */
   .scrollable {
-    -webkit-overflow-scrolling: touch;
     overflow-x: auto;
   }
 
@@ -153,7 +152,6 @@
     margin-bottom: 1rem;
     margin-top: 0.5rem;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     padding-bottom: 0.5rem;
     padding-left: 0;
     padding-right: 0;
@@ -329,7 +327,6 @@
   .modal-content {
     max-height: 85vh;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
     width: 100% !important;
     max-width: 100% !important;
   }
@@ -418,7 +415,6 @@
   .modal-content {
     max-height: 85vh;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
 
   /* Reduce unnecessary whitespace */
