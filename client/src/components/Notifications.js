@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/Notifications.css';
 
@@ -6,6 +6,13 @@ function Notifications({ onUnreadChange }) {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMarkingAsRead, setIsMarkingAsRead] = useState(false);
+
+  const updateUnreadCount = useCallback((newNotifications) => {
+    if (onUnreadChange) {
+      const count = newNotifications.filter(n => !n.is_read).length;
+      onUnreadChange(count);
+    }
+  }, [onUnreadChange]);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -46,14 +53,7 @@ function Notifications({ onUnreadChange }) {
     const pollInterval = setInterval(fetchNotifications, 5000);
     
     return () => clearInterval(pollInterval);
-  }, [isMarkingAsRead]);
-
-  const updateUnreadCount = (newNotifications) => {
-    if (onUnreadChange) {
-      const count = newNotifications.filter(n => !n.is_read).length;
-      onUnreadChange(count);
-    }
-  };
+  }, [isMarkingAsRead, updateUnreadCount]);
 
   const markAsRead = async (id) => {
     try {

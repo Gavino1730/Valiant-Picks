@@ -135,7 +135,7 @@ function AppContent() {
         setUser(JSON.parse(storedUser));
       }
     }
-  }, [token]);
+  }, [token, user]);
 
   useEffect(() => {
     if (!token) return;
