@@ -125,6 +125,12 @@ class Bet {
             game_date,
             game_time,
             status
+          ),
+          prop_bets (
+            id,
+            title,
+            description,
+            team_type
           )
         `)
         .order('created_at', { ascending: false });

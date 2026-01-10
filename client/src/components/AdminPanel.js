@@ -1586,8 +1586,15 @@ function AdminPanel() {
                               {bet.games.team_type?.includes('Girls') ? '🏀 Girls' : '🏀 Boys'}
                             </div>
                           </div>
+                        ) : bet.prop_bets ? (
+                          <div style={{fontSize: '0.9em'}}>
+                            <div style={{fontWeight: '500'}}>{bet.prop_bets.title}</div>
+                            <div style={{fontSize: '0.8em', color: '#42a5f5', marginTop: '3px', fontWeight: '600'}}>
+                              🎯 {bet.prop_bets.team_type || 'General'}
+                            </div>
+                          </div>
                         ) : (
-                          'Prop Bet'
+                          'Unknown Bet'
                         )}
                       </td>
                       <td>{bet.selected_team}</td>
@@ -1643,8 +1650,15 @@ function AdminPanel() {
                             {bet.games.team_type?.includes('Girls') ? '🏀 Girls' : '🏀 Boys'}
                           </div>
                         </div>
+                      ) : bet.prop_bets ? (
+                        <div>
+                          <div style={{fontWeight: '500'}}>{bet.prop_bets.title}</div>
+                          <div style={{fontSize: '0.8em', color: '#42a5f5', marginTop: '3px', fontWeight: '600'}}>
+                            🎯 {bet.prop_bets.team_type || 'General'}
+                          </div>
+                        </div>
                       ) : (
-                        'Prop Bet'
+                        'Unknown Bet'
                       )}
                     </span>
                   </div>

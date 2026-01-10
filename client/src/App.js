@@ -147,43 +147,42 @@ function AppContent() {
     // Copy ref to local variable at effect start for cleanup
     const pollRef = profilePollRef.current;
 
-      const scheduleNextProfileFetch = (delay) => {
-        if (!isMounted) return;
-        pollRef.timeoutId = setTimeout(runProfileFetch, delay);
-      };
+    const scheduleNextProfileFetch = (delay) => {
+      if (!isMounted) return;
+      pollRef.timeoutId = setTimeout(runProfileFetch, delay);
+    };
 
-      const runProfileFetch = async () => {
-        if (!isMounted) return;
-        if (pollRef.inFlight) {
-          scheduleNextProfileFetch(pollRef.delay);
-          return;
-        }
-
-        pollRef.inFlight = true;
-        const updatedUser = await fetchUserProfile();
-
-        if (updatedUser) {
-          pollRef.delay = 5000;
-        } else {
-          pollRef.delay = Math.min(pollRef.delay * 2, 60000);
-        }
-
-        pollRef.inFlight = false;
+    const runProfileFetch = async () => {
+      if (!isMounted) return;
+      if (pollRef.inFlight) {
         scheduleNextProfileFetch(pollRef.delay);
-      };
+        return;
+      }
 
-      runProfileFetch();
+      pollRef.inFlight = true;
+      const updatedUser = await fetchUserProfile();
 
-      return () => {
-        isMounted = false;
-        clearInterval(notificationInterval);
-        if (pollRef.timeoutId) {
-          clearTimeout(pollRef.timeoutId);
-        }
-        pollRef.inFlight = false;
+      if (updatedUser) {
         pollRef.delay = 5000;
-      };
-    }
+      } else {
+        pollRef.delay = Math.min(pollRef.delay * 2, 60000);
+      }
+
+      pollRef.inFlight = false;
+      scheduleNextProfileFetch(pollRef.delay);
+    };
+
+    runProfileFetch();
+
+    return () => {
+      isMounted = false;
+      clearInterval(notificationInterval);
+      if (pollRef.timeoutId) {
+        clearTimeout(pollRef.timeoutId);
+      }
+      pollRef.inFlight = false;
+      pollRef.delay = 5000;
+    };
   }, [token]);
 
   const fetchUnreadCount = async () => {
