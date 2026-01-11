@@ -30,6 +30,7 @@ function AdminPanel() {
   const [userHistoryLoading, setUserHistoryLoading] = useState(false);
   const [showEmailList, setShowEmailList] = useState(false);
   const [editingPropBet, setEditingPropBet] = useState(null);
+  const [userSearch, setUserSearch] = useState('');
   
   // Game creation form
   const [showCompletedGames, setShowCompletedGames] = useState(false);
@@ -1834,6 +1835,41 @@ function AdminPanel() {
             </p>
           </div>
 
+          <div style={{marginBottom: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+            <input
+              type="text"
+              placeholder="🔍 Search users by name or email..."
+              value={userSearch}
+              onChange={(e) => setUserSearch(e.target.value)}
+              style={{
+                flex: '1',
+                minWidth: '200px',
+                padding: '10px 15px',
+                border: '1px solid #666',
+                borderRadius: '8px',
+                background: '#1a1a1a',
+                color: '#fff',
+                fontSize: '0.95em'
+              }}
+            />
+            {userSearch && (
+              <button 
+                onClick={() => setUserSearch('')}
+                style={{
+                  padding: '10px 15px',
+                  background: '#666',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: '600'
+                }}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
           <button 
             onClick={() => setShowEmailList(true)}
             style={{
@@ -1865,11 +1901,17 @@ function AdminPanel() {
                 </tr>
               </thead>
               <tbody>
-                {users.map(u => {
-                  const userBetsCount = allBets.filter(b => b.user_id === u.id).length;
-                  const userWinnings = allBets
-                    .filter(b => b.user_id === u.id && b.outcome === 'won')
-                    .reduce((sum, b) => sum + (b.potential_win - b.amount), 0);
+                {users
+                  .filter(u => 
+                    userSearch === '' ||
+                    u.username.toLowerCase().includes(userSearch.toLowerCase()) ||
+                    u.email.toLowerCase().includes(userSearch.toLowerCase())
+                  )
+                  .map(u => {
+                    const userBetsCount = allBets.filter(b => b.user_id === u.id).length;
+                    const userWinnings = allBets
+                      .filter(b => b.user_id === u.id && b.outcome === 'won')
+                      .reduce((sum, b) => sum + (b.potential_win - b.amount), 0);
                   
                   return (
                     <tr key={u.id} style={{borderLeft: u.is_admin ? '4px solid #1f4e99' : 'none'}}>
@@ -1921,11 +1963,17 @@ function AdminPanel() {
 
           {/* Mobile Users List */}
           <div className="users-mobile-list">
-            {users.map(u => {
-              const userBetsCount = allBets.filter(b => b.user_id === u.id).length;
-              const userWinnings = allBets
-                .filter(b => b.user_id === u.id && b.outcome === 'won')
-                .reduce((sum, b) => sum + (b.potential_win - b.amount), 0);
+            {users
+              .filter(u => 
+                userSearch === '' ||
+                u.username.toLowerCase().includes(userSearch.toLowerCase()) ||
+                u.email.toLowerCase().includes(userSearch.toLowerCase())
+              )
+              .map(u => {
+                const userBetsCount = allBets.filter(b => b.user_id === u.id).length;
+                const userWinnings = allBets
+                  .filter(b => b.user_id === u.id && b.outcome === 'won')
+                  .reduce((sum, b) => sum + (b.potential_win - b.amount), 0);
               
               return (
                 <div key={u.id} className={`user-card ${u.is_admin ? 'admin' : ''}`}>
