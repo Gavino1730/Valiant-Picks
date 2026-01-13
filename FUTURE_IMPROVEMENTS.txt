@@ -260,6 +260,295 @@
 
 ---
 
+## Community & Social Features
+
+### 37. Live Betting Feed (Real-time Activity)
+**Display**: Show recent bets from all users in real-time
+**Location**: Dashboard sidebar or top banner
+**Examples**: 
+  - "Alex just bet $50 on Varsity Boys vs Lincoln"
+  - "Sarah won $120 on Girls JV! 🎉"
+  - "Mike placed a $200 HIGH confidence bet"
+**Features**: 
+  - Auto-scroll/fade animations
+  - Filter by team, amount, or outcome
+  - Anonymous mode option
+**Benefit**: Creates FOMO, shows activity, builds community feeling
+**Impact**: 40-60% increase in engagement
+**Priority**: VERY HIGH
+
+### 38. Team Performance History & Stats
+**Purpose**: Give users data to make informed bets
+**Display on**: Game cards, dedicated team stats page
+**Metrics**: 
+  - Last 5 game results (W/L with scores)
+  - Season record (15-3)
+  - Average point differential (+12.5)
+  - Home vs Away record
+  - Win streak (Won last 3)
+  - Head-to-head vs opponent
+  - Betting trends (65% of users picked this team)
+  - Key player stats
+**Benefit**: Builds trust, helps decision-making, reduces random betting
+**Impact**: Higher user satisfaction, better retention
+**Priority**: HIGH
+
+### 39. Achievements & Badges System
+**Purpose**: Gamify beyond just betting, add progression
+**Examples**: 
+  - 🎯 "First Blood" - Place your first bet
+  - 🔥 "Hot Streak" - Win 5 bets in a row
+  - 💎 "High Roller" - Place a $500+ bet
+  - 🎓 "Perfect Week" - Win all bets in one week
+  - 📈 "Comeback Kid" - Recover from $0 balance
+  - 🏆 "Century Club" - Place 100 total bets
+  - 🎰 "All In" - Bet entire balance
+  - 🧠 "Strategist" - Win 10 Low confidence bets
+  - ⚡ "Risk Taker" - Win 5 High confidence bets
+  - 👑 "King of the Court" - #1 on leaderboard
+**Display**: User profile, badge showcase, progress bars
+**Benefit**: Increases retention, adds progression, bragging rights
+**Impact**: Keeps users engaged even when not betting
+**Priority**: HIGH
+
+### 40. Parlay/Multi-Bet Feature
+**Feature**: Combine multiple games into one bet
+**How it works**: 
+  - Select 2-5 games
+  - All picks must win
+  - Multipliers stack (2-game = 3x, 3-game = 6x, 4-game = 12x)
+  - Higher risk, higher reward
+**UI**: Bet slip that collects multiple selections
+**Rules**: 
+  - Minimum 2 games, maximum 5
+  - All games must be different
+  - Can't combine with single game bets
+**Benefit**: Power users love parlays, increases excitement, higher bet amounts
+**Impact**: 20-30% increase in average bet size
+**Priority**: MEDIUM-HIGH
+
+### 41. Practice Mode for New Users
+**Purpose**: Let new users learn without risk
+**How it works**: 
+  - New users get $1000 practice money
+  - Separate from real balance
+  - Can bet on real games
+  - See results, learn interface
+  - Toggle between Practice/Real mode
+  - "Graduate to Real Mode" button when ready
+**Benefit**: Reduces new user drop-off, builds confidence, better onboarding
+**Impact**: 40% reduction in new user abandonment
+**Priority**: MEDIUM
+
+### 42. Betting Insights Dashboard
+**Purpose**: Show users their betting patterns and performance
+**Location**: New "My Stats" page
+**Metrics**: 
+  - Win rate by confidence level
+  - Best performing team
+  - Average bet amount
+  - Profit/loss over time (chart)
+  - Best day of week to bet
+  - Most successful bet type
+  - ROI (return on investment)
+  - Comparison to site average
+**Visualizations**: Charts, graphs, heat maps
+**Insights**: 
+  - "You win 70% when betting Low confidence"
+  - "Your best team: Varsity Boys (5-1 record)"
+  - "You bet more on weekends (avg $65 vs $40)"
+**Benefit**: Users love seeing their data, actionable insights improve performance
+**Impact**: Increases user engagement, perceived value
+**Priority**: MEDIUM
+
+### 43. Quick Bet Mode
+**Purpose**: Remove friction for repeat bettors
+**Features**: 
+  - Set default amount and confidence level
+  - One-click betting on teams
+  - "Bet Again" button on past bets
+  - Swipe gestures on mobile
+  - Quick bet from notifications
+**Settings**: User preferences for default bet parameters
+**Benefit**: Reduces bet placement time from 30s to 5s
+**Impact**: 25% increase in bet volume
+**Priority**: MEDIUM
+
+### 44. Bet Sharing to Social Media
+**Purpose**: Let winners brag, viral marketing
+**Features**: 
+  - Auto-generate shareable image
+  - Shows: Team, amount won, confidence level, logo
+  - "Share My Win" button after winning bet
+  - Pre-filled text: "I just won $200 betting on Varsity Boys! 🎉"
+  - Links back to valiantpicks.com
+  - Twitter, Instagram, Facebook integration
+**Privacy**: Optional, user controls what to share
+**Benefit**: Free marketing, social proof, viral growth potential
+**Impact**: Organic user acquisition
+**Priority**: MEDIUM
+
+### 45. Rival Tracker
+**Purpose**: Create friendly competition between users
+**Features**: 
+  - Search and select a rival user
+  - See their rank, balance, win rate
+  - Get notified when they place a bet
+  - Private head-to-head leaderboard
+  - Challenge system
+  - Trash talk (moderated)
+**Display**: Side-by-side comparison on profile
+**Benefit**: Increases engagement, creates personal stakes
+**Impact**: Users check app more frequently
+**Priority**: LOW-MEDIUM
+
+### 46. Season Playoffs/Tournaments
+**Purpose**: Recurring engagement events with prizes
+**How it works**: 
+  - Monthly tournament mode
+  - Everyone starts with $1000 tournament balance
+  - Separate from main balance
+  - Top 10 finishers get bonus prizes
+  - Resets monthly
+  - Leaderboard tracking
+**Prizes**: 
+  - 1st place: $500 bonus to main account
+  - 2nd-3rd: $250 bonus
+  - 4th-10th: $100 bonus
+**Benefit**: Creates urgency, recurring engagement events, more winners
+**Impact**: Monthly spike in activity
+**Priority**: LOW-MEDIUM
+
+---
+
+## Quick Wins (Easy Implementation, High Value)
+
+### 47. "Bet with Me" Quick Copy
+**Purpose**: Reduce decision paralysis
+**Display**: 
+  - "50 people bet Low on Varsity Boys"
+  - "Most popular: Medium confidence"
+  - One-click to copy that bet
+**Location**: On each game card
+**Benefit**: Faster betting, social proof
+**Impact**: Reduces time to place bet
+**Priority**: HIGH (Easy to implement)
+
+### 48. Game Day Badges
+**Feature**: Highlight games happening today
+**Badges**: 
+  - 🔴 LIVE - Game in progress
+  - ⏰ TODAY - Game today
+  - 🔥 HOT - Most bet on game
+  - ⏳ CLOSING SOON - Less than 1 hour
+**Benefit**: Creates urgency, draws attention
+**Impact**: Increases bets on live games
+**Priority**: HIGH (Easy to implement)
+
+### 49. Balance Milestones Celebrations
+**Purpose**: Celebrate user achievements
+**Triggers**: 
+  - $2000 - "Double Up! 🎉"
+  - $5000 - "Big Baller! 💎"
+  - $10000 - "Legend Status! 👑"
+**Display**: Confetti animation + toast notification
+**Benefit**: Positive reinforcement, dopamine hit
+**Impact**: Emotional connection to progress
+**Priority**: MEDIUM (Easy to implement)
+
+### 50. Bet Slip Undo (Grace Period)
+**Feature**: Allow canceling bet within 5 seconds
+**How it works**: 
+  - "Undo" button appears for 5 seconds after bet placement
+  - Countdown timer shown
+  - One-click to cancel and refund
+**Benefit**: Reduces user regret, builds trust
+**Impact**: Fewer support complaints
+**Priority**: MEDIUM
+
+### 51. "Hot Games" Section
+**Purpose**: Guide users to popular games
+**Display**: Games with most betting activity
+**Sorting**: By number of bets, total amount wagered, or bet velocity
+**Location**: Top of Dashboard or Browse Picks
+**Benefit**: Helps undecided users, increases engagement
+**Impact**: More bets placed
+**Priority**: MEDIUM
+
+---
+
+## Growth & Monetization
+
+### 52. Referral Program
+**Feature**: Give users incentive to invite friends
+**Rewards**: 
+  - Referrer gets $50 when friend joins + places first bet
+  - New user gets $50 bonus on signup
+**Tracking**: Unique referral codes/links
+**Leaderboard**: Top referrers get special status
+**Benefit**: Organic growth, user acquisition
+**Impact**: Viral growth potential
+**Priority**: HIGH (for growth)
+
+### 53. Weekly Leaderboard Reset
+**Purpose**: Keep competition fresh, more winners
+**Structure**: 
+  - All-time leaderboard (permanent)
+  - Weekly leaderboard (resets Monday)
+  - Monthly leaderboard
+**Prizes**: Weekly winners get bonus or badges
+**Benefit**: More opportunities to win, sustained engagement
+**Impact**: Users compete weekly, not just once
+**Priority**: MEDIUM
+
+### 54. VIP Status for Top Bettors
+**Purpose**: Retain power users
+**Criteria**: 
+  - 100+ total bets
+  - $5000+ wagered all-time
+  - Active for 3+ months
+**Perks**: 
+  - 💎 VIP badge
+  - Early access to games (30 min before public)
+  - Higher betting limits ($15,000 vs $10,000)
+  - Exclusive VIP chat/community
+  - Priority support
+**Benefit**: Retains highest-value users, status symbol
+**Impact**: Reduces churn of power users
+**Priority**: MEDIUM
+
+---
+
+## Recommended Implementation Order (New Features)
+
+**Phase 1 - Social Proof & Engagement (Months 1-2)**
+1. ✅ #37 - Live Betting Feed (Massive engagement boost)
+2. ✅ #39 - Achievements System (Easy + high retention)
+3. ✅ #47 - "Bet with Me" Quick Copy (Easy implementation)
+4. ✅ #48 - Game Day Badges (Easy, creates urgency)
+
+**Phase 2 - Data & Trust (Months 2-3)**
+5. ✅ #38 - Team Performance Stats (Builds credibility)
+6. ✅ #42 - Betting Insights Dashboard (User value)
+7. ✅ #49 - Balance Milestones (Easy win)
+
+**Phase 3 - Power Features (Months 3-4)**
+8. ✅ #40 - Parlay Bets (Revenue driver)
+9. ✅ #43 - Quick Bet Mode (Removes friction)
+10. ✅ #50 - Bet Undo (Trust builder)
+
+**Phase 4 - Growth (Months 4-5)**
+11. ✅ #52 - Referral Program (User acquisition)
+12. ✅ #44 - Bet Sharing (Viral marketing)
+13. ✅ #54 - VIP Status (Retention)
+
+**Phase 5 - Advanced (Months 5-6)**
+14. ✅ #41 - Practice Mode (Onboarding)
+15. ✅ #46 - Tournaments (Events)
+16. ✅ #45 - Rival Tracker (Competition)
+
+---
+
 ## Priority Order for Next Sprint
 
 1. ✅ #8 - Rate Limiting (Prevents bugs)
@@ -270,7 +559,9 @@
 6. 🔄 #1 - Loading Skeletons (Better perceived performance)
 7. 🔄 #5 - Recent Winners (Engagement)
 8. 🔄 #10 - Statistics Dashboard (User retention)
+9. 🔥 #37 - Live Betting Feed (HIGHEST IMPACT - do next!)
+10. 🔥 #39 - Achievements System (HIGH RETENTION - easy to build)
 
 ---
 
-Last Updated: January 12, 2026
+Last Updated: January 13, 2026
