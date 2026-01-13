@@ -11,8 +11,8 @@ function Leaderboard() {
 
   useEffect(() => {
     fetchData();
-    // Poll for leaderboard updates every 5 seconds
-    const interval = setInterval(fetchData, 5000);
+    // Poll for leaderboard updates every 20 seconds
+    const interval = setInterval(fetchData, 20000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -36,7 +36,6 @@ function Leaderboard() {
       setError('');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to fetch leaderboard');
-      console.error('Error fetching leaderboard:', err);
     } finally {
       setLoading(false);
     }
@@ -184,18 +183,6 @@ function Leaderboard() {
                   <div className={`cell-value win-rate ${parseFloat(user.stats.winRate) >= 50 ? 'positive' : parseFloat(user.stats.winRate) === 0 ? 'neutral' : 'negative'}`}>
                     {formatWinRate(user.stats.winRate)}%
                   </div>
-                </div>
-
-                <div className="stats-cell profit-cell">
-                  <div className="cell-label">Profit</div>
-                  <div className={`cell-value profit ${user.stats.netProfit >= 0 ? 'positive' : 'negative'}`}>
-                    {user.stats.netProfit >= 0 ? '+' : ''}{formatCurrency(user.stats.netProfit)}
-                  </div>
-                </div>
-
-                <div className="stats-cell picks-cell">
-                  <div className="cell-label">Picks</div>
-                  <div className="cell-value">{user.stats.totalBets}</div>
                 </div>
             </div>
           ))

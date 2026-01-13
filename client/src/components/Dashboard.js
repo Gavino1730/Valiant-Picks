@@ -46,8 +46,8 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   };
 
   useEffect(() => {
-    // Update less frequently to reduce re-renders and improve interaction latency
-    const intervalId = setInterval(() => setNow(Date.now()), 5000);
+    // Update less frequently to reduce re-renders
+    const intervalId = setInterval(() => setNow(Date.now()), 10000);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -218,10 +218,12 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   }, [previousBets]);
 
   useEffect(() => {
-    // Fetch data immediately on mount
-    fetchProfile();
-    fetchGames();
-    fetchBets();
+    // Fetch all data in parallel for faster initial load
+    Promise.all([
+      fetchGames(),
+      fetchBets()
+      // Skip fetchProfile() - balance already synced from user prop
+    ]);
     
     // Create abort controller to handle unmounting gracefully
     let isActive = true;
@@ -233,27 +235,27 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
     
-    // Poll with proper cleanup: bets every 5 seconds, games every 30 seconds
+    // Poll with proper cleanup: bets every 15 seconds, games every 60 seconds
     // Only poll when page is visible
     const betsInterval = setInterval(async () => {
       if (isActive && isPageVisible) {
         try {
           await fetchBets();
         } catch (err) {
-          console.error('Error in bets polling:', err);
+          // Polling error - will retry
         }
       }
-    }, 5000);
+    }, 15000);
     
     const gamesInterval = setInterval(async () => {
       if (isActive && isPageVisible) {
         try {
           await fetchGames();
         } catch (err) {
-          console.error('Error in games polling:', err);
+          // Polling error - will retry
         }
       }
-    }, 30000);
+    }, 60000);
     
     return () => {
       isActive = false;

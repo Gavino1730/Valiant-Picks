@@ -115,7 +115,6 @@ function AdminPanel() {
       setUserTransactions(txs);
       setUserHistoryLoading(false);
     }).catch(err => {
-      console.error('Error fetching user history:', err);
       setUserHistoryLoading(false);
     });
   }, [selectedUser]);
@@ -181,7 +180,6 @@ function AdminPanel() {
       setError('');
     } catch (err) {
       setError('Failed to fetch users: ' + (err.response?.data?.error || err.message));
-      console.error('Failed to fetch users:', err);
     }
   };
 
@@ -196,7 +194,6 @@ function AdminPanel() {
       setError('');
     } catch (err) {
       setError('Failed to fetch games: ' + (err.response?.data?.error || err.message));
-      console.error('Failed to fetch games:', err);
     }
   };
 
@@ -207,7 +204,6 @@ function AdminPanel() {
       setError('');
     } catch (err) {
       setError('Failed to fetch prop picks: ' + (err.response?.data?.error || err.message));
-      console.error('Failed to fetch prop picks:', err);
     }
   };
 

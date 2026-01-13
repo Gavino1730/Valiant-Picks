@@ -65,7 +65,6 @@ function BetList() {
       setBets(newBets);
       setError('');
     } catch (err) {
-      console.error('Error fetching bets:', err);
       const errorMsg = err.response?.data?.error || err.message || 'Failed to fetch picks';
       setError(errorMsg);
     } finally {

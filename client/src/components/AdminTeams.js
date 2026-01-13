@@ -72,7 +72,6 @@ function AdminTeams() {
             try {
               parsedSchedule = typeof team.schedule === 'string' ? JSON.parse(team.schedule) : team.schedule;
             } catch (e) {
-              console.error('Error parsing schedule for team:', team.name, e);
               parsedSchedule = [];
             }
           }
@@ -95,7 +94,6 @@ function AdminTeams() {
         setFormData(hardcodedTeams[0]);
       }
     } catch (err) {
-      console.error('Failed to fetch teams from API:', err.message);
       const hardcodedTeams = getHardcodedTeams();
       setTeams(hardcodedTeams);
       setSelectedTeam(hardcodedTeams[0]);
@@ -126,7 +124,7 @@ function AdminTeams() {
           }));
         }
       } catch (e) {
-        console.error('Error parsing schedule:', e);
+        // Schedule parsing error handled silently
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -146,7 +144,6 @@ function AdminTeams() {
       try {
         parsedSchedule = typeof team.schedule === 'string' ? JSON.parse(team.schedule) : team.schedule;
       } catch (e) {
-        console.error('Error parsing schedule:', e);
         parsedSchedule = [];
       }
     }
@@ -210,7 +207,6 @@ function AdminTeams() {
       // Refresh teams list
       fetchTeams();
     } catch (err) {
-      console.error('Update error:', err);
       setError(err.response?.data?.error || 'Failed to update team info');
     }
   };
@@ -307,10 +303,9 @@ function AdminTeams() {
       
       setSelectedTeam(response.data);
       setEditingGameIdx(null);
-      alert('✅ Game result updated!');
+      setError('✅ Game result updated!');
     } catch (err) {
-      console.error('Schedule update error:', err);
-      alert('❌ Failed to update game: ' + (err.response?.data?.error || err.message));
+      setError('❌ Failed to update game: ' + (err.response?.data?.error || err.message));
     }
   };
 

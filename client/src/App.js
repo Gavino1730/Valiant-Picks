@@ -31,8 +31,7 @@ const LoadingSpinner = () => (
 
 function GiftBalanceWatcher({ user, updateUser }) {
   const { showToast } = useToast();
-  const giftRequestRef = useRef(false);
-  const lastUserBalanceRef = useRef(null);
+  const checkIntervalRef = useRef(null);
 
   useEffect(() => {
     if (!user) {
@@ -41,75 +40,63 @@ function GiftBalanceWatcher({ user, updateUser }) {
 
     const currentBalance = Number(user.balance ?? 0);
     
-    // Only trigger if balance just hit 0 (changed from > 0 to 0)
-    // Prevents spam when balance stays at 0
+    // Clear any existing interval
+    if (checkIntervalRef.current) {
+      clearInterval(checkIntervalRef.current);
+      checkIntervalRef.current = null;
+    }
+
+    // Only monitor if balance is 0
     if (currentBalance > 0) {
-      lastUserBalanceRef.current = currentBalance;
-      return undefined;
-    }
-    
-    // Check if this is the first time we're seeing balance = 0
-    const balanceJustHitZero = lastUserBalanceRef.current !== null && lastUserBalanceRef.current > 0;
-    lastUserBalanceRef.current = currentBalance;
-    
-    // Only call gift-balance if balance just hit 0, or if we have a pending refill to check
-    if (!balanceJustHitZero && giftRequestRef.current) {
-      return undefined;
-    }
-    
-    if (giftRequestRef.current && !balanceJustHitZero) {
-      // Don't spam - only check if balance just hit zero or was already at 0 and hasn't been checked
       return undefined;
     }
 
-    let isMounted = true;
-    giftRequestRef.current = true;
-
-    const grantGift = async () => {
+    // Check immediately and then every 30 seconds
+    const checkGiftBalance = async () => {
       try {
         const response = await apiClient.post('/users/gift-balance');
-        if (!isMounted) {
-          return;
-        }
+        
         if (response.data?.user) {
           updateUser(response.data.user);
         }
+        
         if (response.data?.gifted) {
           showToast(
             '🎁 Your 72-hour wait is complete! We\'ve added 500 Valiant Bucks to your account - spendable immediately!',
             'success',
             8000
           );
-        } else if (response.data?.pending) {
-          if (response.data.hoursRemaining === 72) {
-            showToast(
-              '⏳ Your balance hit $0.00. You will receive 500 Valiant Bucks in 72 hours. Check your notifications for details.',
-              'info',
-              7000
-            );
-          } else {
-            showToast(
-              `⏳ Your refill will be available in ${response.data.hoursRemaining} hours.`,
-              'info',
-              6000
-            );
+          // Clear interval since gift was received
+          if (checkIntervalRef.current) {
+            clearInterval(checkIntervalRef.current);
+            checkIntervalRef.current = null;
           }
+        } else if (response.data?.pending && response.data?.hoursRemaining === 72) {
+          // Only show toast on first pending (72 hours remaining)
+          showToast(
+            '⏳ Your balance hit $0.00. You will receive 500 Valiant Bucks in 72 hours. Check your notifications for details.',
+            'info',
+            7000
+          );
         }
       } catch (err) {
-        console.error('Error gifting balance:', err);
-      } finally {
-        if (isMounted) {
-          giftRequestRef.current = false;
-        }
+        // Error handled silently
       }
     };
 
-    grantGift();
+    // Check immediately
+    checkGiftBalance();
+    
+    // Then check every 30 seconds while balance is 0
+    checkIntervalRef.current = setInterval(checkGiftBalance, 30000);
 
     return () => {
-      isMounted = false;
+      if (checkIntervalRef.current) {
+        clearInterval(checkIntervalRef.current);
+        checkIntervalRef.current = null;
+      }
     };
-  }, [user, showToast, updateUser]);
+  }, [user?.balance, showToast, updateUser]);
 
   return null;
 }
@@ -121,7 +108,7 @@ function AppContent() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [unreadCount, setUnreadCount] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const profilePollRef = useRef({ timeoutId: null, delay: 5000, inFlight: false });
+  const profilePollRef = useRef({ timeoutId: null, delay: 15000, inFlight: false });
   
   // Get page from URL path
   const page = location.pathname.slice(1) || 'dashboard';
@@ -141,8 +128,8 @@ function AppContent() {
     if (!token) return;
     
     fetchUnreadCount();
-    // Poll notifications every 10 seconds for faster updates
-    const notificationInterval = setInterval(fetchUnreadCount, 10000);
+    // Poll notifications every 20 seconds
+    const notificationInterval = setInterval(fetchUnreadCount, 20000);
     let isMounted = true;
     // Copy ref to local variable at effect start for cleanup
     const pollRef = profilePollRef.current;
@@ -163,7 +150,7 @@ function AppContent() {
       const updatedUser = await fetchUserProfile();
 
       if (updatedUser) {
-        pollRef.delay = 5000;
+        pollRef.delay = 15000;
       } else {
         pollRef.delay = Math.min(pollRef.delay * 2, 60000);
       }
@@ -181,7 +168,7 @@ function AppContent() {
         clearTimeout(pollRef.timeoutId);
       }
       pollRef.inFlight = false;
-      pollRef.delay = 5000;
+      pollRef.delay = 15000;
     };
   }, [token]);
 
@@ -190,7 +177,7 @@ function AppContent() {
       const response = await apiClient.get('/notifications/unread-count');
       setUnreadCount(response.data.count);
     } catch (err) {
-      console.error('Error fetching unread count:', err);
+      // Fail silently - unread count is not critical
     }
   };
 
@@ -202,7 +189,7 @@ function AppContent() {
       localStorage.setItem('user', JSON.stringify(updatedUser));
       return updatedUser;
     } catch (err) {
-      console.error('Error fetching user profile:', err);
+      // Fail silently - will retry
       return null;
     }
   };

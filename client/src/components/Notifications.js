@@ -32,7 +32,7 @@ function Notifications({ onUnreadChange }) {
             setNotifications(updated);
             updateUnreadCount(updated);
           } catch (err) {
-            console.error('Error auto-marking notifications as read:', err);
+            // Auto-mark error handled silently
           } finally {
             setIsMarkingAsRead(false);
           }
@@ -41,7 +41,7 @@ function Notifications({ onUnreadChange }) {
           updateUnreadCount(response.data);
         }
       } catch (err) {
-        console.error('Error fetching notifications:', err);
+        // Fetch error handled silently
       } finally {
         setLoading(false);
       }
@@ -49,8 +49,8 @@ function Notifications({ onUnreadChange }) {
 
     fetchNotifications();
     
-    // Poll for new notifications every 5 seconds for faster updates
-    const pollInterval = setInterval(fetchNotifications, 5000);
+    // Poll for new notifications every 15 seconds
+    const pollInterval = setInterval(fetchNotifications, 15000);
     
     return () => clearInterval(pollInterval);
   }, [isMarkingAsRead, updateUnreadCount]);
@@ -64,7 +64,7 @@ function Notifications({ onUnreadChange }) {
       setNotifications(updated);
       updateUnreadCount(updated);
     } catch (err) {
-      console.error('Error marking notification as read:', err);
+      // Mark as read error handled silently
     }
   };
 
@@ -75,7 +75,7 @@ function Notifications({ onUnreadChange }) {
       setNotifications(updated);
       updateUnreadCount(updated);
     } catch (err) {
-      console.error('Error marking all as read:', err);
+      // Mark all error handled silently
     }
   };
 

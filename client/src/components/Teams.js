@@ -147,7 +147,6 @@ function Teams() {
         setTeams(hardcodedData);
       }
     } catch (err) {
-      console.error('Failed to fetch teams from API:', err.message);
       setTeams(hardcodedData);
     } finally {
       setLoading(false);

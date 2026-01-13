@@ -43,7 +43,7 @@ function Games({ user, updateUser }) {
       const response = await apiClient.get('/users/profile');
       setBalance(response.data.balance);
     } catch (err) {
-      console.error('Error fetching balance:', err);
+      // Balance will be fetched again on next update
     }
   }, []);
 
@@ -52,7 +52,6 @@ function Games({ user, updateUser }) {
       const response = await apiClient.get('/bets');
       setUserBets(response.data || []);
     } catch (err) {
-      console.error('Error fetching user bets:', err);
       setUserBets([]);
     }
   }, []);
@@ -65,7 +64,6 @@ function Games({ user, updateUser }) {
       });
       setGames(sortedGames);
     } catch (err) {
-      console.error('[Games] Error fetching games:', err.message || err);
       // Don't clear games on error - keep showing what we had before
       setGames(prevGames => {
         return prevGames.length === 0 ? [] : prevGames;
@@ -80,7 +78,6 @@ function Games({ user, updateUser }) {
       const response = await apiClient.get('/prop-bets');
       setPropBets(response.data || []);
     } catch (err) {
-      console.error('Error fetching prop bets:', err);
       setPropBets([]);
     }
   }, []);
@@ -96,7 +93,7 @@ function Games({ user, updateUser }) {
           fetchUserBets()
         ]);
       } catch (err) {
-        console.error('Error during initial load:', err);
+        // Initial load errors handled by individual fetch functions
       }
     };
     
@@ -113,27 +110,27 @@ function Games({ user, updateUser }) {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     
     // Poll with staggered intervals for better performance
-    // Games and prop bets every 15 seconds (less frequent, stable data)
+    // Games and prop bets every 30 seconds (stable data)
     const gamesInterval = setInterval(async () => {
       if (isActive && isPageVisible) {
         try {
           await Promise.all([fetchGames(), fetchPropBets()]);
         } catch (err) {
-          console.error('Error polling games/prop bets:', err);
+          // Polling error - will retry on next interval
         }
       }
-    }, 15000);
+    }, 30000);
     
-    // Balance and bets every 5 seconds (more frequent, changes more often)
+    // Balance and bets every 15 seconds
     const userDataInterval = setInterval(async () => {
       if (isActive && isPageVisible) {
         try {
           await Promise.all([fetchBalance(), fetchUserBets()]);
         } catch (err) {
-          console.error('Error polling user data:', err);
+          // Polling error - will retry on next interval
         }
       }
-    }, 5000);
+    }, 15000);
     
     return () => {
       isActive = false;
@@ -145,7 +142,7 @@ function Games({ user, updateUser }) {
   }, []); // Empty array - only run on mount
 
   useEffect(() => {
-    const intervalId = setInterval(() => setNow(Date.now()), 3000);
+    const intervalId = setInterval(() => setNow(Date.now()), 10000);
     return () => clearInterval(intervalId);
   }, []);
 
