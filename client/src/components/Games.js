@@ -694,15 +694,15 @@ function Games({ user, updateUser }) {
 
                       </div>
 
-                      <div className="confidence-options" style={{display: 'flex', gap: '10px', marginBottom: '15px', justifyContent: 'center'}}>
+                      <div className="confidence-options">
                         <Tooltip text="Safest bet - 1.2x return" position="top">
                           <button
                             type="button"
                             className={`confidence-btn ${selectedConfidence[game.id] === 'low' ? 'active' : ''}`}
-                            style={{flex: 1, minWidth: '110px', maxWidth: '150px', padding: '10px 8px', background: selectedConfidence[game.id] === 'low' ? '#66bb6a' : 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', cursor: 'pointer', fontSize: '0.9em', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', fontWeight: '600', minHeight: '56px'}}
+                            style={{background: selectedConfidence[game.id] === 'low' ? '#66bb6a' : ''}}
                             onClick={() => setSelectedConfidence({...selectedConfidence, [game.id]: 'low'})}
                           >
-                            <div style={{lineHeight: '1.2'}}>Low</div>
+                            <div>Low</div>
                             <div style={{fontSize: '0.85em', marginTop: '2px'}}>1.2x</div>
                           </button>
                         </Tooltip>
@@ -710,10 +710,10 @@ function Games({ user, updateUser }) {
                           <button
                             type="button"
                             className={`confidence-btn ${selectedConfidence[game.id] === 'medium' ? 'active' : ''}`}
-                            style={{flex: 1, minWidth: '110px', maxWidth: '150px', padding: '10px 8px', background: selectedConfidence[game.id] === 'medium' ? '#ff9800' : 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', cursor: 'pointer', fontSize: '0.9em', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', fontWeight: '600', minHeight: '56px'}}
+                            style={{background: selectedConfidence[game.id] === 'medium' ? '#ff9800' : ''}}
                             onClick={() => setSelectedConfidence({...selectedConfidence, [game.id]: 'medium'})}
                           >
-                            <div style={{lineHeight: '1.2'}}>Medium</div>
+                            <div>Medium</div>
                             <div style={{fontSize: '0.85em', marginTop: '2px'}}>1.5x</div>
                           </button>
                         </Tooltip>
@@ -721,10 +721,10 @@ function Games({ user, updateUser }) {
                           <button
                             type="button"
                             className={`confidence-btn ${selectedConfidence[game.id] === 'high' ? 'active' : ''}`}
-                            style={{flex: 1, minWidth: '110px', maxWidth: '150px', padding: '10px 8px', background: selectedConfidence[game.id] === 'high' ? '#ef5350' : 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', cursor: 'pointer', fontSize: '0.9em', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', fontWeight: '600', minHeight: '56px'}}
+                            style={{background: selectedConfidence[game.id] === 'high' ? '#ef5350' : ''}}
                             onClick={() => setSelectedConfidence({...selectedConfidence, [game.id]: 'high'})}
                           >
-                            <div style={{lineHeight: '1.2'}}>High</div>
+                            <div>High</div>
                             <div style={{fontSize: '0.85em', marginTop: '2px'}}>2.0x</div>
                           </button>
                         </Tooltip>
@@ -740,7 +740,7 @@ function Games({ user, updateUser }) {
                         </div>
                       ) : (
                         <>
-                          <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+                          <div style={{display: 'flex', gap: '0.75rem', alignItems: 'stretch'}}>
                             <input
                               type="number"
                               placeholder="Pick amount"
@@ -748,12 +748,12 @@ function Games({ user, updateUser }) {
                               step="0.01"
                               value={betAmounts[game.id] || ''}
                               onChange={(e) => setBetAmounts({...betAmounts, [game.id]: e.target.value})}
-                              style={{flex: 1, padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', fontSize: '1em'}}
                             />
                             <button
+                              type="button"
                               onClick={() => handlePlaceGameBet(game.id, gameLocked)}
                               disabled={gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]}
-                              style={{padding: '10px 20px', background: betSuccess[game.id] ? '#66bb6a' : '#1e88e5', border: 'none', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: 'bold', opacity: (gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]) ? 0.5 : 1, transition: 'all 0.3s ease'}}
+                              style={{background: betSuccess[game.id] ? '#66bb6a' : ''}}
                             >
                               {betSuccess[game.id] ? '✓ Success!' : gameLocked ? 'Closed' : 'Pick'}
                             </button>
