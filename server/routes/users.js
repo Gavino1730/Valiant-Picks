@@ -57,13 +57,6 @@ router.post('/gift-balance', authenticateToken, async (req, res) => {
       // Set the timestamp - user must wait 72 hours from now
       await User.setPendingRefill(user.id, new Date());
       
-      await Notification.create(
-        user.id,
-        '⏳ Balance Refill Pending',
-        'Your balance has hit $0.00. You will receive 500 Valiant Bucks in 72 hours. These funds will be spendable immediately once received.',
-        'balance_pending'
-      );
-      
       const updatedUser = await User.findById(user.id);
       return res.json({ 
         gifted: false, 

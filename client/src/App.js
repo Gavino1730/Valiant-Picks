@@ -71,13 +71,6 @@ function GiftBalanceWatcher({ user, updateUser }) {
             clearInterval(checkIntervalRef.current);
             checkIntervalRef.current = null;
           }
-        } else if (response.data?.pending && response.data?.hoursRemaining === 72) {
-          // Only show toast on first pending (72 hours remaining)
-          showToast(
-            '⏳ Your balance hit $0.00. You will receive 500 Valiant Bucks in 72 hours. Check your notifications for details.',
-            'info',
-            7000
-          );
         }
       } catch (err) {
         // Error handled silently
