@@ -14,7 +14,8 @@
   }
 
   /* Touch targets should be at least 48x48px */
-  button,
+  /* Exclude game betting buttons which have their own specific styling */
+  button:not(.team-btn):not(.confidence-btn):not(.prop-bet-btn):not(.yes-btn):not(.no-btn),
   a[role="button"],
   input[type="button"],
   input[type="submit"],
@@ -26,8 +27,8 @@
     font-weight: 700;
   }
 
-  /* Form controls */
-  input,
+  /* Form controls - exclude betting inputs */
+  input:not([type="number"]),
   select,
   textarea {
     padding: 12px 14px;
@@ -370,7 +371,7 @@
   }
 
   /* Larger touch targets for small screens */
-  button,
+  button:not(.team-btn):not(.confidence-btn):not(.prop-bet-btn):not(.yes-btn):not(.no-btn),
   a[role="button"],
   input[type="button"],
   input[type="submit"],
@@ -466,7 +467,7 @@
   }
 
   /* Compact forms */
-  input, select, textarea {
+  input:not([type="number"]), select, textarea {
     padding: 10px 12px;
     font-size: 16px;
     margin-bottom: 0.7rem;
@@ -694,7 +695,7 @@
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
-  input,
+  input:not([type="number"]),
   select,
   textarea,
   .card {
