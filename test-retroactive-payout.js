@@ -138,6 +138,7 @@ const req = httpModule.request(options, (res) => {
 
 req.on('error', (error) => {
   console.error('Request failed:', error.message);
+  console.error('Note: Check your network connection and API URL');
   process.exit(1);
 });
 

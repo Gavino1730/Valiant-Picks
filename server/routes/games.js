@@ -835,11 +835,14 @@ router.post('/retroactive-payout-oes', authenticateToken, async (req, res) => {
       const betTiming = betUpdatedTimes[i];
       const userTransactions = transactionsByUser[bet.user_id] || [];
 
+      // Pre-calculate timestamps for performance
+      const minTimeMs = new Date(betTiming.minTime).getTime();
+      const maxTimeMs = new Date(betTiming.maxTime).getTime();
+
       // Check if a matching transaction exists
       const hasMatchingTransaction = userTransactions.some(tx => {
         const txTime = new Date(tx.created_at).getTime();
-        const inTimeWindow = txTime >= new Date(betTiming.minTime).getTime() && 
-                            txTime <= new Date(betTiming.maxTime).getTime();
+        const inTimeWindow = txTime >= minTimeMs && txTime <= maxTimeMs;
         const matchesAmount = Math.abs(tx.amount - betTiming.payout) < 0.01;
         return inTimeWindow && matchesAmount;
       });
