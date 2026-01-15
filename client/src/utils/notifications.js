@@ -78,7 +78,7 @@ class NotificationService {
 
   // Notification templates for common scenarios
   betResolved(betData) {
-    const { outcome, team, amount, potentialWin } = betData;
+    const { outcome, team, amount } = betData;
     
     if (outcome === 'won') {
       this.send('Bet Won!', {
