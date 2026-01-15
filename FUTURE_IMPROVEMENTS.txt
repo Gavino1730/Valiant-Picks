@@ -8,12 +8,6 @@
 **Benefit**: Makes the app feel faster, better UX during data fetching
 **Implementation**: Add skeleton components for dashboard cards, game lists, leaderboard rows
 
-### 2. Debounce Bet Amount Input
-**Issue**: Validation runs on every keystroke while typing
-**Solution**: Debounce validation by 300-500ms
-**Benefit**: Reduces unnecessary re-renders, smoother typing experience
-**Files**: Dashboard.js, Games.js
-
 ### 3. Add Bet Confirmation Dialog
 **Purpose**: Prevent accidental high-value bets
 **Features**: 

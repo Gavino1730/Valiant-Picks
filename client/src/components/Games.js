@@ -24,6 +24,8 @@ function Games({ user, updateUser }) {
   const [propBetLoading, setPropBetLoading] = useState({});
   const [propBetAmounts, setPropBetAmounts] = useState({});
   const expandedBetRef = useRef(null);
+  const debounceTimerRef = useRef(null);
+  const propDebounceTimersRef = useRef({});
 
   // Sync balance immediately when user prop changes
   useEffect(() => {
@@ -98,6 +100,16 @@ function Games({ user, updateUser }) {
     };
     
     loadData();
+    
+    // Cleanup debounce timers on unmount
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+      Object.values(propDebounceTimersRef.current).forEach(timer => {
+        if (timer) clearTimeout(timer);
+      });
+    };
     
     // Create flag to prevent polling after unmount
     let isActive = true;
@@ -289,10 +301,27 @@ function Games({ user, updateUser }) {
   };
 
   const handlePropAmountChange = (propId, choice, value) => {
+    const key = `${propId}-${choice}`;
     setPropBetAmounts(prev => ({
       ...prev,
-      [`${propId}-${choice}`]: value
+      [key]: value
     }));
+    
+    // Clear previous debounce timer for this prop bet
+    if (propDebounceTimersRef.current[key]) {
+      clearTimeout(propDebounceTimersRef.current[key]);
+    }
+    
+    // Debounce validation by 300ms
+    propDebounceTimersRef.current[key] = setTimeout(() => {
+      const numeric = parseFloat(value);
+      if (balance > 0 && !Number.isNaN(numeric) && numeric > balance) {
+        setPropBetAmounts(prev => ({
+          ...prev,
+          [key]: balance.toString()
+        }));
+      }
+    }, 300);
   };
 
   const handlePlaceGameBet = async (e) => {
@@ -774,12 +803,20 @@ function Games({ user, updateUser }) {
                                         value={amount}
                                         onChange={(e) => {
                                           const val = e.target.value;
-                                          const numeric = parseFloat(val);
-                                          if (balance > 0 && !Number.isNaN(numeric) && numeric > balance) {
-                                            setAmount(balance.toString());
-                                          } else {
-                                            setAmount(val);
+                                          setAmount(val);
+                                          
+                                          // Clear previous debounce timer
+                                          if (debounceTimerRef.current) {
+                                            clearTimeout(debounceTimerRef.current);
                                           }
+                                          
+                                          // Debounce validation by 300ms
+                                          debounceTimerRef.current = setTimeout(() => {
+                                            const numeric = parseFloat(val);
+                                            if (balance > 0 && !Number.isNaN(numeric) && numeric > balance) {
+                                              setAmount(balance.toString());
+                                            }
+                                          }, 300);
                                         }}
                                         placeholder={balance > 0 ? 'Enter amount' : 'Balance too low'}
                                         required
