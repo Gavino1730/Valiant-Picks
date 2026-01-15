@@ -30,8 +30,8 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     totalWinnings: 0
   });
 
-  // Spirit Week Data - Broadway Theme
-  const [spiritWeekData] = useState({
+  // Spirit Week Data - Broadway Theme - TEMPORARILY HIDDEN
+  /* const [spiritWeekData] = useState({
     theme: "Broadway Bonanza",
     weekOf: "February 3-7, 2026",
     grades: [
@@ -92,10 +92,10 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         points: 367
       }
     ]
-  });
+  }); */
 
-  // School Events Data
-  const [schoolEvents] = useState([
+  // School Events Data - TEMPORARILY HIDDEN
+  /* const [schoolEvents] = useState([
     {
       id: 1,
       title: "Spirit Week - Broadway Bonanza",
@@ -137,10 +137,10 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       location: "Cafeteria",
       type: "social"
     }
-  ]);
+  ]); */
 
-  // School Alerts Data
-  const [schoolAlerts] = useState([
+  // School Alerts Data - TEMPORARILY HIDDEN
+  /* const [schoolAlerts] = useState([
     {
       id: 1,
       type: "info",
@@ -159,7 +159,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       message: "Valiant Picks now live! Place your picks on Browse Picks page!",
       date: "January 20, 2026"
     }
-  ]);
+  ]); */
 
   const parseLocalDateOnly = (dateStr) => {
     const [year, month, day] = (dateStr || '').split('-').map(Number);
@@ -300,11 +300,11 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     [bets]
   );
 
-  // Calculate spirit week leader
-  const spiritLeader = React.useMemo(() => {
+  // Calculate spirit week leader - TEMPORARILY HIDDEN
+  /* const spiritLeader = React.useMemo(() => {
     const sorted = [...spiritWeekData.grades].sort((a, b) => b.points - a.points);
     return sorted[0];
-  }, [spiritWeekData]);
+  }, [spiritWeekData]); */
 
   return (
     <div className="dashboard school-dashboard">
@@ -339,8 +339,8 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         )}
       </div>
 
-      {/* School Alerts */}
-      {schoolAlerts.length > 0 && (
+      {/* School Alerts - TEMPORARILY HIDDEN */}
+      {/* {schoolAlerts.length > 0 && (
         <div className="school-alerts">
           {schoolAlerts.map(alert => (
             <div key={alert.id} className={`alert-banner alert-${alert.type}`}>
@@ -353,7 +353,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             </div>
           ))}
         </div>
-      )}
+      )} */
 
       {/* Stats Overview - Compact */}
       <div className="dashboard-stats-compact">
@@ -402,8 +402,8 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             </div>
           </div>
 
-          {/* Spirit Week Tracker */}
-          <div className="card spirit-week-card">
+          {/* Spirit Week Tracker - TEMPORARILY HIDDEN */}
+          {/* <div className="card spirit-week-card">
             <div className="spirit-week-header">
               <h3>🎭 Spirit Week: {spiritWeekData.theme}</h3>
               <span className="spirit-week-date">{spiritWeekData.weekOf}</span>
@@ -412,7 +412,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               Each grade has their own Broadway musical! Show your class spirit all week long!
             </p>
             
-            {/* Current Leader Banner */}
+            {/* Current Leader Banner * /}
             <div className="spirit-leader-banner" style={{borderColor: spiritLeader.color}}>
               <span className="leader-icon" style={{fontSize: '2.5rem'}}>{spiritLeader.icon}</span>
               <div className="leader-info">
@@ -423,7 +423,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               <div className="leader-points">{spiritLeader.points} pts</div>
             </div>
 
-            {/* All Grades */}
+            {/* All Grades * /}
             <div className="spirit-grades-grid">
               {spiritWeekData.grades.map((grade, index) => (
                 <div key={index} className="spirit-grade-card" style={{borderLeftColor: grade.color}}>
@@ -446,10 +446,10 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */
 
-          {/* Upcoming School Events */}
-          <div className="card school-events-card">
+          {/* Upcoming School Events - TEMPORARILY HIDDEN */}
+          {/* <div className="card school-events-card">
             <h3>📅 Upcoming School Events</h3>
             {schoolEvents.length > 0 ? (
               <div className="events-list">
@@ -478,7 +478,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             ) : (
               <p className="empty-text">No upcoming events</p>
             )}
-          </div>
+          </div> */
         </div>
 
         {/* Right Sidebar */}

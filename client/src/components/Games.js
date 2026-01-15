@@ -14,16 +14,17 @@ function Games({ user, updateUser }) {
   const [propBetAmounts, setPropBetAmounts] = useState({});
   const [message, setMessage] = useState('');
   const [teamFilter, setTeamFilter] = useState('all');
-  const [selectedTeams, setSelectedTeams] = useState({});
-  const [selectedConfidence, setSelectedConfidence] = useState({});
-  const [betAmounts, setBetAmounts] = useState({});
+  const [selectedGameId, setSelectedGameId] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState('');
+  const [confidence, setConfidence] = useState('');
+  const [amount, setAmount] = useState('');
   const [now, setNow] = useState(Date.now());
   const [userBets, setUserBets] = useState([]);
-  const [betSuccess, setBetSuccess] = useState({});
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [pendingBet, setPendingBet] = useState(null);
   const [isSubmittingBet, setIsSubmittingBet] = useState(false);
   const [propBetLoading, setPropBetLoading] = useState({});
+  const [propBetAmounts, setPropBetAmounts] = useState({});
 
   // Sync balance immediately when user prop changes
   useEffect(() => {
@@ -295,37 +296,48 @@ function Games({ user, updateUser }) {
     }));
   };
 
-  const handlePlaceGameBet = (gameId, isLocked) => {
-    if (isLocked) {
+  const handlePlaceGameBet = async (e) => {
+    e.preventDefault();
+    setMessage('');
+
+    const selectedGame = games.find(g => g.id === parseInt(selectedGameId));
+    if (!selectedGame) {
+      setMessage('Please select a game');
+      return;
+    }
+
+    const startDate = buildDateFromParts(selectedGame);
+    const countdown = getCountdown(startDate);
+    const gameLocked = countdown.isPast || isClosedStatus(selectedGame.status);
+
+    if (gameLocked) {
       setMessage('Picking closed for this game');
       return;
     }
 
-    if (hasExistingBet(gameId)) {
+    if (hasExistingBet(selectedGame.id)) {
       setMessage('You have already placed a pick on this game');
       return;
     }
 
-    const team = selectedTeams[gameId];
-    const confidence = selectedConfidence[gameId];
-    const amount = parseFloat(betAmounts[gameId]);
+    const betAmount = parseFloat(amount);
 
-    if (!team || !confidence || !amount) {
+    if (!selectedTeam || !confidence || !betAmount) {
       setMessage('Please select team, confidence, and enter amount');
       return;
     }
 
-    if (amount > balance) {
+    if (betAmount > balance) {
       setMessage('Insufficient balance!');
       return;
     }
 
-    // Show confirmation modal instead of placing immediately
+    // Show confirmation modal
     setPendingBet({
-      gameId,
-      team,
+      gameId: selectedGame.id,
+      team: selectedTeam,
       confidence,
-      amount,
+      amount: betAmount,
       odds: confidenceMultipliers[confidence]
     });
     setConfirmationOpen(true);
@@ -344,14 +356,11 @@ function Games({ user, updateUser }) {
         odds: pendingBet.odds
       });
 
-      setBetSuccess(prev => ({ ...prev, [pendingBet.gameId]: true }));
-      setTimeout(() => {
-        setBetSuccess(prev => ({ ...prev, [pendingBet.gameId]: false }));
-      }, 3000);
-      
-      setSelectedTeams(prev => ({ ...prev, [pendingBet.gameId]: '' }));
-      setSelectedConfidence(prev => ({ ...prev, [pendingBet.gameId]: '' }));
-      setBetAmounts(prev => ({ ...prev, [pendingBet.gameId]: '' }));
+      setMessage(`Pick placed successfully on ${pendingBet.team}!`);
+      setSelectedGameId('');
+      setSelectedTeam('');
+      setConfidence('');
+      setAmount('');
       fetchBalance();
       fetchUserBets();
       setConfirmationOpen(false);
@@ -368,6 +377,10 @@ function Games({ user, updateUser }) {
   };
 
   const activePropBets = useMemo(() => propBets.filter(pb => pb.status === 'active'), [propBets]);
+
+  const selectedGame = selectedGameId ? games.find(g => g.id === parseInt(selectedGameId)) : null;
+  const selectedGameLocked = selectedGame ? (getCountdown(buildDateFromParts(selectedGame)).isPast || isClosedStatus(selectedGame.status)) : false;
+  const hasExistingBetOnSelectedGame = selectedGame ? hasExistingBet(selectedGame.id) : false;
 
   return (
     <div className="games-page">
@@ -585,7 +598,7 @@ function Games({ user, updateUser }) {
                   );
                 })}
 
-                {/* Render Games */}
+                {/* Render Games with Card-based Expandable UI */}
                 {games
                   .filter(game => {
                     if (teamFilter === 'all') return true;
@@ -597,184 +610,215 @@ function Games({ user, updateUser }) {
                     const startDate = buildDateFromParts(game);
                     const countdown = getCountdown(startDate);
                     const gameLocked = countdown.isPast || isClosedStatus(game.status);
+                    const isSelected = selectedGameId === game.id.toString();
 
                     return (
-                  <div key={game.id} className={`game-card-display ${game.team_type?.toLowerCase().includes('boys') ? 'boys-game' : game.team_type?.toLowerCase().includes('girls') ? 'girls-game' : ''}`}>
-                    <div className="game-header">
-                      <span className={`game-sport ${game.team_type?.toLowerCase().includes('boys') ? 'boys' : game.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
-                        {game.team_type?.toLowerCase().includes('boys') ? '🏀 ' : game.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{game.team_type}
-                      </span>
-                      <span className="game-status">{game.status}</span>
-                    </div>
-                    
-                    <div className="game-matchup">
-                      <div className="team">
-                        <span className="team-name">{game.home_team}</span>
-                      </div>
-                      {game.away_team && (
-                        <>
-                          <span className="vs">VS</span>
-                          <div className="team">
-                            <span className="team-name">{game.away_team}</span>
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    <div className="game-details">
-                      <div className="detail-item">
-                        <span className="detail-icon">📅</span>
-                        <span className="detail-text">{formatDate(game.game_date)}</span>
-                      </div>
-                      {game.game_time && (
-                        <div className="detail-item">
-                          <span className="detail-icon">⏰</span>
-                          <span className="detail-text">{formatTime(game.game_time)}</span>
-                        </div>
-                      )}
-                      {game.location && (
-                        <div className="detail-item">
-                          <span className="detail-icon">📍</span>
-                          <span className="detail-text">{game.location}</span>
-                        </div>
-                      )}
-                      <div className={`countdown-chip ${gameLocked ? 'countdown-closed' : ''}`}>
-                        {countdown.isPast ? 'Picking closed' : `Starts in ${countdown.label}`}
-                      </div>
-                    </div>
-
-                    {game.notes && (
-                      <div className="game-notes">
-                        <p>{game.notes}</p>
-                      </div>
-                    )}
-
-                    <div className="betting-section">
-                      <div className="team-selection">
-                        {/* Always show Valiants on the left */}
-                        {game.home_team.toLowerCase().includes('valiant') ? (
-                          <>
-                            <button
-                              type="button"
-                              className={`team-btn valiant ${selectedTeams[game.id] === game.home_team ? 'active' : ''}`}
-                              onClick={() => setSelectedTeams({...selectedTeams, [game.id]: game.home_team})}
-                            >
-                              {game.home_team}
-                            </button>
-                            {game.away_team && (
-                              <button
-                                type="button"
-                                className={`team-btn opponent ${selectedTeams[game.id] === game.away_team ? 'active' : ''}`}
-                                onClick={() => setSelectedTeams({...selectedTeams, [game.id]: game.away_team})}
-                              >
-                                {game.away_team}
-                              </button>
+                      <React.Fragment key={game.id}>
+                        <button
+                          type="button"
+                          className={`game-card-btn ${isSelected ? 'active' : ''} ${gameLocked ? 'locked' : ''} ${game.team_type?.toLowerCase().includes('boys') ? 'boys-game' : game.team_type?.toLowerCase().includes('girls') ? 'girls-game' : ''}`}
+                          onClick={() => {
+                            if (!gameLocked) {
+                              setSelectedGameId(isSelected ? '' : game.id.toString());
+                              if (!isSelected) {
+                                setSelectedTeam('');
+                                setConfidence('');
+                                setAmount('');
+                              }
+                            }
+                          }}
+                          disabled={gameLocked}
+                        >
+                          <div className="game-card-header">
+                            <span className={`game-badge ${game.team_type?.toLowerCase().includes('boys') ? 'boys' : game.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
+                              {game.team_type?.toLowerCase().includes('boys') ? '🏀 ' : game.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{game.team_type}
+                            </span>
+                            {countdown && (
+                              <span className={`countdown-chip ${countdown.isPast ? 'countdown-closed' : ''}`}>
+                                {countdown.isPast ? '🔒 Closed' : `⏰ ${countdown.label}`}
+                              </span>
                             )}
-                          </>
-                        ) : (
-                          <>
-                            {game.away_team && game.away_team.toLowerCase().includes('valiant') && (
-                              <button
-                                type="button"
-                                className={`team-btn valiant ${selectedTeams[game.id] === game.away_team ? 'active' : ''}`}
-                                onClick={() => setSelectedTeams({...selectedTeams, [game.id]: game.away_team})}
-                              >
-                                {game.away_team}
-                              </button>
-                            )}
-                            <button
-                              type="button"
-                              className={`team-btn opponent ${selectedTeams[game.id] === game.home_team ? 'active' : ''}`}
-                              onClick={() => setSelectedTeams({...selectedTeams, [game.id]: game.home_team})}
-                            >
-                              {game.home_team}
-                            </button>
-                          </>
-                        )}
-
-                      </div>
-
-                      <div className="confidence-options" style={{display: 'flex', gap: '10px', marginBottom: '15px', justifyContent: 'center'}}>
-                        <Tooltip text="Safest bet - 1.2x return" position="top">
-                          <button
-                            type="button"
-                            className={`confidence-btn ${selectedConfidence[game.id] === 'low' ? 'active' : ''}`}
-                            style={{flex: 1, minWidth: '110px', maxWidth: '150px', padding: '10px 8px', background: selectedConfidence[game.id] === 'low' ? '#66bb6a' : 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', cursor: 'pointer', fontSize: '0.9em', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', fontWeight: '600', minHeight: '56px'}}
-                            onClick={() => setSelectedConfidence({...selectedConfidence, [game.id]: 'low'})}
-                          >
-                            <div style={{lineHeight: '1.2'}}>Low</div>
-                            <div style={{fontSize: '0.85em', marginTop: '2px'}}>1.2x</div>
-                          </button>
-                        </Tooltip>
-                        <Tooltip text="Balanced risk & reward - 1.5x return" position="top">
-                          <button
-                            type="button"
-                            className={`confidence-btn ${selectedConfidence[game.id] === 'medium' ? 'active' : ''}`}
-                            style={{flex: 1, minWidth: '110px', maxWidth: '150px', padding: '10px 8px', background: selectedConfidence[game.id] === 'medium' ? '#ff9800' : 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', cursor: 'pointer', fontSize: '0.9em', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', fontWeight: '600', minHeight: '56px'}}
-                            onClick={() => setSelectedConfidence({...selectedConfidence, [game.id]: 'medium'})}
-                          >
-                            <div style={{lineHeight: '1.2'}}>Medium</div>
-                            <div style={{fontSize: '0.85em', marginTop: '2px'}}>1.5x</div>
-                          </button>
-                        </Tooltip>
-                        <Tooltip text="Risky but rewarding - 2.0x return" position="top">
-                          <button
-                            type="button"
-                            className={`confidence-btn ${selectedConfidence[game.id] === 'high' ? 'active' : ''}`}
-                            style={{flex: 1, minWidth: '110px', maxWidth: '150px', padding: '10px 8px', background: selectedConfidence[game.id] === 'high' ? '#ef5350' : 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', cursor: 'pointer', fontSize: '0.9em', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', fontWeight: '600', minHeight: '56px'}}
-                            onClick={() => setSelectedConfidence({...selectedConfidence, [game.id]: 'high'})}
-                          >
-                            <div style={{lineHeight: '1.2'}}>High</div>
-                            <div style={{fontSize: '0.85em', marginTop: '2px'}}>2.0x</div>
-                          </button>
-                        </Tooltip>
-                      </div>
-
-                      {hasExistingBet(game.id) ? (
-                        <div style={{padding: '12px', background: 'rgba(102, 187, 106, 0.15)', border: '1px solid rgba(102, 187, 106, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#66bb6a', fontWeight: 'bold'}}>
-                          ✓ Pick Already Placed
-                        </div>
-                      ) : gameLocked ? (
-                        <div style={{padding: '12px', background: 'rgba(239, 83, 80, 0.15)', border: '1px solid rgba(239, 83, 80, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#ef5350', fontWeight: 'bold'}}>
-                          🔒 Picking Closed
-                        </div>
-                      ) : (
-                        <>
-                          <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
-                            <input
-                              type="number"
-                              placeholder="Pick amount"
-                              min="0.01"
-                              step="0.01"
-                              value={betAmounts[game.id] || ''}
-                              onChange={(e) => setBetAmounts({...betAmounts, [game.id]: e.target.value})}
-                              style={{flex: 1, padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', fontSize: '1em'}}
-                            />
-                            <button
-                              onClick={() => handlePlaceGameBet(game.id, gameLocked)}
-                              disabled={gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]}
-                              style={{padding: '10px 20px', background: betSuccess[game.id] ? '#66bb6a' : '#1e88e5', border: 'none', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: 'bold', opacity: (gameLocked || !selectedTeams[game.id] || !selectedConfidence[game.id] || !betAmounts[game.id]) ? 0.5 : 1, transition: 'all 0.3s ease'}}
-                            >
-                              {betSuccess[game.id] ? '✓ Success!' : gameLocked ? 'Closed' : 'Pick'}
-                            </button>
                           </div>
-                          {betSuccess[game.id] && (
-                            <div style={{marginTop: '10px', padding: '8px', background: 'rgba(102, 187, 106, 0.2)', border: '1px solid #66bb6a', borderRadius: '8px', textAlign: 'center', color: '#66bb6a', fontWeight: 'bold', animation: 'slideDown 0.3s ease'}}>
-                              ✓ Pick placed successfully on {selectedTeams[game.id]}!
-                            </div>
+                          <div className="game-card-matchup">
+                            <div className="game-card-team">{game.home_team}</div>
+                            <div className="game-card-vs">VS</div>
+                            <div className="game-card-team">{game.away_team}</div>
+                          </div>
+                          <div className="game-card-details">
+                            <span className="game-card-date">📅 {formatDate(game.game_date)}</span>
+                            <span className="game-card-time">🕐 {formatTime(game.game_time)}</span>
+                          </div>
+                          {game.location && (
+                            <div className="game-card-location">📍 {game.location}</div>
                           )}
-                        </>
-                      )}
+                        </button>
+                        
+                        {isSelected && selectedGame && (
+                          <div className="bet-details-expanded">
+                            <form onSubmit={handlePlaceGameBet} className="expanded-bet-form">
+                              <div className="form-group">
+                                <label>👥 Step 1: Who Will Win?</label>
+                                <p className="field-help">Click on the team you think will win this game</p>
+                                <div className="team-selection">
+                                  {/* Always show Valiants first (left) */}
+                                  {selectedGame.home_team.toLowerCase().includes('valiant') ? (
+                                    <>
+                                      <button
+                                        type="button"
+                                        className={`team-btn valiant ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
+                                        onClick={() => setSelectedTeam(selectedGame.home_team)}
+                                      >
+                                        <span className="team-name">{selectedGame.home_team}</span>
+                                        <span className="team-label">Home</span>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className={`team-btn opponent ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
+                                        onClick={() => setSelectedTeam(selectedGame.away_team)}
+                                      >
+                                        <span className="team-name">{selectedGame.away_team}</span>
+                                        <span className="team-label">Away</span>
+                                      </button>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <button
+                                        type="button"
+                                        className={`team-btn valiant ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
+                                        onClick={() => setSelectedTeam(selectedGame.away_team)}
+                                      >
+                                        <span className="team-name">{selectedGame.away_team}</span>
+                                        <span className="team-label">Away</span>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className={`team-btn opponent ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
+                                        onClick={() => setSelectedTeam(selectedGame.home_team)}
+                                      >
+                                        <span className="team-name">{selectedGame.home_team}</span>
+                                        <span className="team-label">Home</span>
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
 
-                      {selectedConfidence[game.id] && betAmounts[game.id] && !gameLocked && !hasExistingBet(game.id) && (
-                        <div style={{marginTop: '10px', textAlign: 'center', color: '#1f4e99', fontWeight: 'bold'}}>
-                          Potential Win: {formatCurrency(parseFloat(betAmounts[game.id]) * confidenceMultipliers[selectedConfidence[game.id]])}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                              <div className="form-group">
+                                <label>💪 Step 2: How Sure Are You?</label>
+                                <p className="field-help">Choose your confidence level - higher confidence = bigger rewards if you win!</p>
+                                <div className="confidence-selection">
+                                  <button
+                                    type="button"
+                                    className={`confidence-btn low ${confidence === 'low' ? 'active' : ''}`}
+                                    onClick={() => setConfidence('low')}
+                                  >
+                                    <span className="confidence-label">Low</span>
+                                    <span className="confidence-multiplier">1.2x</span>
+                                    <span className="confidence-desc">Win 20% more</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className={`confidence-btn medium ${confidence === 'medium' ? 'active' : ''}`}
+                                    onClick={() => setConfidence('medium')}
+                                  >
+                                    <span className="confidence-label">Medium</span>
+                                    <span className="confidence-multiplier">1.5x</span>
+                                    <span className="confidence-desc">Win 50% more</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className={`confidence-btn high ${confidence === 'high' ? 'active' : ''}`}
+                                    onClick={() => setConfidence('high')}
+                                  >
+                                    <span className="confidence-label">High</span>
+                                    <span className="confidence-multiplier">2.0x</span>
+                                    <span className="confidence-desc">Double your stake!</span>
+                                  </button>
+                                </div>
+                              </div>
+
+                              {hasExistingBetOnSelectedGame ? (
+                                <div className="form-group">
+                                  <label htmlFor="amount">💵 Pick Amount</label>
+                                  <div style={{padding: '12px', background: 'rgba(102, 187, 106, 0.15)', border: '1px solid rgba(102, 187, 106, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#66bb6a', fontWeight: 'bold'}}>
+                                    ✓ Pick Already Placed
+                                  </div>
+                                </div>
+                              ) : selectedGameLocked ? (
+                                <div className="form-group">
+                                  <label htmlFor="amount">💵 Pick Amount</label>
+                                  <div style={{padding: '12px', background: 'rgba(239, 83, 80, 0.15)', border: '1px solid rgba(239, 83, 80, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#ef5350', fontWeight: 'bold'}}>
+                                    🔒 Picking Closed
+                                  </div>
+                                </div>
+                              ) : (
+                                <>
+                                  <div className="form-group">
+                                    <label htmlFor="amount">💵 Step 3: How Much to Stake?</label>
+                                    <p className="field-help">Enter how many Valiant Bucks you want to stake • Your balance: <strong>{formatCurrency(balance)}</strong></p>
+                                    <div className="amount-input-wrapper">
+                                      <input
+                                        id="amount"
+                                        type="number"
+                                        step="1"
+                                        min={balance > 0 ? 1 : 0}
+                                        value={amount}
+                                        onChange={(e) => {
+                                          const val = e.target.value;
+                                          const numeric = parseFloat(val);
+                                          if (balance > 0 && !Number.isNaN(numeric) && numeric > balance) {
+                                            setAmount(balance.toString());
+                                          } else {
+                                            setAmount(val);
+                                          }
+                                        }}
+                                        placeholder={balance > 0 ? 'Enter amount' : 'Balance too low'}
+                                        required
+                                        className="amount-input"
+                                        disabled={balance <= 0}
+                                      />
+                                      <button 
+                                        type="button" 
+                                        className="max-btn"
+                                        onClick={() => balance > 0 && setAmount(balance.toString())}
+                                        disabled={balance <= 0}
+                                      >
+                                        MAX
+                                      </button>
+                                    </div>
+                                    {amount && selectedTeam && confidence && (
+                                      <div className="bet-preview">
+                                        <div className="bet-preview-row">
+                                          <span className="bet-preview-label">Stake</span>
+                                          <span className="bet-preview-value">{formatCurrency(parseFloat(amount))}</span>
+                                        </div>
+                                        <div className="bet-preview-row">
+                                          <span className="bet-preview-label">Multiplier</span>
+                                          <span className="bet-preview-value">{confidenceMultipliers[confidence]}x</span>
+                                        </div>
+                                        <div className="bet-preview-row highlight">
+                                          <span className="bet-preview-label">Potential Win</span>
+                                          <span className="bet-preview-value">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</span>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  <button 
+                                    type="submit" 
+                                    className="btn btn-primary" 
+                                    disabled={!selectedTeam || !confidence || !amount || balance <= 0 || selectedGameLocked}
+                                  >
+                                    ✅ Lock In Pick for {formatCurrency(parseFloat(amount || 0))}
+                                  </button>
+                                </>
+                              )}
+                            </form>
+                          </div>
+                        )}
+                      </React.Fragment>
                     );
-                })}
+                  })}
                 </>
               )}
             </div>

@@ -1239,3 +1239,447 @@
     font-size: 2rem;
   }
 }
+
+/* ===== EXPANDABLE CARD-BASED BETTING UI ===== */
+.game-card-btn {
+  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+  color: #e9f1ff;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card-btn:hover:not(.locked) {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border-color: rgba(33, 150, 243, 0.5);
+}
+
+.game-card-btn.active {
+  border-color: #2196f3;
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.4);
+}
+
+.game-card-btn.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #1a1c2e 0%, #12141f 100%);
+}
+
+.game-card-btn.boys-game {
+  border-left: 4px solid #2196f3;
+}
+
+.game-card-btn.girls-game {
+  border-left: 4px solid #e91e63;
+}
+
+.game-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.game-badge {
+  background: rgba(33, 150, 243, 0.2);
+  color: #64b5f6;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.game-badge.boys {
+  background: rgba(33, 150, 243, 0.2);
+  color: #64b5f6;
+}
+
+.game-badge.girls {
+  background: rgba(233, 30, 99, 0.2);
+  color: #f48fb1;
+}
+
+.countdown-chip {
+  background: rgba(102, 187, 106, 0.2);
+  color: #81c784;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.countdown-chip.countdown-closed {
+  background: rgba(239, 83, 80, 0.2);
+  color: #ef5350;
+}
+
+.game-card-matchup {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 1rem 0;
+  gap: 1rem;
+}
+
+.game-card-team {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e9f1ff;
+  flex: 1;
+  text-align: center;
+}
+
+.game-card-vs {
+  font-size: 0.9rem;
+  color: #888a9b;
+  font-weight: 600;
+  padding: 0 0.5rem;
+}
+
+.game-card-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: #b8c5d6;
+  font-size: 0.9rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.game-card-date,
+.game-card-time {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.game-card-location {
+  width: 100%;
+  text-align: center;
+  color: #888a9b;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* Expanded Betting Details */
+.bet-details-expanded {
+  background: rgba(30, 33, 57, 0.8);
+  border: 2px solid rgba(33, 150, 243, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.expanded-bet-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  color: #e9f1ff;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.field-help {
+  color: #b8c5d6;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.field-help strong {
+  color: #4caf50;
+  font-weight: 700;
+}
+
+/* Team Selection */
+.team-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.team-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #e9f1ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.team-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.team-btn.active {
+  border-color: #2196f3;
+  background: rgba(33, 150, 243, 0.2);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.team-btn.valiant {
+  border-color: rgba(0, 79, 158, 0.5);
+}
+
+.team-btn.valiant.active {
+  background: linear-gradient(135deg, rgba(0, 79, 158, 0.3), rgba(0, 61, 122, 0.2));
+  border-color: #004f9e;
+}
+
+.team-btn.opponent.active {
+  background: rgba(239, 83, 80, 0.2);
+  border-color: #ef5350;
+}
+
+.team-name {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.team-label {
+  font-size: 0.8rem;
+  color: #888a9b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Confidence Selection */
+.confidence-selection {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.confidence-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #e9f1ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.confidence-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.confidence-btn.low.active {
+  background: rgba(102, 187, 106, 0.2);
+  border-color: #66bb6a;
+  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.3);
+}
+
+.confidence-btn.medium.active {
+  background: rgba(255, 152, 0, 0.2);
+  border-color: #ff9800;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+}
+
+.confidence-btn.high.active {
+  background: rgba(239, 83, 80, 0.2);
+  border-color: #ef5350;
+  box-shadow: 0 4px 12px rgba(239, 83, 80, 0.3);
+}
+
+.confidence-label {
+  font-size: 0.95rem;
+}
+
+.confidence-multiplier {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.confidence-desc {
+  font-size: 0.75rem;
+  color: #b8c5d6;
+}
+
+/* Amount Input */
+.amount-input-wrapper {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.amount-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  color: #e9f1ff;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.amount-input:focus {
+  outline: none;
+  border-color: #2196f3;
+  background: rgba(33, 150, 243, 0.1);
+}
+
+.amount-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.max-btn {
+  background: rgba(33, 150, 243, 0.2);
+  border: 2px solid #2196f3;
+  color: #64b5f6;
+  padding: 0.9rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.max-btn:hover:not(:disabled) {
+  background: rgba(33, 150, 243, 0.3);
+  transform: scale(1.05);
+}
+
+.max-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Bet Preview */
+.bet-preview {
+  background: rgba(33, 150, 243, 0.1);
+  border: 2px solid rgba(33, 150, 243, 0.3);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.bet-preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  color: #b8c5d6;
+}
+
+.bet-preview-row.highlight {
+  border-top: 2px solid rgba(33, 150, 243, 0.3);
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  color: #e9f1ff;
+}
+
+.bet-preview-label {
+  font-size: 0.95rem;
+}
+
+.bet-preview-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #4caf50;
+}
+
+.bet-preview-row.highlight .bet-preview-value {
+  font-size: 1.3rem;
+  color: #66bb6a;
+}
+
+/* Submit Button */
+.btn-primary {
+  background: linear-gradient(135deg, #2196f3, #1976d2);
+  border: none;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+  width: 100%;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+  background: linear-gradient(135deg, #1e88e5, #1565c0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive Expandable Cards */
+@media (max-width: 768px) {
+  .team-selection {
+    grid-template-columns: 1fr;
+  }
+
+  .confidence-selection {
+    grid-template-columns: 1fr;
+  }
+
+  .amount-input-wrapper {
+    flex-direction: column;
+  }
+
+  .max-btn {
+    width: 100%;
+  }
+
+  .game-card-matchup {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .game-card-vs {
+    padding: 0.25rem 0;
+  }
+}
