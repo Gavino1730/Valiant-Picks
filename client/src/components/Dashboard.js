@@ -403,8 +403,8 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             </div>
           </div>
 
-          {/* Spirit Week Tracker - TEMPORARILY HIDDEN */}
-          {/* <div className="card spirit-week-card">
+          {/* Spirit Week Tracker - TEMPORARILY HIDDEN
+          <div className="card spirit-week-card">
             <div className="spirit-week-header">
               <h3>🎭 Spirit Week: {spiritWeekData.theme}</h3>
               <span className="spirit-week-date">{spiritWeekData.weekOf}</span>
@@ -413,7 +413,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               Each grade has their own Broadway musical! Show your class spirit all week long!
             </p>
             
-            {/* Current Leader Banner * /}
+            Current Leader Banner
             <div className="spirit-leader-banner" style={{borderColor: spiritLeader.color}}>
               <span className="leader-icon" style={{fontSize: '2.5rem'}}>{spiritLeader.icon}</span>
               <div className="leader-info">
@@ -424,7 +424,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               <div className="leader-points">{spiritLeader.points} pts</div>
             </div>
 
-            {/* All Grades * /}
+            All Grades
             <div className="spirit-grades-grid">
               {spiritWeekData.grades.map((grade, index) => (
                 <div key={index} className="spirit-grade-card" style={{borderLeftColor: grade.color}}>
@@ -447,10 +447,11 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                 </div>
               ))}
             </div>
-          </div> */
+          </div>
+          */}
 
-          {/* Upcoming School Events - TEMPORARILY HIDDEN */}
-          {/* <div className="card school-events-card">
+          {/* Upcoming School Events - TEMPORARILY HIDDEN
+          <div className="card school-events-card">
             <h3>📅 Upcoming School Events</h3>
             {schoolEvents.length > 0 ? (
               <div className="events-list">
@@ -479,7 +480,8 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             ) : (
               <p className="empty-text">No upcoming events</p>
             )}
-          </div> */
+          </div>
+          */}
         </div>
 
         {/* Right Sidebar */}
