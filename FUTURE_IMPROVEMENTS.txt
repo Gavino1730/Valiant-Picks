@@ -25,14 +25,6 @@
   - "Game locked" → "Betting closed - game starts in 5 minutes"
   - "Server error" → "Connection issue - your bet was not placed"
 
-### 5. Add "Recent Winners" Section
-**Location**: Dashboard top section
-**Display**: Recent winning bets from all users
-**Features**: 
-  - Username, team, amount won
-  - Sliding carousel or auto-scroll
-  - Creates FOMO and social proof
-**Benefit**: Increases engagement, shows active community
 
 ### 6. Keyboard Navigation
 **Add shortcuts**:
@@ -42,25 +34,6 @@
   - Arrow keys: Navigate between games
 **Benefit**: Power users can bet faster, better accessibility
 
-### 7. Add Bet Slip Preview (Real-time Calculation)
-**Feature**: Live calculation as user types bet amount
-**Display**: 
-  - Amount wagered
-  - Confidence multiplier
-  - Potential payout
-  - Profit if won
-**Location**: Next to bet form, updates in real-time
-**Benefit**: User knows exact payout before confirming
-**Priority**: HIGH - improves clarity
-
-### 8. Implement Rate Limiting on Client
-**Issue**: User can accidentally double-click "Place Bet"
-**Solution**: 
-  - Disable button after click
-  - Show loading state
-  - Re-enable only after response or timeout
-**Benefit**: Prevents double-betting bugs
-**Priority**: HIGH - prevents critical bugs
 
 ---
 

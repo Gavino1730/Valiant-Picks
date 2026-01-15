@@ -86,6 +86,18 @@ function Games({ user, updateUser }) {
 
   useEffect(() => {
     // Initial fetch on mount
+  useEffect(() => {
+    // Create flag to prevent polling after unmount
+    let isActive = true;
+    let isPageVisible = true;
+    
+    // Track page visibility to pause polling when tab is not in focus
+    const handleVisibilityChange = () => {
+      isPageVisible = document.visibilityState === 'visible';
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Initial fetch on mount
     const loadData = async () => {
       try {
         await Promise.all([
@@ -100,26 +112,6 @@ function Games({ user, updateUser }) {
     };
     
     loadData();
-    
-    // Cleanup debounce timers on unmount
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-      Object.values(propDebounceTimersRef.current).forEach(timer => {
-        if (timer) clearTimeout(timer);
-      });
-    };
-    
-    // Create flag to prevent polling after unmount
-    let isActive = true;
-    let isPageVisible = true;
-    
-    // Track page visibility to pause polling when tab is not in focus
-    const handleVisibilityChange = () => {
-      isPageVisible = document.visibilityState === 'visible';
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
     
     // Poll with staggered intervals for better performance
     // Games and prop bets every 30 seconds (stable data)
@@ -144,11 +136,21 @@ function Games({ user, updateUser }) {
       }
     }, 15000);
     
+    // Cleanup on unmount
     return () => {
       isActive = false;
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearInterval(gamesInterval);
       clearInterval(userDataInterval);
+      
+      // Cleanup debounce timers
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+      const timers = propDebounceTimersRef.current;
+      Object.values(timers).forEach(timer => {
+        if (timer) clearTimeout(timer);
+      });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array - only run on mount
@@ -254,6 +256,19 @@ function Games({ user, updateUser }) {
     // Set loading state
     setPropBetLoading(prev => ({ ...prev, [loadingKey]: true }));
 
+    // Set timeout failsafe to re-enable button after 10 seconds
+    const timeoutId = setTimeout(() => {
+      if (propBetLoading[loadingKey]) {
+        setPropBetLoading(prev => ({ ...prev, [loadingKey]: false }));
+        setBalance(originalBalance);
+        if (updateUser) {
+          updateUser({ ...user, balance: originalBalance });
+        }
+        setMessage('Request timed out. Please try again.');
+        setTimeout(() => setMessage(''), 3000);
+      }
+    }, 10000);
+
     // CRITICAL: Optimistically subtract balance immediately to prevent double-betting
     const newBalance = balance - amount;
     setBalance(newBalance);
@@ -267,6 +282,8 @@ function Games({ user, updateUser }) {
         choice,
         amount
       });
+      
+      clearTimeout(timeoutId);
       
       // Use the balance returned from the server
       const serverBalance = response.data.newBalance;
@@ -288,6 +305,8 @@ function Games({ user, updateUser }) {
       
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
+      clearTimeout(timeoutId);
+      
       // Restore the original balance if bet fails
       setBalance(originalBalance);
       if (updateUser) {
@@ -374,6 +393,15 @@ function Games({ user, updateUser }) {
   const handleConfirmBet = async () => {
     if (!pendingBet || isSubmittingBet) return;
 
+    // Set timeout failsafe to re-enable button after 10 seconds
+    const timeoutId = setTimeout(() => {
+      if (isSubmittingBet) {
+        setIsSubmittingBet(false);
+        setMessage('Request timed out. Please try again.');
+        setTimeout(() => setMessage(''), 3000);
+      }
+    }, 10000);
+
     try {
       setIsSubmittingBet(true);
       await apiClient.post('/bets', {
@@ -384,6 +412,7 @@ function Games({ user, updateUser }) {
         odds: pendingBet.odds
       });
 
+      clearTimeout(timeoutId);
       setMessage(`Pick placed successfully on ${pendingBet.team}!`);
       setSelectedGameId('');
       setSelectedTeam('');
@@ -396,6 +425,7 @@ function Games({ user, updateUser }) {
 
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
+      clearTimeout(timeoutId);
       setMessage(err.response?.data?.error || 'Failed to place pick');
       setConfirmationOpen(false);
       setPendingBet(null);
@@ -832,19 +862,33 @@ function Games({ user, updateUser }) {
                                         MAX
                                       </button>
                                     </div>
-                                    {amount && selectedTeam && confidence && (
-                                      <div className="bet-preview">
-                                        <div className="bet-preview-row">
-                                          <span className="bet-preview-label">Stake</span>
-                                          <span className="bet-preview-value">{formatCurrency(parseFloat(amount))}</span>
+                                    {amount && selectedTeam && confidence && parseFloat(amount) > 0 && (
+                                      <div className="bet-slip-preview">
+                                        <div className="bet-slip-header">
+                                          <span className="bet-slip-title">💰 Your Bet Slip</span>
+                                          <span className="bet-slip-team">{selectedTeam}</span>
                                         </div>
-                                        <div className="bet-preview-row">
-                                          <span className="bet-preview-label">Multiplier</span>
-                                          <span className="bet-preview-value">{confidenceMultipliers[confidence]}x</span>
-                                        </div>
-                                        <div className="bet-preview-row highlight">
-                                          <span className="bet-preview-label">Potential Win</span>
-                                          <span className="bet-preview-value">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</span>
+                                        <div className="bet-slip-body">
+                                          <div className="bet-slip-row">
+                                            <span className="bet-slip-label">Amount Wagered</span>
+                                            <span className="bet-slip-value">{formatCurrency(parseFloat(amount))}</span>
+                                          </div>
+                                          <div className="bet-slip-row">
+                                            <span className="bet-slip-label">Confidence Multiplier</span>
+                                            <span className="bet-slip-value confidence-value">
+                                              <span className={`confidence-badge ${confidence}`}>{confidence.toUpperCase()}</span>
+                                              <span>{confidenceMultipliers[confidence]}x</span>
+                                            </span>
+                                          </div>
+                                          <div className="bet-slip-divider"></div>
+                                          <div className="bet-slip-row payout">
+                                            <span className="bet-slip-label">💵 Potential Payout</span>
+                                            <span className="bet-slip-value payout-value">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</span>
+                                          </div>
+                                          <div className="bet-slip-row profit">
+                                            <span className="bet-slip-label">✨ Profit if Won</span>
+                                            <span className="bet-slip-value profit-value">+{formatCurrency((parseFloat(amount) * confidenceMultipliers[confidence]) - parseFloat(amount))}</span>
+                                          </div>
                                         </div>
                                       </div>
                                     )}
@@ -853,9 +897,9 @@ function Games({ user, updateUser }) {
                                   <button 
                                     type="submit" 
                                     className="btn btn-primary" 
-                                    disabled={!selectedTeam || !confidence || !amount || balance <= 0 || selectedGameLocked}
+                                    disabled={!selectedTeam || !confidence || !amount || balance <= 0 || selectedGameLocked || isSubmittingBet}
                                   >
-                                    ✅ Lock In Pick for {formatCurrency(parseFloat(amount || 0))}
+                                    {isSubmittingBet ? '⏳ Placing...' : `✅ Lock In Pick for ${formatCurrency(parseFloat(amount || 0))}`}
                                   </button>
                                 </>
                               )}
