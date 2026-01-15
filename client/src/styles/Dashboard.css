@@ -1489,3 +1489,489 @@
     font-size: 0.8rem;
   }
 }
+
+/* ===== SCHOOL DASHBOARD STYLES ===== */
+
+/* Welcome Banner */
+.welcome-banner {
+  background: linear-gradient(135deg, rgba(0, 79, 158, 0.25), rgba(0, 61, 122, 0.15));
+  border: 2px solid rgba(33, 150, 243, 0.4);
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.welcome-banner .banner-icon {
+  font-size: 2.5rem;
+}
+
+.welcome-banner h2 {
+  color: #e9f1ff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.welcome-banner p {
+  color: #b8c5d6;
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* School Alerts */
+.school-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.alert-banner {
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+  border: 2px solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.alert-banner.alert-info {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(33, 150, 243, 0.4);
+  color: #64b5f6;
+}
+
+.alert-banner.alert-warning {
+  background: rgba(255, 152, 0, 0.15);
+  border-color: rgba(255, 152, 0, 0.4);
+  color: #ffb74d;
+}
+
+.alert-banner.alert-success {
+  background: rgba(102, 187, 106, 0.15);
+  border-color: rgba(102, 187, 106, 0.4);
+  color: #81c784;
+}
+
+.alert-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.alert-message {
+  flex: 1;
+  font-weight: 500;
+}
+
+/* School Grid Layout */
+.school-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.dashboard-main-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Pick CTA Card */
+.pick-cta-card {
+  background: linear-gradient(135deg, rgba(0, 79, 158, 0.2), rgba(0, 61, 122, 0.1));
+  border: 2px solid #2196f3;
+  text-align: center;
+  padding: 2rem;
+}
+
+.pick-cta-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+  color: #e9f1ff;
+}
+
+.pick-cta-card p {
+  color: #b8c5d6;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.btn-large {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.balance-display {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.balance-label {
+  color: #b8c5d6;
+}
+
+.balance-amount {
+  color: #4caf50;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/* Spirit Week Card */
+.spirit-week-card {
+  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
+}
+
+.spirit-week-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.spirit-week-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #e9f1ff;
+}
+
+.spirit-week-date {
+  background: rgba(33, 150, 243, 0.2);
+  color: #64b5f6;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.spirit-week-description {
+  color: #b8c5d6;
+  margin: 0.75rem 0 1.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Spirit Leader Banner */
+.spirit-leader-banner {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 193, 7, 0.1));
+  border: 3px solid;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+}
+
+.leader-icon {
+  flex-shrink: 0;
+}
+
+.leader-info {
+  flex: 1;
+}
+
+.leader-label {
+  color: #b8c5d6;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.leader-grade {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.leader-subtheme {
+  color: #b8c5d6;
+  font-size: 0.95rem;
+}
+
+.leader-points {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffd700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Spirit Grades Grid */
+.spirit-grades-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.spirit-grade-card {
+  background: rgba(30, 33, 57, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-left: 4px solid;
+  border-radius: 10px;
+  padding: 1.25rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.spirit-grade-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.grade-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.grade-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.grade-title {
+  flex: 1;
+}
+
+.grade-title h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+}
+
+.grade-subtheme {
+  color: #b8c5d6;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.grade-points {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffd700;
+}
+
+.grade-activities {
+  color: #b8c5d6;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.grade-activities strong {
+  color: #e9f1ff;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.grade-activities ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.grade-activities li {
+  margin-bottom: 0.4rem;
+}
+
+/* School Events Card */
+.school-events-card {
+  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
+}
+
+.school-events-card h3 {
+  margin-bottom: 1rem;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-item {
+  background: rgba(30, 33, 57, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1.25rem;
+  display: flex;
+  gap: 1rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.event-item:hover {
+  transform: translateX(4px);
+  border-color: rgba(33, 150, 243, 0.5);
+}
+
+.event-item.event-sports {
+  border-left: 4px solid #ff9800;
+}
+
+.event-item.event-spirit {
+  border-left: 4px solid #9c27b0;
+}
+
+.event-item.event-academic {
+  border-left: 4px solid #2196f3;
+}
+
+.event-item.event-social {
+  border-left: 4px solid #4caf50;
+}
+
+.event-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.event-details {
+  flex: 1;
+}
+
+.event-details h4 {
+  margin: 0 0 0.5rem 0;
+  color: #e9f1ff;
+  font-size: 1.05rem;
+}
+
+.event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  color: #b8c5d6;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.event-description {
+  color: #b8c5d6;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 0 0;
+  line-height: 1.5;
+}
+
+/* Quick Links Card */
+.quick-links-card {
+  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
+}
+
+.quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quick-link-btn {
+  background: rgba(33, 150, 243, 0.15);
+  border: 2px solid rgba(33, 150, 243, 0.3);
+  color: #64b5f6;
+  padding: 0.9rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.quick-link-btn:hover {
+  background: rgba(33, 150, 243, 0.25);
+  border-color: rgba(33, 150, 243, 0.5);
+  transform: translateX(4px);
+}
+
+.btn-small {
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Responsive School Dashboard */
+@media (max-width: 1100px) {
+  .school-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-sidebar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-banner {
+    padding: 1.25rem;
+  }
+
+  .welcome-banner h2 {
+    font-size: 1.2rem;
+  }
+
+  .welcome-banner p {
+    font-size: 0.9rem;
+  }
+
+  .spirit-leader-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .spirit-grades-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .event-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .event-meta {
+    justify-content: center;
+  }
+
+  .dashboard-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .pick-cta-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .school-alerts {
+    gap: 0.5rem;
+  }
+
+  .alert-banner {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .spirit-week-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .balance-display {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

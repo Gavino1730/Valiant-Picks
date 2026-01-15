@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/Dashboard.css';
 import '../styles/Confetti.css';
@@ -17,12 +17,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   }, [user?.balance]);
   const [games, setGames] = useState([]);
   const [bets, setBets] = useState([]);
-  const [selectedGameId, setSelectedGameId] = useState('');
-  const [selectedTeam, setSelectedTeam] = useState('');
-  const [confidence, setConfidence] = useState('');
-  const [amount, setAmount] = useState('');
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
   const [gamesLoading, setGamesLoading] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
   const [winNotification, setWinNotification] = useState(null);
@@ -37,43 +31,144 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     totalWinnings: 0
   });
   const [now, setNow] = useState(Date.now());
-  const messageRef = useRef(null);
 
-  const confidenceMultipliers = {
-    low: 1.2,
-    medium: 1.5,
-    high: 2.0
-  };
+  // Spirit Week Data - Broadway Theme
+  const [spiritWeekData] = useState({
+    theme: "Broadway Bonanza",
+    weekOf: "February 3-7, 2026",
+    grades: [
+      {
+        grade: "Freshman",
+        subtheme: "Hamilton",
+        color: "#8B4513",
+        icon: "🎩",
+        activities: [
+          "Monday: Colonial Day",
+          "Tuesday: War Room Dance-Off",
+          "Wednesday: Ten Duel Commandments Trivia",
+          "Thursday: Hamilton Karaoke",
+          "Friday: Full Costume Day"
+        ],
+        points: 245
+      },
+      {
+        grade: "Sophomores",
+        subtheme: "Wicked",
+        color: "#00C853",
+        icon: "🧙‍♀️",
+        activities: [
+          "Monday: Emerald City Green Day",
+          "Tuesday: Defying Gravity Challenge",
+          "Wednesday: Wizard Trivia",
+          "Thursday: Musical Number Performance",
+          "Friday: Good vs Evil Costume Battle"
+        ],
+        points: 312
+      },
+      {
+        grade: "Juniors",
+        subtheme: "The Phantom of the Opera",
+        color: "#D32F2F",
+        icon: "🎭",
+        activities: [
+          "Monday: Masquerade Ball Prep",
+          "Tuesday: Opera Singing Contest",
+          "Wednesday: Chandelier Decorating",
+          "Thursday: Phantom vs Christine Debate",
+          "Friday: Full Opera Attire Day"
+        ],
+        points: 298
+      },
+      {
+        grade: "Seniors",
+        subtheme: "Les Misérables",
+        color: "#1976D2",
+        icon: "🇫🇷",
+        activities: [
+          "Monday: French Revolution Day",
+          "Tuesday: Barricade Building Competition",
+          "Wednesday: One Day More Choir Performance",
+          "Thursday: Revolutionary Trivia",
+          "Friday: 19th Century Costume Day"
+        ],
+        points: 367
+      }
+    ]
+  });
+
+  // School Events Data
+  const [schoolEvents] = useState([
+    {
+      id: 1,
+      title: "Spirit Week - Broadway Bonanza",
+      date: "February 3-7, 2026",
+      time: "All Week",
+      location: "Campus Wide",
+      type: "spirit",
+      description: "Show your class pride with Broadway-themed activities!"
+    },
+    {
+      id: 2,
+      title: "Boys Basketball vs Highland",
+      date: "February 10, 2026",
+      time: "7:00 PM",
+      location: "Valiant Arena",
+      type: "sports"
+    },
+    {
+      id: 3,
+      title: "Girls Basketball vs Skyview",
+      date: "February 12, 2026",
+      time: "6:30 PM",
+      location: "Valiant Arena",
+      type: "sports"
+    },
+    {
+      id: 4,
+      title: "College Fair",
+      date: "February 15, 2026",
+      time: "10:00 AM - 2:00 PM",
+      location: "Main Gymnasium",
+      type: "academic"
+    },
+    {
+      id: 5,
+      title: "Winter Dance: Enchanted Evening",
+      date: "February 21, 2026",
+      time: "7:00 PM - 10:00 PM",
+      location: "Cafeteria",
+      type: "social"
+    }
+  ]);
+
+  // School Alerts Data
+  const [schoolAlerts] = useState([
+    {
+      id: 1,
+      type: "info",
+      message: "Spirit Week voting opens Monday! Support your class!",
+      date: "February 1, 2026"
+    },
+    {
+      id: 2,
+      type: "warning",
+      message: "Early dismissal on Friday, February 7th at 1:00 PM for pep rally",
+      date: "February 1, 2026"
+    },
+    {
+      id: 3,
+      type: "success",
+      message: "Valiant Picks now live! Place your picks on Browse Picks page!",
+      date: "January 20, 2026"
+    }
+  ]);
+
 
   useEffect(() => {
     // Update less frequently to reduce re-renders
     const intervalId = setInterval(() => setNow(Date.now()), 10000);
     return () => clearInterval(intervalId);
   }, []);
-
-  const buildGameStartDate = (game) => {
-    if (!game?.game_date) return null;
-
-    // Parse as local date to avoid UTC shifting that pushes the day forward/backward
-    const [year, month, day] = (game.game_date || '').split('-').map(Number);
-    const date = Number.isInteger(year) && Number.isInteger(month) && Number.isInteger(day)
-      ? new Date(year, month - 1, day)
-      : new Date(game.game_date);
-
-    if (Number.isNaN(date.getTime())) return null;
-
-    if (game.game_time) {
-      const parts = game.game_time.split(':').map(Number);
-      if (parts.length >= 2 && !parts.some(Number.isNaN)) {
-        date.setHours(parts[0]);
-        date.setMinutes(parts[1]);
-        date.setSeconds(parts[2] || 0);
-        date.setMilliseconds(0);
-      }
-    }
-
-    return date;
-  };
 
   const parseLocalDateOnly = (dateStr) => {
     const [year, month, day] = (dateStr || '').split('-').map(Number);
@@ -82,37 +177,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     }
     const parsed = new Date(dateStr);
     return Number.isNaN(parsed.getTime()) ? null : parsed;
-  };
-
-  const getCountdown = (targetDate) => {
-    if (!targetDate || Number.isNaN(targetDate.getTime())) {
-      return { label: 'Start time TBD', isPast: false };
-    }
-
-    const diff = targetDate.getTime() - now;
-    if (diff <= 0) return { label: 'In progress', isPast: true };
-
-    const totalSeconds = Math.floor(diff / 1000);
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    if (days > 0) return { label: `${days}d ${hours}h`, isPast: false };
-    if (hours > 0) return { label: `${hours}h ${minutes}m`, isPast: false };
-    return { label: `${minutes}m ${seconds.toString().padStart(2, '0')}s`, isPast: false };
-  };
-
-  const isGameLocked = (game) => {
-    const startDate = buildGameStartDate(game);
-    const normalizedStatus = (game?.status || '').toLowerCase();
-    const statusClosed = ['in progress', 'live', 'completed', 'final', 'resolved', 'closed', 'cancelled'].some((keyword) =>
-      normalizedStatus.includes(keyword)
-    );
-
-    if (statusClosed) return true;
-    if (startDate && Date.now() >= startDate.getTime()) return true;
-    return false;
   };
 
   const fetchGames = useCallback(async () => {
@@ -125,8 +189,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       setGames(sortedGames);
     } catch (err) {
       console.error('Error fetching games:', err.message || err);
-      // Don't clear games on error - keep showing what we had before
-      // Only set empty if it's the initial load and we had no games
       setGames(prevGames => {
         return prevGames.length === 0 ? [] : prevGames;
       });
@@ -148,7 +210,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       const response = await apiClient.get('/users/profile');
       if (response?.data?.balance !== undefined) {
         setBalance(response.data.balance);
-        // Update parent component's user state and localStorage
         if (updateUser && typeof updateUser === 'function') {
           updateUser(response.data);
         }
@@ -156,7 +217,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     } catch (err) {
       console.error('Error fetching profile:', err);
     }
-  }, [fetchUserProfile, updateUser])
+  }, [fetchUserProfile, updateUser]);
 
   const fetchBets = useCallback(async () => {
     try {
@@ -223,7 +284,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     Promise.all([
       fetchGames(),
       fetchBets()
-      // Skip fetchProfile() - balance already synced from user prop
     ]);
     
     // Create abort controller to handle unmounting gracefully
@@ -237,7 +297,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     
     // Poll with proper cleanup: bets every 15 seconds, games every 60 seconds
-    // Only poll when page is visible
     const betsInterval = setInterval(async () => {
       if (isActive && isPageVisible) {
         try {
@@ -264,294 +323,34 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       clearInterval(betsInterval);
       clearInterval(gamesInterval);
     };
-  }, [fetchGames, fetchBets, fetchProfile]);
+  }, [fetchGames, fetchBets]);
 
-  const selectedGame = selectedGameId ? games.find(g => g.id === parseInt(selectedGameId)) : null;
-  const selectedGameLocked = selectedGame ? isGameLocked(selectedGame) : false;
-  const isGameBet = (bet) => Boolean(bet?.games) && !bet?.bet_type?.startsWith('prop-');
-  const hasExistingBetOnSelectedGame = selectedGame
-    ? bets.some(bet => isGameBet(bet) && bet.game_id === selectedGame.id)
-    : false;
-
-  const handlePlaceBet = async (e) => {
-    e.preventDefault();
-    setMessage('');
-    setLoading(true);
-
-    try {
-      if (!selectedGame) {
-        setMessage('Please select a game');
-        setLoading(false);
-        return;
-      }
-
-      if (isGameLocked(selectedGame)) {
-        setMessage('Picking closed for this game');
-        setLoading(false);
-        return;
-      }
-
-      const betAmount = parseFloat(amount);
-      
-      // Validate bet amount against balance
-      if (betAmount > balance) {
-        setMessage('Insufficient balance! You cannot stake more than you have.');
-        setLoading(false);
-        return;
-      }
-
-      const betData = {
-        gameId: selectedGame.id,
-        selectedTeam,
-        confidence,
-        amount: betAmount,
-        odds: confidenceMultipliers[confidence],
-      };
-
-      // CRITICAL: Store original balance BEFORE optimistic update
-      const originalBalance = balance;
-      
-      // Optimistically subtract balance immediately to prevent double-betting
-      const newBalance = balance - betAmount;
-      setBalance(newBalance);
-      if (updateUser) {
-        updateUser({ ...user, balance: newBalance });
-      }
-
-      try {
-        const response = await apiClient.post('/bets', betData);
-
-        // Use balance from server response to ensure accuracy (no additional fetch needed)
-        const serverBalance = response.data?.user?.balance || response.data?.newBalance;
-        if (serverBalance !== undefined) {
-          setBalance(serverBalance);
-          if (updateUser) {
-            updateUser({ ...user, balance: serverBalance });
-          }
-        } else {
-          // Fallback: fetch fresh balance if not in response
-          const userResponse = await apiClient.get('/users/profile');
-          setBalance(userResponse.data.balance);
-          if (updateUser) {
-            updateUser(userResponse.data);
-          }
-        }
-      } catch (betError) {
-        // Restore to original balance if bet fails
-        setBalance(originalBalance);
-        if (updateUser) {
-          updateUser({ ...user, balance: originalBalance });
-        }
-        throw betError;
-      }
-
-      setMessage(`Pick placed successfully on ${selectedTeam}! Potential win: ${formatCurrency(amount * confidenceMultipliers[confidence])}`);
-      setSelectedGameId('');
-      setSelectedTeam('');
-      setConfidence('');
-      setAmount('');
-      
-      // Scroll to message
-      setTimeout(() => {
-        messageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 100);
-      
-      // Refresh bets and games to update stats and show bet placed
-      fetchBets();
-      fetchGames();
-    } catch (err) {
-      setMessage(err.response?.data?.error || 'Error placing pick');
-      // Scroll to message on error too
-      setTimeout(() => {
-        messageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 100);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const renderBetDetails = () => (
-    <>
-      <div className="form-group">
-        <label>👥 Step 2: Who Will Win?</label>
-        <p className="field-help">Click on the team you think will win this game</p>
-        <div className="team-selection">
-          {/* Always show Valiants first (left) */}
-          {selectedGame.home_team.toLowerCase().includes('valiant') ? (
-            <>
-              <button
-                type="button"
-                className={`team-btn valiant ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
-                onClick={() => setSelectedTeam(selectedGame.home_team)}
-              >
-                <span className="team-name">{selectedGame.home_team}</span>
-                <span className="team-label">Home</span>
-              </button>
-              <button
-                type="button"
-                className={`team-btn opponent ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
-                onClick={() => setSelectedTeam(selectedGame.away_team)}
-              >
-                <span className="team-name">{selectedGame.away_team}</span>
-                <span className="team-label">Away</span>
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                className={`team-btn valiant ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
-                onClick={() => setSelectedTeam(selectedGame.away_team)}
-              >
-                <span className="team-name">{selectedGame.away_team}</span>
-                <span className="team-label">Away</span>
-              </button>
-              <button
-                type="button"
-                className={`team-btn opponent ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
-                onClick={() => setSelectedTeam(selectedGame.home_team)}
-              >
-                <span className="team-name">{selectedGame.home_team}</span>
-                <span className="team-label">Home</span>
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
-      <div className="form-group">
-        <label>💪 Step 3: How Sure Are You?</label>
-        <p className="field-help">Choose your confidence level - higher confidence = bigger rewards if you win!</p>
-        <div className="confidence-selection">
-          <button
-            type="button"
-            className={`confidence-btn low ${confidence === 'low' ? 'active' : ''}`}
-            onClick={() => setConfidence('low')}
-          >
-            <span className="confidence-label">Low</span>
-            <span className="confidence-multiplier">1.2x</span>
-            <span className="confidence-desc">Win 20% more</span>
-          </button>
-          <button
-            type="button"
-            className={`confidence-btn medium ${confidence === 'medium' ? 'active' : ''}`}
-            onClick={() => setConfidence('medium')}
-          >
-            <span className="confidence-label">Medium</span>
-            <span className="confidence-multiplier">1.5x</span>
-            <span className="confidence-desc">Win 50% more</span>
-          </button>
-          <button
-            type="button"
-            className={`confidence-btn high ${confidence === 'high' ? 'active' : ''}`}
-            onClick={() => setConfidence('high')}
-          >
-            <span className="confidence-label">High</span>
-            <span className="confidence-multiplier">2.0x</span>
-            <span className="confidence-desc">Double your stake!</span>
-          </button>
-        </div>
-      </div>
-
-      {hasExistingBetOnSelectedGame ? (
-        <div className="form-group">
-          <label htmlFor="amount">💵 Pick Amount</label>
-          <div style={{padding: '12px', background: 'rgba(102, 187, 106, 0.15)', border: '1px solid rgba(102, 187, 106, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#66bb6a', fontWeight: 'bold'}}>
-            ✓ Bet Already Placed
-          </div>
-        </div>
-      ) : selectedGameLocked ? (
-        <div className="form-group">
-          <label htmlFor="amount">💵 Pick Amount</label>
-          <div style={{padding: '12px', background: 'rgba(239, 83, 80, 0.15)', border: '1px solid rgba(239, 83, 80, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#ef5350', fontWeight: 'bold'}}>
-            🔒 Betting Closed
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="form-group">
-            <label htmlFor="amount">💵 Step 4: How Much to Stake?</label>
-            <p className="field-help">Enter how many Valiant Bucks you want to stake • Your balance: <strong>{formatCurrency(balance)}</strong></p>
-            <div className="amount-input-wrapper">
-              <input
-                id="amount"
-                type="number"
-                step="1"
-                min={balance > 0 ? 1 : 0}
-                value={amount}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  const numeric = parseFloat(val);
-                  if (balance > 0 && !Number.isNaN(numeric) && numeric > balance) {
-                    setAmount(balance.toString());
-                  } else {
-                    setAmount(val);
-                  }
-                }}
-                placeholder={balance > 0 ? 'Enter amount' : 'Balance too low'}
-                required
-                className="amount-input"
-                disabled={balance <= 0}
-              />
-              <button 
-                type="button" 
-                className="max-btn"
-                onClick={() => balance > 0 && setAmount(balance.toString())}
-                disabled={balance <= 0}
-              >
-                MAX
-              </button>
-            </div>
-            {amount && selectedTeam && confidence && (
-              <div className="bet-preview">
-                <div className="bet-preview-row">
-                  <span className="bet-preview-label">Stake</span>
-                  <span className="bet-preview-value">{formatCurrency(parseFloat(amount))}</span>
-                </div>
-                <div className="bet-preview-row">
-                  <span className="bet-preview-label">Multiplier</span>
-                  <span className="bet-preview-value">{confidenceMultipliers[confidence]}x</span>
-                </div>
-                <div className="bet-preview-row highlight">
-                  <span className="bet-preview-label">Potential Win</span>
-                  <span className="bet-preview-value">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <button 
-            type="submit" 
-            className="btn btn-primary" 
-            disabled={loading || !selectedGameId || !selectedTeam || !confidence || !amount || balance <= 0 || selectedGameLocked}
-          >
-            {loading ? 'Placing Pick...' : `✅ Lock In Pick for ${formatCurrency(parseFloat(amount || 0))}`}
-          </button>
-        </>
-      )}
-    </>
-  );
-
-  const upcomingGames = React.useMemo(() => games.slice(0, 3), [games]);
+  const upcomingGames = React.useMemo(() => games.slice(0, 5), [games]);
   const recentActivity = React.useMemo(
     () => [...bets].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 6),
     [bets]
   );
 
+  // Calculate spirit week leader
+  const spiritLeader = React.useMemo(() => {
+    const sorted = [...spiritWeekData.grades].sort((a, b) => b.points - a.points);
+    return sorted[0];
+  }, [spiritWeekData]);
+
   return (
-    <div className="dashboard">
+    <div className="dashboard school-dashboard">
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
       
-      {/* Beginner Help Banner */}
-      <div className="beginner-banner">
-        <div className="banner-icon">💡</div>
+      {/* Welcome Banner */}
+      <div className="welcome-banner">
+        <div className="banner-icon">🏫</div>
         <div className="banner-content">
-          <h3>How It Works</h3>
-          <p>Pick which team you think will win, choose how confident you are, and decide how many Valiant Bucks to stake. If you're right, you win back your stake multiplied by your confidence level!</p>
+          <h2>Welcome to Valiant Central, {user?.username || 'Student'}!</h2>
+          <p>Your one-stop hub for school updates, spirit week, upcoming events, and Valiant Picks predictions</p>
         </div>
       </div>
       
-      {/* Reserve space for notifications to prevent layout shift */}
+      {/* Win/Loss Notifications */}
       <div style={{minHeight: winNotification || lossNotification ? 'auto' : '0px', marginBottom: winNotification || lossNotification ? '1rem' : '0'}}>
         {winNotification && (
           <div className="win-notification">
@@ -571,11 +370,27 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         )}
       </div>
 
+      {/* School Alerts */}
+      {schoolAlerts.length > 0 && (
+        <div className="school-alerts">
+          {schoolAlerts.map(alert => (
+            <div key={alert.id} className={`alert-banner alert-${alert.type}`}>
+              <span className="alert-icon">
+                {alert.type === 'warning' && '⚠️'}
+                {alert.type === 'info' && 'ℹ️'}
+                {alert.type === 'success' && '✅'}
+              </span>
+              <span className="alert-message">{alert.message}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Stats Overview - Compact */}
       <div className="dashboard-stats-compact">
         <div className="stat-compact">
           <span className="stat-compact-value">{stats.totalBets}</span>
-          <span className="stat-compact-label">Total</span>
+          <span className="stat-compact-label">Total Picks</span>
         </div>
         <div className="stat-compact pending">
           <span className="stat-compact-value">{stats.activeBets}</span>
@@ -597,97 +412,117 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         </div>
       </div>
 
-      {/* Two Column Layout */}
-      <div className="dashboard-grid">
-        {/* Left Column - Place Pick */}
-        <div className="card bet-card">
-          <h3>🎲 Place a Pick</h3>
-          {message && (
-            <div ref={messageRef} className={`alert ${message.includes('Error') || message.includes('error') || message.includes('Insufficient') ? 'alert-error' : 'alert-success'}`}>
-              {message}
+      {/* Main Grid Layout */}
+      <div className="dashboard-grid school-grid">
+        {/* Left Column */}
+        <div className="dashboard-main-column">
+          {/* Place a Pick CTA */}
+          <div className="card pick-cta-card">
+            <h3>🎲 Ready to Make Your Picks?</h3>
+            <p>Head over to the Browse Picks page to place your predictions on upcoming Valiant games!</p>
+            <button 
+              className="btn btn-primary btn-large"
+              onClick={() => onNavigate && onNavigate('games')}
+              style={{ marginTop: '1rem', width: '100%' }}
+            >
+              🏀 Go to Browse Picks
+            </button>
+            <div className="balance-display">
+              <span className="balance-label">Your Balance:</span>
+              <span className="balance-amount">{formatCurrency(balance)}</span>
             </div>
-          )}
+          </div>
 
-          {gamesLoading ? (
-            <div className="skeleton-stack" style={{gap: '12px'}}>
-              <span className="skeleton-line" style={{height: '14px', width: '60%'}} />
-              <span className="skeleton-line" style={{height: '14px', width: '50%'}} />
-              <span className="skeleton-line" style={{height: '44px', width: '100%', borderRadius: '10px'}} />
-              <span className="skeleton-line" style={{height: '44px', width: '100%', borderRadius: '10px'}} />
+          {/* Spirit Week Tracker */}
+          <div className="card spirit-week-card">
+            <div className="spirit-week-header">
+              <h3>🎭 Spirit Week: {spiritWeekData.theme}</h3>
+              <span className="spirit-week-date">{spiritWeekData.weekOf}</span>
             </div>
-          ) : games.length === 0 ? (
-            <div className="empty-state">
-              <p>🏀 No games available at the moment.</p>
-              <p className="empty-subtitle">Check back soon for upcoming games!</p>
-            </div>
-          ) : (
-            <form onSubmit={handlePlaceBet} className="bet-form">
-              <div className="form-group">
-                <label>🏀 Step 1: Choose a Game</label>
-                <p className="field-help">Select the game you want to predict the winner for</p>
-                <div className="game-cards-selection">
-                  {games.map((game, index) => {
-                    const gameCountdown = getCountdown(buildGameStartDate(game));
-                    const isLocked = isGameLocked(game);
-                    const isSelected = selectedGameId === game.id.toString();
-                    return (
-                      <React.Fragment key={game.id}>
-                        <button
-                          type="button"
-                          className={`game-card-btn ${isSelected ? 'active' : ''} ${isLocked ? 'locked' : ''} ${game.team_type?.toLowerCase().includes('boys') ? 'boys-game' : game.team_type?.toLowerCase().includes('girls') ? 'girls-game' : ''}`}
-                          onClick={() => {
-                            if (!isLocked) {
-                              setSelectedGameId(game.id.toString());
-                              setSelectedTeam('');
-                              setConfidence('');
-                            }
-                          }}
-                          disabled={isLocked}
-                        >
-                          <div className="game-card-header">
-                            <span className={`game-badge ${game.team_type?.toLowerCase().includes('boys') ? 'boys' : game.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
-                              {game.team_type?.toLowerCase().includes('boys') ? '🏀 ' : game.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{game.team_type}
-                            </span>
-                            {gameCountdown && (
-                              <span className={`countdown-chip ${gameCountdown.isPast ? 'countdown-closed' : ''}`}>
-                                {gameCountdown.isPast ? '🔒 Closed' : `⏰ ${gameCountdown.label}`}
-                              </span>
-                            )}
-                          </div>
-                          <div className="game-card-matchup">
-                            <div className="game-card-team">{game.home_team}</div>
-                            <div className="game-card-vs">VS</div>
-                            <div className="game-card-team">{game.away_team}</div>
-                          </div>
-                          <div className="game-card-details">
-                            <span className="game-card-date">📅 {parseLocalDateOnly(game.game_date)?.toLocaleDateString() || 'Date TBD'}</span>
-                            <span className="game-card-time">🕐 {formatTime(game.game_time)}</span>
-                          </div>
-                          {game.location && (
-                            <div className="game-card-location">📍 {game.location}</div>
-                          )}
-                        </button>
-                        
-                        {isSelected && selectedGame && (
-                          <div className="bet-details-expanded">
-                            {renderBetDetails()}
-                          </div>
-                        )}
-                      </React.Fragment>
-                    );
-                  })}
-                </div>
+            <p className="spirit-week-description">
+              Each grade has their own Broadway musical! Show your class spirit all week long!
+            </p>
+            
+            {/* Current Leader Banner */}
+            <div className="spirit-leader-banner" style={{borderColor: spiritLeader.color}}>
+              <span className="leader-icon" style={{fontSize: '2.5rem'}}>{spiritLeader.icon}</span>
+              <div className="leader-info">
+                <div className="leader-label">Current Leader</div>
+                <div className="leader-grade" style={{color: spiritLeader.color}}>{spiritLeader.grade}</div>
+                <div className="leader-subtheme">{spiritLeader.subtheme}</div>
               </div>
-            </form>
-          )}
+              <div className="leader-points">{spiritLeader.points} pts</div>
+            </div>
+
+            {/* All Grades */}
+            <div className="spirit-grades-grid">
+              {spiritWeekData.grades.map((grade, index) => (
+                <div key={index} className="spirit-grade-card" style={{borderLeftColor: grade.color}}>
+                  <div className="grade-header">
+                    <span className="grade-icon">{grade.icon}</span>
+                    <div className="grade-title">
+                      <h4 style={{color: grade.color}}>{grade.grade}</h4>
+                      <span className="grade-subtheme">{grade.subtheme}</span>
+                    </div>
+                    <span className="grade-points">{grade.points} pts</span>
+                  </div>
+                  <div className="grade-activities">
+                    <strong>This Week:</strong>
+                    <ul>
+                      {grade.activities.map((activity, i) => (
+                        <li key={i}>{activity}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Upcoming School Events */}
+          <div className="card school-events-card">
+            <h3>📅 Upcoming School Events</h3>
+            {schoolEvents.length > 0 ? (
+              <div className="events-list">
+                {schoolEvents.map(event => (
+                  <div key={event.id} className={`event-item event-${event.type}`}>
+                    <div className="event-icon">
+                      {event.type === 'sports' && '🏀'}
+                      {event.type === 'spirit' && '🎭'}
+                      {event.type === 'academic' && '📚'}
+                      {event.type === 'social' && '🎉'}
+                    </div>
+                    <div className="event-details">
+                      <h4>{event.title}</h4>
+                      <div className="event-meta">
+                        <span>📅 {event.date}</span>
+                        <span>🕐 {event.time}</span>
+                        <span>📍 {event.location}</span>
+                      </div>
+                      {event.description && (
+                        <p className="event-description">{event.description}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="empty-text">No upcoming events</p>
+            )}
+          </div>
         </div>
 
-        {/* Right Column - Info */}
+        {/* Right Sidebar */}
         <div className="dashboard-sidebar">
           {/* Upcoming Games */}
           <div className="card">
-            <h3>📅 Upcoming Games</h3>
-            {upcomingGames.length > 0 ? (
+            <h3>🏀 Upcoming Games</h3>
+            {gamesLoading ? (
+              <div className="skeleton-stack">
+                <span className="skeleton-line" style={{height: '60px'}} />
+                <span className="skeleton-line" style={{height: '60px'}} />
+              </div>
+            ) : upcomingGames.length > 0 ? (
               <div className="upcoming-games-list">
                 {upcomingGames.map(game => (
                   <div key={game.id} className="upcoming-game-item">
@@ -708,18 +543,25 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             ) : (
               <p className="empty-text">No upcoming games</p>
             )}
+            <button 
+              className="btn btn-secondary btn-small"
+              onClick={() => onNavigate && onNavigate('games')}
+              style={{ marginTop: '1rem', width: '100%' }}
+            >
+              View All & Place Picks
+            </button>
           </div>
 
           {/* Recent Activity */}
           <div className="card">
-            <h3>📝 Recent Activity</h3>
+            <h3>📝 Recent Picks</h3>
             {recentActivity.length > 0 ? (
               <div className="recent-bets-list">
                 {recentActivity.map(activity => (
                   <div key={activity.id} className="recent-bet-item">
                     <div className="bet-info">
                       <div className="bet-team">{activity.selected_team}</div>
-                      <div className="bet-amount">{activity.amount}</div>
+                      <div className="bet-amount">{formatCurrency(activity.amount)}</div>
                     </div>
                     <div className="bet-status">
                       <span className={`status-badge status-${activity.status === 'pending' ? 'pending' : activity.outcome}`}>
@@ -742,21 +584,39 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                 ))}
               </div>
             ) : (
-              <p className="empty-text">No recent activity</p>
+              <p className="empty-text">No recent picks</p>
             )}
           </div>
 
-          {/* About Section */}
-          <div className="card about-section">
-            <h3>Learn More About Valiant Picks</h3>
-            <p>Curious about the platform? Check out our comprehensive information page.</p>
-            <button 
-              className="btn btn-secondary"
-              onClick={() => onNavigate && onNavigate('about')}
-              style={{ marginTop: '1rem' }}
-            >
-              ℹ️ About Valiant Picks
-            </button>
+          {/* Quick Links */}
+          <div className="card quick-links-card">
+            <h3>🔗 Quick Links</h3>
+            <div className="quick-links">
+              <button 
+                className="quick-link-btn"
+                onClick={() => onNavigate && onNavigate('games')}
+              >
+                🏀 Browse Picks
+              </button>
+              <button 
+                className="quick-link-btn"
+                onClick={() => onNavigate && onNavigate('teams')}
+              >
+                👥 Team Rosters
+              </button>
+              <button 
+                className="quick-link-btn"
+                onClick={() => onNavigate && onNavigate('leaderboard')}
+              >
+                🏆 Leaderboard
+              </button>
+              <button 
+                className="quick-link-btn"
+                onClick={() => onNavigate && onNavigate('about')}
+              >
+                ℹ️ About
+              </button>
+            </div>
           </div>
         </div>
       </div>
