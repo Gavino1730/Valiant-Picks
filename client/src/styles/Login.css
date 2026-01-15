@@ -6,6 +6,81 @@
   background: linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #0f1419 100%);
   position: relative;
   overflow: hidden;
+  padding: 1rem;
+}
+
+/* Tablet responsive */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .login-box {
+    max-width: 440px;
+    padding: 2rem 1.75rem;
+  }
+
+  .brand-name {
+    font-size: 1.4rem;
+  }
+
+  .login-logo {
+    width: 55px;
+    height: 55px;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+  .login-container {
+    padding: 1rem;
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+
+  .login-container::before,
+  .login-container::after {
+    display: none;
+  }
+
+  .login-box {
+    max-width: 100%;
+    padding: 1.75rem 1.5rem;
+    margin: 0 auto;
+  }
+
+  .login-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .brand-name {
+    font-size: 1.3rem;
+  }
+
+  .brand-tagline {
+    font-size: 0.8rem;
+  }
+
+  .logo-section {
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 0.75rem;
+  }
+
+  .login-box {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .login-logo {
+    width: 45px;
+    height: 45px;
+  }
+
+  .brand-name {
+    font-size: 1.2rem;
+  }
 }
 
 .login-container::before {

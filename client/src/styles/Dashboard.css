@@ -78,6 +78,28 @@
   transition: transform 0.2s ease;
 }
 
+/* Tablet responsive styles */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .dashboard {
+    padding: 0 1rem;
+  }
+
+  .dashboard-stats-compact {
+    gap: 0.6rem;
+    padding: 0.4rem 0;
+  }
+
+  .stat-compact {
+    min-width: 85px;
+    padding: 0.7rem 1rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
 .stat-compact:hover {
   transform: translateY(-2px);
 }
@@ -2189,6 +2211,20 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1rem;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 768px) {
+  .welcome-banner {
+    padding: 1.5rem;
+  }
+
+  .welcome-banner h2 {
+    font-size: 1.5rem;
+  }
+
+  .spirit-grades-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   }
 }
 

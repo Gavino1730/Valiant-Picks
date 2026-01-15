@@ -131,6 +131,38 @@
   gap: 1.5rem;
 }
 
+/* Tablet optimizations */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .games-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .game-card-display {
+    padding: 1.25rem;
+  }
+
+  .page-header h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Mobile landscape */
+@media (max-height: 600px) and (orientation: landscape) {
+  .page-header {
+    padding: 1rem 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .page-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .games-grid {
+    gap: 1rem;
+  }
+}
+
 .game-card-display {
   background: linear-gradient(135deg, #1e2139 0%, #252945 100%);
   border: 1px solid rgba(255, 255, 255, 0.1);

@@ -6,6 +6,70 @@
   animation: fadeIn 0.4s ease;
 }
 
+/* Tablet responsive */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .about-page {
+    padding: 1.5rem;
+  }
+
+  .about-header h1 {
+    font-size: 2.4rem;
+  }
+
+  .about-header p {
+    font-size: 1rem;
+  }
+
+  .about-container {
+    gap: 2rem;
+  }
+
+  .mission-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+  .about-page {
+    padding: 1rem;
+  }
+
+  .about-header {
+    margin-bottom: 2rem;
+  }
+
+  .about-header h1 {
+    font-size: 2rem;
+  }
+
+  .about-header p {
+    font-size: 0.95rem;
+  }
+
+  .about-container {
+    gap: 1.5rem;
+  }
+
+  .mission-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .mission-card {
+    padding: 1.25rem;
+  }
+
+  .mission-icon {
+    font-size: 2.4rem;
+  }
+
+  .mission-card h3 {
+    font-size: 1.1rem;
+  }
+}
+
 .about-header {
   text-align: center;
   margin-bottom: 3rem;

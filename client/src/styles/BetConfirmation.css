@@ -301,7 +301,39 @@
   transform: translateY(0);
 }
 
+/* ===== TABLET RESPONSIVE ===== */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .confirmation-modal {
+    max-width: 550px;
+    width: 85%;
+  }
+
+  .confirmation-header {
+    padding: 1.4rem;
+  }
+
+  .confirmation-content {
+    padding: 1.75rem;
+  }
+}
+
 /* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 767px) {
+  .confirmation-modal {
+    width: 95%;
+    max-width: 95%;
+    border-radius: 12px;
+  }
+
+  .confirmation-header {
+    padding: 1.2rem;
+  }
+
+  .confirmation-header h2 {
+    font-size: 1.15rem;
+  }
+}
+
 @media (max-width: 600px) {
   .confirmation-modal {
     width: 95%;

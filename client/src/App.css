@@ -17,9 +17,13 @@ body {
   color: #e0e0e0;
   background-color: #0f1419;
   margin: 0;
-  overflow-x: hidden; /* prevent horizontal scroll on small phones */
+  overflow-x: hidden;
   /* Prevent white overscroll background on mobile */
   overscroll-behavior-y: contain;
+  /* Smooth scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Better touch interaction */
+  touch-action: pan-y;
 }
 
 #root {
@@ -220,6 +224,18 @@ body {
   }
 }
 
+/* iPad Pro and Large Tablets (1024-1366px) */
+@media (max-width: 1366px) and (min-width: 1025px) {
+  .container {
+    max-width: 96%;
+    padding: 2rem 1.5rem;
+  }
+
+  .games-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
 /* Tablet optimizations (iPad, tablets) */
 @media (max-width: 1024px) and (min-width: 768px) {
   .container {
@@ -237,7 +253,7 @@ body {
   }
 
   .nav-brand span {
-    display: none; /* Hide "Valiant Picks" text on tablets */
+    display: inline; /* Keep visible on tablets */
   }
 
   .logo-img {
@@ -1024,6 +1040,13 @@ table tbody tr:hover {
     padding: 1.5rem 1rem;
     width: 100%;
     margin: 0 auto;
+    max-width: 100%;
+  }
+
+  /* Better touch targets */
+  .btn {
+    min-height: 48px;
+    padding: 0.85rem 1.75rem;
   }
 
   .card {

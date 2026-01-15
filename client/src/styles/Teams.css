@@ -5,6 +5,65 @@
   background: transparent;
 }
 
+/* Tablet responsive */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .teams-page {
+    padding: 15px;
+  }
+
+  .team-section {
+    padding: 25px;
+    gap: 18px;
+  }
+
+  .team-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .team-stats {
+    gap: 25px;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+  .teams-page {
+    padding: 12px;
+  }
+
+  .teams-page h1 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+
+  .tabs {
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-button {
+    padding: 10px 18px;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  .team-section {
+    padding: 20px;
+    gap: 15px;
+  }
+
+  .team-header h2 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+  }
+
+  .team-stats {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
 .teams-page h1 {
   color: #ffffff;
   margin-bottom: 30px;

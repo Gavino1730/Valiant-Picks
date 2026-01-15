@@ -10,6 +10,51 @@
   overflow-x: hidden;
 }
 
+/* Tablet responsive */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .bet-list-container {
+    padding: 1.5rem;
+  }
+
+  .header-title h1 {
+    font-size: 2.2rem;
+  }
+
+  .bet-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .bet-stat-card {
+    padding: 1.25rem;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+  .bet-list-container {
+    padding: 1rem;
+  }
+
+  .header-title h1 {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .bet-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .bet-stat-card {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

@@ -1,5 +1,93 @@
 /* ===== COMPREHENSIVE MOBILE STYLES ===== */
 
+/* iPad Pro 12.9" and large tablets (1024-1366px) */
+@media (max-width: 1366px) and (min-width: 1024px) {
+  .container {
+    max-width: 96%;
+    padding: 2rem 1.5rem;
+  }
+
+  .games-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+/* iPad Portrait and Landscape (768-1024px) */
+@media (max-width: 1024px) and (min-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+
+  .container {
+    padding: 1.5rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+  }
+
+  /* Touch targets for iPad */
+  button:not(.team-btn):not(.confidence-btn):not(.prop-bet-btn):not(.yes-btn):not(.no-btn) {
+    min-height: 44px;
+    padding: 11px 15px;
+  }
+
+  /* iPad specific grid layouts */
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  /* Tables on iPad */
+  table {
+    font-size: 0.9rem;
+  }
+
+  th, td {
+    padding: 0.75rem;
+  }
+}
+
+/* iPad Landscape specific adjustments */
+@media (max-width: 1024px) and (min-width: 768px) and (orientation: landscape) {
+  .navbar {
+    padding: 0.8rem 1.5rem;
+  }
+
+  .container {
+    max-width: 95%;
+  }
+
+  .games-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .modal-content {
+    max-width: 650px;
+  }
+}
+
 /* Touch-friendly UI adjustments for all mobile devices */
 @media (max-width: 768px) {
   /* Base spacing and sizing */
@@ -13,7 +101,7 @@
     background: linear-gradient(135deg, #f0f4f8 0%, #e8ecf2 100%);
   }
 
-  /* Touch targets should be at least 48x48px */
+  /* Touch targets should be at least 48x48px for accessibility */
   /* Exclude game betting buttons which have their own specific styling */
   button:not(.team-btn):not(.confidence-btn):not(.prop-bet-btn):not(.yes-btn):not(.no-btn),
   a[role="button"],
@@ -25,6 +113,20 @@
     padding: 12px 16px;
     border-radius: 10px;
     font-weight: 700;
+    /* Better touch feedback */
+    -webkit-tap-highlight-color: rgba(31, 78, 153, 0.2);
+    touch-action: manipulation;
+  }
+  
+  /* Ensure betting buttons also have good touch targets */
+  .team-btn,
+  .confidence-btn,
+  .prop-bet-btn,
+  .yes-btn,
+  .no-btn {
+    min-height: 48px;
+    -webkit-tap-highlight-color: rgba(31, 78, 153, 0.2);
+    touch-action: manipulation;
   }
 
   /* Form controls - exclude betting inputs */
@@ -610,6 +712,7 @@
 @media (max-height: 500px) and (orientation: landscape) {
   .navbar {
     padding: 0.4rem 0.8rem;
+    min-height: 50px;
   }
 
   .nav-brand {
@@ -637,6 +740,7 @@
 
   .card {
     padding: 0.8rem;
+    margin-bottom: 0.8rem;
   }
 
   h1 {
@@ -661,6 +765,22 @@
   /* Scrollable content in landscape */
   .content-area {
     max-height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+
+  /* Games grid for landscape */
+  .games-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .game-card-display {
+    padding: 1rem;
+  }
+
+  /* Modal adjustments for landscape */
+  .modal-content {
+    max-height: 85vh;
     overflow-y: auto;
   }
 }
