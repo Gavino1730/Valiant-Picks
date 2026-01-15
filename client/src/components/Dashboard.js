@@ -6,6 +6,7 @@ import '../styles/Confetti.css';
 import { formatCurrency } from '../utils/currency';
 import Confetti from './Confetti';
 import { UpcomingGameSkeleton } from './Skeleton';
+import notificationService from '../utils/notifications';
 
 function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [balance, setBalance] = useState(user?.balance || 0);
@@ -24,6 +25,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [lossNotification, setLossNotification] = useState(null);
   const [previousBets, setPreviousBets] = useState([]);
   const [recentWinners, setRecentWinners] = useState([]);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(notificationService.isEnabled());
   const [stats, setStats] = useState({
     totalBets: 0,
     activeBets: 0,
@@ -207,6 +209,15 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               const profit = newBet.potential_win ? (parseFloat(newBet.potential_win) - parseFloat(newBet.amount)) : 0;
               setWinNotification({ team: newBet.selected_team, amount: profit });
               setShowConfetti(true);
+              
+              // Send browser notification
+              notificationService.betResolved({
+                outcome: 'won',
+                team: newBet.selected_team,
+                amount: formatCurrency(profit),
+                potentialWin: newBet.potential_win
+              });
+              
               const winTimeout = setTimeout(() => {
                 setWinNotification(null);
                 setShowConfetti(false);
@@ -215,6 +226,15 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               return () => clearTimeout(winTimeout);
             } else if (newBet.outcome === 'lost') {
               setLossNotification({ team: newBet.selected_team, amount: newBet.amount });
+              
+              // Send browser notification
+              notificationService.betResolved({
+                outcome: 'lost',
+                team: newBet.selected_team,
+                amount: formatCurrency(newBet.amount),
+                potentialWin: 0
+              });
+              
               const lossTimeout = setTimeout(() => {
                 setLossNotification(null);
               }, 2500);
@@ -326,6 +346,12 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     [bets]
   );
 
+  // Handle notification toggle
+  const handleNotificationToggle = async () => {
+    const result = await notificationService.toggle();
+    setNotificationsEnabled(result);
+  };
+
   // Calculate spirit week leader - TEMPORARILY HIDDEN
   /* const spiritLeader = React.useMemo(() => {
     const sorted = [...spiritWeekData.grades].sort((a, b) => b.points - a.points);
@@ -335,6 +361,23 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   return (
     <div className="dashboard school-dashboard">
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
+      
+      {/* Notification Permission Banner */}
+      {!notificationsEnabled && (
+        <div className="notification-banner">
+          <div className="notification-banner-icon">🔔</div>
+          <div className="notification-banner-content">
+            <strong>Enable Notifications</strong>
+            <p>Get instant updates when your bets are resolved, new games are available, and more!</p>
+          </div>
+          <button className="notification-banner-btn" onClick={handleNotificationToggle}>
+            Enable Notifications
+          </button>
+          <button className="notification-banner-close" onClick={() => setNotificationsEnabled(null)} title="Don't show again">
+            ✕
+          </button>
+        </div>
+      )}
       
       {/* Welcome Banner */}
       <div className="welcome-banner">

@@ -14,19 +14,6 @@
 **Benefit**: Power users can bet faster, better accessibility
 
 
----
-
-## Medium Priority (Features)
-
-
-### 11. Add Push Notifications
-**For**: 
-  - Bet resolved (won/lost)
-  - Balance refill ready
-  - New games available
-  - Game starting soon (if user has bet)
-
-
 ### 13. Add Bet Editing Window
 **Feature**: Allow users to change selected team within first 5 minutes
 **Rules**: 
