@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/Leaderboard.css';
+import '../styles/Skeleton.css';
 import { formatCurrency } from '../utils/currency';
+import { LeaderboardRowSkeleton } from './Skeleton';
 
 function Leaderboard() {
   const [users, setUsers] = useState([]);
@@ -101,11 +103,14 @@ function Leaderboard() {
   if (loading) {
     return (
       <div className="leaderboard-page">
-        <div style={{textAlign: 'center', padding: '40px', color: '#b8c5d6'}}>
-          <div className="loading-spinner">
-            <div className="spinner"></div>
-            <p>Loading Leaderboard...</p>
-          </div>
+        <div className="leaderboard-header">
+          <h1>Leaderboard</h1>
+          <p>Top performers ranked by Valiant Bucks balance</p>
+        </div>
+        <div className="leaderboard-table">
+          {Array.from({ length: 10 }).map((_, idx) => (
+            <LeaderboardRowSkeleton key={idx} />
+          ))}
         </div>
       </div>
     );

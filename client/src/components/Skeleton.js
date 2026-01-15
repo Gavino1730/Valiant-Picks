@@ -1,0 +1,81 @@
+import React from 'react';
+import '../styles/Skeleton.css';
+
+// Reusable skeleton component for loading states
+function Skeleton({ variant = 'text', width, height, style, count = 1, className = '' }) {
+  const skeletons = Array.from({ length: count }).map((_, idx) => {
+    const skeletonStyle = {
+      width: width || (variant === 'text' ? '100%' : undefined),
+      height: height || (variant === 'text' ? '1em' : variant === 'card' ? '200px' : '20px'),
+      ...style
+    };
+
+    return (
+      <div
+        key={idx}
+        className={`skeleton skeleton-${variant} ${className}`}
+        style={skeletonStyle}
+      />
+    );
+  });
+
+  return count === 1 ? skeletons[0] : <>{skeletons}</>;
+}
+
+// Pre-configured skeleton components for common use cases
+export function GameCardSkeleton() {
+  return (
+    <div className="game-card-display skeleton-card">
+      <div className="skeleton-row">
+        <Skeleton variant="badge" width="80px" height="24px" />
+        <Skeleton variant="pill" width="100px" height="22px" />
+      </div>
+      <Skeleton variant="text" height="24px" style={{ marginTop: '10px' }} />
+      <Skeleton variant="text" height="18px" width="60%" style={{ marginTop: '6px' }} />
+      <div className="skeleton-stack" style={{ marginTop: '16px' }}>
+        <Skeleton variant="text" height="16px" />
+        <Skeleton variant="text" height="16px" width="70%" />
+        <Skeleton variant="text" height="16px" width="50%" />
+      </div>
+    </div>
+  );
+}
+
+export function LeaderboardRowSkeleton() {
+  return (
+    <div className="leaderboard-row skeleton-row">
+      <div className="rank-column">
+        <Skeleton variant="circle" width="32px" height="32px" />
+      </div>
+      <div className="user-column">
+        <Skeleton variant="text" width="120px" height="18px" />
+      </div>
+      <div className="balance-column">
+        <Skeleton variant="text" width="80px" height="20px" />
+      </div>
+      <div className="stats-column">
+        <Skeleton variant="text" width="60px" height="16px" />
+      </div>
+    </div>
+  );
+}
+
+export function DashboardCardSkeleton() {
+  return (
+    <div className="dashboard-stat-card skeleton-card">
+      <Skeleton variant="text" width="100px" height="16px" />
+      <Skeleton variant="text" width="80px" height="32px" style={{ marginTop: '8px' }} />
+    </div>
+  );
+}
+
+export function UpcomingGameSkeleton() {
+  return (
+    <div className="upcoming-game-item skeleton-item">
+      <Skeleton variant="text" height="18px" width="100%" />
+      <Skeleton variant="text" height="14px" width="60%" style={{ marginTop: '4px' }} />
+    </div>
+  );
+}
+
+export default Skeleton;

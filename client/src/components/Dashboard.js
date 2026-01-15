@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/Dashboard.css';
+import '../styles/Skeleton.css';
 import '../styles/Confetti.css';
 import { formatCurrency } from '../utils/currency';
 import Confetti from './Confetti';
+import { UpcomingGameSkeleton } from './Skeleton';
 
 function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [balance, setBalance] = useState(user?.balance || 0);
@@ -338,8 +340,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       <div className="welcome-banner">
         <div className="banner-icon">🏫</div>
         <div className="banner-content">
-          <h2>Welcome to Valiant Central, {user?.username || 'Student'}!</h2>
-          <p>Your one-stop hub for school updates, spirit week, upcoming events, and Valiant Picks predictions</p>
+          <h2>Welcome to Valiant Picks, {user?.username || 'Student'}!</h2>
         </div>
       </div>
       
@@ -548,9 +549,10 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
           <div className="card">
             <h3>🏀 Upcoming Games</h3>
             {gamesLoading ? (
-              <div className="skeleton-stack">
-                <span className="skeleton-line" style={{height: '60px'}} />
-                <span className="skeleton-line" style={{height: '60px'}} />
+              <div>
+                {Array.from({ length: 3 }).map((_, idx) => (
+                  <UpcomingGameSkeleton key={idx} />
+                ))}
               </div>
             ) : upcomingGames.length > 0 ? (
               <div className="upcoming-games-list">

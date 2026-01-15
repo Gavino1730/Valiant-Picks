@@ -1,21 +1,6 @@
-# Future Improvements for Valiant Picks
 
-## High Priority (User Experience)
 
-### 1. Add Loading Skeletons
-**Current**: Shows "Loading..." text
-**Better**: Skeleton screens for better perceived performance
-**Benefit**: Makes the app feel faster, better UX during data fetching
-**Implementation**: Add skeleton components for dashboard cards, game lists, leaderboard rows
 
-### 3. Add Bet Confirmation Dialog
-**Purpose**: Prevent accidental high-value bets
-**Features**: 
-  - Show bet summary (team, amount, potential win)
-  - Require explicit confirmation
-  - Highlight for bets over $100
-**Benefit**: Prevents costly user mistakes, adds confidence
-**Priority**: HIGH - prevents user errors
 
 
 
@@ -33,17 +18,6 @@
 
 ## Medium Priority (Features)
 
-### 9. Add Bet History Export
-**Feature**: Export bet history to CSV/PDF
-**Use case**: Users can track their performance offline
-**Data**: All bets with dates, amounts, outcomes, profit/loss
-
-### 10. Add Bet Statistics Dashboard
-**Show user**: 
-  - Profit/loss over time (chart)
-  - Best performing confidence level
-  - Most profitable teams
-  - Win rate by team type (Boys/Girls Basketball, etc.)
 
 ### 11. Add Push Notifications
 **For**: 
@@ -52,10 +26,6 @@
   - New games available
   - Game starting soon (if user has bet)
 
-### 12. Add Dark/Light Mode Toggle
-**Current**: Dark theme only
-**Add**: User preference toggle
-**Benefit**: Accessibility, user preference
 
 ### 13. Add Bet Editing Window
 **Feature**: Allow users to change selected team within first 5 minutes
@@ -64,10 +34,6 @@
   - Only if no other bets placed since
   - Keep same confidence/amount
 
-### 14. Add Live Game Updates
-**Feature**: Show live scores during games
-**Source**: Could be manual admin updates or API integration
-**Display**: On dashboard and games page
 
 ### 15. Add Betting Trends
 **Show**: 
@@ -105,11 +71,7 @@
 **Format**: "I just bet $100 on [Team] with Valiant Picks!"
 **Benefit**: Free marketing, viral growth
 
-### 20. Add Leaderboard Filters
-**Filters**: 
-  - By time period (weekly, monthly, all-time)
-  - By team type
-  - By confidence level stats
+
 
 ---
 
