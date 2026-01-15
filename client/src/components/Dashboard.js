@@ -21,6 +21,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [winNotification, setWinNotification] = useState(null);
   const [lossNotification, setLossNotification] = useState(null);
   const [previousBets, setPreviousBets] = useState([]);
+  const [recentWinners, setRecentWinners] = useState([]);
   const [stats, setStats] = useState({
     totalBets: 0,
     activeBets: 0,
@@ -248,11 +249,22 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     }
   }, [previousBets]);
 
+  const fetchRecentWinners = useCallback(async () => {
+    try {
+      const response = await apiClient.get('/bets/recent-winners?limit=15');
+      setRecentWinners(response.data || []);
+    } catch (err) {
+      console.error('Error fetching recent winners:', err);
+      setRecentWinners([]);
+    }
+  }, []);
+
   useEffect(() => {
     // Fetch all data in parallel for faster initial load
     Promise.all([
       fetchGames(),
-      fetchBets()
+      fetchBets(),
+      fetchRecentWinners()
     ]);
     
     // Create abort controller to handle unmounting gracefully
@@ -286,13 +298,25 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       }
     }, 60000);
     
+    // Poll recent winners every 30 seconds
+    const winnersInterval = setInterval(async () => {
+      if (isActive && isPageVisible) {
+        try {
+          await fetchRecentWinners();
+        } catch (err) {
+          // Polling error - will retry
+        }
+      }
+    }, 30000);
+    
     return () => {
       isActive = false;
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearInterval(betsInterval);
       clearInterval(gamesInterval);
+      clearInterval(winnersInterval);
     };
-  }, [fetchGames, fetchBets]);
+  }, [fetchGames, fetchBets, fetchRecentWinners]);
 
   const upcomingGames = React.useMemo(() => games.slice(0, 5), [games]);
   const recentActivity = React.useMemo(
@@ -338,6 +362,40 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
           </div>
         )}
       </div>
+
+      {/* Recent Winners Section */}
+      {recentWinners.length > 0 && (
+        <div className="recent-winners-banner">
+          <div className="recent-winners-header">
+            <span className="recent-winners-icon">🏆</span>
+            <h3>Recent Winners</h3>
+            <span className="recent-winners-pulse">🔴 LIVE</span>
+          </div>
+          <div className="recent-winners-carousel">
+            <div className="winners-scroll">
+              {recentWinners.concat(recentWinners).map((winner, index) => {
+                const profit = winner.potential_win - winner.amount;
+                return (
+                  <div key={`${winner.id}-${index}`} className="winner-card">
+                    <div className="winner-avatar">{winner.users?.username?.charAt(0).toUpperCase() || '?'}</div>
+                    <div className="winner-info">
+                      <div className="winner-username">{winner.users?.username || 'Anonymous'}</div>
+                      <div className="winner-details">
+                        <span className="winner-team">{winner.selected_team}</span>
+                        <span className="winner-multiplier">{winner.odds}x</span>
+                      </div>
+                    </div>
+                    <div className="winner-amount">
+                      <span className="winner-won-label">WON</span>
+                      <span className="winner-won-value">+{formatCurrency(profit)}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* School Alerts - TEMPORARILY HIDDEN
       {schoolAlerts.length > 0 && (

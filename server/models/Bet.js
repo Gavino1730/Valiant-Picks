@@ -167,6 +167,41 @@ class Bet {
       throw new Error(`Error checking existing bet: ${err.message}`);
     }
   }
+
+  static async getRecentWinners(limit = 10) {
+    try {
+      const { data, error } = await supabase
+        .from('bets')
+        .select(`
+          id,
+          amount,
+          potential_win,
+          odds,
+          selected_team,
+          bet_type,
+          updated_at,
+          users!inner (
+            username,
+            is_admin
+          ),
+          games (
+            home_team,
+            away_team,
+            team_type
+          )
+        `)
+        .eq('status', 'resolved')
+        .eq('outcome', 'won')
+        .eq('users.is_admin', false)
+        .order('updated_at', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      throw new Error(`Error fetching recent winners: ${err.message}`);
+    }
+  }
 }
 
 module.exports = Bet;

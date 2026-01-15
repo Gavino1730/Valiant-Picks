@@ -899,7 +899,7 @@ function Games({ user, updateUser }) {
                                     className="btn btn-primary" 
                                     disabled={!selectedTeam || !confidence || !amount || balance <= 0 || selectedGameLocked || isSubmittingBet}
                                   >
-                                    {isSubmittingBet ? '⏳ Placing...' : `✅ Lock In Pick for ${formatCurrency(parseFloat(amount || 0))}`}
+                                    {isSubmittingBet ? 'Placing...' : `Lock In Pick for ${formatCurrency(parseFloat(amount || 0))}`}
                                   </button>
                                 </>
                               )}

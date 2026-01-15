@@ -17,13 +17,7 @@
 **Benefit**: Prevents costly user mistakes, adds confidence
 **Priority**: HIGH - prevents user errors
 
-### 4. Better Error Messages
-**Current**: Generic error messages
-**Better**: User-friendly, actionable error messages
-**Examples**:
-  - "Insufficient balance" → "You need $X more to place this bet"
-  - "Game locked" → "Betting closed - game starts in 5 minutes"
-  - "Server error" → "Connection issue - your bet was not placed"
+
 
 
 ### 6. Keyboard Navigation

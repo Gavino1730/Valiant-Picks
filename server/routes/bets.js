@@ -176,6 +176,18 @@ router.get('/all', optionalAuth, async (req, res) => {
   }
 });
 
+// Get recent winners (public for dashboard)
+router.get('/recent-winners', async (req, res) => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+    const winners = await Bet.getRecentWinners(limit);
+    res.json(winners);
+  } catch (error) {
+    console.error('Get recent winners error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Admin: Settle a bet (mark as resolved with outcome)
 router.put('/:id', authenticateToken, adminOnly, async (req, res) => {
   try {
