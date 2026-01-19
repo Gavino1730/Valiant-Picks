@@ -367,7 +367,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       clearInterval(gamesInterval);
       clearInterval(winnersInterval);
     };
-  }, [fetchGames, fetchBets, fetchRecentWinners]);
+  }, [fetchGames, fetchBets, fetchRecentWinners, hasCheckedSpinWheel]);
 
   const upcomingGames = React.useMemo(() => games.slice(0, 5), [games]);
   const recentActivity = React.useMemo(
