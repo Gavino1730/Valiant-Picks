@@ -105,33 +105,91 @@ const SpinWheel = ({ isOpen, onClose, onPrizeWon }) => {
 
       <div className="wheel-wrapper">
         <div className="wheel-pointer">▼</div>
-        <div 
+        <svg 
           className={`wheel ${spinning ? 'spinning' : ''}`}
           style={{ transform: `rotate(${rotation}deg)` }}
+          viewBox="0 0 200 200"
         >
           {prizes.map((prize, index) => {
             const startAngle = index * segmentAngle;
+            const endAngle = startAngle + segmentAngle;
             const colorPair = colors[index % colors.length];
+            
+            // Convert angles to radians
+            const startRad = (startAngle - 90) * Math.PI / 180;
+            const endRad = (endAngle - 90) * Math.PI / 180;
+            
+            // Calculate path for pie slice
+            const x1 = 100 + 100 * Math.cos(startRad);
+            const y1 = 100 + 100 * Math.sin(startRad);
+            const x2 = 100 + 100 * Math.cos(endRad);
+            const y2 = 100 + 100 * Math.sin(endRad);
+            
+            const largeArc = segmentAngle > 180 ? 1 : 0;
+            const pathData = `M 100 100 L ${x1} ${y1} A 100 100 0 ${largeArc} 1 ${x2} ${y2} Z`;
+            
+            // Text position (middle of segment, 70% from center)
+            const midAngle = (startAngle + segmentAngle / 2 - 90) * Math.PI / 180;
+            const textX = 100 + 70 * Math.cos(midAngle);
+            const textY = 100 + 70 * Math.sin(midAngle);
+            const textAngle = startAngle + segmentAngle / 2;
+            
             return (
-              <div
-                key={index}
-                className="wheel-segment"
-                style={{
-                  transform: `rotate(${startAngle}deg)`,
-                  '--segment-color': colorPair.base,
-                  '--segment-color-dark': colorPair.dark
-                }}
-              >
-                <div className="prize-text" style={{ transform: `rotate(${-startAngle + 90 - segmentAngle / 2}deg) translateX(-60px)` }}>
+              <g key={index}>
+                <defs>
+                  <linearGradient id={`gradient-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor={colorPair.base} />
+                    <stop offset="100%" stopColor={colorPair.dark} />
+                  </linearGradient>
+                </defs>
+                <path
+                  d={pathData}
+                  fill={`url(#gradient-${index})`}
+                  stroke="rgba(255,255,255,0.3)"
+                  strokeWidth="0.5"
+                />
+                <text
+                  x={textX}
+                  y={textY}
+                  fill="white"
+                  fontSize="10"
+                  fontWeight="900"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  transform={`rotate(${textAngle}, ${textX}, ${textY})`}
+                  style={{
+                    textShadow: '0 2px 4px rgba(0,0,0,0.8)',
+                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))'
+                  }}
+                >
                   {prize} VB
-                </div>
-              </div>
+                </text>
+              </g>
             );
           })}
-          <div className="wheel-center">
-            <span>SPIN</span>
-          </div>
-        </div>
+          
+          {/* Center circle */}
+          <circle cx="100" cy="100" r="15" fill="url(#centerGradient)" stroke="white" strokeWidth="2" />
+          <defs>
+            <linearGradient id="centerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ffd700" />
+              <stop offset="50%" stopColor="#ffed4e" />
+              <stop offset="100%" stopColor="#ffd700" />
+            </linearGradient>
+          </defs>
+          <text
+            x="100"
+            y="100"
+            fill="#004f9e"
+            fontSize="8"
+            fontWeight="900"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            style={{ textShadow: '0 1px 2px rgba(255,255,255,0.8)' }}
+          >
+            SPIN
+          </text>
+        </svg>
       </div>
 
       <button 
