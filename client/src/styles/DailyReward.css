@@ -1,0 +1,374 @@
+.daily-reward-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.daily-reward-modal {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 450px;
+  box-shadow: 0 20px 60px rgba(0, 79, 158, 0.3);
+  animation: slideDown 0.5s ease;
+  border: 3px solid #004f9e;
+}
+
+.reward-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  animation: bounce 1s infinite;
+}
+
+.daily-reward-modal h2 {
+  color: #004f9e;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.streak-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: rgba(0, 79, 158, 0.1);
+  border-radius: 15px;
+}
+
+.streak-count {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #004f9e;
+  line-height: 1;
+}
+
+.streak-label {
+  font-size: 1.2rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.reward-amount {
+  margin-bottom: 15px;
+}
+
+.base-reward {
+  display: block;
+  font-size: 1.5rem;
+  color: #28a745;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.bonus-reward {
+  display: block;
+  font-size: 1.3rem;
+  color: #ffc107;
+  font-weight: bold;
+}
+
+.total-reward {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #004f9e;
+  margin-bottom: 30px;
+  padding: 15px;
+  background: rgba(40, 167, 69, 0.1);
+  border-radius: 10px;
+}
+
+.claim-button {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  margin-bottom: 10px;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.claim-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #20c997, #28a745);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+@media (hover: none) {
+  .claim-button:hover:not(:disabled) {
+    transform: none;
+  }
+  .claim-button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
+.claim-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.close-button {
+  background: transparent;
+  color: #666;
+  border: 2px solid #ddd;
+  padding: 12px 30px;
+  font-size: 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.close-button:hover {
+  border-color: #004f9e;
+  color: #004f9e;
+}
+
+.claimed-message {
+  padding: 20px;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: #28a745;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 3rem;
+  color: white;
+  animation: scaleIn 0.5s ease;
+}
+
+.claimed-message h2 {
+  color: #28a745;
+  margin-bottom: 15px;
+}
+
+.claimed-message p {
+  font-size: 1.5rem;
+  color: #004f9e;
+  font-weight: bold;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Tablet responsive */
+@media (max-width: 768px) {
+  .daily-reward-modal {
+    max-width: 420px;
+    margin: 0 15px;
+    padding: 35px 25px;
+    max-height: 85vh;
+  }
+
+  .reward-icon {
+    font-size: 4.5rem;
+  }
+
+  .daily-reward-modal h2 {
+    font-size: 1.7rem;
+  }
+
+  .streak-info {
+    padding: 18px;
+  }
+
+  .streak-count {
+    font-size: 3.5rem;
+  }
+
+  .streak-label {
+    font-size: 1.1rem;
+  }
+
+  .base-reward {
+    font-size: 1.3rem;
+  }
+
+  .bonus-reward {
+    font-size: 1.2rem;
+  }
+
+  .total-reward {
+    font-size: 1.6rem;
+    padding: 13px;
+  }
+
+  .claim-button {
+    padding: 14px 35px;
+    font-size: 1.1rem;
+  }
+
+  .close-button {
+    padding: 11px 28px;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .daily-reward-modal {
+    max-width: calc(100% - 30px);
+    margin: 0 15px;
+    padding: 30px 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .reward-icon {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+  }
+
+  .daily-reward-modal h2 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+  }
+
+  .streak-info {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+  }
+
+  .streak-count {
+    font-size: 2.8rem;
+  }
+
+  .streak-label {
+    font-size: 1rem;
+  }
+
+  .base-reward {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  .bonus-reward {
+    font-size: 1.1rem;
+  }
+
+  .total-reward {
+    font-size: 1.5rem;
+    padding: 12px;
+    margin-bottom: 25px;
+  }
+
+  .claim-button {
+    padding: 13px 30px;
+    font-size: 1rem;
+  }
+
+  .close-button {
+    padding: 10px 25px;
+    font-size: 0.95rem;
+  }
+
+  .claimed-message {
+    padding: 15px;
+  }
+
+  .success-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+  }
+
+  .claimed-message h2 {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+
+  .claimed-message p {
+    font-size: 1.3rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .daily-reward-modal {
+    padding: 25px 15px;
+  }
+
+  .reward-icon {
+    font-size: 3rem;
+  }
+
+  .daily-reward-modal h2 {
+    font-size: 1.2rem;
+  }
+
+  .streak-count {
+    font-size: 2.5rem;
+  }
+
+  .streak-label {
+    font-size: 0.9rem;
+  }
+
+  .total-reward {
+    font-size: 1.3rem;
+  }
+}

@@ -147,6 +147,15 @@ router.post('/', authenticateToken, async (req, res) => {
       'bet_placed'
     );
 
+    // Check for "all games bet" achievement
+    const Achievement = require('../models/Achievement');
+    try {
+      await Achievement.checkAllGamesBet(req.user.id);
+    } catch (achError) {
+      console.error('Error checking all games bet achievement:', achError);
+      // Don't fail the bet if achievement check fails
+    }
+
     res.status(201).json(bet);
   } catch (error) {
     console.error('Bet placement error:', error);

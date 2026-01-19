@@ -73,6 +73,9 @@ app.use('/api/teams-admin', require('./routes/teamsAdmin'));
 app.use('/api/transactions', require('./routes/transactions'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/error-logs', require('./routes/errorLogs'));
+app.use('/api/wheel', require('./routes/wheelSpin'));
+app.use('/api/daily-rewards', require('./routes/dailyRewards'));
+app.use('/api/achievements', require('./routes/achievements'));
 
 // Health check
 app.get('/api/health', (req, res) => {

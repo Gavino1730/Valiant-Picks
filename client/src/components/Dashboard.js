@@ -7,6 +7,9 @@ import { formatCurrency } from '../utils/currency';
 import Confetti from './Confetti';
 import { UpcomingGameSkeleton } from './Skeleton';
 import notificationService from '../utils/notifications';
+import DailyReward from './DailyReward';
+import SpinWheel from './SpinWheel';
+import Achievements from './Achievements';
 
 function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [balance, setBalance] = useState(user?.balance || 0);
@@ -26,6 +29,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [previousBets, setPreviousBets] = useState([]);
   const [recentWinners, setRecentWinners] = useState([]);
   const [notificationsEnabled, setNotificationsEnabled] = useState(notificationService.isEnabled());
+  const [showSpinWheel, setShowSpinWheel] = useState(false);
   const [stats, setStats] = useState({
     totalBets: 0,
     activeBets: 0,
@@ -352,6 +356,37 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     setNotificationsEnabled(result);
   };
 
+  // Handle daily reward claimed
+  const handleDailyRewardClaimed = async (amount, newBalance, streak) => {
+    setBalance(newBalance);
+    if (fetchUserProfile) {
+      await fetchUserProfile();
+    }
+    
+    // Check for streak achievements
+    try {
+      await apiClient.post('/achievements/check-all-games');
+    } catch (error) {
+      console.error('Error checking achievements:', error);
+    }
+  };
+
+  // Handle spin wheel prize
+  const handleSpinWheelPrize = async (amount, newBalance) => {
+    setBalance(newBalance);
+    if (fetchUserProfile) {
+      await fetchUserProfile();
+    }
+  };
+
+  // Handle achievement claimed
+  const handleAchievementClaimed = async (amount, newBalance) => {
+    setBalance(newBalance);
+    if (fetchUserProfile) {
+      await fetchUserProfile();
+    }
+  };
+
   // Calculate spirit week leader - TEMPORARILY HIDDEN
   /* const spiritLeader = React.useMemo(() => {
     const sorted = [...spiritWeekData.grades].sort((a, b) => b.points - a.points);
@@ -361,6 +396,12 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   return (
     <div className="dashboard school-dashboard">
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
+      
+      {/* Daily Reward Modal */}
+      <DailyReward onRewardClaimed={handleDailyRewardClaimed} />
+      
+      {/* Achievements Popup */}
+      <Achievements onAchievementClaimed={handleAchievementClaimed} />
       
       {/* Notification Permission Banner */}
       {!notificationsEnabled && (
@@ -499,11 +540,25 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             >
               🏀 Go to Place Picks
             </button>
+            <button 
+              className="btn btn-secondary btn-large"
+              onClick={() => setShowSpinWheel(!showSpinWheel)}
+              style={{ marginTop: '0.5rem', width: '100%', background: 'linear-gradient(135deg, #ffc107, #ff9800)' }}
+            >
+              🎡 {showSpinWheel ? 'Hide' : 'Show'} Daily Spin Wheel
+            </button>
             <div className="balance-display">
               <span className="balance-label">Your Balance:</span>
               <span className="balance-amount">{formatCurrency(balance)}</span>
             </div>
           </div>
+
+          {/* Spin Wheel Section */}
+          {showSpinWheel && (
+            <div className="card">
+              <SpinWheel onPrizeWon={handleSpinWheelPrize} />
+            </div>
+          )}
 
           {/* Spirit Week Tracker - TEMPORARILY HIDDEN
           <div className="card spirit-week-card">

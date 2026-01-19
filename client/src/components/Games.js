@@ -706,7 +706,7 @@ function Games({ user, updateUser }) {
                         >
                           <div className="game-card-header">
                             <span className={`game-badge ${game.team_type?.toLowerCase().includes('boys') ? 'boys' : game.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
-                              {game.team_type}
+                              {game.team_type?.toLowerCase().includes('boys') ? '🏀 ' : game.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{game.team_type}
                             </span>
                             {countdown && (
                               <span className={`countdown-chip ${countdown.isPast ? 'countdown-closed' : ''}`}>

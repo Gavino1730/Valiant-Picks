@@ -1392,9 +1392,79 @@
     font-size: 0.9rem;
   }
 
+  /* Flex Schedule Mobile */
+  .flex-schedule-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 1.25rem;
+  }
+
+  .flex-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .flex-periods {
+    font-size: 1.3rem;
+  }
+
+  .flex-note {
+    text-align: left;
+    margin-top: 0.5rem;
+  }
+
+  /* Spirit Week Mobile */
+  .spirit-week-events {
+    padding: 1rem;
+  }
+
+  .timeline-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .timeline-day {
+    min-width: auto;
+    font-size: 0.8rem;
+  }
+
+  .timeline-event {
+    font-size: 0.9rem;
+  }
+
   .spirit-leader-banner {
     flex-direction: column;
     text-align: center;
+  }
+
+  /* Grade Bar Mobile */
+  .grade-bar-item {
+    padding: 0.85rem;
+  }
+
+  .grade-bar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .grade-bar-points {
+    font-size: 1.2rem;
+    align-self: flex-end;
+  }
+
+  .grade-bar-icon {
+    font-size: 1.8rem;
+  }
+
+  .grade-bar-name {
+    font-size: 1rem;
+  }
+
+  .grade-bar-container {
+    height: 28px;
   }
 
   .spirit-grades-grid {
@@ -1462,6 +1532,114 @@
 
   .test-banner-content p {
     font-size: 0.85rem;
+  }
+
+  /* Flex Schedule Small Mobile */
+  .flex-schedule-banner {
+    padding: 0.85rem 1rem;
+  }
+
+  .flex-icon {
+    font-size: 1.5rem;
+  }
+
+  .flex-label {
+    font-size: 0.8rem;
+  }
+
+  .flex-periods {
+    font-size: 1.2rem;
+  }
+
+  .flex-note {
+    font-size: 0.75rem;
+  }
+
+  /* Spirit Week Small Mobile */
+  .spirit-week-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .spirit-week-date {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .spirit-week-description {
+    font-size: 0.9rem;
+  }
+
+  .spirit-week-events {
+    padding: 0.85rem;
+  }
+
+  .spirit-week-events h4 {
+    font-size: 0.9rem;
+  }
+
+  .timeline-item {
+    padding: 0.65rem 0.85rem;
+  }
+
+  .timeline-day {
+    font-size: 0.75rem;
+  }
+
+  .timeline-event {
+    font-size: 0.85rem;
+  }
+
+  /* Grade Bar Small Mobile */
+  .spirit-leaderboard h4 {
+    font-size: 1rem;
+  }
+
+  .grade-bar-item {
+    padding: 0.75rem;
+  }
+
+  .grade-bar-icon {
+    font-size: 1.6rem;
+  }
+
+  .grade-bar-name {
+    font-size: 0.95rem;
+  }
+
+  .grade-bar-theme {
+    font-size: 0.8rem;
+  }
+
+  .grade-bar-points {
+    font-size: 1.1rem;
+  }
+
+  .grade-bar-container {
+    height: 24px;
+  }
+
+  .grade-bar-percentage {
+    font-size: 0.75rem;
+  }
+
+  .spirit-leader-banner {
+    padding: 1rem;
+  }
+
+  .leader-icon {
+    font-size: 2rem !important;
+  }
+
+  .leader-grade {
+    font-size: 1.2rem;
+  }
+
+  .leader-subtheme {
+    font-size: 0.85rem;
+  }
+
+  .leader-points {
+    font-size: 1.5rem;
   }
 
   .school-alerts {

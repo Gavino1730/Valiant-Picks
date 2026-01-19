@@ -1,0 +1,115 @@
+import React, { useState, useEffect } from 'react';
+import axios from '../utils/axios';
+import '../styles/Achievements.css';
+
+const Achievements = ({ onAchievementClaimed }) => {
+  const [achievements, setAchievements] = useState([]);
+  const [unclaimedCount, setUnclaimedCount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [claiming, setClaiming] = useState(null);
+
+  useEffect(() => {
+    loadAchievements();
+  }, []);
+
+  const loadAchievements = async () => {
+    try {
+      const response = await axios.get('/achievements/unclaimed');
+      const unclaimed = response.data || [];
+      setAchievements(unclaimed);
+      setUnclaimedCount(unclaimed.length);
+      
+      if (unclaimed.length > 0) {
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.error('Error loading achievements:', error);
+    }
+  };
+
+  const claimAchievement = async (achievementId) => {
+    if (claiming) return;
+
+    setClaiming(achievementId);
+    try {
+      const response = await axios.post(`/achievements/claim/${achievementId}`);
+      const { amount, newBalance } = response.data;
+
+      // Remove claimed achievement from list
+      setAchievements(prev => prev.filter(a => a.id !== achievementId));
+      setUnclaimedCount(prev => prev - 1);
+
+      if (onAchievementClaimed) {
+        onAchievementClaimed(amount, newBalance);
+      }
+
+      setClaiming(null);
+    } catch (error) {
+      console.error('Error claiming achievement:', error);
+      alert(error.response?.data?.message || 'Error claiming achievement');
+      setClaiming(null);
+    }
+  };
+
+  const getAchievementIcon = (type) => {
+    const icons = {
+      'all_games_bet': '🎯',
+      'consecutive_logins_7': '🔥',
+      'consecutive_logins_30': '⭐',
+      'big_win': '💰',
+      'first_bet': '🎉'
+    };
+    return icons[type] || '🏆';
+  };
+
+  if (!showModal || achievements.length === 0) {
+    // Badge indicator when there are unclaimed achievements
+    if (unclaimedCount > 0) {
+      return (
+        <button 
+          className="achievement-badge"
+          onClick={() => setShowModal(true)}
+          title="You have unclaimed achievements!"
+        >
+          🏆 {unclaimedCount}
+        </button>
+      );
+    }
+    return null;
+  }
+
+  return (
+    <div className="achievements-overlay" onClick={() => setShowModal(false)}>
+      <div className="achievements-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="close-modal" onClick={() => setShowModal(false)}>×</button>
+        <h2>🏆 Achievements Unlocked!</h2>
+        <p className="achievements-subtitle">You've earned new rewards!</p>
+        
+        <div className="achievements-list">
+          {achievements.map(achievement => (
+            <div key={achievement.id} className="achievement-card">
+              <div className="achievement-icon">
+                {getAchievementIcon(achievement.achievement_type)}
+              </div>
+              <div className="achievement-info">
+                <h3>{achievement.description}</h3>
+                <div className="achievement-reward">
+                  +{achievement.reward_amount} Valiant Bucks
+                </div>
+              </div>
+              <button
+                className="claim-achievement-btn"
+                onClick={() => claimAchievement(achievement.id)}
+                disabled={claiming === achievement.id}
+              >
+                {claiming === achievement.id ? 'Claiming...' : 'Claim'}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Achievements;
