@@ -32,8 +32,15 @@ async function login(page, email, password) {
   // Wait for successful login (dashboard or home page)
   await page.waitForURL(/\/(dashboard)?/, { timeout: 15000 });
   
-  // Verify we're logged in (check for logout button or user menu)
-  await expect(page.locator('text=/Logout|Dashboard/i')).toBeVisible({ timeout: 5000 });
+  // Dismiss onboarding modal if present
+  const skipButton = page.locator('button:has-text(/Skip|Close|Got it/i)').first();
+  if (await skipButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+    await skipButton.click();
+    await page.waitForTimeout(500);
+  }
+  
+  // Verify we're logged in (check for logout button - use .first() to avoid strict mode)
+  await expect(page.locator('button.logout-btn').first()).toBeVisible({ timeout: 5000 });
 }
 
 /**
