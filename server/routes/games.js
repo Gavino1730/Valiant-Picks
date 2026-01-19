@@ -458,20 +458,42 @@ router.put('/:id/outcome', authenticateToken, async (req, res) => {
         // Create notification
         const Notification = require('../models/Notification');
         if (won) {
-          const payout = bet.potential_win || (bet.amount * bet.odds);
-          await User.updateBalance(bet.user_id, payout);
-          await Transaction.create(
-            bet.user_id,
-            'win',
-            payout,
-            `Won bet on ${bet.selected_team} (${bet.bet_type} confidence)`
-          );
-          await Notification.create(
-            bet.user_id,
-            '🎉 Bet Won!',
-            `Your ${bet.bet_type} confidence bet on ${bet.selected_team} won ${payout} Valiant Bucks!`,
-            'bet_won'
-          );
+          let payout = bet.potential_win || (bet.amount * bet.odds);
+          
+          // Add girls game bonus to payout
+          if (bet.girls_game_bonus && bet.girls_game_bonus > 0) {
+            const bonusAmount = payout * bet.girls_game_bonus;
+            payout += bonusAmount;
+            const bonusPercent = (bet.girls_game_bonus * 100).toFixed(0);
+            
+            await User.updateBalance(bet.user_id, payout);
+            await Transaction.create(
+              bet.user_id,
+              'win',
+              payout,
+              `Won bet on ${bet.selected_team} (${bet.bet_type} confidence) with +${bonusPercent}% girls game bonus`
+            );
+            await Notification.create(
+              bet.user_id,
+              '🎉🎀 Bet Won with Bonus!',
+              `Your ${bet.bet_type} confidence bet on ${bet.selected_team} won ${payout.toFixed(0)} Valiant Bucks (including +${bonusPercent}% girls game bonus)!`,
+              'bet_won'
+            );
+          } else {
+            await User.updateBalance(bet.user_id, payout);
+            await Transaction.create(
+              bet.user_id,
+              'win',
+              payout,
+              `Won bet on ${bet.selected_team} (${bet.bet_type} confidence)`
+            );
+            await Notification.create(
+              bet.user_id,
+              '🎉 Bet Won!',
+              `Your ${bet.bet_type} confidence bet on ${bet.selected_team} won ${payout} Valiant Bucks!`,
+              'bet_won'
+            );
+          }
           winningsDistributed += payout;
         } else {
           await Notification.create(

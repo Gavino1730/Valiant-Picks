@@ -122,7 +122,7 @@ const SpinWheel = ({ isOpen, onClose, onPrizeWon }) => {
                   '--segment-color-dark': colorPair.dark
                 }}
               >
-                <div className="prize-text" style={{ transform: `rotate(${segmentAngle / 2}deg)` }}>
+                <div className="prize-text" style={{ transform: `rotate(${-startAngle + 90 - segmentAngle / 2}deg) translateX(-60px)` }}>
                   {prize} VB
                 </div>
               </div>

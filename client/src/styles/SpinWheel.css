@@ -5,8 +5,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(0, 79, 158, 0.95), rgba(0, 36, 70, 0.95));
-  backdrop-filter: blur(10px);
+  background: rgba(245, 245, 245, 0.5);
+  backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,15 +18,14 @@
 
 /* Modal Container */
 .spin-wheel-modal {
-  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-  border-radius: 30px;
+  background: white;
+  border-radius: 20px;
   max-width: 650px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
-              0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  box-shadow: 0 10px 40px rgba(0, 79, 158, 0.2);
   animation: slideUp 0.4s ease;
 }
 
@@ -134,15 +133,15 @@
   width: 50%;
   height: 50%;
   left: 50%;
-  top: 0;
-  transform-origin: 0% 100%;
-  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  top: 50%;
+  transform-origin: 0% 0%;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
   padding: 20px;
   background: linear-gradient(135deg, var(--segment-color) 0%, var(--segment-color-dark) 100%);
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .prize-text {
@@ -152,9 +151,9 @@
   text-shadow: 0 2px 4px rgba(0,0,0,0.8),
                0 0 10px rgba(0,0,0,0.5);
   white-space: nowrap;
-  transform-origin: center;
-  margin-top: 40px;
-  margin-right: 10px;
+  position: absolute;
+  top: 35px;
+  left: 50%;
   letter-spacing: 1px;
 }
 
@@ -578,29 +577,21 @@
     font-size: 1.2rem;
   }
 
-  .wheel-pointer {
-    font-size: 30px;
-  }
-
   .prize-text {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     margin-top: 20px;
   }
 
   .wheel-center {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
   }
 
   .wheel-center span {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
   }
 
   .prize-amount {
-    font-size: 2rem;
-  }
-
-  .result-content h3 {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
   }
 }

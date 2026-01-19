@@ -64,6 +64,79 @@
   font-weight: 700;
 }
 
+/* Bonus Promotion Banner */
+.bonus-promo-banner {
+  background: linear-gradient(135deg, rgba(255, 105, 180, 0.15), rgba(255, 20, 147, 0.08));
+  border: 2px solid rgba(255, 105, 180, 0.4);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(255, 105, 180, 0.4);
+  }
+}
+
+.bonus-promo-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.bonus-promo-content h3 {
+  color: #ff69b4;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+}
+
+.bonus-promo-content p {
+  color: #e9f1ff;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+}
+
+.bonus-promo-content strong {
+  color: #ff69b4;
+  font-weight: 800;
+}
+
+.bonus-tiers {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.bonus-tier {
+  background: rgba(255, 105, 180, 0.2);
+  color: #ff69b4;
+  padding: 0.5rem 0.875rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 105, 180, 0.3);
+}
+
 .balance-display {
   color: #1f4e99;
   font-size: 1.3rem;
@@ -1699,6 +1772,32 @@
 
 .bet-slip-row.profit {
   padding-bottom: 0;
+}
+
+.bet-slip-row.bonus-row {
+  background: linear-gradient(90deg, rgba(255, 105, 180, 0.1), transparent);
+  border-left: 3px solid #ff69b4;
+  padding-left: 0.75rem;
+  margin: 0.5rem -1.25rem;
+  padding-right: 1.25rem;
+}
+
+.bet-slip-row.bonus-payout {
+  font-size: 1.05rem;
+  color: #ff69b4;
+  font-weight: 700;
+}
+
+.bet-slip-value.bonus-value {
+  color: #ff69b4;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.bet-slip-value.bonus-payout-value {
+  color: #ff69b4;
+  font-size: 1.25rem;
+  font-weight: 800;
 }
 
 .bet-slip-label {

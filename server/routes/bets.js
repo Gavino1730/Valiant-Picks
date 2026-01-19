@@ -129,11 +129,43 @@ router.post('/', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Insufficient balance' });
     }
 
-    // Create bet and update balance atomically
+    // Calculate girls game bonus if applicable
+    const { supabase } = require('../supabase');
+    let girlsGameBonus = 0;
+    let bonusMessage = '';
+    
+    if (game.team_type === 'girls') {
+      try {
+        const { data: bonusData } = await supabase
+          .rpc('calculate_girls_game_bonus', { 
+            p_user_id: req.user.id, 
+            p_team_type: game.team_type 
+          });
+        
+        girlsGameBonus = bonusData || 0;
+        
+        if (girlsGameBonus > 0) {
+          const bonusPercent = (girlsGameBonus * 100).toFixed(0);
+          bonusMessage = ` 🎀 +${bonusPercent}% Girls Game Bonus!`;
+        }
+      } catch (error) {
+        console.error('Error calculating girls game bonus:', error);
+      }
+    }
+
+    // Create bet with bonus
     const bet = await Bet.create(req.user.id, gameId, confidence, selectedTeam, parsedAmount, resolvedOdds);
     
+    // Update bet with bonus if applicable
+    if (girlsGameBonus > 0) {
+      await supabase
+        .from('bets')
+        .update({ girls_game_bonus: girlsGameBonus })
+        .eq('id', bet.id);
+    }
+    
     // Create transaction record first (before balance update)
-    await Transaction.create(req.user.id, 'bet', -parsedAmount, `${confidence} confidence bet on ${selectedTeam}: ${resolvedOdds}x odds`);
+    await Transaction.create(req.user.id, 'bet', -parsedAmount, `${confidence} confidence bet on ${selectedTeam}: ${resolvedOdds}x odds${bonusMessage}`);
     
     // Then deduct balance
     await User.updateBalance(req.user.id, -parsedAmount);
@@ -142,17 +174,25 @@ router.post('/', authenticateToken, async (req, res) => {
     const Notification = require('../models/Notification');
     await Notification.create(
       req.user.id,
-      '✅ Bet Placed',
-      `${confidence.charAt(0).toUpperCase() + confidence.slice(1)} confidence bet on ${selectedTeam} for ${parsedAmount} Valiant Bucks at ${resolvedOdds}x odds`,
+      '✅ Bet Placed' + (girlsGameBonus > 0 ? ' 🎀' : ''),
+      `${confidence.charAt(0).toUpperCase() + confidence.slice(1)} confidence bet on ${selectedTeam} for ${parsedAmount} Valiant Bucks at ${resolvedOdds}x odds${bonusMessage}`,
       'bet_placed'
     );
 
-    // Check for "all games bet" achievement
+    // Check for achievements
     const Achievement = require('../models/Achievement');
     try {
       await Achievement.checkAllGamesBet(req.user.id);
+      
+      // Check girls game achievements if applicable
+      if (game.team_type === 'girls') {
+        await Achievement.checkGirlsGameAchievements(req.user.id);
+      }
+      
+      // Check betting milestones
+      await Achievement.checkBettingMilestones(req.user.id);
     } catch (achError) {
-      console.error('Error checking all games bet achievement:', achError);
+      console.error('Error checking achievements:', achError);
       // Don't fail the bet if achievement check fails
     }
 

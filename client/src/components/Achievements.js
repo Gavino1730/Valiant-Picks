@@ -57,7 +57,29 @@ const Achievements = ({ onAchievementClaimed }) => {
       'consecutive_logins_7': '🔥',
       'consecutive_logins_30': '⭐',
       'big_win': '💰',
-      'first_bet': '🎉'
+      'first_bet': '🎉',
+      // Girls game achievements
+      'girls_supporter': '🎀',
+      'girls_champion': '👑',
+      'girls_legend': '🏆',
+      'girls_streak_3': '💖',
+      'girls_streak_7': '💝',
+      'girls_all_today': '🌟',
+      // Betting engagement
+      'bet_streak_3': '📈',
+      'bet_streak_7': '🚀',
+      'bet_streak_30': '🌠',
+      'high_roller': '🎲',
+      'perfect_week': '✨',
+      'comeback_kid': '💪',
+      // Milestones
+      'bets_10': '🎊',
+      'bets_50': '🎖️',
+      'bets_100': '🏅',
+      'bets_500': '👑',
+      'wins_10': '🥉',
+      'wins_50': '🥈',
+      'wins_100': '🥇'
     };
     return icons[type] || '🏆';
   };

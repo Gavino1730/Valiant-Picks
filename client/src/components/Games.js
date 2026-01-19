@@ -464,6 +464,21 @@ function Games({ user, updateUser }) {
         </div>
       </div>
 
+      {/* Girls Game Bonus Promotion */}
+      <div className="bonus-promo-banner">
+        <div className="bonus-promo-icon">🎀</div>
+        <div className="bonus-promo-content">
+          <h3>Girls Game Bonus Active!</h3>
+          <p><strong>Earn up to 25% extra</strong> on all girls basketball bets! The more consecutive girls games you bet on, the bigger your bonus grows!</p>
+          <div className="bonus-tiers">
+            <span className="bonus-tier">Base: +10%</span>
+            <span className="bonus-tier">3 Streak: +15%</span>
+            <span className="bonus-tier">7 Streak: +25%</span>
+            <span className="bonus-tier">Weekend: +5% Extra</span>
+          </div>
+        </div>
+      </div>
+
       {message && (
         <div className={`alert ${message.includes('Error') || message.includes('Insufficient') ? 'alert-error' : 'alert-success'}`}>
           {message}
@@ -887,11 +902,23 @@ function Games({ user, updateUser }) {
                                               <span>{confidenceMultipliers[confidence]}x</span>
                                             </span>
                                           </div>
+                                          {selectedGame?.team_type?.toLowerCase().includes('girls') && (
+                                            <div className="bet-slip-row bonus-row">
+                                              <span className="bet-slip-label">🎀 Girls Game Bonus</span>
+                                              <span className="bet-slip-value bonus-value">+10% to +25%</span>
+                                            </div>
+                                          )}
                                           <div className="bet-slip-divider"></div>
                                           <div className="bet-slip-row payout">
-                                            <span className="bet-slip-label">Potential Payout</span>
+                                            <span className="bet-slip-label">Base Payout</span>
                                             <span className="bet-slip-value payout-value">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</span>
                                           </div>
+                                          {selectedGame?.team_type?.toLowerCase().includes('girls') && (
+                                            <div className="bet-slip-row bonus-payout">
+                                              <span className="bet-slip-label">🎀 With Girls Bonus</span>
+                                              <span className="bet-slip-value bonus-payout-value">Up to {formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence] * 1.25)}</span>
+                                            </div>
+                                          )}
                                           <div className="bet-slip-row profit">
                                             <span className="bet-slip-label">Profit if Won</span>
                                             <span className="bet-slip-value profit-value">+{formatCurrency((parseFloat(amount) * confidenceMultipliers[confidence]) - parseFloat(amount))}</span>
