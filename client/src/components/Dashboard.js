@@ -30,6 +30,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [recentWinners, setRecentWinners] = useState([]);
   const [notificationsEnabled, setNotificationsEnabled] = useState(notificationService.isEnabled());
   const [showSpinWheel, setShowSpinWheel] = useState(false);
+  const [hasCheckedSpinWheel, setHasCheckedSpinWheel] = useState(false);
   const [stats, setStats] = useState({
     totalBets: 0,
     activeBets: 0,
@@ -293,6 +294,30 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       fetchRecentWinners()
     ]);
     
+    // Check if user should see spin wheel automatically
+    const checkAutoOpenSpinWheel = async () => {
+      if (hasCheckedSpinWheel) return;
+      
+      try {
+        const response = await apiClient.get('/wheel/can-spin');
+        const today = new Date().toDateString();
+        const lastShown = localStorage.getItem('lastSpinWheelShown');
+        
+        // Auto-open if user has spins and hasn't seen it today
+        if (response.data.canSpin && lastShown !== today) {
+          setTimeout(() => {
+            setShowSpinWheel(true);
+            localStorage.setItem('lastSpinWheelShown', today);
+          }, 1000); // Delay 1 second for smooth experience
+        }
+        setHasCheckedSpinWheel(true);
+      } catch (error) {
+        console.error('Error checking spin wheel availability:', error);
+      }
+    };
+    
+    checkAutoOpenSpinWheel();
+    
     // Create abort controller to handle unmounting gracefully
     let isActive = true;
     let isPageVisible = true;
@@ -541,11 +566,21 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               🏀 Go to Place Picks
             </button>
             <button 
-              className="btn btn-secondary btn-large"
+              className="btn btn-secondary btn-large spin-wheel-cta"
               onClick={() => setShowSpinWheel(true)}
-              style={{ marginTop: '0.5rem', width: '100%', background: 'linear-gradient(135deg, #ffc107, #ff9800)' }}
+              style={{ 
+                marginTop: '0.5rem', 
+                width: '100%', 
+                background: 'linear-gradient(135deg, #FFD700, #FFA500, #FFD700)',
+                color: '#004f9e',
+                fontWeight: '900',
+                fontSize: '1.1rem',
+                boxShadow: '0 4px 15px rgba(255, 165, 0, 0.4)',
+                border: '2px solid rgba(255, 215, 0, 0.5)',
+                animation: 'spinPulse 2s ease-in-out infinite'
+              }}
             >
-              🎡 Open Daily Spin Wheel
+              🎰 Spin Daily Wheel - Win up to 10,000 VB!
             </button>
             <div className="balance-display">
               <span className="balance-label">Your Balance:</span>

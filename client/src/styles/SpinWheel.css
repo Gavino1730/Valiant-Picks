@@ -5,11 +5,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: transparent;
+  background: linear-gradient(135deg, rgba(0, 79, 158, 0.95), rgba(0, 36, 70, 0.95));
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 10000;
   animation: fadeIn 0.3s ease;
   padding: 20px;
   overflow-y: auto;
@@ -24,6 +25,7 @@
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
+  z-index: 10001;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
               0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   animation: slideUp 0.4s ease;

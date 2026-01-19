@@ -16,6 +16,22 @@
   }
 }
 
+@keyframes spinPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 6px 25px rgba(255, 165, 0, 0.6);
+  }
+}
+
+.spin-wheel-cta:hover {
+  transform: scale(1.03) !important;
+  box-shadow: 0 6px 30px rgba(255, 165, 0, 0.7) !important;
+}
+
 /* Beginner Help Banner */
 .beginner-banner {
   background: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(13, 71, 161, 0.1));

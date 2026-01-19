@@ -7,7 +7,7 @@ const SpinWheel = ({ isOpen, onClose, onPrizeWon }) => {
   const [rotation, setRotation] = useState(0);
   const [canSpin, setCanSpin] = useState(false);
   const [spinsRemaining, setSpinsRemaining] = useState(0);
-  const [prizes, setPrizes] = useState([10, 25, 50, 100, 150, 200, 500, 1000]);
+  const [prizes, setPrizes] = useState([500, 750, 1000, 2000, 3000, 5000, 7500, 10000]);
   const [showResult, setShowResult] = useState(false);
   const [wonAmount, setWonAmount] = useState(0);
 
@@ -15,6 +15,18 @@ const SpinWheel = ({ isOpen, onClose, onPrizeWon }) => {
     checkCanSpin();
     loadConfig();
   }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Scroll the modal into view when opened
+      setTimeout(() => {
+        const modal = document.querySelector('.spin-wheel-modal');
+        if (modal) {
+          modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
+  }, [isOpen]);
 
   const loadConfig = async () => {
     try {
