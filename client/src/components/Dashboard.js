@@ -313,6 +313,8 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         setHasCheckedSpinWheel(true);
       } catch (error) {
         console.error('Error checking spin wheel availability:', error);
+        // Mark as checked even on error to prevent infinite retries
+        setHasCheckedSpinWheel(true);
       }
     };
     
