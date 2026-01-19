@@ -720,7 +720,7 @@ function AdminPanel() {
 
   return (
     <div className="admin-panel">
-      <h2>Admin Panel</h2>
+      <h2 style={{fontSize: '1.2rem', fontWeight: '500'}}>🏫 Welcome to Valiant Picks, admin!</h2>
       
       {error && <div className="alert alert-error">{error}</div>}
 
