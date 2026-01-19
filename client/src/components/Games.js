@@ -3,7 +3,6 @@ import apiClient from '../utils/axios';
 import '../styles/Games.css';
 import { formatCurrency } from '../utils/currency';
 import { formatTime } from '../utils/time';
-import BetConfirmation from './BetConfirmation';
 
 function Games({ user, updateUser }) {
   const [games, setGames] = useState([]);
@@ -18,8 +17,6 @@ function Games({ user, updateUser }) {
   const [amount, setAmount] = useState('');
   const [now, setNow] = useState(Date.now());
   const [userBets, setUserBets] = useState([]);
-  const [confirmationOpen, setConfirmationOpen] = useState(false);
-  const [pendingBet, setPendingBet] = useState(null);
   const [isSubmittingBet, setIsSubmittingBet] = useState(false);
   const [propBetLoading, setPropBetLoading] = useState({});
   const [propBetAmounts, setPropBetAmounts] = useState({});
@@ -400,20 +397,6 @@ function Games({ user, updateUser }) {
       return;
     }
 
-    // Show confirmation modal
-    setPendingBet({
-      gameId: selectedGame.id,
-      team: selectedTeam,
-      confidence,
-      amount: betAmount,
-      odds: confidenceMultipliers[confidence]
-    });
-    setConfirmationOpen(true);
-  };
-
-  const handleConfirmBet = async () => {
-    if (!pendingBet || isSubmittingBet) return;
-
     // Set timeout failsafe to re-enable button after 10 seconds
     const timeoutId = setTimeout(() => {
       if (isSubmittingBet) {
@@ -426,23 +409,21 @@ function Games({ user, updateUser }) {
     try {
       setIsSubmittingBet(true);
       await apiClient.post('/bets', {
-        gameId: pendingBet.gameId,
-        selectedTeam: pendingBet.team,
-        confidence: pendingBet.confidence,
-        amount: pendingBet.amount,
-        odds: pendingBet.odds
+        gameId: selectedGame.id,
+        selectedTeam,
+        confidence,
+        amount: betAmount,
+        odds: confidenceMultipliers[confidence]
       });
 
       clearTimeout(timeoutId);
-      setMessage(`Pick placed successfully on ${pendingBet.team}!`);
+      setMessage(`Pick placed successfully on ${selectedTeam}!`);
       setSelectedGameId('');
       setSelectedTeam('');
       setConfidence('');
       setAmount('');
       fetchBalance();
       fetchUserBets();
-      setConfirmationOpen(false);
-      setPendingBet(null);
 
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
@@ -455,8 +436,6 @@ function Games({ user, updateUser }) {
       } else {
         setMessage('Failed to place pick - your bet was not placed. Please try again.');
       }
-      setConfirmationOpen(false);
-      setPendingBet(null);
     } finally {
       setIsSubmittingBet(false);
     }
@@ -943,26 +922,6 @@ function Games({ user, updateUser }) {
           </div>
         </>
       )}
-      
-      <BetConfirmation
-        isOpen={confirmationOpen}
-        bet={pendingBet ? {
-          team: pendingBet.team,
-          amount: pendingBet.amount,
-          confidence: pendingBet.confidence,
-          odds: pendingBet.odds
-        } : null}
-        potentialWin={pendingBet ? pendingBet.amount * pendingBet.odds : 0}
-        isSubmitting={isSubmittingBet}
-        onConfirm={handleConfirmBet}
-        onCancel={() => {
-          if (isSubmittingBet) {
-            return;
-          }
-          setConfirmationOpen(false);
-          setPendingBet(null);
-        }}
-      />
     </div>
   );
 }
