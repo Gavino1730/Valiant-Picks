@@ -884,6 +884,59 @@
   line-height: 1.5;
 }
 
+/* Spirit Week Events Timeline */
+.spirit-week-events {
+  background: rgba(33, 150, 243, 0.08);
+  border: 2px solid rgba(33, 150, 243, 0.2);
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.spirit-week-events h4 {
+  color: #64b5f6;
+  font-size: 1rem;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+}
+
+.events-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(30, 33, 57, 0.6);
+  border-radius: 8px;
+  border-left: 3px solid #64b5f6;
+  transition: all 0.2s ease;
+}
+
+.timeline-item:hover {
+  background: rgba(30, 33, 57, 0.8);
+  transform: translateX(4px);
+}
+
+.timeline-day {
+  color: #ffa726;
+  font-weight: 700;
+  font-size: 0.85rem;
+  min-width: 120px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.timeline-event {
+  color: #e9f1ff;
+  font-size: 0.95rem;
+  flex: 1;
+}
+
 /* Spirit Leader Banner */
 .spirit-leader-banner {
   background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 193, 7, 0.1));
@@ -936,6 +989,123 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1rem;
+}
+
+/* Spirit Leaderboard with Visual Bars */
+.spirit-leaderboard {
+  margin-top: 1.5rem;
+}
+
+.spirit-leaderboard h4 {
+  color: #ffd700;
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+  text-align: center;
+}
+
+.grade-bar-item {
+  background: rgba(30, 33, 57, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.grade-bar-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.grade-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.grade-bar-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.grade-bar-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.grade-bar-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.grade-bar-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.grade-bar-theme {
+  font-size: 0.85rem;
+  color: #b8c5d6;
+  font-style: italic;
+}
+
+.grade-bar-points {
+  font-size: 1.3rem;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.grade-bar-container {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  height: 32px;
+  overflow: hidden;
+  position: relative;
+}
+
+.grade-bar-fill {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.75rem;
+  border-radius: 8px;
+  transition: width 0.8s ease, background-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.grade-bar-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.grade-bar-percentage {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 1;
 }
 
 .spirit-grade-card {

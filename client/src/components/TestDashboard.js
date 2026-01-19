@@ -39,19 +39,19 @@ function TestDashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [spiritWeekData] = useState({
     theme: "Broadway Bonanza",
     weekOf: "February 3-7, 2026",
+    description: "Each grade decorates their hallway to their musical theme. Judges rank hallways for points. Daily dress-up themes earn participation points. Check in teachers for your grade to get DOUBLE points!",
+    events: [
+      { day: "Monday-Thursday", event: "Daily Dress-Up Themes (TBD)" },
+      { day: "Tuesday", event: "🎯 Tug of War Competition" },
+      { day: "Friday", event: "🎤 Lip Sync Battle Finals" },
+      { day: "Saturday", event: "💃 Sadie Hawkins Dance (Theme TBD)" }
+    ],
     grades: [
       {
         grade: "Freshmen",
         subtheme: "Wicked",
         color: "#00C853",
         icon: "🧙‍♀️",
-        activities: [
-          "Monday: Emerald City Green Day",
-          "Tuesday: Defying Gravity Challenge",
-          "Wednesday: Wizard Trivia",
-          "Thursday: Musical Number Performance",
-          "Friday: Good vs Evil Costume Battle"
-        ],
         points: 245
       },
       {
@@ -59,13 +59,6 @@ function TestDashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         subtheme: "Lion King",
         color: "#FF9800",
         icon: "🦁",
-        activities: [
-          "Monday: Pride Lands Safari Day",
-          "Tuesday: Circle of Life Performance",
-          "Wednesday: Hakuna Matata Dance-Off",
-          "Thursday: Can You Feel the Love Tonight?",
-          "Friday: Full Animal Kingdom Costume Day"
-        ],
         points: 312
       },
       {
@@ -73,13 +66,6 @@ function TestDashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         subtheme: "Grease",
         color: "#E91E63",
         icon: "🎸",
-        activities: [
-          "Monday: Sock Hop & Poodle Skirts",
-          "Tuesday: Greased Lightning Car Show",
-          "Wednesday: Summer Nights Karaoke",
-          "Thursday: T-Birds vs Pink Ladies Face-Off",
-          "Friday: 1950s Costume Day"
-        ],
         points: 298
       },
       {
@@ -87,13 +73,6 @@ function TestDashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         subtheme: "Hamilton",
         color: "#1976D2",
         icon: "🎩",
-        activities: [
-          "Monday: Colonial Day",
-          "Tuesday: War Room Dance-Off",
-          "Wednesday: Ten Duel Commandments Trivia",
-          "Thursday: Hamilton Karaoke",
-          "Friday: Revolutionary Era Costume Day"
-        ],
         points: 367
       }
     ]
@@ -520,8 +499,21 @@ function TestDashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               <span className="spirit-week-date">{spiritWeekData.weekOf}</span>
             </div>
             <p className="spirit-week-description">
-              Each grade has their own Broadway musical! Show your class spirit all week long!
+              {spiritWeekData.description}
             </p>
+            
+            {/* Spirit Week Events */}
+            <div className="spirit-week-events">
+              <h4>📅 Week Schedule</h4>
+              <div className="events-timeline">
+                {spiritWeekData.events.map((event, idx) => (
+                  <div key={idx} className="timeline-item">
+                    <span className="timeline-day">{event.day}</span>
+                    <span className="timeline-event">{event.event}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
             
             {/* Current Leader Banner */}
             <div className="spirit-leader-banner" style={{borderColor: spiritLeader.color}}>
@@ -534,28 +526,41 @@ function TestDashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               <div className="leader-points">{spiritLeader.points} pts</div>
             </div>
 
-            {/* All Grades */}
-            <div className="spirit-grades-grid">
-              {spiritWeekData.grades.map((grade, index) => (
-                <div key={index} className="spirit-grade-card" style={{borderLeftColor: grade.color}}>
-                  <div className="grade-header">
-                    <span className="grade-icon">{grade.icon}</span>
-                    <div className="grade-title">
-                      <h4 style={{color: grade.color}}>{grade.grade}</h4>
-                      <span className="grade-subtheme">{grade.subtheme}</span>
+            {/* All Grades - Points Leaderboard */}
+            <div className="spirit-leaderboard">
+              <h4>🏆 Grade Rankings</h4>
+              {[...spiritWeekData.grades]
+                .sort((a, b) => b.points - a.points)
+                .map((grade, index) => {
+                  const maxPoints = Math.max(...spiritWeekData.grades.map(g => g.points));
+                  const percentage = (grade.points / maxPoints) * 100;
+                  return (
+                    <div key={index} className="grade-bar-item">
+                      <div className="grade-bar-header">
+                        <div className="grade-bar-info">
+                          <span className="grade-bar-icon">{grade.icon}</span>
+                          <div className="grade-bar-text">
+                            <span className="grade-bar-name" style={{color: grade.color}}>{grade.grade}</span>
+                            <span className="grade-bar-theme">{grade.subtheme}</span>
+                          </div>
+                        </div>
+                        <span className="grade-bar-points" style={{color: grade.color}}>{grade.points} pts</span>
+                      </div>
+                      <div className="grade-bar-container">
+                        <div 
+                          className="grade-bar-fill" 
+                          style={{
+                            width: `${percentage}%`,
+                            backgroundColor: grade.color,
+                            boxShadow: `0 2px 8px ${grade.color}40`
+                          }}
+                        >
+                          <span className="grade-bar-percentage">{percentage.toFixed(0)}%</span>
+                        </div>
+                      </div>
                     </div>
-                    <span className="grade-points">{grade.points} pts</span>
-                  </div>
-                  <div className="grade-activities">
-                    <strong>This Week:</strong>
-                    <ul>
-                      {grade.activities.map((activity, i) => (
-                        <li key={i}>{activity}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              ))}
+                  );
+                })}
             </div>
           </div>
 
