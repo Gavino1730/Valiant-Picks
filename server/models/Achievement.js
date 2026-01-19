@@ -1,4 +1,4 @@
-const supabase = require('../supabase');
+const { supabase } = require('../supabase');
 
 // Get current date in Pacific timezone (YYYY-MM-DD format)
 const getTodayPacific = () => {

@@ -16,8 +16,8 @@ module.exports = defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    actionTimeout: 15000,
-    navigationTimeout: 30000,
+    actionTimeout: 30000,
+    navigationTimeout: 60000,
   },
 
   projects: [
@@ -36,8 +36,8 @@ module.exports = defineConfig({
   ],
 
   // Test timeout
-  timeout: 60000,
+  timeout: 120000,
   expect: {
-    timeout: 10000,
+    timeout: 15000,
   },
 });

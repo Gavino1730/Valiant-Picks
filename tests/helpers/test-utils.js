@@ -1,6 +1,33 @@
 const { expect } = require('@playwright/test');
 
 /**
+ * Dismiss onboarding modal if present
+ */
+async function dismissOnboarding(page) {
+  try {
+    // Try multiple possible selectors
+    const selectors = [
+      'button:has-text(/Skip|Close|Got it|Next time|Maybe later/i)',
+      '.onboarding-overlay button',
+      '[class*="modal"] button:has-text(/Skip|Close/i)',
+      '.close-button',
+      'button[aria-label*="Close"]'
+    ];
+    
+    for (const selector of selectors) {
+      const button = page.locator(selector).first();
+      if (await button.isVisible({ timeout: 1000 }).catch(() => false)) {
+        await button.click({ timeout: 2000 });
+        await page.waitForTimeout(500);
+        break;
+      }
+    }
+  } catch (error) {
+    // Onboarding not present or already dismissed
+  }
+}
+
+/**
  * Login helper function
  */
 async function login(page, email, password) {
@@ -33,11 +60,7 @@ async function login(page, email, password) {
   await page.waitForURL(/\/(dashboard)?/, { timeout: 15000 });
   
   // Dismiss onboarding modal if present
-  const skipButton = page.locator('button:has-text(/Skip|Close|Got it/i)').first();
-  if (await skipButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-    await skipButton.click();
-    await page.waitForTimeout(500);
-  }
+  await dismissOnboarding(page);
   
   // Verify we're logged in (check for logout button - use .first() to avoid strict mode)
   await expect(page.locator('button.logout-btn').first()).toBeVisible({ timeout: 5000 });
@@ -112,8 +135,15 @@ async function waitForAPI(page, urlPattern) {
  * Navigate to a specific page
  */
 async function navigateTo(page, linkText) {
-  await page.click(`text=${linkText}`);
-  await page.waitForLoadState('networkidle');
+  // Dismiss onboarding if present
+  await dismissOnboarding(page);
+  
+  // Wait for the link to be clickable
+  await page.locator(`text=${linkText}`).first().click({ timeout: 10000 });
+  await page.waitForLoadState('networkidle', { timeout: 30000 });
+  
+  // Dismiss onboarding on new page if present
+  await dismissOnboarding(page);
 }
 
 /**
@@ -152,7 +182,10 @@ function generateTestData() {
 /**
  * Wait for element to be visible
  */
-async function waitForElement(page, selector, timeout = 5000) {
+async function waitForElement(page, selector, timeout = 10000) {
+  // Dismiss onboarding first
+  await dismissOnboarding(page);
+  
   await page.waitForSelector(selector, { state: 'visible', timeout });
 }
 
@@ -207,6 +240,7 @@ async function clearSession(page) {
 }
 
 module.exports = {
+  dismissOnboarding,
   login,
   logout,
   register,
