@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocat
 import './App.css';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import TestDashboard from './components/TestDashboard';
 import OnboardingModal from './components/OnboardingModal';
 import RivalryWeekPopup from './components/RivalryWeekPopup';
 import Footer from './components/Footer';
@@ -10,6 +11,7 @@ import { ToastProvider, useToast } from './components/ToastProvider';
 import './styles/Toast.css';
 import apiClient from './utils/axios';
 import { formatCurrency } from './utils/currency';
+import notificationService from './utils/notifications';
 
 // Lazy load admin and less-frequently-used components
 const AdminPanel = lazy(() => import('./components/AdminPanel'));
@@ -102,6 +104,7 @@ function AppContent() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const profilePollRef = useRef({ timeoutId: null, delay: 15000, inFlight: false });
+  const previousNotificationIds = useRef(new Set());
   
   // Get page from URL path
   const page = location.pathname.slice(1) || 'dashboard';
@@ -121,8 +124,14 @@ function AppContent() {
     if (!token) return;
     
     fetchUnreadCount();
+    fetchAndCheckNotifications(); // Initial fetch
+    
     // Poll notifications every 20 seconds
-    const notificationInterval = setInterval(fetchUnreadCount, 20000);
+    const notificationInterval = setInterval(() => {
+      fetchUnreadCount();
+      fetchAndCheckNotifications();
+    }, 20000);
+    
     let isMounted = true;
     // Copy ref to local variable at effect start for cleanup
     const pollRef = profilePollRef.current;
@@ -172,6 +181,48 @@ function AppContent() {
     } catch (err) {
       // Fail silently - unread count is not critical
     }
+  };
+
+  const fetchAndCheckNotifications = async () => {
+    try {
+      const response = await apiClient.get('/notifications');
+      const notifications = response.data || [];
+      
+      // Check for new unread notifications and send browser notifications
+      if (previousNotificationIds.current.size > 0) {
+        notifications.forEach(notification => {
+          // If this is a new notification that wasn't in the previous set and is unread
+          if (!previousNotificationIds.current.has(notification.id) && !notification.is_read) {
+            sendBrowserNotification(notification);
+          }
+        });
+      }
+      
+      // Update the set of notification IDs we've seen
+      previousNotificationIds.current = new Set(notifications.map(n => n.id));
+    } catch (err) {
+      // Fail silently - notifications are not critical
+    }
+  };
+
+  const sendBrowserNotification = (notification) => {
+    // Map notification types to browser notification messages
+    const typeMessages = {
+      'bet_won': { title: '🎉 Bet Won!', body: notification.message },
+      'bet_lost': { title: '😔 Bet Lost', body: notification.message },
+      'bet_placed': { title: '✅ Bet Placed', body: notification.message },
+      'balance_gift': { title: '🎁 Balance Gift', body: notification.message },
+      'balance_pending': { title: '⏳ Balance Pending', body: notification.message },
+      'default': { title: notification.title || '📢 Notification', body: notification.message }
+    };
+
+    const messageData = typeMessages[notification.type] || typeMessages.default;
+    
+    notificationService.send(messageData.title, {
+      body: messageData.body,
+      tag: `notification-${notification.id}`,
+      data: { notificationId: notification.id, type: notification.type }
+    });
   };
 
   const fetchUserProfile = async () => {
@@ -393,6 +444,13 @@ function AppContent() {
               <span className="mobile-badge">{unreadCount}</span>
             )}
           </button>
+          <button 
+            onClick={() => handlePageChange('test-dashboard')} 
+            className={page === 'test-dashboard' ? 'active' : ''}
+          >
+            <span className="menu-icon">🧪</span>
+            Test Dashboard
+          </button>
           {user && (user.is_admin || user.isAdminUser) && (
             <button 
               onClick={() => handlePageChange('admin')} 
@@ -422,6 +480,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard user={user} onNavigate={handlePageChange} updateUser={updateUser} fetchUserProfile={fetchUserProfile} />} />
+            <Route path="/test-dashboard" element={<TestDashboard user={user} onNavigate={handlePageChange} updateUser={updateUser} fetchUserProfile={fetchUserProfile} />} />
             <Route path="/games" element={<Games user={currentUser} updateUser={updateUser} />} />
             <Route path="/teams" element={<Teams />} />
             <Route path="/bets" element={<BetList />} />

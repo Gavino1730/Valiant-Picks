@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import apiClient from '../utils/axios';
+import notificationService from '../utils/notifications';
 import '../styles/Notifications.css';
 
 function Notifications({ onUnreadChange }) {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMarkingAsRead, setIsMarkingAsRead] = useState(false);
+  const previousNotificationIds = useRef(new Set());
 
   const updateUnreadCount = useCallback((newNotifications) => {
     if (onUnreadChange) {
@@ -18,17 +20,33 @@ function Notifications({ onUnreadChange }) {
     const fetchNotifications = async () => {
       try {
         const response = await apiClient.get('/notifications');
-        setNotifications(response.data);
+        const newNotifications = response.data;
+        
+        // Check for new unread notifications and send browser notifications
+        if (previousNotificationIds.current.size > 0) {
+          newNotifications.forEach(notification => {
+            // If this is a new notification that wasn't in the previous set
+            if (!previousNotificationIds.current.has(notification.id) && !notification.is_read) {
+              // Send browser notification
+              sendBrowserNotification(notification);
+            }
+          });
+        }
+        
+        // Update the set of notification IDs
+        previousNotificationIds.current = new Set(newNotifications.map(n => n.id));
+        
+        setNotifications(newNotifications);
         
         // Auto-mark unread notifications as read when viewing this page (prevent concurrent calls)
-        const unreadNotifications = response.data.filter(n => !n.is_read);
+        const unreadNotifications = newNotifications.filter(n => !n.is_read);
         if (unreadNotifications.length > 0 && !isMarkingAsRead) {
           // Batch mark all unread as read
           setIsMarkingAsRead(true);
           try {
             await apiClient.put('/notifications/mark-all-read');
             // Update local state to reflect all as read
-            const updated = response.data.map(n => ({ ...n, is_read: true }));
+            const updated = newNotifications.map(n => ({ ...n, is_read: true }));
             setNotifications(updated);
             updateUnreadCount(updated);
           } catch (err) {
@@ -38,7 +56,7 @@ function Notifications({ onUnreadChange }) {
           }
         } else {
           // Even if no unread, update the unread count
-          updateUnreadCount(response.data);
+          updateUnreadCount(newNotifications);
         }
       } catch (err) {
         // Fetch error handled silently
@@ -54,6 +72,26 @@ function Notifications({ onUnreadChange }) {
     
     return () => clearInterval(pollInterval);
   }, [isMarkingAsRead, updateUnreadCount]);
+
+  const sendBrowserNotification = (notification) => {
+    // Map notification types to browser notification messages
+    const typeMessages = {
+      'bet_won': { title: '🎉 Bet Won!', body: notification.message },
+      'bet_lost': { title: '😔 Bet Lost', body: notification.message },
+      'bet_placed': { title: '✅ Bet Placed', body: notification.message },
+      'balance_gift': { title: '🎁 Balance Gift', body: notification.message },
+      'balance_pending': { title: '⏳ Balance Pending', body: notification.message },
+      'default': { title: notification.title || '📢 Notification', body: notification.message }
+    };
+
+    const messageData = typeMessages[notification.type] || typeMessages.default;
+    
+    notificationService.send(messageData.title, {
+      body: messageData.body,
+      tag: `notification-${notification.id}`,
+      data: { notificationId: notification.id, type: notification.type }
+    });
+  };
 
   const markAsRead = async (id) => {
     try {
