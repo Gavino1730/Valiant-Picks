@@ -5,8 +5,15 @@ const { expect } = require('@playwright/test');
  */
 async function dismissOnboarding(page) {
   try {
-    // Try multiple possible selectors
+    // Wait a bit for modal to appear if it will
+    await page.waitForTimeout(300);
+    
     const selectors = [
+      '[data-testid="onboarding-close"]',
+      '[data-testid="onboarding-start"]',
+      '.onboarding-close',
+      'button:has-text("Let\'s Get Started")',
+      'button:has-text("×")',
       'button:has-text(/Skip|Close|Got it|Next time|Maybe later/i)',
       '.onboarding-overlay button',
       '[class*="modal"] button:has-text(/Skip|Close/i)',
@@ -19,6 +26,8 @@ async function dismissOnboarding(page) {
       if (await button.isVisible({ timeout: 1000 }).catch(() => false)) {
         await button.click({ timeout: 2000 });
         await page.waitForTimeout(500);
+        // Verify modal is gone
+        await page.waitForSelector('[data-testid="onboarding-overlay"]', { state: 'hidden', timeout: 2000 }).catch(() => {});
         break;
       }
     }

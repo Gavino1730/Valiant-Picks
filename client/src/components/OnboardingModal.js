@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/OnboardingModal.css';
 
+// Check localStorage before component mounts to prevent flash
+const hasSeenOnboarding = () => {
+  try {
+    return localStorage.getItem('hasSeenOnboarding') === 'true';
+  } catch {
+    return false;
+  }
+};
+
 function OnboardingModal() {
-  const [showModal, setShowModal] = useState(false);
+  // Initialize from localStorage immediately to prevent flash
+  const [showModal, setShowModal] = useState(!hasSeenOnboarding());
 
   useEffect(() => {
-    // Check if user has already seen onboarding
-    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
-    if (!hasSeenOnboarding) {
-      setShowModal(true);
+    // Double-check on mount in case localStorage changed
+    if (hasSeenOnboarding()) {
+      setShowModal(false);
     }
   }, []);
 
@@ -20,9 +29,9 @@ function OnboardingModal() {
   if (!showModal) return null;
 
   return (
-    <div className="onboarding-overlay" onClick={handleClose}>
-      <div className="onboarding-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="onboarding-close" onClick={handleClose}>✕</button>
+    <div className="onboarding-overlay" data-testid="onboarding-overlay" onClick={handleClose}>
+      <div className="onboarding-modal" data-testid="onboarding-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="onboarding-close" data-testid="onboarding-close" onClick={handleClose}>✕</button>
 
         <div className="onboarding-header">
           <div className="onboarding-header-brand">
@@ -98,7 +107,7 @@ function OnboardingModal() {
         </div>
 
         <div className="onboarding-footer">
-          <button className="onboarding-btn-primary" onClick={handleClose}>
+          <button className="onboarding-btn-primary" data-testid="onboarding-start" onClick={handleClose}>
             Let's Get Started! 🚀
           </button>
           <p className="onboarding-hint">You can always visit "How to Use" for more information</p>
@@ -108,4 +117,4 @@ function OnboardingModal() {
   );
 }
 
-export default OnboardingModal;
+export default React.memo(OnboardingModal);
