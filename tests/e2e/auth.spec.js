@@ -67,6 +67,7 @@ test.describe('Authentication Flow', () => {
     };
 
     await login(page, testUser.email, testUser.password);
+    await dismissOnboarding(page);
     await logout(page);
     
     // Should be back at homepage

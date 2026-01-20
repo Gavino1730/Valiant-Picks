@@ -238,6 +238,7 @@ test.describe('Teams', () => {
   test('should display game scores in schedule', async ({ page }) => {
     await page.goto('/teams');
     await page.waitForLoadState('domcontentloaded');
+    await dismissOnboarding(page);
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -256,6 +257,7 @@ test.describe('Teams', () => {
   test('should show team stats if available', async ({ page }) => {
     await page.goto('/teams');
     await page.waitForLoadState('domcontentloaded');
+    await dismissOnboarding(page);
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);

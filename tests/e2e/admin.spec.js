@@ -227,6 +227,8 @@ test.describe('Admin Panel', () => {
 
   test('should display teams management section', async ({ page }) => {
     await page.goto('/admin');
+    await page.waitForLoadState('domcontentloaded');
+    await dismissOnboarding(page);
     
     // Navigate to teams management
     const teamsLink = page.locator('text=/Manage Teams|Teams/i').first();

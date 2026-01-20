@@ -58,6 +58,7 @@ test.describe('Games and Betting', () => {
   test('should open bet modal when clicking on game', async ({ page }) => {
     await page.goto('/games');
     await page.waitForLoadState('domcontentloaded');
+    await dismissOnboarding(page);
     
     const firstGame = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await firstGame.isVisible({ timeout: 5000 }).catch(() => false);
@@ -240,6 +241,7 @@ test.describe('Games and Betting', () => {
   test('should calculate potential winnings correctly', async ({ page }) => {
     await page.goto('/games');
     await page.waitForLoadState('domcontentloaded');
+    await dismissOnboarding(page);
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -269,6 +271,7 @@ test.describe('Games and Betting', () => {
   test('should display spread betting option', async ({ page }) => {
     await page.goto('/games');
     await page.waitForLoadState('domcontentloaded');
+    await dismissOnboarding(page);
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -286,6 +289,7 @@ test.describe('Games and Betting', () => {
   test('should display over/under betting option', async ({ page }) => {
     await page.goto('/games');
     await page.waitForLoadState('domcontentloaded');
+    await dismissOnboarding(page);
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
