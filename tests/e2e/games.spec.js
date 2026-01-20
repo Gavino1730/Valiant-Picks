@@ -30,7 +30,9 @@ test.describe('Games and Betting', () => {
 
   test('should display game details', async ({ page }) => {
     await page.goto('/games');
+    await dismissOnboarding(page);
     await page.waitForLoadState('domcontentloaded');
+    await page.waitForTimeout(500);
     
     // Find first game card
     const firstGame = page.locator('[class*="game"]').first();
@@ -227,13 +229,17 @@ test.describe('Games and Betting', () => {
 
   test('should prevent zero bet amounts', async ({ page }) => {
     await page.goto('/games');
+    await dismissOnboarding(page);
     await page.waitForLoadState('domcontentloaded');
+    await page.waitForTimeout(1000);
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
     
     if (gameExists) {
+      await page.waitForTimeout(1000);
       await betButton.click();
+      await page.waitForTimeout(1000);
       
       await page.fill('input[placeholder*="amount" i], input[type="number"]', '0');
       

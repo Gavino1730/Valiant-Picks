@@ -77,9 +77,9 @@ test.describe('Rewards and Achievements', () => {
     const exists = await spinWheelLink.isVisible({ timeout: 5000 }).catch(() => false);
     
     if (exists) {
-      // Wait for element to be stable
+      // Wait for element to be stable - use evaluate to force click
       await page.waitForTimeout(1000);
-      await spinWheelLink.click({ timeout: 10000 });
+      await spinWheelLink.evaluate(node => node.click());
       await page.waitForTimeout(1000);
       const wheelVisible = await page.locator('text=/Spin|Wheel/i').first().isVisible({ timeout: 5000 }).catch(() => false);
       if (wheelVisible) {

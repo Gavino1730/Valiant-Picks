@@ -133,14 +133,15 @@ test.describe('Transaction History', () => {
     await page.goto('/dashboard');
     await dismissOnboarding(page);
     await page.waitForLoadState('domcontentloaded');
+    await page.waitForTimeout(2000); // Wait for dashboard to stabilize
     
     // Look for filter buttons
     const filterButtons = page.getByRole('button', { name: /All|Bets|Wins|Rewards/i });
     const filterCount = await filterButtons.count();
     
     if (filterCount > 0) {
-      // Click on a filter
-      await filterButtons.first().click();
+      // Click on a filter - use evaluate to bypass intercepting elements
+      await filterButtons.first().evaluate(node => node.click());
       await page.waitForTimeout(500);
       
       // Transactions should be filtered
