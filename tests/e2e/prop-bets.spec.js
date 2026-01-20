@@ -27,7 +27,7 @@ test.describe('Prop Bets', () => {
 
   test('should display list of active prop bets', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Find prop bets section
     const propBets = page.locator('[class*="prop"], text=/Prop Bet/i').first();
@@ -41,7 +41,7 @@ test.describe('Prop Bets', () => {
 
   test('should display prop bet details', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const propBetCard = page.locator('[class*="prop"]').first();
     const exists = await propBetCard.isVisible({ timeout: 5000 }).catch(() => false);
@@ -60,7 +60,7 @@ test.describe('Prop Bets', () => {
 
   test('should display YES and NO odds for prop bets', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const propBetCard = page.locator('[class*="prop"]').first();
     const exists = await propBetCard.isVisible({ timeout: 5000 }).catch(() => false);
@@ -75,7 +75,7 @@ test.describe('Prop Bets', () => {
 
   test('should place YES bet on prop bet', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const initialBalance = await getUserBalance(page);
     
@@ -107,7 +107,7 @@ test.describe('Prop Bets', () => {
 
   test('should place NO bet on prop bet', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const propBetCard = page.locator('[class*="prop"]').first();
     const exists = await propBetCard.isVisible({ timeout: 5000 }).catch(() => false);
@@ -132,7 +132,7 @@ test.describe('Prop Bets', () => {
 
   test('should show different odds for YES and NO', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const propBetCard = page.locator('[class*="prop"]').first();
     const exists = await propBetCard.isVisible({ timeout: 5000 }).catch(() => false);
@@ -160,7 +160,7 @@ test.describe('Prop Bets', () => {
 
   test('should display prop bet expiration date', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const propBetCard = page.locator('[class*="prop"]').first();
     const exists = await propBetCard.isVisible({ timeout: 5000 }).catch(() => false);
@@ -174,7 +174,7 @@ test.describe('Prop Bets', () => {
 
   test('should prevent betting on expired prop bets', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Look for expired prop bet
     const expiredPropBet = page.locator('text=/Expired|Closed/i');
@@ -190,7 +190,7 @@ test.describe('Prop Bets', () => {
 
   test('should calculate potential winnings for prop bets', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const propBetCard = page.locator('[class*="prop"]').first();
     const exists = await propBetCard.isVisible({ timeout: 5000 }).catch(() => false);
@@ -214,7 +214,7 @@ test.describe('Prop Bets', () => {
 
   test('should validate minimum bet amount for prop bets', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const propBetCard = page.locator('[class*="prop"]').first();
     const exists = await propBetCard.isVisible({ timeout: 5000 }).catch(() => false);
@@ -240,7 +240,7 @@ test.describe('Prop Bets', () => {
     const balance = await getUserBalance(page);
     
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const propBetCard = page.locator('[class*="prop"]').first();
     const exists = await propBetCard.isVisible({ timeout: 5000 }).catch(() => false);
@@ -263,7 +263,7 @@ test.describe('Prop Bets', () => {
 
   test('should display prop bet status (active/resolved)', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const propBetCard = page.locator('[class*="prop"]').first();
     const exists = await propBetCard.isVisible({ timeout: 5000 }).catch(() => false);
@@ -277,7 +277,7 @@ test.describe('Prop Bets', () => {
 
   test('should cancel prop bet placement', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const propBetCard = page.locator('[class*="prop"]').first();
     const exists = await propBetCard.isVisible({ timeout: 5000 }).catch(() => false);

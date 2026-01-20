@@ -17,7 +17,7 @@ test.describe('Games and Betting', () => {
     await page.goto('/games');
     
     // Wait for games to load
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Should show games or "no games" message
     const gamesExist = await page.locator('[class*="game"], text=/No games available/i').count();
@@ -26,7 +26,7 @@ test.describe('Games and Betting', () => {
 
   test('should display game details', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Find first game card
     const firstGame = page.locator('[class*="game"]').first();
@@ -43,7 +43,7 @@ test.describe('Games and Betting', () => {
 
   test('should show betting odds for games', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstGame = page.locator('[class*="game"]').first();
     const gameExists = await firstGame.isVisible({ timeout: 5000 }).catch(() => false);
@@ -57,7 +57,7 @@ test.describe('Games and Betting', () => {
 
   test('should open bet modal when clicking on game', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstGame = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await firstGame.isVisible({ timeout: 5000 }).catch(() => false);
@@ -72,7 +72,7 @@ test.describe('Games and Betting', () => {
 
   test('should place bet with low confidence (1.2x)', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const initialBalance = await getUserBalance(page);
     
@@ -106,7 +106,7 @@ test.describe('Games and Betting', () => {
 
   test('should place bet with medium confidence (1.5x)', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -130,7 +130,7 @@ test.describe('Games and Betting', () => {
 
   test('should place bet with high confidence (2.0x)', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -156,7 +156,7 @@ test.describe('Games and Betting', () => {
     const balance = await getUserBalance(page);
     
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -176,7 +176,7 @@ test.describe('Games and Betting', () => {
 
   test('should prevent negative bet amounts', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -196,7 +196,7 @@ test.describe('Games and Betting', () => {
 
   test('should prevent zero bet amounts', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -216,7 +216,7 @@ test.describe('Games and Betting', () => {
 
   test('should show bet confirmation before placing bet', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -233,7 +233,7 @@ test.describe('Games and Betting', () => {
 
   test('should calculate potential winnings correctly', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -262,7 +262,7 @@ test.describe('Games and Betting', () => {
 
   test('should display spread betting option', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -279,7 +279,7 @@ test.describe('Games and Betting', () => {
 
   test('should display over/under betting option', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -296,7 +296,7 @@ test.describe('Games and Betting', () => {
 
   test('should cancel bet placement', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);
@@ -320,7 +320,7 @@ test.describe('Games and Betting', () => {
 
   test('should filter games by type', async ({ page }) => {
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Check if filter options exist
     const filterButtons = page.locator('button:has-text(/All|Varsity|JV|Girls|Boys/i)');

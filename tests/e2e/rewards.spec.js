@@ -184,7 +184,7 @@ test.describe('Rewards and Achievements', () => {
   test('should unlock achievement after completing task', async ({ page }) => {
     // This would test if placing a bet unlocks "First Bet" achievement
     await page.goto('/games');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const betButton = page.locator('[class*="game"], button:has-text("Bet")').first();
     const gameExists = await betButton.isVisible({ timeout: 5000 }).catch(() => false);

@@ -15,7 +15,7 @@ test.describe('Teams', () => {
 
   test('should list all teams', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Should show team cards/list
     const teams = page.locator('[class*="team"]');
@@ -25,7 +25,7 @@ test.describe('Teams', () => {
 
   test('should display team types (Varsity, JV, Girls, etc)', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Check for team type filters or labels
     const teamTypes = page.locator('text=/Varsity|JV|Girls|Boys|Freshman/i');
@@ -35,7 +35,7 @@ test.describe('Teams', () => {
 
   test('should display team details when clicked', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -50,7 +50,7 @@ test.describe('Teams', () => {
 
   test('should display team record (wins/losses)', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -64,7 +64,7 @@ test.describe('Teams', () => {
 
   test('should display team schedule', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -81,7 +81,7 @@ test.describe('Teams', () => {
 
   test('should display team roster/players', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -98,7 +98,7 @@ test.describe('Teams', () => {
 
   test('should display player names', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -115,7 +115,7 @@ test.describe('Teams', () => {
 
   test('should display player positions/numbers', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -132,7 +132,7 @@ test.describe('Teams', () => {
 
   test('should display coach information', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -149,7 +149,7 @@ test.describe('Teams', () => {
 
   test('should display team description', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -166,7 +166,7 @@ test.describe('Teams', () => {
 
   test('should display team ranking/standing', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -183,7 +183,7 @@ test.describe('Teams', () => {
 
   test('should filter teams by type', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Check for filter buttons
     const filterButtons = page.locator('button:has-text(/Varsity|JV|Girls|Boys/i)');
@@ -203,7 +203,7 @@ test.describe('Teams', () => {
 
   test('should show upcoming games for team', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -220,7 +220,7 @@ test.describe('Teams', () => {
 
   test('should show past games for team', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -237,7 +237,7 @@ test.describe('Teams', () => {
 
   test('should display game scores in schedule', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -255,7 +255,7 @@ test.describe('Teams', () => {
 
   test('should show team stats if available', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -272,7 +272,7 @@ test.describe('Teams', () => {
 
   test('should navigate back from team details', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
@@ -295,7 +295,7 @@ test.describe('Teams', () => {
 
   test('should display contact information for coaches', async ({ page }) => {
     await page.goto('/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const firstTeam = page.locator('[class*="team"]').first();
     const teamExists = await firstTeam.isVisible({ timeout: 5000 }).catch(() => false);
