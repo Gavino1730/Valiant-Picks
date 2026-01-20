@@ -7,7 +7,7 @@ module.exports = defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: 1, // Single worker to prevent race conditions
   reporter: [
-    ['html', { outputFolder: 'test-results/html' }],
+    ['html', { outputFolder: 'playwright-report' }],
     ['json', { outputFile: 'test-results/results.json' }],
     ['list']
   ],
