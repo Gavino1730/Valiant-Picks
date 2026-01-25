@@ -10,10 +10,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
+  z-index: 99999;
   animation: fadeIn 0.3s ease;
   padding: 20px;
   overflow-y: auto;
+  isolation: isolate;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 /* Modal Container */
@@ -25,7 +28,7 @@
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  z-index: 10001;
+  z-index: 100000;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
               0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   animation: slideUp 0.4s ease;
@@ -333,11 +336,13 @@
 @media (max-width: 768px) {
   .spin-wheel-overlay {
     padding: 15px;
+    z-index: 99999 !important;
   }
 
   .spin-wheel-modal {
     border-radius: 20px;
     max-height: 95vh;
+    z-index: 100000 !important;
   }
 
   .spin-wheel-close {
@@ -414,10 +419,12 @@
 @media (max-width: 480px) {
   .spin-wheel-overlay {
     padding: 10px;
+    z-index: 99999 !important;
   }
 
   .spin-wheel-modal {
     border-radius: 15px;
+    z-index: 100000 !important;
   }
 
   .spin-wheel-close {
