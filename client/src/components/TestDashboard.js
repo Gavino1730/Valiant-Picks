@@ -20,6 +20,17 @@ function TestDashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       setBalance(user.balance);
     }
   }, [user?.balance]);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+      setIsMobile(isMobileDevice);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   const [games, setGames] = useState([]);
   const [bets, setBets] = useState([]);
   const [gamesLoading, setGamesLoading] = useState(true);
@@ -29,6 +40,7 @@ function TestDashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [previousBets, setPreviousBets] = useState([]);
   const [recentWinners, setRecentWinners] = useState([]);
   const [notificationsEnabled, setNotificationsEnabled] = useState(notificationService.isEnabled());
+  const [isMobile, setIsMobile] = useState(false);
   const [stats, setStats] = useState({
     totalBets: 0,
     activeBets: 0,
@@ -334,7 +346,7 @@ function TestDashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       </div>
       
       {/* Notification Permission Banner */}
-      {!notificationsEnabled && (
+      {!notificationsEnabled && !isMobile && (
         <div className="notification-banner">
           <div className="notification-banner-icon">🔔</div>
           <div className="notification-banner-content">
