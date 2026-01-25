@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import axios from '../utils/axios';
 import '../styles/SpinWheel.css';
 
@@ -114,7 +115,7 @@ const SpinWheel = ({ isOpen, onClose, onPrizeWon }) => {
 
   if (!isOpen) return null;
 
-  return (
+  return ReactDOM.createPortal(
     <div className="spin-wheel-overlay" onClick={onClose}>
       <div className="spin-wheel-modal" onClick={(e) => e.stopPropagation()}>
         <button className="spin-wheel-close" onClick={onClose}>&times;</button>
@@ -234,7 +235,8 @@ const SpinWheel = ({ isOpen, onClose, onPrizeWon }) => {
       )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
