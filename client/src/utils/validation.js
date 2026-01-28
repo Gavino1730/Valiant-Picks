@@ -1,4 +1,5 @@
 // Form Validation Utilities
+import { formatCurrency } from './currency';
 
 export const validateUsername = (username) => {
   if (!username) return 'Username is required';
@@ -26,7 +27,7 @@ export const validateBetAmount = (amount, balance) => {
   if (!amount) return 'Amount is required';
   if (isNaN(num)) return 'Please enter a valid number';
   if (num <= 0) return 'Amount must be greater than 0';
-  if (num > balance) return `You only have ${balance} Valiant Bucks available`;
+  if (num > balance) return `You only have ${formatCurrency(balance)} Valiant Bucks available`;
   if (num > 10000) return 'Maximum bet is 10,000 Valiant Bucks';
   return '';
 };
