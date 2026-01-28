@@ -1,11 +1,10 @@
-// Currency formatting utility
+// Currency formatting utility - Always displays whole numbers by rounding up
 export const formatCurrency = (amount) => {
   const num = parseFloat(amount || 0);
-  const hasDecimals = num % 1 !== 0;
+  // Always round up to whole number using Math.ceil()
+  const roundedNum = Math.ceil(num);
   
-  return hasDecimals 
-    ? `$${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-    : `$${num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+  return `$${roundedNum.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 };
 
 // Format currency for display in text
