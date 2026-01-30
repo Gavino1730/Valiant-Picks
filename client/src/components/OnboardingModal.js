@@ -90,6 +90,12 @@ function OnboardingModal() {
           </div>
 
           <div className="onboarding-section">
+            <div className="section-icon">�</div>
+            <h3>Earn Bonus Payouts</h3>
+            <p>All games offer bonuses! Girls games: up to 25%, Boys games: up to 15%, plus daily streak bonuses!</p>
+          </div>
+
+          <div className="onboarding-section">
             <div className="section-icon">🏆</div>
             <h3>Climb the Leaderboard</h3>
             <p>Your wins are tracked. Compete with friends and earn bragging rights!</p>
@@ -99,7 +105,7 @@ function OnboardingModal() {
             <h4>💡 Pro Tips:</h4>
             <ul>
               <li>Start with smaller picks to learn the system</li>
-              <li>Check the "How to Use" page for more details</li>
+              <li>Build betting streaks for extra bonus multipliers</li>
               <li>You can place multiple picks on different games</li>
               <li>Each game only allows one pick per user</li>
             </ul>

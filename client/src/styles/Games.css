@@ -137,6 +137,111 @@
   border: 1px solid rgba(255, 105, 180, 0.3);
 }
 
+/* All Bonuses Banner Styles */
+.bonus-promo-banner.all-bonuses {
+  background: linear-gradient(135deg, rgba(31, 78, 153, 0.2), rgba(30, 136, 229, 0.15));
+  border: 2px solid rgba(30, 136, 229, 0.4);
+  box-shadow: 0 4px 15px rgba(30, 136, 229, 0.2);
+}
+
+.bonus-promo-banner.all-bonuses h3 {
+  color: #64b5f6;
+  margin-bottom: 1rem;
+}
+
+.all-bonus-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .all-bonus-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .all-bonus-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bonus-category {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bonus-category:hover {
+  transform: translateY(-2px);
+}
+
+.bonus-category.girls {
+  background: rgba(255, 105, 180, 0.2);
+  border: 1px solid rgba(255, 105, 180, 0.4);
+}
+
+.bonus-category.boys {
+  background: rgba(255, 152, 0, 0.2);
+  border: 1px solid rgba(255, 152, 0, 0.4);
+}
+
+.bonus-category.streak {
+  background: rgba(239, 83, 80, 0.2);
+  border: 1px solid rgba(239, 83, 80, 0.4);
+}
+
+.bonus-category.weekend {
+  background: rgba(102, 187, 106, 0.2);
+  border: 1px solid rgba(102, 187, 106, 0.4);
+}
+
+.bonus-category-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.bonus-category-name {
+  font-size: 0.8rem;
+  color: #b8c5d6;
+  font-weight: 600;
+}
+
+.bonus-category-range {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+
+.bonus-category.girls .bonus-category-range {
+  color: #ff69b4;
+}
+
+.bonus-category.boys .bonus-category-range {
+  color: #ff9800;
+}
+
+.bonus-category.streak .bonus-category-range {
+  color: #ef5350;
+}
+
+.bonus-category.weekend .bonus-category-range {
+  color: #66bb6a;
+}
+
+.bonus-tip {
+  color: #b8c5d6;
+  font-size: 0.85rem;
+  margin: 0;
+  text-align: center;
+}
+
 .balance-display {
   color: #1f4e99;
   font-size: 1.3rem;

@@ -52,136 +52,54 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     totalWinnings: 0
   });
 
-  // Spirit Week Data - Broadway Theme - TEMPORARILY HIDDEN
-  /* const [spiritWeekData] = useState({
-    theme: "Broadway Bonanza",
-    weekOf: "February 3-7, 2026",
+  // Spirit Week Data - Broadway Theme
+  const [spiritWeekData] = useState({
+    theme: "Broadway",
+    weekOf: "February 2-6, 2026",
+    description: "Each grade decorates their hallway to their musical theme. Judges rank hallways for points. Daily dress-up themes earn participation points. Check in teachers for your grade to get DOUBLE points!",
+    events: [
+      { day: "Monday-Thursday", event: "Daily Dress-Up Themes (TBD)" },
+      { day: "Tuesday", event: "🎯 Tug of War Competition" },
+      { day: "Friday", event: "🎤 Lip Sync Battle Finals" },
+      { day: "Saturday, Feb 7", event: "💃 Sadie Hawkins Dance @ Valley Catholic - 8:00 PM" }
+    ],
     grades: [
       {
-        grade: "Freshman",
-        subtheme: "Hamilton",
-        color: "#8B4513",
-        icon: "🎩",
-        activities: [
-          "Monday: Colonial Day",
-          "Tuesday: War Room Dance-Off",
-          "Wednesday: Ten Duel Commandments Trivia",
-          "Thursday: Hamilton Karaoke",
-          "Friday: Full Costume Day"
-        ],
-        points: 245
-      },
-      {
-        grade: "Sophomores",
+        grade: "Freshmen",
         subtheme: "Wicked",
         color: "#00C853",
         icon: "🧙‍♀️",
-        activities: [
-          "Monday: Emerald City Green Day",
-          "Tuesday: Defying Gravity Challenge",
-          "Wednesday: Wizard Trivia",
-          "Thursday: Musical Number Performance",
-          "Friday: Good vs Evil Costume Battle"
-        ],
-        points: 312
+        points: 0
+      },
+      {
+        grade: "Sophomores",
+        subtheme: "Lion King",
+        color: "#FF9800",
+        icon: "🦁",
+        points: 0
       },
       {
         grade: "Juniors",
-        subtheme: "The Phantom of the Opera",
-        color: "#D32F2F",
-        icon: "🎭",
-        activities: [
-          "Monday: Masquerade Ball Prep",
-          "Tuesday: Opera Singing Contest",
-          "Wednesday: Chandelier Decorating",
-          "Thursday: Phantom vs Christine Debate",
-          "Friday: Full Opera Attire Day"
-        ],
-        points: 298
+        subtheme: "Grease",
+        color: "#E91E63",
+        icon: "🎸",
+        points: 0
       },
       {
         grade: "Seniors",
-        subtheme: "Les Misérables",
+        subtheme: "Hamilton",
         color: "#1976D2",
-        icon: "🇫🇷",
-        activities: [
-          "Monday: French Revolution Day",
-          "Tuesday: Barricade Building Competition",
-          "Wednesday: One Day More Choir Performance",
-          "Thursday: Revolutionary Trivia",
-          "Friday: 19th Century Costume Day"
-        ],
-        points: 367
+        icon: "🎩",
+        points: 0
       }
     ]
+  });
+
+  // Flex Schedule - HIDDEN FOR NOW
+  /* const [flexSchedule] = useState({
+    currentWeek: "5, 6, 7",
+    note: "Flex schedule rotates weekly"
   }); */
-
-  // School Events Data - TEMPORARILY HIDDEN
-  /* const [schoolEvents] = useState([
-    {
-      id: 1,
-      title: "Spirit Week - Broadway Bonanza",
-      date: "February 3-7, 2026",
-      time: "All Week",
-      location: "Campus Wide",
-      type: "spirit",
-      description: "Show your class pride with Broadway-themed activities!"
-    },
-    {
-      id: 2,
-      title: "Boys Basketball vs Highland",
-      date: "February 10, 2026",
-      time: "7:00 PM",
-      location: "Valiant Arena",
-      type: "sports"
-    },
-    {
-      id: 3,
-      title: "Girls Basketball vs Skyview",
-      date: "February 12, 2026",
-      time: "6:30 PM",
-      location: "Valiant Arena",
-      type: "sports"
-    },
-    {
-      id: 4,
-      title: "College Fair",
-      date: "February 15, 2026",
-      time: "10:00 AM - 2:00 PM",
-      location: "Main Gymnasium",
-      type: "academic"
-    },
-    {
-      id: 5,
-      title: "Winter Dance: Enchanted Evening",
-      date: "February 21, 2026",
-      time: "7:00 PM - 10:00 PM",
-      location: "Cafeteria",
-      type: "social"
-    }
-  ]); */
-
-  // School Alerts Data - TEMPORARILY HIDDEN
-  /* const [schoolAlerts] = useState([
-    {
-      id: 1,
-      type: "info",
-      message: "Spirit Week voting opens Monday! Support your class!",
-      date: "February 1, 2026"
-    },
-    {
-      id: 2,
-      type: "warning",
-      message: "Early dismissal on Friday, February 7th at 1:00 PM for pep rally",
-      date: "February 1, 2026"
-    },
-    {
-      id: 3,
-      type: "success",
-      message: "Valiant Picks now live! Place your picks on Place Picks page!",
-      date: "January 20, 2026"
-    }
-  ]); */
 
   const parseLocalDateOnly = (dateStr) => {
     const [year, month, day] = (dateStr || '').split('-').map(Number);
@@ -426,11 +344,11 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     }
   };
 
-  // Calculate spirit week leader - TEMPORARILY HIDDEN
-  /* const spiritLeader = React.useMemo(() => {
+  // Calculate spirit week leader
+  const spiritLeader = React.useMemo(() => {
     const sorted = [...spiritWeekData.grades].sort((a, b) => b.points - a.points);
     return sorted[0];
-  }, [spiritWeekData]); */
+  }, [spiritWeekData]);
 
   return (
     <div className="dashboard school-dashboard">
@@ -570,14 +488,17 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         <div className="dashboard-main-column">
           {/* Place a Pick CTA */}
           <div className="card pick-cta-card">
-            <h3>🎲 Ready to Make Your Picks?</h3>
-            <p>Head over to the Place Picks page to place your predictions on upcoming Valiant games!</p>
+            <h3>🎲 Want to Place Your Picks?</h3>
+            <p style={{fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.75rem'}}>
+              All betting has moved to the <strong style={{color: '#4caf50'}}>Place Picks</strong> page!
+            </p>
+            <p>Click below to view upcoming games and make your predictions on Valiant sports.</p>
             <button 
               className="btn btn-primary btn-large"
               onClick={() => onNavigate && onNavigate('games')}
               style={{ marginTop: '1rem', width: '100%' }}
             >
-              🏀 Go to Place Picks
+              🏀 Go to Place Picks Page
             </button>
             <button 
               className="btn btn-secondary btn-large spin-wheel-cta"
@@ -609,17 +530,30 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             onPrizeWon={handleSpinWheelPrize} 
           />
 
-          {/* Spirit Week Tracker - TEMPORARILY HIDDEN
+          {/* Spirit Week Tracker */}
           <div className="card spirit-week-card">
             <div className="spirit-week-header">
-              <h3>🎭 Spirit Week: {spiritWeekData.theme}</h3>
+              <h3>🎭 Spirit Week 2026: {spiritWeekData.theme}</h3>
               <span className="spirit-week-date">{spiritWeekData.weekOf}</span>
             </div>
             <p className="spirit-week-description">
-              Each grade has their own Broadway musical! Show your class spirit all week long!
+              {spiritWeekData.description}
             </p>
             
-            Current Leader Banner
+            {/* Spirit Week Events */}
+            <div className="spirit-week-events">
+              <h4>📅 Week Schedule</h4>
+              <div className="events-timeline">
+                {spiritWeekData.events.map((event, idx) => (
+                  <div key={idx} className="timeline-item">
+                    <span className="timeline-day">{event.day}</span>
+                    <span className="timeline-event">{event.event}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Current Leader Banner */}
             <div className="spirit-leader-banner" style={{borderColor: spiritLeader.color}}>
               <span className="leader-icon" style={{fontSize: '2.5rem'}}>{spiritLeader.icon}</span>
               <div className="leader-info">
@@ -630,64 +564,43 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               <div className="leader-points">{spiritLeader.points} pts</div>
             </div>
 
-            All Grades
-            <div className="spirit-grades-grid">
-              {spiritWeekData.grades.map((grade, index) => (
-                <div key={index} className="spirit-grade-card" style={{borderLeftColor: grade.color}}>
-                  <div className="grade-header">
-                    <span className="grade-icon">{grade.icon}</span>
-                    <div className="grade-title">
-                      <h4 style={{color: grade.color}}>{grade.grade}</h4>
-                      <span className="grade-subtheme">{grade.subtheme}</span>
+            {/* All Grades - Points Leaderboard */}
+            <div className="spirit-leaderboard">
+              <h4>🏆 Grade Rankings</h4>
+              {[...spiritWeekData.grades]
+                .sort((a, b) => b.points - a.points)
+                .map((grade, index) => {
+                  const maxPoints = Math.max(...spiritWeekData.grades.map(g => g.points), 1);
+                  const percentage = (grade.points / maxPoints) * 100;
+                  return (
+                    <div key={index} className="grade-bar-item">
+                      <div className="grade-bar-header">
+                        <div className="grade-bar-info">
+                          <span className="grade-bar-icon">{grade.icon}</span>
+                          <div className="grade-bar-text">
+                            <span className="grade-bar-name" style={{color: grade.color}}>{grade.grade}</span>
+                            <span className="grade-bar-theme">{grade.subtheme}</span>
+                          </div>
+                        </div>
+                        <span className="grade-bar-points" style={{color: grade.color}}>{grade.points} pts</span>
+                      </div>
+                      <div className="grade-bar-container">
+                        <div 
+                          className="grade-bar-fill" 
+                          style={{
+                            width: `${percentage}%`,
+                            backgroundColor: grade.color,
+                            boxShadow: `0 2px 8px ${grade.color}40`
+                          }}
+                        >
+                          {percentage > 10 && <span className="grade-bar-percentage">{percentage.toFixed(0)}%</span>}
+                        </div>
+                      </div>
                     </div>
-                    <span className="grade-points">{grade.points} pts</span>
-                  </div>
-                  <div className="grade-activities">
-                    <strong>This Week:</strong>
-                    <ul>
-                      {grade.activities.map((activity, i) => (
-                        <li key={i}>{activity}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              ))}
+                  );
+                })}
             </div>
           </div>
-          */}
-
-          {/* Upcoming School Events - TEMPORARILY HIDDEN
-          <div className="card school-events-card">
-            <h3>📅 Upcoming School Events</h3>
-            {schoolEvents.length > 0 ? (
-              <div className="events-list">
-                {schoolEvents.map(event => (
-                  <div key={event.id} className={`event-item event-${event.type}`}>
-                    <div className="event-icon">
-                      {event.type === 'sports' && '🏀'}
-                      {event.type === 'spirit' && '🎭'}
-                      {event.type === 'academic' && '📚'}
-                      {event.type === 'social' && '🎉'}
-                    </div>
-                    <div className="event-details">
-                      <h4>{event.title}</h4>
-                      <div className="event-meta">
-                        <span>📅 {event.date}</span>
-                        <span>🕐 {event.time}</span>
-                        <span>📍 {event.location}</span>
-                      </div>
-                      {event.description && (
-                        <p className="event-description">{event.description}</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="empty-text">No upcoming events</p>
-            )}
-          </div>
-          */}
         </div>
 
         {/* Right Sidebar */}
@@ -700,6 +613,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                 {Array.from({ length: 3 }).map((_, idx) => (
                   <UpcomingGameSkeleton key={idx} />
                 ))}
+
               </div>
             ) : upcomingGames.length > 0 ? (
               <div className="upcoming-games-list">
@@ -771,6 +685,13 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
           <div className="card quick-links-card">
             <h3>🔗 Quick Links</h3>
             <div className="quick-links">
+              <button 
+                className="quick-link-btn"
+                onClick={() => setShowSpinWheel(true)}
+                style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}
+              >
+                🎡 Spin Wheel
+              </button>
               <button 
                 className="quick-link-btn"
                 onClick={() => onNavigate && onNavigate('games')}

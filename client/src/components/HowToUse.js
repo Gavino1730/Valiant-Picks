@@ -144,13 +144,13 @@ function HowToUse({ onNavigate }) {
           <div className="bonus-tier girls">
             <div className="bonus-header">
               <span className="bonus-icon">💗</span>
-              <h4>Girls Games (BEST!)</h4>
+              <h4>Girls Games</h4>
             </div>
             <ul>
               <li><strong>10% base bonus</strong> on all girls game bets</li>
               <li><strong>+5%</strong> for 3+ consecutive girls bets</li>
               <li><strong>+10%</strong> for 7+ consecutive girls bets</li>
-              <li className="bonus-max">Maximum: 20% bonus (+5% on weekends!)</li>
+              <li className="bonus-max">Maximum: 25% bonus (+5% on weekends!)</li>
             </ul>
           </div>
           <div className="bonus-tier boys">
@@ -162,26 +162,27 @@ function HowToUse({ onNavigate }) {
               <li><strong>5% base bonus</strong> on all boys game bets</li>
               <li><strong>+3%</strong> for 3+ consecutive boys bets</li>
               <li><strong>+5%</strong> for 7+ consecutive boys bets</li>
-              <li className="bonus-max">Maximum: 10% bonus (+5% on weekends!)</li>
+              <li className="bonus-max">Maximum: 15% bonus (+5% on weekends!)</li>
             </ul>
           </div>
           <div className="bonus-tier general">
             <div className="bonus-header">
-              <span className="bonus-icon">⭐</span>
-              <h4>All Bets</h4>
+              <span className="bonus-icon">🔥</span>
+              <h4>Streak Bonuses</h4>
             </div>
             <ul>
-              <li><strong>2% base bonus</strong> on any bet</li>
+              <li><strong>+2% base</strong> for betting daily</li>
               <li><strong>+3%</strong> for betting 3 days in a row</li>
               <li><strong>+5%</strong> for betting 7 days in a row</li>
-              <li className="bonus-max">Maximum: 7% bonus (+5% on weekends!)</li>
+              <li className="bonus-max">Stacks with game bonuses (+5% on weekends!)</li>
             </ul>
           </div>
         </div>
         <div className="bonus-example">
-          <h4>💰 Example:</h4>
-          <p>Win 200 Valiant Bucks on a girls game with 15% bonus = <strong>230 Bucks total!</strong></p>
-          <p className="bonus-tip">💡 Tip: Build streaks and bet on weekends for maximum bonuses!</p>
+          <h4>💰 Examples:</h4>
+          <p>Win 200 VB on a girls game with 15% bonus = <strong>230 Bucks total!</strong></p>
+          <p>Win 200 VB on a boys game with 10% bonus = <strong>220 Bucks total!</strong></p>
+          <p className="bonus-tip">💡 Tip: Build streaks and bet on weekends for maximum bonuses on ALL games!</p>
         </div>
       </div>
 
@@ -196,9 +197,9 @@ function HowToUse({ onNavigate }) {
             <p>Don't risk all your Valiant Bucks on one game. Spread your picks to minimize risk.</p>
           </div>
           <div className="tip-card">
-            <div className="tip-icon">💗</div>
-            <h4>Support Girls Basketball</h4>
-            <p>Girls games offer the best bonuses (up to 20%+)! More winnings and support women's sports.</p>
+            <div className="tip-icon">�</div>
+            <h4>Earn Bonuses</h4>
+            <p>All games offer bonus payouts! Girls games up to 25%, Boys games up to 15%, plus streak bonuses!</p>
           </div>
           <div className="tip-card">
             <div className="tip-icon">📊</div>

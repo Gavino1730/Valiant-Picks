@@ -464,18 +464,34 @@ function Games({ user, updateUser }) {
         </div>
       </div>
 
-      {/* Girls Game Bonus Promotion */}
-      <div className="bonus-promo-banner">
-        <div className="bonus-promo-icon">💗</div>
+      {/* Bonus Info Banner - Shows all available bonuses */}
+      <div className="bonus-promo-banner all-bonuses">
+        <div className="bonus-promo-icon">🎁</div>
         <div className="bonus-promo-content">
-          <h3>Girls Game Bonus Active!</h3>
-          <p><strong>Earn up to 25% extra</strong> on all girls basketball bets! The more consecutive girls games you bet on, the bigger your bonus grows!</p>
-          <div className="bonus-tiers">
-            <span className="bonus-tier">Base: +10%</span>
-            <span className="bonus-tier">3 Streak: +15%</span>
-            <span className="bonus-tier">7 Streak: +25%</span>
-            <span className="bonus-tier">Weekend: +5% Extra</span>
+          <h3>Earn Bonus Payouts on Every Pick!</h3>
+          <div className="all-bonus-grid">
+            <div className="bonus-category girls">
+              <span className="bonus-category-icon">💗</span>
+              <span className="bonus-category-name">Girls Games</span>
+              <span className="bonus-category-range">+10% to +25%</span>
+            </div>
+            <div className="bonus-category boys">
+              <span className="bonus-category-icon">🏀</span>
+              <span className="bonus-category-name">Boys Games</span>
+              <span className="bonus-category-range">+5% to +15%</span>
+            </div>
+            <div className="bonus-category streak">
+              <span className="bonus-category-icon">🔥</span>
+              <span className="bonus-category-name">Streak Bonus</span>
+              <span className="bonus-category-range">+3% to +5%</span>
+            </div>
+            <div className="bonus-category weekend">
+              <span className="bonus-category-icon">📅</span>
+              <span className="bonus-category-name">Weekend</span>
+              <span className="bonus-category-range">+5% Extra</span>
+            </div>
           </div>
+          <p className="bonus-tip">💡 Build consecutive bet streaks to maximize your bonus multipliers!</p>
         </div>
       </div>
 
@@ -902,10 +918,21 @@ function Games({ user, updateUser }) {
                                               <span>{confidenceMultipliers[confidence]}x</span>
                                             </span>
                                           </div>
-                                          {selectedGame?.team_type?.toLowerCase().includes('girls') && (
+                                          {/* Show bonus info for all game types */}
+                                          {selectedGame?.team_type?.toLowerCase().includes('girls') ? (
                                             <div className="bet-slip-row bonus-row">
                                               <span className="bet-slip-label">💗 Girls Game Bonus</span>
                                               <span className="bet-slip-value bonus-value">+10% to +25%</span>
+                                            </div>
+                                          ) : selectedGame?.team_type?.toLowerCase().includes('boys') ? (
+                                            <div className="bet-slip-row bonus-row">
+                                              <span className="bet-slip-label">🏀 Boys Game Bonus</span>
+                                              <span className="bet-slip-value bonus-value">+5% to +15%</span>
+                                            </div>
+                                          ) : (
+                                            <div className="bet-slip-row bonus-row">
+                                              <span className="bet-slip-label">⭐ Betting Bonus</span>
+                                              <span className="bet-slip-value bonus-value">+2% to +12%</span>
                                             </div>
                                           )}
                                           <div className="bet-slip-divider"></div>
@@ -913,10 +940,21 @@ function Games({ user, updateUser }) {
                                             <span className="bet-slip-label">Base Payout</span>
                                             <span className="bet-slip-value payout-value">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</span>
                                           </div>
-                                          {selectedGame?.team_type?.toLowerCase().includes('girls') && (
+                                          {/* Show potential bonus payout for all game types */}
+                                          {selectedGame?.team_type?.toLowerCase().includes('girls') ? (
                                             <div className="bet-slip-row bonus-payout">
                                               <span className="bet-slip-label">💗 With Girls Bonus</span>
                                               <span className="bet-slip-value bonus-payout-value">Up to {formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence] * 1.25)}</span>
+                                            </div>
+                                          ) : selectedGame?.team_type?.toLowerCase().includes('boys') ? (
+                                            <div className="bet-slip-row bonus-payout">
+                                              <span className="bet-slip-label">🏀 With Boys Bonus</span>
+                                              <span className="bet-slip-value bonus-payout-value">Up to {formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence] * 1.15)}</span>
+                                            </div>
+                                          ) : (
+                                            <div className="bet-slip-row bonus-payout">
+                                              <span className="bet-slip-label">⭐ With Streak Bonus</span>
+                                              <span className="bet-slip-value bonus-payout-value">Up to {formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence] * 1.12)}</span>
                                             </div>
                                           )}
                                           <div className="bet-slip-row profit">
