@@ -124,6 +124,9 @@ function Leaderboard() {
       <div className="leaderboard-header">
         <h1>🏆 Leaderboard</h1>
         <p className="subtitle">Track your picks and compete with other players</p>
+        <div className="spirit-week-badge">
+          🎭 Spirit Week is here! Show your Valiant pride! 🌟
+        </div>
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}

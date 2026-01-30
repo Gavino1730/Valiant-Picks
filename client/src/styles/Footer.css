@@ -4,6 +4,20 @@
   border-top: 1px solid rgba(31, 78, 153, 0.2);
   padding: 1.5rem 2rem;
   margin-top: 3rem;
+  position: relative;
+}
+
+.footer-sparkle-line {
+  text-align: center;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  animation: sparkleWave 3s ease-in-out infinite;
+  letter-spacing: 1rem;
+}
+
+@keyframes sparkleWave {
+  0%, 100% { opacity: 0.6; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-3px); }
 }
 
 .footer-content {

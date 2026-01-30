@@ -38,6 +38,36 @@ body {
   background: linear-gradient(180deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
   width: 100%;
   position: relative;
+  overflow: hidden;
+}
+
+/* Spirit Week Background Confetti */
+.app::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(255, 20, 147, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 30% 70%, rgba(0, 191, 255, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: confettiDrift 30s ease-in-out infinite;
+}
+
+@keyframes confettiDrift {
+  0%, 100% { 
+    transform: translateY(0) scale(1);
+    opacity: 0.5;
+  }
+  50% { 
+    transform: translateY(-20px) scale(1.1);
+    opacity: 0.7;
+  }
 }
 
 .navbar {
@@ -59,6 +89,32 @@ body {
   width: 100%;
   gap: 0.5rem;
   min-height: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Spirit Week Flair */
+.navbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    #ff1744 0%, #ff1744 20%,
+    #ffea00 20%, #ffea00 40%,
+    #00e676 40%, #00e676 60%,
+    #2979ff 60%, #2979ff 80%,
+    #d500f9 80%, #d500f9 100%
+  );
+  animation: rainbowShift 3s linear infinite;
+  z-index: 1;
+}
+
+@keyframes rainbowShift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(20%); }
 }
 
 .nav-brand {
@@ -82,6 +138,12 @@ body {
   height: 32px;
   width: auto;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
 }
 
 .nav-center {
@@ -97,6 +159,8 @@ body {
   overflow-y: hidden;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  position: relative;
+  z-index: 2;
 }
 
 .nav-center::-webkit-scrollbar {
@@ -129,6 +193,32 @@ body {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Spirit week button shimmer effect */
+.nav-center button::after,
+.nav-right button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
 }
 
 .notification-icon-btn {
@@ -167,21 +257,27 @@ body {
 /* Subtle strobing animation for Place Picks button */
 @keyframes gentle-pulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4), 0 4px 12px rgba(31, 78, 153, 0.2);
-    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 8px 0 rgba(76, 175, 80, 0.4), 0 4px 12px rgba(76, 175, 80, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
   }
   50% {
-    box-shadow: 0 0 20px 4px rgba(37, 99, 235, 0.6), 0 4px 16px rgba(37, 99, 235, 0.4);
-    border-color: rgba(37, 99, 235, 0.5);
+    box-shadow: 0 0 20px 5px rgba(76, 175, 80, 0.7), 0 4px 20px rgba(76, 175, 80, 0.5);
+    border-color: rgba(76, 175, 80, 0.6);
+    background: rgba(76, 175, 80, 0.15);
   }
 }
 
-.place-picks-btn {
-  animation: gentle-pulse 3s ease-in-out infinite;
+.nav-center button.place-picks-btn {
+  animation: gentle-pulse 2.5s ease-in-out infinite;
 }
 
-.place-picks-btn.active {
+.nav-center button.place-picks-btn.active {
   animation: none;
+}
+
+.nav-center button.place-picks-btn:hover {
+  animation: gentle-pulse 1.5s ease-in-out infinite;
 }
 
 .logout-btn {
