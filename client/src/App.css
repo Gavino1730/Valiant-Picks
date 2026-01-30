@@ -231,15 +231,15 @@ body {
     font-size: 0.85rem;
   }
 
-  .balance-display {
+  .nav-right .balance-display {
     padding: 0.45rem 0.75rem;
   }
 
-  .balance-label {
+  .nav-right .balance-label {
     font-size: 0.75rem;
   }
 
-  .balance-amount {
+  .nav-right .balance-amount {
     font-size: 0.85rem;
   }
 }
@@ -295,15 +295,15 @@ body {
     font-size: 0.8rem;
   }
 
-  .balance-display {
+  .nav-right .balance-display {
     padding: 0.45rem 0.75rem;
   }
 
-  .balance-label {
+  .nav-right .balance-label {
     font-size: 0.75rem;
   }
 
-  .balance-amount {
+  .nav-right .balance-amount {
     font-size: 0.9rem;
   }
 
@@ -349,15 +349,15 @@ body {
     font-size: 0.8rem;
   }
 
-  .balance-display {
+  .nav-right .balance-display {
     padding: 0.4rem 0.6rem;
   }
 
-  .balance-label {
+  .nav-right .balance-label {
     font-size: 0.7rem;
   }
 
-  .balance-amount {
+  .nav-right .balance-amount {
     font-size: 0.8rem;
   }
 
@@ -415,7 +415,7 @@ body {
   box-shadow: 0 2px 8px rgba(239, 83, 80, 0.5);
 }
 
-.balance-display {
+.nav-right .balance-display {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -429,16 +429,19 @@ body {
   flex-shrink: 0;
   margin: 0;
   height: 38px;
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
 }
 
-.balance-label {
+.nav-right .balance-label {
   color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
   font-size: 0.85rem;
   white-space: nowrap;
 }
 
-.balance-amount {
+.nav-right .balance-amount {
   color: #66bb6a;
   font-weight: 700;
   font-size: 0.9rem;
@@ -975,11 +978,11 @@ table tbody tr:hover {
   }
 
   /* Make balance pill more compact so it doesn't crowd nav */
-  .balance-display {
+  .nav-right .balance-display {
     padding: 0.45rem 0.75rem;
   }
 
-  .balance-label {
+  .nav-right .balance-label {
     display: none;
   }
 }
@@ -1000,7 +1003,7 @@ table tbody tr:hover {
     font-size: 0.85rem;
   }
 
-  .balance-display {
+  .nav-right .balance-display {
     padding: 0.5rem 0.8rem;
   }
 
