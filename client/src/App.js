@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocat
 import './App.css';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-import TestDashboard from './components/TestDashboard';
 import OnboardingModal from './components/OnboardingModal';
 import RivalryWeekPopup from './components/RivalryWeekPopup';
 import Footer from './components/Footer';
@@ -465,13 +464,6 @@ function AppContent() {
               <span className="mobile-badge">{unreadCount}</span>
             )}
           </button>
-          <button 
-            onClick={() => handlePageChange('test-dashboard')} 
-            className={page === 'test-dashboard' ? 'active' : ''}
-          >
-            <span className="menu-icon">🧪</span>
-            Test Dashboard
-          </button>
           {user && (user.is_admin || user.isAdminUser) && (
             <button 
               onClick={() => handlePageChange('admin')} 
@@ -501,7 +493,6 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard user={user} onNavigate={handlePageChange} updateUser={updateUser} fetchUserProfile={fetchUserProfile} />} />
-            <Route path="/test-dashboard" element={<TestDashboard user={user} onNavigate={handlePageChange} updateUser={updateUser} fetchUserProfile={fetchUserProfile} />} />
             <Route path="/games" element={<Games user={currentUser} updateUser={updateUser} />} />
             <Route path="/teams" element={<Teams />} />
             <Route path="/bets" element={<BetList />} />

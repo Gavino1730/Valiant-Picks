@@ -425,14 +425,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         </div>
       )}
       
-      {/* Welcome Banner */}
-      <div className="welcome-banner">
-        <div className="banner-icon">🏫</div>
-        <div className="banner-content">
-          <h2>Welcome to Valiant Picks, {user?.username || 'Student'}!</h2>
-        </div>
-      </div>
-      
       {/* Win/Loss Notifications */}
       <div style={{minHeight: winNotification || lossNotification ? 'auto' : '0px', marginBottom: winNotification || lossNotification ? '1rem' : '0'}}>
         {winNotification && (
@@ -537,6 +529,20 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         <div className="dashboard-main-column">
           {/* Grade Rankings - Top Priority */}
           <div className="card spirit-week-card" style={{marginBottom: '1.5rem'}}>
+            <div className="spirit-week-header" style={{marginBottom: '1rem'}}>
+              <h3 style={{margin: 0}}>🎭 Spirit Week 2026: Battle of the Broadways</h3>
+            </div>
+            {/* Current Leader Banner */}
+            <div className="spirit-leader-banner" style={{borderColor: spiritLeader.color, marginBottom: '1.5rem'}}>
+              <span className="leader-icon" style={{fontSize: '2.5rem'}}>{spiritLeader.icon}</span>
+              <div className="leader-info">
+                <div className="leader-label">Current Leader</div>
+                <div className="leader-grade" style={{color: spiritLeader.color}}>{spiritLeader.grade}</div>
+                <div className="leader-subtheme">{spiritLeader.subtheme}</div>
+              </div>
+              <div className="leader-points">{spiritLeader.points} pts</div>
+            </div>
+
             <div className="spirit-leaderboard">
               <h4>🏆 Grade Rankings</h4>
               {[...spiritWeekData.grades]
@@ -689,38 +695,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                     </div>
                   ))}
               </div>
-            </div>
-
-            {/* Prep Week Info */}
-            {spiritWeekData.prepWeek && (
-              <div className="spirit-week-events prep-week-section">
-                <h4>🎨 Prep Week - Final Days!</h4>
-                <p style={{fontSize: '0.9rem', color: '#b8c5d6', marginBottom: '0.75rem'}}>
-                  Service hours available! Build class unity and prepare for Spirit Week success.
-                </p>
-                <div className="events-timeline">
-                  {spiritWeekData.prepWeek.map((prep, idx) => (
-                    <div key={idx} className="timeline-item prep-day">
-                      <span className="timeline-day">{prep.day}</span>
-                      <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
-                        <span className="timeline-event">{prep.activity}</span>
-                        <span style={{fontSize: '0.85rem', color: '#888a9b'}}>{prep.time}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* Current Leader Banner */}
-            <div className="spirit-leader-banner" style={{borderColor: spiritLeader.color}}>
-              <span className="leader-icon" style={{fontSize: '2.5rem'}}>{spiritLeader.icon}</span>
-              <div className="leader-info">
-                <div className="leader-label">Current Leader</div>
-                <div className="leader-grade" style={{color: spiritLeader.color}}>{spiritLeader.grade}</div>
-                <div className="leader-subtheme">{spiritLeader.subtheme}</div>
-              </div>
-              <div className="leader-points">{spiritLeader.points} pts</div>
             </div>
           </div>
         </div>

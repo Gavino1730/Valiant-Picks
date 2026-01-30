@@ -1566,14 +1566,28 @@
   }
 
   /* Center upcoming games, recent picks, and quick links on mobile */
+  .dashboard-sidebar .card {
+    text-align: center;
+  }
+
+  .dashboard-sidebar h3 {
+    text-align: center;
+  }
+
   .upcoming-games-list,
   .recent-bets-list {
-    text-align: center;
+    align-items: center;
   }
 
   .upcoming-game-item,
   .recent-bet-item {
-    text-align: center;
+    border-left: none;
+    border-top: 3px solid #1f4e99;
+  }
+
+  .upcoming-game-item:hover,
+  .recent-bet-item:hover {
+    transform: translateY(-2px);
   }
 
   .game-teams,
@@ -1583,11 +1597,19 @@
     justify-content: center;
   }
 
+  .game-teams {
+    flex-wrap: wrap;
+  }
+
   .quick-links-card {
     text-align: center;
   }
 
   .quick-link-btn {
+    text-align: center;
+  }
+
+  .empty-text {
     text-align: center;
   }
 
@@ -1772,9 +1794,24 @@
   }
 
   /* Ensure centering on smaller mobile */
+  .dashboard-sidebar .card {
+    text-align: center;
+  }
+
+  .dashboard-sidebar h3 {
+    text-align: center;
+  }
+
   .upcoming-games-list,
-  .recent-bets-list,
+  .recent-bets-list {
+    align-items: center;
+  }
+
   .quick-links-card {
+    text-align: center;
+  }
+
+  .empty-text {
     text-align: center;
   }
 
