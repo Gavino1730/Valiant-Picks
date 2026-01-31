@@ -556,7 +556,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                 className="btn btn-primary preview-banner-btn"
                 onClick={scrollToCalendar}
               >
-                📅 View Full Schedule
+                📅 View Spirit Week Schedule
               </button>
             </div>
           </div>
