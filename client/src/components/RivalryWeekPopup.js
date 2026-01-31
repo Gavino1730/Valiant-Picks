@@ -45,11 +45,11 @@ const RivalryWeekPopup = ({ enabled = true, gameInfo = {} }) => {
         <button className="rivalry-close-btn" onClick={handleClose}>×</button>
         
         {/* Top Badge */}
-        <div className="rivalry-top-badge">💢 RIVALRY GAME 💢</div>
+        <div className="rivalry-top-badge">‼️ RIVALRY GAME ‼️</div>
         
         <div className="rivalry-image-container">
           <img 
-            src="/assets/rivalry-vc-vs-oes.png" 
+            src="/assets/varks.png" 
             alt="Rivalry Week" 
             className="rivalry-image"
           />

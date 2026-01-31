@@ -327,6 +327,8 @@
   justify-content: center;
   font-size: 1.2rem;
   transition: all 0.3s ease;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 .notification-banner-close:hover {
@@ -3249,5 +3251,82 @@
 
   .balance-display-compact .balance-amount {
     font-size: 1.1rem;
+  }
+}
+
+/* Scroll Indicator for Spirit Week Calendar */
+.scroll-indicator {
+  text-align: center;
+  padding: 1.5rem 0;
+  margin: 1rem 0;
+  animation: fadeInBounce 1.5s ease-in-out infinite;
+}
+
+.scroll-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4caf50;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+}
+
+.scroll-arrow {
+  font-size: 2rem;
+  color: #4caf50;
+  animation: bounce 2s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes fadeInBounce {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* View Calendar Button */
+.view-calendar-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.view-calendar-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 79, 158, 0.4);
+}
+
+.view-calendar-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive adjustments for scroll indicator */
+@media (max-width: 768px) {
+  .scroll-indicator {
+    padding: 1rem 0;
+  }
+  
+  .scroll-text {
+    font-size: 0.9rem;
+  }
+  
+  .scroll-arrow {
+    font-size: 1.5rem;
   }
 }

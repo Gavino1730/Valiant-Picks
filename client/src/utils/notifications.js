@@ -161,6 +161,24 @@ class NotificationService {
     return false;
   }
 
+  // Dismiss the notification banner (don't show again)
+  dismissBanner() {
+    try {
+      localStorage.setItem('notificationBannerDismissed', 'true');
+    } catch (error) {
+      console.error('Failed to save banner dismissal:', error);
+    }
+  }
+
+  // Check if notification banner has been dismissed
+  isBannerDismissed() {
+    try {
+      return localStorage.getItem('notificationBannerDismissed') === 'true';
+    } catch (error) {
+      return false;
+    }
+  }
+
   // Toggle notifications on/off
   toggle() {
     if (!this.enabled) {

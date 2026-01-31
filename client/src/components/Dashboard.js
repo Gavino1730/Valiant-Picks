@@ -44,6 +44,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [showSpinWheel, setShowSpinWheel] = useState(false);
   const [hasCheckedSpinWheel, setHasCheckedSpinWheel] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const spiritWeekCalendarRef = React.useRef(null);
   // TEMPORARILY DISABLED - stats state (used in commented-out stats overview section)
   // const [stats, setStats] = useState({
   //   totalBets: 0,
@@ -364,6 +365,12 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     setNotificationsEnabled(result);
   };
 
+  // Handle notification banner dismiss
+  const handleNotificationBannerDismiss = () => {
+    notificationService.dismissBanner();
+    setNotificationsEnabled(true); // Hide banner by setting to truthy value
+  };
+
   // Handle daily reward claimed
   const handleDailyRewardClaimed = async (amount, newBalance, streak) => {
     // TEMPORARILY DISABLED - setBalance (balance state is disabled)
@@ -403,7 +410,10 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     const sorted = [...spiritWeekData.grades].sort((a, b) => b.points - a.points);
     return sorted[0];
   }, [spiritWeekData]);
-
+  // Scroll to Spirit Week Calendar
+  const scrollToCalendar = () => {
+    spiritWeekCalendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
   return (
     <div className="dashboard school-dashboard">
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
@@ -415,7 +425,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       <Achievements onAchievementClaimed={handleAchievementClaimed} />
       
       {/* Notification Permission Banner */}
-      {!notificationsEnabled && !isMobile && (
+      {!notificationsEnabled && !isMobile && !notificationService.isBannerDismissed() && (
         <div className="notification-banner">
           <div className="notification-banner-icon">🔔</div>
           <div className="notification-banner-content">
@@ -425,7 +435,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
           <button className="notification-banner-btn" onClick={handleNotificationToggle}>
             Enable Notifications
           </button>
-          <button className="notification-banner-close" onClick={() => setNotificationsEnabled(null)} title="Don't show again">
+          <button className="notification-banner-close" onClick={handleNotificationBannerDismiss} title="Don't show again">
             ✕
           </button>
         </div>
@@ -585,6 +595,22 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                   );
                 })}
             </div>
+            
+            {/* View Calendar Button */}
+            <button 
+              className="btn btn-primary view-calendar-btn"
+              onClick={scrollToCalendar}
+              style={{ 
+                marginTop: '1.5rem', 
+                width: '100%',
+                background: 'linear-gradient(135deg, #004f9e 0%, #0066cc 100%)',
+                fontSize: '1rem',
+                fontWeight: '600',
+                padding: '0.9rem'
+              }}
+            >
+              📅 View Full Spirit Week Schedule Below ⬇️
+            </button>
           </div>
 
           {/* Place a Pick CTA - TEMPORARILY HIDDEN
@@ -632,8 +658,14 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             onPrizeWon={handleSpinWheelPrize} 
           />
 
+          {/* Scroll Indicator */}
+          <div className="scroll-indicator">
+            <div className="scroll-text">📅 Spirit Week Calendar Below</div>
+            <div className="scroll-arrow">⬇</div>
+          </div>
+
           {/* Spirit Week Tracker */}
-          <div className="card spirit-week-card">
+          <div ref={spiritWeekCalendarRef} className="card spirit-week-card">
             <div className="spirit-week-header">
               <h3>🎭 Spirit Week 2026: {spiritWeekData.theme}</h3>
               <span className="spirit-week-date">{spiritWeekData.weekOf}</span>
