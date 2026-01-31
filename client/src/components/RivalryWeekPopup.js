@@ -3,19 +3,14 @@ import '../styles/RivalryWeekPopup.css';
 
 const RivalryWeekPopup = ({ enabled = true, gameInfo = {} }) => {
   const [showPopup, setShowPopup] = useState(false);
-  const [shake, setShake] = useState(false);
 
   useEffect(() => {
     // Only show if enabled and user hasn't dismissed it this session
     const dismissed = sessionStorage.getItem('rivalryWeekDismissed');
     if (enabled && !dismissed) {
-      // Show popup with shake effect
+      // Show popup
       const timer = setTimeout(() => {
         setShowPopup(true);
-        setShake(true);
-        
-        // Stop shaking after 1 second
-        setTimeout(() => setShake(false), 1000);
       }, 500);
       
       // Auto-dismiss after 10 seconds
@@ -45,7 +40,7 @@ const RivalryWeekPopup = ({ enabled = true, gameInfo = {} }) => {
   } = gameInfo;
 
   return (
-    <div className={`rivalry-popup-overlay ${shake ? 'shake' : ''}`} onClick={handleClose}>
+    <div className="rivalry-popup-overlay" onClick={handleClose}>
       <div className="rivalry-popup-content" onClick={(e) => e.stopPropagation()}>
         <button className="rivalry-close-btn" onClick={handleClose}>×</button>
         
@@ -54,9 +49,9 @@ const RivalryWeekPopup = ({ enabled = true, gameInfo = {} }) => {
         
         <div className="rivalry-image-container">
           <img 
-            src="/assets/fight.png" 
+            src="/assets/rivalry-vc-vs-oes.png" 
             alt="Rivalry Week" 
-            className={`rivalry-image ${shake ? 'rumble' : ''}`}
+            className="rivalry-image"
           />
         </div>
 
@@ -88,14 +83,6 @@ const RivalryWeekPopup = ({ enabled = true, gameInfo = {} }) => {
               <span className="info-icon">📍</span>
               <span className="info-text">{location}</span>
             </div>
-          </div>
-
-          <button className="rivalry-cta-btn" onClick={handleClose}>
-            LET'S GO! 🔥
-          </button>
-          
-          <div className="rivalry-bottom-text">
-            <span>💙 Wear Blue • Bring the Energy • Support Your Valiants 💙</span>
           </div>
         </div>
       </div>

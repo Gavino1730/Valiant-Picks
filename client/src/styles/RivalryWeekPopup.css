@@ -38,16 +38,17 @@
 
 /* Popup Content */
 .rivalry-popup-content {
-  background: linear-gradient(135deg, #1a1f35 0%, #0f1419 100%);
-  border: 3px solid #1f4e99;
+  background: linear-gradient(135deg, #1a2f35 0%, #0f1a19 50%, #1a1f35 100%);
+  border: 3px solid transparent;
+  border-image: linear-gradient(135deg, #1f4e99, #005a43) 1;
   border-radius: 20px;
   max-width: 500px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 20px 60px rgba(31, 78, 153, 0.4), 
-              0 0 100px rgba(31, 78, 153, 0.2);
+  box-shadow: 0 20px 60px rgba(31, 78, 153, 0.3), 
+              0 0 100px rgba(0, 90, 67, 0.2);
   animation: slideInScale 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   overflow-x: hidden;
 }
@@ -65,8 +66,8 @@
 
 /* Top Badge - Game of the Year */
 .rivalry-top-badge {
-  background: linear-gradient(135deg, #ffd700, #ffb300);
-  color: #1a1a1a;
+  background: linear-gradient(90deg, #1f4e99, #005a43, #1f4e99);
+  color: #ffffff;
   font-size: 0.9rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -78,11 +79,11 @@
 
 @keyframes shimmer {
   0%, 100% {
-    background: linear-gradient(135deg, #ffd700, #ffb300);
+    background: linear-gradient(90deg, #1f4e99, #005a43, #1f4e99);
   }
   50% {
-    background: linear-gradient(135deg, #ffb300, #ffd700);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    background: linear-gradient(90deg, #005a43, #1f4e99, #005a43);
+    box-shadow: 0 0 20px rgba(31, 78, 153, 0.3), 0 0 20px rgba(0, 122, 90, 0.3);
   }
 }
 
@@ -120,7 +121,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, rgba(31, 78, 153, 0.2) 0%, transparent 100%);
+  background: linear-gradient(90deg, rgba(31, 78, 153, 0.2) 0%, rgba(0, 90, 67, 0.2) 100%);
   padding: 1rem;
 }
 
@@ -138,11 +139,11 @@
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
-    filter: drop-shadow(0 0 10px rgba(31, 78, 153, 0.5));
+    filter: drop-shadow(0 0 10px rgba(31, 78, 153, 0.4)) drop-shadow(0 0 10px rgba(0, 90, 67, 0.4));
   }
   50% {
     transform: scale(1.05);
-    filter: drop-shadow(0 0 20px rgba(31, 78, 153, 0.8));
+    filter: drop-shadow(0 0 20px rgba(31, 78, 153, 0.6)) drop-shadow(0 0 20px rgba(0, 90, 67, 0.6));
   }
 }
 
@@ -183,8 +184,8 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 1rem;
-  text-shadow: 0 0 20px rgba(31, 78, 153, 0.8),
-               0 0 40px rgba(31, 78, 153, 0.6);
+  text-shadow: 0 0 20px rgba(31, 78, 153, 0.6),
+               0 0 40px rgba(0, 90, 67, 0.6);
 }
 
 .rivalry-title.animated {
@@ -204,13 +205,13 @@
 
 @keyframes glow {
   0%, 100% {
-    text-shadow: 0 0 20px rgba(31, 78, 153, 0.8),
-                 0 0 40px rgba(31, 78, 153, 0.6);
+    text-shadow: 0 0 20px rgba(31, 78, 153, 0.6),
+                 0 0 40px rgba(0, 90, 67, 0.6);
   }
   50% {
-    text-shadow: 0 0 30px rgba(31, 78, 153, 1),
-                 0 0 60px rgba(31, 78, 153, 0.8),
-                 0 0 80px rgba(31, 78, 153, 0.6);
+    text-shadow: 0 0 30px rgba(31, 78, 153, 0.8),
+                 0 0 60px rgba(0, 90, 67, 0.8),
+                 0 0 80px rgba(31, 78, 153, 0.4);
   }
 }
 
@@ -245,9 +246,9 @@
 }
 
 .rivalry-team.opponent {
-  background: linear-gradient(135deg, #ef5350, #c62828);
+  background: linear-gradient(135deg, #005a43, #007a5a);
   color: white;
-  box-shadow: 0 4px 20px rgba(239, 83, 80, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 90, 67, 0.5);
   animation-delay: 0.4s;
   animation-fill-mode: both;
 }
@@ -317,26 +318,29 @@
 
 /* Game Info */
 .rivalry-game-info {
-  background: linear-gradient(135deg, rgba(31, 78, 153, 0.3), rgba(31, 78, 153, 0.1));
-  border: 2px solid rgba(31, 78, 153, 0.5);
+  background: linear-gradient(135deg, rgba(31, 78, 153, 0.2), rgba(0, 90, 67, 0.2));
+  border: 2px solid rgba(31, 78, 153, 0.4);
+  border-right-color: rgba(0, 90, 67, 0.4);
   border-radius: 10px;
   padding: 1rem;
   margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  box-shadow: 0 4px 20px rgba(31, 78, 153, 0.3), inset 0 0 30px rgba(31, 78, 153, 0.1);
+  box-shadow: 0 4px 20px rgba(31, 78, 153, 0.2), 0 4px 20px rgba(0, 90, 67, 0.2), inset 0 0 30px rgba(31, 78, 153, 0.1);
   animation: infoPulse 2s ease-in-out infinite;
 }
 
 @keyframes infoPulse {
   0%, 100% {
-    box-shadow: 0 4px 20px rgba(31, 78, 153, 0.3), inset 0 0 30px rgba(31, 78, 153, 0.1);
-    border-color: rgba(31, 78, 153, 0.5);
+    box-shadow: 0 4px 20px rgba(31, 78, 153, 0.2), 0 4px 20px rgba(0, 90, 67, 0.2), inset 0 0 30px rgba(31, 78, 153, 0.1);
+    border-color: rgba(31, 78, 153, 0.4);
+    border-right-color: rgba(0, 90, 67, 0.4);
   }
   50% {
-    box-shadow: 0 4px 30px rgba(31, 78, 153, 0.5), inset 0 0 40px rgba(31, 78, 153, 0.2);
-    border-color: rgba(31, 78, 153, 0.8);
+    box-shadow: 0 4px 30px rgba(31, 78, 153, 0.3), 0 4px 30px rgba(0, 90, 67, 0.3), inset 0 0 40px rgba(0, 90, 67, 0.1);
+    border-color: rgba(31, 78, 153, 0.6);
+    border-right-color: rgba(0, 90, 67, 0.6);
   }
 }
 

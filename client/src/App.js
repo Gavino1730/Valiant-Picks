@@ -301,10 +301,10 @@ function AppContent() {
   const rivalryWeekConfig = {
     enabled: true, // Set to false to disable
     gameInfo: {
-      opponent: 'OREGON EPISCOPAL',
+      opponent: 'OES',
       date: 'Tuesday, February 3',
       time: '7:30 PM',
-      location: 'Home Court'
+      location: 'Valiants Gym'
     }
   };
 
