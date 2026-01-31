@@ -552,13 +552,13 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                 <h4>Spirit Week 2026: Battle of the Broadways</h4>
                 <p>Feb 2-6 • Daily dress-up themes, events & grade competition!</p>
               </div>
-              <button 
-                className="btn btn-primary preview-banner-btn"
-                onClick={scrollToCalendar}
-              >
-                📅 View Spirit Week Schedule
-              </button>
             </div>
+            <button 
+              className="btn btn-primary preview-banner-btn"
+              onClick={scrollToCalendar}
+            >
+              📅 View Spirit Week Schedule
+            </button>
           </div>
 
           {/* Grade Rankings - Top Priority */}
