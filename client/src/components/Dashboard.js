@@ -10,6 +10,7 @@ import notificationService from '../utils/notifications';
 import DailyReward from './DailyReward';
 import SpinWheel from './SpinWheel';
 import Achievements from './Achievements';
+import popupQueue from '../utils/popupQueue';
 
 function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   // TEMPORARILY DISABLED - balance state (used in commented-out CTA section)
@@ -287,10 +288,16 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         
         // Auto-open if user has spins and hasn't seen it today
         if (response.data.canSpin && lastShown !== today) {
-          setTimeout(() => {
-            setShowSpinWheel(true);
-            localStorage.setItem('lastSpinWheelShown', today);
-          }, 1000); // Delay 1 second for smooth experience
+          // Add to popup queue with priority 3 (show third, after daily reward)
+          popupQueue.enqueue(
+            'spinWheel',
+            () => {
+              setShowSpinWheel(true);
+              localStorage.setItem('lastSpinWheelShown', today);
+            },
+            3, // Priority: 3 (show last)
+            0 // No initial delay (queue handles timing)
+          );
         }
         setHasCheckedSpinWheel(true);
       } catch (error) {

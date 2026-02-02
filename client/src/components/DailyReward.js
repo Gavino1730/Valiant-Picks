@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../utils/axios';
 import '../styles/DailyReward.css';
+import popupQueue from '../utils/popupQueue';
 
 const DailyReward = ({ onRewardClaimed }) => {
   const [showModal, setShowModal] = useState(false);
@@ -8,6 +9,7 @@ const DailyReward = ({ onRewardClaimed }) => {
   const [claimed, setClaimed] = useState(false);
   const [claiming, setClaiming] = useState(false);
   const hasChecked = React.useRef(false);
+  const hasDismissed = React.useRef(false);
 
   useEffect(() => {
     // Prevent duplicate checks in React Strict Mode
@@ -22,9 +24,14 @@ const DailyReward = ({ onRewardClaimed }) => {
       const data = response.data;
 
       if (!data.alreadyLoggedIn && data.canClaim) {
-        // New login today, show reward modal
+        // New login today, add to popup queue with priority 2
         setRewardData(data);
-        setShowModal(true);
+        popupQueue.enqueue(
+          'dailyReward',
+          () => setShowModal(true),
+          2, // Priority: 2 (show second, after rivalry)
+          0 // No initial delay (queue handles timing)
+        );
       } else if (data.alreadyLoggedIn && !data.rewardClaimed) {
         // Already logged in but reward not claimed yet
         setRewardData(data);
@@ -53,12 +60,26 @@ const DailyReward = ({ onRewardClaimed }) => {
         setShowModal(false);
         setClaimed(false);
         setClaiming(false);
+        // Only dismiss if not already dismissed
+        if (!hasDismissed.current) {
+          hasDismissed.current = true;
+          popupQueue.dismiss('dailyReward');
+        }
       }, 2000);
 
     } catch (error) {
       console.error('Error claiming reward:', error);
       alert(error.response?.data?.message || 'Error claiming reward');
       setClaiming(false);
+    }
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+    // Only dismiss if not already dismissed
+    if (!hasDismissed.current) {
+      hasDismissed.current = true;
+      popupQueue.dismiss('dailyReward');
     }
   };
 
@@ -95,7 +116,7 @@ const DailyReward = ({ onRewardClaimed }) => {
             </button>
             <button 
               className="close-button"
-              onClick={() => setShowModal(false)}
+              onClick={handleClose}
             >
               Claim Later
             </button>
