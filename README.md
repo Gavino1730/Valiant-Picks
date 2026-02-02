@@ -177,6 +177,7 @@ valiant-picks/
 
 - **[API Documentation](API.md)** - Complete API reference
 - **[Deployment Guide](DEPLOYMENT.md)** - How to deploy to production
+- **[SEO Implementation](SEO_IMPLEMENTATION.md)** - SEO optimization details
 - **[Contributing Guide](CONTRIBUTING.md)** - How to contribute
 - **[Security Policy](SECURITY.md)** - Security guidelines
 - **[Changelog](CHANGELOG.md)** - Version history

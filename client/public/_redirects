@@ -1,0 +1,18 @@
+# Cloudflare Pages redirects for SPA routing
+
+# Redirect www to non-www
+https://www.valiantpicks.com/* https://valiantpicks.com/:splat 301
+
+# SEO files should be served as-is
+/robots.txt /robots.txt 200
+/sitemap.xml /sitemap.xml 200
+/manifest.json /manifest.json 200
+/humans.txt /humans.txt 200
+/.well-known/* /.well-known/:splat 200
+
+# Assets should be served as-is
+/assets/* /assets/:splat 200
+/static/* /static/:splat 200
+
+# All other routes should serve index.html (SPA routing)
+/* /index.html 200

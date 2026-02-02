@@ -1,0 +1,12 @@
+/* TEAM */
+  Project: Valiant Picks
+  Site: https://valiantpicks.com
+  Description: Sports betting platform for Valiant sports games
+  
+/* SITE */
+  Standards: HTML5, CSS3, JavaScript ES6+
+  Components: React, Node.js, Express, PostgreSQL
+  Software: VS Code, Git
+  
+/* THANKS */
+  To all the Valiant sports fans and bettors who make this platform exciting!

@@ -1,0 +1,28 @@
+{
+  "short_name": "Valiant Picks",
+  "name": "Valiant Picks - Sports Betting Platform",
+  "description": "Place bets on Valiant sports games with virtual Valiant Bucks. Track your picks, compete on the leaderboard, and follow your favorite teams.",
+  "icons": [
+    {
+      "src": "/assets/transparent.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "theme_color": "#004f9e",
+  "background_color": "#0f1419",
+  "orientation": "portrait-primary",
+  "categories": ["sports", "entertainment"],
+  "scope": "/",
+  "lang": "en-US",
+  "dir": "ltr"
+}
