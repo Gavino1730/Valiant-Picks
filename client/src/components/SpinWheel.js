@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import axios from '../utils/axios';
 import '../styles/SpinWheel.css';
+import popupQueue from '../utils/popupQueue';
 
 const SpinWheel = ({ isOpen, onClose, onPrizeWon }) => {
   const [spinning, setSpinning] = useState(false);
@@ -11,6 +12,12 @@ const SpinWheel = ({ isOpen, onClose, onPrizeWon }) => {
   const [prizes, setPrizes] = useState([500, 750, 1000, 2000, 3000, 5000, 7500, 10000]);
   const [showResult, setShowResult] = useState(false);
   const [wonAmount, setWonAmount] = useState(0);
+
+  // Handle close with queue dismissal
+  const handleClose = () => {
+    popupQueue.dismiss('spinWheel');
+    onClose();
+  };
 
   useEffect(() => {
     checkCanSpin();
@@ -127,9 +134,9 @@ const SpinWheel = ({ isOpen, onClose, onPrizeWon }) => {
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
-    <div className="spin-wheel-overlay" onClick={onClose}>
+    <div className="spin-wheel-overlay" onClick={handleClose}>
       <div className="spin-wheel-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="spin-wheel-close" onClick={onClose}>&times;</button>
+        <button className="spin-wheel-close" onClick={handleClose}>&times;</button>
         <div className="spin-wheel-container">
       <div className="wheel-header">
         <h2>Daily Spin Wheel</h2>

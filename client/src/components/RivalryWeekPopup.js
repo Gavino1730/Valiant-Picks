@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/RivalryWeekPopup.css';
+import popupQueue from '../utils/popupQueue';
 
 const RivalryWeekPopup = ({ enabled = true, gameInfo = {} }) => {
   const [showPopup, setShowPopup] = useState(false);
@@ -8,26 +9,26 @@ const RivalryWeekPopup = ({ enabled = true, gameInfo = {} }) => {
     // Only show if enabled and user hasn't dismissed it this session
     const dismissed = sessionStorage.getItem('rivalryWeekDismissed');
     if (enabled && !dismissed) {
-      // Show popup
-      const timer = setTimeout(() => {
-        setShowPopup(true);
-      }, 500);
-      
-      // Auto-dismiss after 10 seconds
-      const autoDismiss = setTimeout(() => {
-        handleClose();
-      }, 10500);
-      
-      return () => {
-        clearTimeout(timer);
-        clearTimeout(autoDismiss);
-      };
+      // Add to popup queue with priority 1 (highest priority)
+      popupQueue.enqueue(
+        'rivalryWeek',
+        () => {
+          setShowPopup(true);
+          // Auto-dismiss after 10 seconds
+          setTimeout(() => {
+            handleClose();
+          }, 10000);
+        },
+        1, // Priority: 1 (show first)
+        500 // Initial delay: 500ms
+      );
     }
   }, [enabled]);
 
   const handleClose = () => {
     setShowPopup(false);
     sessionStorage.setItem('rivalryWeekDismissed', 'true');
+    popupQueue.dismiss('rivalryWeek');
   };
 
   if (!showPopup) return null;
