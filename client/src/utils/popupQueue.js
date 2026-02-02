@@ -91,17 +91,24 @@ class PopupQueue {
    */
   waitForDismissal(id) {
     return new Promise((resolve) => {
-      const checkInterval = setInterval(() => {
+      let intervalId = null;
+      let timeoutId = null;
+      
+      const cleanup = () => {
+        if (intervalId) clearInterval(intervalId);
+        if (timeoutId) clearTimeout(timeoutId);
+        resolve();
+      };
+      
+      intervalId = setInterval(() => {
         if (this.currentPopup && this.currentPopup.id === id && this.currentPopup.dismissed) {
-          clearInterval(checkInterval);
-          resolve();
+          cleanup();
         }
       }, 100);
 
       // Auto-dismiss after 30 seconds if not manually dismissed
-      setTimeout(() => {
-        clearInterval(checkInterval);
-        resolve();
+      timeoutId = setTimeout(() => {
+        cleanup();
       }, 30000);
     });
   }

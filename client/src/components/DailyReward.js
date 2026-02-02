@@ -9,6 +9,7 @@ const DailyReward = ({ onRewardClaimed }) => {
   const [claimed, setClaimed] = useState(false);
   const [claiming, setClaiming] = useState(false);
   const hasChecked = React.useRef(false);
+  const hasDismissed = React.useRef(false);
 
   useEffect(() => {
     // Prevent duplicate checks in React Strict Mode
@@ -59,7 +60,11 @@ const DailyReward = ({ onRewardClaimed }) => {
         setShowModal(false);
         setClaimed(false);
         setClaiming(false);
-        popupQueue.dismiss('dailyReward');
+        // Only dismiss if not already dismissed
+        if (!hasDismissed.current) {
+          hasDismissed.current = true;
+          popupQueue.dismiss('dailyReward');
+        }
       }, 2000);
 
     } catch (error) {
@@ -71,7 +76,11 @@ const DailyReward = ({ onRewardClaimed }) => {
 
   const handleClose = () => {
     setShowModal(false);
-    popupQueue.dismiss('dailyReward');
+    // Only dismiss if not already dismissed
+    if (!hasDismissed.current) {
+      hasDismissed.current = true;
+      popupQueue.dismiss('dailyReward');
+    }
   };
 
   if (!showModal || !rewardData) return null;
