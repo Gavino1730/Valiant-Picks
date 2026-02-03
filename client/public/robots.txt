@@ -1,4 +1,4 @@
-# Robots.txt for Valiant Picks - Sports Betting Platform
+# Robots.txt for Valiant Picks - Sports Picks Platform
 # https://valiantpicks.com
 
 User-agent: *
@@ -11,13 +11,8 @@ Allow: /howto
 Allow: /about
 Allow: /terms
 
-# Disallow admin and authentication pages
-Disallow: /admin
-Disallow: /login
-Disallow: /register
-
-# Disallow private user pages
-Disallow: /bets
+# Crawl-delay (optional)
+Crawl-delay: 1
 Disallow: /notifications
 
 # Allow all assets
