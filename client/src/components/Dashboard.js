@@ -113,7 +113,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         colors: "Pink & Green",
         color: "#00C853",
         icon: "🧙‍♀️",
-        points: 0,
+        points: 850,
         lipSyncPractice: "Monday Lunch"
       },
       {
@@ -122,7 +122,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         colors: "Orange & Yellow",
         color: "#FF9800",
         icon: "🦁",
-        points: 0,
+        points: 720,
         lipSyncPractice: "Tuesday Lunch"
       },
       {
@@ -131,7 +131,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         colors: "Pink & Black",
         color: "#E91E63",
         icon: "🎸",
-        points: 0,
+        points: 1240,
         lipSyncPractice: "Wednesday Lunch"
       },
       {
@@ -140,7 +140,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         colors: "Red, White & Blue",
         color: "#1976D2",
         icon: "🎩",
-        points: 0,
+        points: 1050,
         lipSyncPractice: "Thursday Lunch"
       }
     ]
