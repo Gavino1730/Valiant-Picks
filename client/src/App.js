@@ -299,7 +299,7 @@ function AppContent() {
 
   // Rivalry Week Configuration - Toggle enabled to true/false
   const rivalryWeekConfig = {
-    enabled: true, // Set to false to disable
+    enabled: false, // Set to false to disable
     gameInfo: {
       opponent: 'OES',
       date: 'This Tuesday!',
