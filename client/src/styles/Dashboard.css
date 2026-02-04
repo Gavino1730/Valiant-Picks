@@ -2844,6 +2844,16 @@
   gap: 0.75rem;
 }
 
+.grade-bar-rank {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #FFD700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  min-width: 2.5rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
 .grade-bar-icon {
   font-size: 2rem;
   flex-shrink: 0;
