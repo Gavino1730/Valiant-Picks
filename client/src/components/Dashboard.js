@@ -612,7 +612,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                             boxShadow: `0 2px 8px ${grade.color}40`
                           }}
                         >
-                          {percentage > 10 && <span className="grade-bar-percentage">{percentage.toFixed(0)}</span>}
                         </div>
                       </div>
                     </div>
