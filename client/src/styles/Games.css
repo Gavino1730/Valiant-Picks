@@ -13,34 +13,6 @@
   position: relative;
 }
 
-.page-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 3px;
-  background: repeating-linear-gradient(
-    90deg,
-    #ff8c00 0px,
-    #ff8c00 20px,
-    transparent 20px,
-    transparent 30px,
-    #ffd700 30px,
-    #ffd700 50px,
-    transparent 50px,
-    transparent 60px
-  );
-  box-shadow: 0 0 15px rgba(255, 140, 0, 0.6);
-  animation: bulbsGlow 3s linear infinite;
-}
-
-@keyframes bulbsGlow {
-  0% { transform: translateX(-50%) scaleX(1); }
-  100% { transform: translateX(-50%) scaleX(1); }
-}
-
 .page-header h2 {
   color: #ffd700;
   font-size: 2.5rem;
