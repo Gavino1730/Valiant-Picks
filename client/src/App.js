@@ -401,12 +401,8 @@ function AppContent() {
 
       {/* Mobile Slide-out Menu */}
       <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
-        {/* User Info Header at Top */}
+        {/* Spacing at Top */}
         <div className="mobile-menu-header">
-          <div className="mobile-user-info">
-            <div className="mobile-user-name">👤 {currentUser?.username || 'User'}</div>
-            <div className="mobile-balance">💰 {formatCurrency(currentUser?.balance || 0)}</div>
-          </div>
         </div>
 
         {/* Navigation Menu */}
@@ -488,8 +484,12 @@ function AppContent() {
           )}
         </div>
 
-        {/* Logout Button at Bottom */}
+        {/* User Info and Logout Button at Bottom */}
         <div className="mobile-menu-footer">
+          <div className="mobile-user-info">
+            <div className="mobile-user-name">👤 {currentUser?.username || 'User'}</div>
+            <div className="mobile-balance">💰 {formatCurrency(currentUser?.balance || 0)}</div>
+          </div>
           <button onClick={handleLogout} className="mobile-logout-btn">
             🚪 Logout
           </button>
