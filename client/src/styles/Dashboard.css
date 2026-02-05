@@ -1655,8 +1655,7 @@
   /* Center upcoming games, recent picks, and quick links cards on mobile */
   .dashboard-sidebar .card {
     text-align: center;
-    margin: 0 auto;
-    max-width: 600px;
+    margin: 0;
     width: 100%;
   }
 
@@ -3177,13 +3176,12 @@
     grid-template-columns: 1fr;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin: 0 auto;
+    align-items: stretch;
+    margin: 0;
   }
 
   .dashboard-sidebar .card {
-    margin: 0 auto;
-    max-width: 600px;
+    margin: 0;
     width: 100%;
   }
 

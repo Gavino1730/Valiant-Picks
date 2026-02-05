@@ -19,7 +19,7 @@ body {
   margin: 0;
   overflow-x: hidden;
   /* Prevent white overscroll background on mobile */
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: none;
   /* Smooth scrolling on iOS */
   -webkit-overflow-scrolling: touch;
   /* Better touch interaction */
@@ -90,36 +90,6 @@ body {
   gap: 0.5rem;
   min-height: 60px;
   overflow: hidden;
-}
-
-/* Spirit Week Flair - Broadway Marquee Lights */
-.navbar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: 
-    repeating-linear-gradient(
-      90deg,
-      #ff8c00 0px,
-      #ff8c00 20px,
-      #ffeb3b 20px,
-      #ffeb3b 40px,
-      #ff6f00 40px,
-      #ff6f00 60px,
-      #ffd700 60px,
-      #ffd700 80px
-    );
-  animation: marqueeLightsScroll 2s linear infinite;
-  z-index: 1;
-  box-shadow: 0 0 10px rgba(255, 140, 0, 0.6);
-}
-
-@keyframes marqueeLightsScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(80px); }
 }
 
 .nav-brand {
@@ -1127,9 +1097,10 @@ table tbody tr:hover {
     display: grid;
     grid-template-columns: auto 1fr auto;
     justify-items: stretch;
-    position: -webkit-sticky;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 1100;
     width: 100%;
   }
@@ -1171,6 +1142,7 @@ table tbody tr:hover {
 
   .container {
     padding: 1.5rem 1rem;
+    padding-top: calc(76px + 1.5rem);
     width: 100%;
     margin: 0 auto;
     max-width: 100%;
@@ -1234,8 +1206,10 @@ table tbody tr:hover {
   .navbar {
     padding: 0.7rem 0.75rem;
     grid-template-columns: 1fr auto;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 1100;
   }
 
@@ -1265,6 +1239,7 @@ table tbody tr:hover {
 
   .container {
     padding: 0.75rem;
+    padding-top: calc(60px + 0.75rem);
     max-width: 100%;
   }
 
@@ -1390,6 +1365,11 @@ table tbody tr:hover {
 @media (max-width: 380px) {
   .navbar {
     grid-template-columns: auto 1fr;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1100;
   }
 
   .nav-brand {
