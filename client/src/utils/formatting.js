@@ -32,10 +32,13 @@ export const formatSignedCurrency = (value) => {
 
 export const formatSignedPercentage = (value) => {
   if (!Number.isFinite(Number(value))) {
-    return '0.00%';
+    return '0%';
   }
   const amount = Number(value);
-  const formatted = Math.abs(amount).toFixed(2);
+  const formatted = Math.abs(amount).toLocaleString(DEFAULT_LOCALE, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
   if (amount > 0) return `+${formatted}%`;
   if (amount < 0) return `-${formatted}%`;
   return `${formatted}%`;

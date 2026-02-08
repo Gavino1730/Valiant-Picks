@@ -181,7 +181,7 @@ function OnboardingModal() {
 
         <div className="onboarding-footer">
           <button className="onboarding-btn-primary" data-testid="onboarding-start" onClick={handleClose}>
-            Lets Get Started
+            Let's Get Started
           </button>
           <button
             type="button"
@@ -196,7 +196,7 @@ function OnboardingModal() {
               checked={dontShowAgain}
               onChange={(event) => setDontShowAgain(event.target.checked)}
             />
-            Dont show again
+            Don't show again
           </label>
         </div>
       </div>
