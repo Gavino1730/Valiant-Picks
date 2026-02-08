@@ -321,6 +321,8 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     }
   };
   
+  const balance = user?.balance || 0;
+
   return (
     <div className="dashboard school-dashboard">
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
@@ -353,17 +355,18 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         {winNotification && (
           <div className="win-notification">
             <span className="win-notification-emoji">🎉</span>
-            <div>You Won!</div>
+            <div className="win-notification-title">You Won!</div>
             <div className="win-notification-amount">+{formatCurrency(winNotification.amount)}</div>
-            <div style={{fontSize: '1.2rem', marginTop: '0.5rem'}}>{winNotification.team}</div>
+            <div className="win-notification-team">{winNotification.team}</div>
           </div>
         )}
         
         {lossNotification && (
           <div className="loss-notification">
-            <span className="loss-notification-emoji">😔</span>
-            <div>Better luck next time!</div>
-            <div style={{fontSize: '1rem', marginTop: '0.5rem', opacity: 0.9}}>-{formatCurrency(lossNotification.amount)}</div>
+            <span className="loss-notification-emoji">😢</span>
+            <div className="loss-notification-title">Loss</div>
+            <div className="loss-notification-amount">-{formatCurrency(lossNotification.amount)}</div>
+            <div className="loss-notification-team">{lossNotification.team}</div>
           </div>
         )}
       </div>
@@ -451,79 +454,45 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       <div className="dashboard-grid school-grid">
         {/* Left Column */}
         <div className="dashboard-main-column">
-          {/* Welcome Banner */}
-          <div className="card welcome-banner">
-            <h2>Welcome back, {user?.username || 'Bettor'}! 🎉</h2>
-            <p>Your current balance: <strong style={{color: '#4caf50', fontSize: '1.2rem'}}>{formatCurrency(balance)}</strong></p>
-            <p>Ready to make some picks? Check out the upcoming games and start winning!</p>
-          </div>
-
-          {/* Place a Pick CTA */}
-          <div className="card pick-cta-card">
-            <h3>🎲 Place Your Picks</h3>
-            <p style={{fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.75rem'}}>
-              View upcoming games and make your predictions on Valiant sports!
-            </p>
+          {/* Welcome Section with Balance - PRIMARY CTA */}
+          <div className="card welcome-card-primary">
+            <div className="welcome-header">
+              <h2>Welcome back, {user?.username || 'Bettor'}!</h2>
+              <div className="balance-display-large">
+                <span className="balance-label">Your Balance</span>
+                <span className="balance-amount">{formatCurrency(user?.balance ?? 0)}</span>
+              </div>
+            </div>
             <button 
-              className="btn btn-primary btn-large"
+              className="btn btn-primary btn-cta-large"
               onClick={() => onNavigate && onNavigate('games')}
-              style={{ marginTop: '1rem', width: '100%' }}
             >
-              🏀 Go to Place Picks Page
-            </button>
-            <button 
-              className="btn btn-secondary btn-large spin-wheel-cta"
-              onClick={() => setShowSpinWheel(true)}
-              style={{ 
-                marginTop: '0.5rem', 
-                width: '100%', 
-                background: 'linear-gradient(135deg, #FFD700, #FFA500, #FFD700)',
-                color: '#004f9e',
-                fontWeight: '900',
-                fontSize: '1.1rem',
-                boxShadow: '0 4px 15px rgba(255, 165, 0, 0.4)',
-                border: '2px solid rgba(255, 215, 0, 0.5)',
-                animation: 'spinPulse 2s ease-in-out infinite'
-              }}
-            >
-              🎰 Spin Daily Wheel - Win up to 10,000 VB!
+              🏀 Place Your Picks Now
             </button>
           </div>
 
-          {/* Spin Wheel Modal */}
-          <SpinWheel 
-            isOpen={showSpinWheel} 
-            onClose={() => setShowSpinWheel(false)}
-            onPrizeWon={handleSpinWheelPrize} 
-          />
-        </div>
-
-        {/* Right Sidebar */}
-        <div className="dashboard-sidebar">
-          {/* Upcoming Games */}
-          <div className="card">
+          {/* Upcoming Games Section */}
+          <div className="card upcoming-section">
             <h3>🏀 Upcoming Games</h3>
             {gamesLoading ? (
               <div>
                 {Array.from({ length: 3 }).map((_, idx) => (
                   <UpcomingGameSkeleton key={idx} />
                 ))}
-
               </div>
             ) : upcomingGames.length > 0 ? (
-              <div className="upcoming-games-list">
+              <div className="upcoming-games-grid">
                 {upcomingGames.map(game => (
-                  <div key={game.id} className="upcoming-game-item">
-                    <div className="game-teams">
-                      <span>{game.home_team}</span>
-                      <span className="vs-small">vs</span>
-                      <span>{game.away_team}</span>
+                  <div key={game.id} className="upcoming-game-card">
+                    <div className="game-matchup-display">
+                      <span className="team-name">{game.home_team}</span>
+                      <span className="vs-divider">vs</span>
+                      <span className="team-name">{game.away_team}</span>
                     </div>
-                    <div className="game-meta">
-                      <span className={`game-type-badge ${game.team_type?.toLowerCase().includes('boys') ? 'boys' : game.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
-                        {game.team_type?.toLowerCase().includes('boys') ? '🏀 ' : game.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{game.team_type?.replace(' Basketball', '')}
+                    <div className="game-details-row">
+                      <span className="game-date-display">
+                        {parseLocalDateOnly(game.game_date)?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) || 'TBD'}
                       </span>
-                      <span>{parseLocalDateOnly(game.game_date)?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) || 'TBD'}</span>
                     </div>
                   </div>
                 ))}
@@ -532,27 +501,26 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               <p className="empty-text">No upcoming games</p>
             )}
             <button 
-              className="btn btn-secondary btn-small"
+              className="btn btn-secondary btn-full-width"
               onClick={() => onNavigate && onNavigate('games')}
-              style={{ marginTop: '1rem', width: '100%' }}
             >
-              View All & Make Picks
+              View All Games
             </button>
           </div>
 
-          {/* Recent Activity */}
-          <div className="card">
-            <h3>📝 Recent Picks</h3>
+          {/* Recent Activity Section */}
+          <div className="card recent-activity-section">
+            <h3>📊 Recent Picks</h3>
             {recentActivity.length > 0 ? (
-              <div className="recent-bets-list">
+              <div className="recent-activity-grid">
                 {recentActivity.map(activity => (
-                  <div key={activity.id} className="recent-bet-item">
-                    <div className="bet-info">
-                      <div className="bet-team">{activity.selected_team}</div>
-                      <div className="bet-amount">{formatCurrency(activity.amount)}</div>
+                  <div key={activity.id} className="activity-card">
+                    <div className="activity-header">
+                      <span className="activity-team">{activity.selected_team}</span>
+                      <span className="activity-bet-amount">{formatCurrency(activity.amount)}</span>
                     </div>
-                    <div className="bet-status">
-                      <span className={`status-badge status-${activity.status === 'pending' ? 'pending' : activity.outcome}`}>
+                    <div className="activity-footer">
+                      <span className={`activity-status status-${activity.status === 'pending' ? 'pending' : activity.outcome}`}>
                         {activity.status === 'pending'
                           ? '⏳ Pending'
                           : activity.outcome === 'won'
@@ -560,11 +528,14 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                           : '❌ Lost'}
                       </span>
                       {activity.outcome === 'won' && (
-                        <span className="bet-win">+{formatCurrency(activity.potential_win - activity.amount)}</span>
+                        <span className="activity-profit won">+{formatCurrency(activity.potential_win - activity.amount)}</span>
+                      )}
+                      {activity.outcome === 'lost' && (
+                        <span className="activity-profit lost">-{formatCurrency(activity.amount)}</span>
                       )}
                       {activity.status === 'pending' && (
-                        <span className="bet-win" style={{ color: '#1f4e99' }}>
-                          Possible: {formatCurrency(activity.potential_win - activity.amount)}
+                        <span className="activity-potential">
+                          Potential: +{formatCurrency(activity.potential_win - activity.amount)}
                         </span>
                       )}
                     </div>
@@ -575,46 +546,55 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               <p className="empty-text">No recent picks</p>
             )}
           </div>
+        </div>
 
-          {/* Quick Links */}
-          <div className="card quick-links-card">
-            <h3>🔗 Quick Links</h3>
-            <div className="quick-links">
+        {/* Right Sidebar */}
+        <div className="dashboard-sidebar">
+          {/* Spin Wheel CTA - Secondary */}
+          <div className="card spin-wheel-card">
+            <h3>🎰 Daily Spin Wheel</h3>
+            <p>Spin once per day for bonus Valiant Bucks!</p>
+            <button 
+              className="btn btn-spin-wheel"
+              onClick={() => setShowSpinWheel(true)}
+            >
+              Spin to Win!
+            </button>
+          </div>
+
+          {/* Quick Links - Minimal */}
+          <div className="card quick-links-minimal">
+            <h4>Quick Links</h4>
+            <div className="quick-links-list">
               <button 
-                className="quick-link-btn"
-                onClick={() => setShowSpinWheel(true)}
-                style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}
-              >
-                🎡 Spin Wheel
-              </button>
-              <button 
-                className="quick-link-btn"
-                onClick={() => onNavigate && onNavigate('games')}
-              >
-                🏀 Place Picks
-              </button>
-              <button 
-                className="quick-link-btn"
+                className="quick-link-item"
                 onClick={() => onNavigate && onNavigate('teams')}
               >
-                👥 Team Rosters
+                Teams
               </button>
               <button 
-                className="quick-link-btn"
+                className="quick-link-item"
                 onClick={() => onNavigate && onNavigate('leaderboard')}
               >
-                🏆 Leaderboard
+                Leaderboard
               </button>
               <button 
-                className="quick-link-btn"
+                className="quick-link-item"
                 onClick={() => onNavigate && onNavigate('about')}
               >
-                ℹ️ About
+                About
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Spin Wheel Modal */}
+      <SpinWheel 
+        isOpen={showSpinWheel} 
+        onClose={() => setShowSpinWheel(false)}
+        onPrizeWon={handleSpinWheelPrize} 
+      />
     </div>
   );
 }
