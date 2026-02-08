@@ -32,6 +32,7 @@ function AdminPanel() {
   const [editingPropBet, setEditingPropBet] = useState(null);
   const [userSearch, setUserSearch] = useState('');
   const [selectedGameIds, setSelectedGameIds] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [openGameMenuId, setOpenGameMenuId] = useState(null);
   
   // Game creation form
@@ -339,12 +340,14 @@ function AdminPanel() {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const toggleGameSelection = (gameId) => {
     setSelectedGameIds(prev => (
       prev.includes(gameId) ? prev.filter(id => id !== gameId) : [...prev, gameId]
     ));
   };
 
+  // eslint-disable-next-line no-unused-vars
   const setSelectedGames = (ids, shouldSelect) => {
     setSelectedGameIds(prev => {
       const next = new Set(prev);
@@ -361,6 +364,7 @@ function AdminPanel() {
 
   const clearSelectedGames = () => setSelectedGameIds([]);
 
+  // eslint-disable-next-line no-unused-vars
   const handleBulkVisibility = async (isVisible) => {
     if (selectedGameIds.length === 0) return;
     if (!window.confirm(`Set visibility to ${isVisible ? 'Show' : 'Hide'} for ${selectedGameIds.length} selected games?`)) {
@@ -377,6 +381,7 @@ function AdminPanel() {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleBulkDelete = async () => {
     if (selectedGameIds.length === 0) return;
     if (!window.confirm(`Delete ${selectedGameIds.length} selected games? All related bets will be refunded.`)) {
@@ -391,6 +396,7 @@ function AdminPanel() {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const toggleGameMenu = (gameId) => {
     setOpenGameMenuId(prev => (prev === gameId ? null : gameId));
   };
@@ -780,7 +786,9 @@ function AdminPanel() {
 
   if (loading) return <div className="card">Loading...</div>;
 
+  // eslint-disable-next-line no-unused-vars
   const boysGamesCount = games.filter(g => g.team_type === 'Boys Basketball').length;
+  // eslint-disable-next-line no-unused-vars
   const girlsGamesCount = games.filter(g => g.team_type === 'Girls Basketball').length;
 
   const activeGames = games.filter(game => {
@@ -797,7 +805,9 @@ function AdminPanel() {
 
   const activeIds = activeGames.map(game => game.id);
   const completedIds = completedGames.map(game => game.id);
+  // eslint-disable-next-line no-unused-vars
   const isAllActiveSelected = activeIds.length > 0 && activeIds.every(id => selectedGameIds.includes(id));
+  // eslint-disable-next-line no-unused-vars
   const isAllCompletedSelected = completedIds.length > 0 && completedIds.every(id => selectedGameIds.includes(id));
 
   return (
@@ -836,122 +846,79 @@ function AdminPanel() {
       </div>
 
       {tab === 'games' && (
-        <div className="admin-section">
-          {/* Filter and Action Bar */}
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', gap: '15px', flexWrap: 'wrap'}}>
-            <div style={{display: 'flex', gap: '10px'}}>
-              <button 
+        <div className="admin-section admin-games">
+          <div className="admin-games-toolbar">
+            <div className="admin-segmented" role="tablist" aria-label="Game filters">
+              <button
+                type="button"
+                className={`admin-segment-btn ${gameFilter === 'all' ? 'active' : ''}`}
                 onClick={() => setGameFilter('all')}
-                style={{
-                  padding: '10px 20px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: gameFilter === 'all' ? 'linear-gradient(135deg, #1f4e99, #3b82f6)' : 'rgba(255, 255, 255, 0.1)',
-                  color: gameFilter === 'all' ? '#ffffff' : 'white',
-                  fontWeight: gameFilter === 'all' ? '600' : '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
               >
-                All Games ({games.length})
+                All Games <span className="count-badge">{games.length}</span>
               </button>
-              <button 
+              <button
+                type="button"
+                className={`admin-segment-btn ${gameFilter === 'boys' ? 'active' : ''}`}
                 onClick={() => setGameFilter('boys')}
-                style={{
-                  padding: '10px 20px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: gameFilter === 'boys' ? 'linear-gradient(135deg, #2196f3, #1976d2)' : 'rgba(255, 255, 255, 0.1)',
-                  color: 'white',
-                  fontWeight: gameFilter === 'boys' ? '600' : '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
               >
-                Boys Basketball ({games.filter(g => g.team_type === 'Boys Basketball').length})
+                Boys <span className="count-badge">{boysGamesCount}</span>
               </button>
-              <button 
+              <button
+                type="button"
+                className={`admin-segment-btn ${gameFilter === 'girls' ? 'active' : ''}`}
                 onClick={() => setGameFilter('girls')}
-                style={{
-                  padding: '10px 20px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: gameFilter === 'girls' ? 'linear-gradient(135deg, #e91e63, #c2185b)' : 'rgba(255, 255, 255, 0.1)',
-                  color: 'white',
-                  fontWeight: gameFilter === 'girls' ? '600' : '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
               >
-                Girls Basketball ({games.filter(g => g.team_type === 'Girls Basketball').length})
+                Girls <span className="count-badge">{girlsGamesCount}</span>
               </button>
             </div>
-            <div className="admin-game-actions">
-              <button
-                type="button"
-                className="btn"
-                onClick={seedGamesFromSchedule}
-                style={{
-                  background: 'linear-gradient(135deg, #66bb6a, #43a047)',
-                  borderRadius: '999px',
-                }}
-              >
-                📥 Seed from Schedules
+
+            <div className="admin-toolbar">
+              <button type="button" className="admin-toolbar-btn" onClick={seedGamesFromSchedule}>
+                Seed from Schedule
+              </button>
+              <button type="button" className="admin-toolbar-btn" onClick={() => toggleAllVisibility(true)}>
+                Show All
+              </button>
+              <button type="button" className="admin-toolbar-btn" onClick={() => toggleAllVisibility(false)}>
+                Hide All
+              </button>
+              <button type="button" className="admin-toolbar-btn admin-toolbar-btn--danger" onClick={deleteAllGames}>
+                Delete All
               </button>
               <button
                 type="button"
-                className="btn"
-                onClick={() => toggleAllVisibility(true)}
-                style={{
-                  background: 'linear-gradient(135deg, #29b6f6, #0288d1)',
-                  borderRadius: '999px',
-                }}
-              >
-                👁️ Show All
-              </button>
-              <button
-                type="button"
-                className="btn"
-                onClick={() => toggleAllVisibility(false)}
-                style={{
-                  background: 'linear-gradient(135deg, #ffb300, #fb8c00)',
-                  borderRadius: '999px',
-                }}
-              >
-                🚫 Hide All
-              </button>
-              <button
-                type="button"
-                className="btn"
-                onClick={deleteAllGames}
-                style={{
-                  background: 'linear-gradient(135deg, #ef5350, #e53935)',
-                  borderRadius: '999px',
-                }}
-              >
-                🗑️ Delete All
-              </button>
-              <button
-                type="button"
-                className="btn"
+                className={`admin-toolbar-btn admin-toolbar-btn--primary ${showCreateForm ? 'is-active' : ''}`}
                 onClick={() => setShowCreateForm(!showCreateForm)}
-                style={{
-                  background: showCreateForm
-                    ? 'linear-gradient(135deg, #757575, #616161)'
-                    : 'linear-gradient(135deg, #1e88e5, #1565c0)',
-                  color: '#ffffff',
-                  borderRadius: '999px',
-                }}
               >
-                {showCreateForm ? '✕ Close Form' : '+ Create Game'}
+                {showCreateForm ? 'Close' : 'Create Game'}
               </button>
             </div>
           </div>
 
+          {selectedGameIds.length > 0 && (
+            <div className="admin-bulk-bar">
+              <div className="admin-bulk-count">{selectedGameIds.length} selected</div>
+              <div className="admin-bulk-actions">
+                <button type="button" className="admin-toolbar-btn" onClick={() => handleBulkVisibility(true)}>
+                  Show
+                </button>
+                <button type="button" className="admin-toolbar-btn" onClick={() => handleBulkVisibility(false)}>
+                  Hide
+                </button>
+                <button type="button" className="admin-toolbar-btn admin-toolbar-btn--danger" onClick={handleBulkDelete}>
+                  Delete
+                </button>
+                <button type="button" className="admin-toolbar-btn admin-toolbar-btn--ghost" onClick={clearSelectedGames}>
+                  Clear
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Create Game Form (Collapsible) */}
           {showCreateForm && (
-            <div style={{background: 'rgba(31, 78, 153, 0.05)', padding: '25px', borderRadius: '12px', marginBottom: '25px', border: '2px solid rgba(31, 78, 153, 0.3)'}}>
-              <h3 style={{marginTop: 0}}>Create New Game</h3>
+            <div className="admin-game-form-card admin-game-form-card--create">
+              <h3 className="admin-form-title">Create New Game</h3>
               <form onSubmit={handleCreateGame} className="game-form">
                 <div className="form-row">
                   <div className="form-group">
@@ -1065,15 +1032,15 @@ function AdminPanel() {
                   </div>
                 </div>
 
-                <button type="submit" className="btn">Create Game</button>
+                <button type="submit" className="btn admin-btn admin-btn--primary">Create Game</button>
               </form>
             </div>
           )}
 
           {/* Edit Game Form */}
           {editingGame && (
-            <div style={{background: 'rgba(30, 136, 229, 0.1)', padding: '25px', borderRadius: '12px', marginBottom: '25px', border: '2px solid #1e88e5'}}>
-              <h3 style={{marginTop: 0}}>✏️ Edit Game</h3>
+            <div className="admin-game-form-card admin-game-form-card--edit">
+              <h3 className="admin-form-title">Edit Game</h3>
               <form onSubmit={handleUpdateGame} className="game-form">
                 <div className="form-row">
                   <div className="form-group">
@@ -1112,218 +1079,210 @@ function AdminPanel() {
                     <input type="text" name="notes" value={editingGame.notes || ''} onChange={handleEditingGameChange} />
                   </div>
                 </div>
-                <div style={{display: 'flex', gap: '10px', marginTop: '15px'}}>
-                  <button type="submit" className="btn" style={{background: '#66bb6a'}}>💾 Save Changes</button>
-                  <button type="button" className="btn" style={{background: '#757575'}} onClick={() => setEditingGame(null)}>Cancel</button>
+                <div className="admin-form-actions">
+                  <button type="submit" className="btn admin-btn admin-btn--primary">Save Changes</button>
+                  <button type="button" className="btn admin-btn" onClick={() => setEditingGame(null)}>Cancel</button>
                 </div>
               </form>
             </div>
           )}
           
           {/* Games List */}
-          <h3 style={{marginBottom: '20px'}}>
-            {gameFilter === 'all' && 'Active Games'}
-            {gameFilter === 'boys' && 'Active Boys Basketball Games'}
-            {gameFilter === 'girls' && 'Active Girls Basketball Games'}
-          </h3>
-          
-          {games.filter(game => {
-            if (gameFilter === 'boys') return game.team_type === 'Boys Basketball' && !game.result;
-            if (gameFilter === 'girls') return game.team_type === 'Girls Basketball' && !game.result;
-            return !game.result;
-          }).length === 0 ? (
-            <p style={{textAlign: 'center', padding: '40px', color: '#888'}}>
-              {gameFilter === 'all' ? 'No active games. Click "Create Game" or "Seed from Schedules" to get started.' : `No active ${gameFilter} games found.`}
-            </p>
+          <div className="admin-section-header admin-section-header--sticky">
+            <div className="admin-section-title">
+              {gameFilter === 'all' && 'Active Games'}
+              {gameFilter === 'boys' && 'Active Boys Basketball Games'}
+              {gameFilter === 'girls' && 'Active Girls Basketball Games'}
+              <span className="count-badge">{activeGames.length}</span>
+            </div>
+            <label className="admin-checkbox admin-checkbox--select-all">
+              <input
+                type="checkbox"
+                checked={isAllActiveSelected}
+                onChange={(e) => setSelectedGames(activeIds, e.target.checked)}
+              />
+              <span>Select all</span>
+            </label>
+          </div>
+
+          {activeGames.length === 0 ? (
+            <div className="admin-empty-state">
+              {gameFilter === 'all'
+                ? 'No active games. Use Create Game or Seed from Schedule to get started.'
+                : `No active ${gameFilter} games found.`}
+            </div>
           ) : (
-            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px', marginBottom: '40px'}}>
-              {games.filter(game => {
-                if (gameFilter === 'boys') return game.team_type === 'Boys Basketball' && !game.result;
-                if (gameFilter === 'girls') return game.team_type === 'Girls Basketball' && !game.result;
-                return !game.result;
-              }).map(game => (
-                <div key={game.id} style={{
-                  background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)',
-                  padding: '20px',
-                  borderRadius: '12px',
-                  border: `2px solid ${game.team_type === 'Boys Basketball' ? '#2196f3' : '#e91e63'}`,
-                  transition: 'transform 0.2s ease',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                >
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
-                    <div>
-                      <h4 style={{margin: '0 0 5px 0', color: '#1f4e99'}}>{game.home_team} {game.away_team ? `vs ${game.away_team}` : ''}</h4>
-                      <span style={{
-                        fontSize: '0.75rem',
-                        padding: '3px 8px',
-                        borderRadius: '4px',
-                        background: game.team_type === 'Boys Basketball' ? 'rgba(33, 150, 243, 0.2)' : 'rgba(233, 30, 99, 0.2)',
-                        color: game.team_type === 'Boys Basketball' ? '#64b5f6' : '#f48fb1',
-                        border: `1px solid ${game.team_type === 'Boys Basketball' ? '#2196f3' : '#e91e63'}`
-                      }}>
-                        {game.team_type}
-                      </span>
+            <div className="admin-game-grid">
+              {activeGames.map(game => (
+                <div key={game.id} className="admin-game-card">
+                  <div className="admin-game-card__header">
+                    <label className="admin-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={selectedGameIds.includes(game.id)}
+                        onChange={() => toggleGameSelection(game.id)}
+                      />
+                      <span></span>
+                    </label>
+                    <div className="admin-game-card__title">
+                      <div className="admin-game-card__teams">
+                        <span className="team">{game.home_team}</span>
+                        {game.away_team && <span className="vs">vs</span>}
+                        {game.away_team && <span className="team">{game.away_team}</span>}
+                      </div>
+                      <div className="admin-game-card__meta">
+                        {game.game_date}
+                        {game.game_time ? ` • ${formatTime(game.game_time)}` : ''}
+                        {game.location ? ` • ${game.location}` : ' • TBD'}
+                      </div>
                     </div>
-                    <span style={{
-                      padding: '5px 12px',
-                      borderRadius: '20px',
-                      fontSize: '0.7rem',
-                      fontWeight: 'bold',
-                      background: game.is_visible === false ? '#ef5350' : '#66bb6a',
-                      color: 'white'
-                    }}>
-                      {game.is_visible === false ? '👁️ HIDDEN' : '👁️ VISIBLE'}
-                    </span>
+                    <div className="admin-game-card__badges">
+                      <span className="badge badge--scheduled">Scheduled</span>
+                      {game.is_visible === false && <span className="badge badge--hidden">Hidden</span>}
+                    </div>
                   </div>
-                  
-                  <div style={{fontSize: '0.9rem', color: '#b8c5d6', marginBottom: '15px'}}>
-                    <p style={{margin: '5px 0'}}><strong>📅</strong> {game.game_date} {game.game_time ? `at ${formatTime(game.game_time)}` : ''}</p>
-                    <p style={{margin: '5px 0'}}><strong>📍</strong> {game.location || 'TBD'}</p>
-                    <p style={{margin: '5px 0'}}><strong>Status:</strong> {game.status}</p>
-                    {game.result && <p style={{margin: '5px 0', color: '#66bb6a'}}><strong>Winner:</strong> {game.result}</p>}
+
+                  <div className="admin-game-card__body">
+                    <div className="admin-game-card__row">
+                      <span className="label">Type</span>
+                      <span className="value">{game.team_type}</span>
+                    </div>
+                    <div className="admin-game-card__row">
+                      <span className="label">Status</span>
+                      <span className="value">{game.status || 'Scheduled'}</span>
+                    </div>
                   </div>
-                  
-                  <div style={{display: 'flex', gap: '12px', alignItems: 'center', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', flexWrap: 'wrap'}}>
-                    <label className="toggle-switch" style={{flexShrink: 0}}>
-                      <input 
-                        type="checkbox" 
+
+                  <div className="admin-game-card__actions">
+                    <label className="toggle-switch admin-toggle-compact">
+                      <input
+                        type="checkbox"
                         checked={game.is_visible !== false}
                         onChange={() => handleToggleGameVisibility(game.id, game.is_visible !== false)}
                       />
                       <span className="toggle-slider"></span>
                     </label>
-                    <button 
-                      className="btn" 
-                      style={{background: '#1e88e5', padding: '8px 16px', fontSize: '0.85em', whiteSpace: 'nowrap', flex: 1, minWidth: '100px'}}
-                      onClick={() => handleEditGame(game)}
-                    >
-                      ✏️ Edit
+                    <button className="btn admin-btn admin-btn--primary" onClick={() => handleEditGame(game)}>
+                      Edit
                     </button>
-                      <button 
-                        className="btn" 
-                        style={{background: '#9c27b0', padding: '8px 16px', fontSize: '0.85em', whiteSpace: 'nowrap', flex: 1, minWidth: '100px'}}
-                        onClick={() => handleOpenGameStatus(game)}
+                    <div className="admin-overflow">
+                      <button
+                        type="button"
+                        className="btn admin-btn admin-btn--ghost"
+                        onClick={() => toggleGameMenu(game.id)}
                       >
-                        ⚙️ Outcome
+                        More
                       </button>
+                      {openGameMenuId === game.id && (
+                        <div className="admin-overflow-menu">
+                          <button
+                            type="button"
+                            className="admin-overflow-item"
+                            onClick={() => {
+                              handleOpenGameStatus(game);
+                              setOpenGameMenuId(null);
+                            }}
+                          >
+                            Outcome
+                          </button>
+                        </div>
+                      )}
                     </div>
+                  </div>
                 </div>
               ))}
             </div>
           )}
 
           {/* Completed Games Section */}
-          {games.filter(game => {
-            if (gameFilter === 'boys') return game.team_type === 'Boys Basketball' && game.result;
-            if (gameFilter === 'girls') return game.team_type === 'Girls Basketball' && game.result;
-            return game.result;
-          }).length > 0 && (
-            <div style={{marginTop: '50px', paddingTop: '30px', borderTop: '2px solid rgba(31, 78, 153, 0.2)'}}>
-              <button
-                onClick={() => setShowCompletedGames(!showCompletedGames)}
-                style={{
-                  width: '100%',
-                  padding: '15px 20px',
-                  marginBottom: '20px',
-                  background: 'linear-gradient(135deg, rgba(31, 78, 153, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)',
-                  border: '2px solid rgba(31, 78, 153, 0.3)',
-                  borderRadius: '12px',
-                  color: '#1f4e99',
-                  fontWeight: '700',
-                  fontSize: '1.1rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, rgba(31, 78, 153, 0.25) 0%, rgba(59, 130, 246, 0.25) 100%)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, rgba(31, 78, 153, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)'}
-              >
-                {showCompletedGames ? '▼' : '▶'} Completed Games ({games.filter(game => {
-                  if (gameFilter === 'boys') return game.team_type === 'Boys Basketball' && game.result;
-                  if (gameFilter === 'girls') return game.team_type === 'Girls Basketball' && game.result;
-                  return game.result;
-                }).length})
-              </button>
+          {completedGames.length > 0 && (
+            <div className="admin-completed-section">
+              <div className="admin-section-header admin-section-header--sticky admin-section-header--completed">
+                <button
+                  type="button"
+                  className="admin-section-toggle"
+                  onClick={() => setShowCompletedGames(!showCompletedGames)}
+                >
+                  <span>{showCompletedGames ? '▾' : '▸'} Completed Games</span>
+                  <span className="count-badge">{completedGames.length}</span>
+                </button>
+                <label className={`admin-checkbox admin-checkbox--select-all ${!showCompletedGames ? 'is-disabled' : ''}`}>
+                  <input
+                    type="checkbox"
+                    disabled={!showCompletedGames}
+                    checked={isAllCompletedSelected}
+                    onChange={(e) => setSelectedGames(completedIds, e.target.checked)}
+                  />
+                  <span>Select all</span>
+                </label>
+              </div>
 
               {showCompletedGames && (
-                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
-                  {games.filter(game => {
-                    if (gameFilter === 'boys') return game.team_type === 'Boys Basketball' && game.result;
-                    if (gameFilter === 'girls') return game.team_type === 'Girls Basketball' && game.result;
-                    return game.result;
-                  }).map(game => (
-                    <div key={game.id} style={{
-                      background: 'linear-gradient(135deg, rgba(102, 187, 106, 0.1) 0%, rgba(67, 160, 71, 0.1) 100%)',
-                      padding: '20px',
-                      borderRadius: '12px',
-                      border: `2px solid rgba(102, 187, 106, 0.3)`,
-                      transition: 'transform 0.2s ease',
-                      opacity: 0.8
-                    }}
-                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.opacity = '1'}}
-                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.opacity = '0.8'}}
-                    >
-                      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
-                        <div>
-                          <h4 style={{margin: '0 0 5px 0', color: '#81c784'}}>{game.home_team} {game.away_team ? `vs ${game.away_team}` : ''}</h4>
-                          <span style={{
-                            fontSize: '0.75rem',
-                            padding: '3px 8px',
-                            borderRadius: '4px',
-                            background: 'rgba(102, 187, 106, 0.2)',
-                            color: '#81c784',
-                            border: '1px solid #66bb6a'
-                          }}>
-                            ✅ COMPLETED
-                          </span>
+                <div className="admin-completed-list">
+                  {completedGames.map(game => (
+                    <div key={game.id} className="admin-completed-row">
+                      <label className="admin-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={selectedGameIds.includes(game.id)}
+                          onChange={() => toggleGameSelection(game.id)}
+                        />
+                        <span></span>
+                      </label>
+                      <div className="admin-completed-main">
+                        <div className="admin-game-card__teams">
+                          <span className="team">{game.home_team}</span>
+                          {game.away_team && <span className="vs">vs</span>}
+                          {game.away_team && <span className="team">{game.away_team}</span>}
                         </div>
-                        <span style={{
-                          padding: '5px 12px',
-                          borderRadius: '20px',
-                          fontSize: '0.7rem',
-                          fontWeight: 'bold',
-                          background: game.is_visible === false ? '#ef5350' : '#66bb6a',
-                          color: 'white'
-                        }}>
-                          {game.is_visible === false ? '👁️ HIDDEN' : '👁️ VISIBLE'}
-                        </span>
+                        <div className="admin-game-card__meta">
+                          {game.game_date}
+                          {game.game_time ? ` • ${formatTime(game.game_time)}` : ''}
+                          {game.location ? ` • ${game.location}` : ' • TBD'}
+                        </div>
                       </div>
-                      
-                      <div style={{fontSize: '0.9rem', color: '#b8c5d6', marginBottom: '15px'}}>
-                        <p style={{margin: '5px 0'}}><strong>📅</strong> {game.game_date} {game.game_time ? `at ${formatTime(game.game_time)}` : ''}</p>
-                        <p style={{margin: '5px 0'}}><strong>📍</strong> {game.location || 'TBD'}</p>
-                        {game.result && <p style={{margin: '5px 0', color: '#66bb6a', fontWeight: '600'}}><strong>🏆 Winner:</strong> {game.result}</p>}
+                      <div className="admin-completed-winner">
+                        {game.result ? `Winner: ${game.result}` : 'Winner: —'}
                       </div>
-                      
-                      <div style={{display: 'flex', gap: '12px', alignItems: 'center', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', flexWrap: 'wrap'}}>
-                        <label className="toggle-switch" style={{flexShrink: 0}}>
-                          <input 
-                            type="checkbox" 
+                      <div className="admin-game-card__badges">
+                        <span className="badge badge--completed">Completed</span>
+                        {game.is_visible === false && <span className="badge badge--hidden">Hidden</span>}
+                      </div>
+                      <div className="admin-game-card__actions admin-game-card__actions--compact">
+                        <label className="toggle-switch admin-toggle-compact">
+                          <input
+                            type="checkbox"
                             checked={game.is_visible !== false}
                             onChange={() => handleToggleGameVisibility(game.id, game.is_visible !== false)}
                           />
                           <span className="toggle-slider"></span>
                         </label>
-                        <button 
-                          className="btn" 
-                          style={{background: '#1e88e5', padding: '8px 16px', fontSize: '0.85em', whiteSpace: 'nowrap', flex: 1, minWidth: '100px'}}
-                          onClick={() => handleEditGame(game)}
-                        >
-                          ✏️ Edit
+                        <button className="btn admin-btn admin-btn--primary" onClick={() => handleEditGame(game)}>
+                          Edit
                         </button>
-                        <button 
-                          className="btn" 
-                          style={{background: '#757575', padding: '8px 16px', fontSize: '0.85em', whiteSpace: 'nowrap', flex: 1, minWidth: '100px'}}
-                          onClick={() => handleDeleteGame(game.id)}
-                        >
-                          🗑️ Delete
-                        </button>
+                        <div className="admin-overflow">
+                          <button
+                            type="button"
+                            className="btn admin-btn admin-btn--ghost"
+                            onClick={() => toggleGameMenu(game.id)}
+                          >
+                            More
+                          </button>
+                          {openGameMenuId === game.id && (
+                            <div className="admin-overflow-menu">
+                              <button
+                                type="button"
+                                className="admin-overflow-item admin-overflow-item--danger"
+                                onClick={() => {
+                                  handleDeleteGame(game.id);
+                                  setOpenGameMenuId(null);
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
