@@ -82,10 +82,14 @@
   font-weight: 700;
   margin-bottom: var(--space-2);
   letter-spacing: -0.4px;
+  background: linear-gradient(90deg, #60a5fa 0%, #34d399 45%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .leaderboard-header .subtitle {
-  color: var(--color-text-secondary);
+  color: #bcd7ff;
   font-size: var(--font-body);
   font-weight: 400;
   letter-spacing: 0.2px;
@@ -117,12 +121,27 @@
 }
 
 .stat-card::before {
-  content: none;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #60a5fa, #34d399, #f59e0b);
+  opacity: 0.85;
+}
+
+.stat-card:nth-child(1)::before {
+  background: linear-gradient(90deg, #60a5fa, #93c5fd);
+}
+
+.stat-card:nth-child(2)::before {
+  background: linear-gradient(90deg, #34d399, #10b981);
 }
 
 .stat-card:hover {
   border-color: rgba(255, 255, 255, 0.2);
-  background: var(--color-surface-raised);
+  background: linear-gradient(180deg, rgba(96, 165, 250, 0.08), rgba(52, 211, 153, 0.04));
 }
 
 .stat-card-value {
@@ -276,7 +295,7 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  background: rgba(10, 14, 20, 0.95);
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
   color: var(--color-text-secondary);
   font-size: var(--font-micro);
   font-weight: 600;
@@ -305,12 +324,12 @@
 }
 
 .leaderboard-row:hover {
-  background: rgba(148, 163, 184, 0.06);
+  background: rgba(96, 165, 250, 0.08);
 }
 
 .leaderboard-row.is-current-user {
-  background: rgba(59, 130, 246, 0.08);
-  box-shadow: inset 3px 0 0 rgba(59, 130, 246, 0.7);
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.18), rgba(59, 130, 246, 0.05));
+  box-shadow: inset 3px 0 0 rgba(59, 130, 246, 0.7), inset 0 0 18px rgba(59, 130, 246, 0.15);
 }
 
 .leaderboard-row.is-current-user:hover {
@@ -346,24 +365,40 @@
   color: #cbd5e1;
   font-size: 0.85rem;
   font-weight: 600;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 .rank-badge.rank-1 {
-  background: rgba(59, 130, 246, 0.16);
-  border-color: rgba(59, 130, 246, 0.35);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(56, 189, 248, 0.2));
+  border-color: rgba(59, 130, 246, 0.55);
   color: #dbeafe;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.35);
 }
 
 .rank-badge.rank-2 {
-  background: rgba(148, 163, 184, 0.18);
-  border-color: rgba(148, 163, 184, 0.3);
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.35), rgba(203, 213, 225, 0.2));
+  border-color: rgba(148, 163, 184, 0.45);
   color: #e2e8f0;
+  box-shadow: 0 0 10px rgba(148, 163, 184, 0.25);
 }
 
 .rank-badge.rank-3 {
-  background: rgba(191, 129, 52, 0.18);
-  border-color: rgba(191, 129, 52, 0.35);
-  color: #f5e4d2;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(234, 88, 12, 0.2));
+  border-color: rgba(245, 158, 11, 0.55);
+  color: #fef3c7;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+}
+
+.leaderboard-row.rank-1 {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.14), rgba(59, 130, 246, 0.04));
+}
+
+.leaderboard-row.rank-2 {
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.14), rgba(148, 163, 184, 0.04));
+}
+
+.leaderboard-row.rank-3 {
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.14), rgba(245, 158, 11, 0.04));
 }
 
 .username-cell {
@@ -383,11 +418,12 @@
   border-radius: 50%;
   flex: 0 0 auto;
   background: rgba(148, 163, 184, 0.4);
-  box-shadow: none;
+  box-shadow: 0 0 6px rgba(148, 163, 184, 0.35);
 }
 
 .activity-dot.active {
-  background: rgba(52, 211, 153, 0.85);
+  background: rgba(52, 211, 153, 0.95);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.6);
 }
 
 .activity-dot.inactive {
@@ -495,12 +531,12 @@
 }
 
 .record-cell .wins {
-  color: #7fbf8a;
+  color: #34d399;
   font-weight: 600;
 }
 
 .record-cell .losses {
-  color: #d38b8b;
+  color: #f87171;
   font-weight: 600;
 }
 
@@ -538,8 +574,8 @@
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: rgba(148, 163, 184, 0.16);
-  border-color: rgba(148, 163, 184, 0.35);
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.45);
 }
 
 .pagination-btn:disabled {

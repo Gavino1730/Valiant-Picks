@@ -444,8 +444,17 @@ function Games({ user, updateUser }) {
   const activePropBets = useMemo(() => propBets.filter(pb => pb.status === 'active'), [propBets]);
 
   const selectedGame = selectedGameId ? games.find(g => g.id === parseInt(selectedGameId)) : null;
-  const selectedGameLocked = selectedGame ? (getCountdown(buildDateFromParts(selectedGame)).isPast || isClosedStatus(selectedGame.status)) : false;
+  const selectedGameCountdown = selectedGame ? getCountdown(buildDateFromParts(selectedGame)) : null;
+  const selectedGameLocked = selectedGame ? (selectedGameCountdown.isPast || isClosedStatus(selectedGame.status)) : false;
   const hasExistingBetOnSelectedGame = selectedGame ? hasExistingBet(selectedGame.id) : false;
+  const filteredGames = useMemo(() => {
+    return games.filter(game => {
+      if (teamFilter === 'all') return true;
+      if (teamFilter === 'boys') return game.team_type?.toLowerCase().includes('boys');
+      if (teamFilter === 'girls') return game.team_type?.toLowerCase().includes('girls');
+      return true;
+    });
+  }, [games, teamFilter]);
 
   return (
     <div className="games-page ds-page">
@@ -460,497 +469,526 @@ function Games({ user, updateUser }) {
         </div>
       )}
 
-      <div className="filter-buttons">
-          <button 
-            className={`filter-btn ${teamFilter === 'all' ? 'active' : ''}`}
-            onClick={() => setTeamFilter('all')}
-          >
-            All
-          </button>
-          <button 
-            className={`filter-btn ${teamFilter === 'boys' ? 'active' : ''}`}
-            onClick={() => setTeamFilter('boys')}
-          >
-            Boys
-          </button>
-          <button 
-            className={`filter-btn ${teamFilter === 'girls' ? 'active' : ''}`}
-            onClick={() => setTeamFilter('girls')}
-          >
-            Girls
-          </button>
-        </div>
+      {activePropBets.length > 0 && (
+        <section className="prop-picks-section">
+          <div className="section-header">
+            <h3>Prop Picks</h3>
+            <p>Special picks with custom odds and expirations.</p>
+          </div>
+          <div className="props-grid">
+            {activePropBets.map(prop => {
+              const expiresAt = prop.expires_at ? new Date(prop.expires_at) : null;
+              const countdown = getCountdown(expiresAt);
+              const propLocked = countdown.isPast || prop.status !== 'active';
+              const isBoys = prop.team_type?.toLowerCase().includes('boys');
+              const isGirls = prop.team_type?.toLowerCase().includes('girls');
 
-      {loading ? (
-        <div className="games-grid">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <div className="game-card-display skeleton-card" key={idx}>
-              <div className="skeleton-row">
-                <span className="skeleton-badge" />
-                <span className="skeleton-pill" />
-              </div>
-              <div className="skeleton-block" style={{height: '24px', marginTop: '10px'}} />
-              <div className="skeleton-block" style={{height: '18px', width: '60%', marginTop: '6px'}} />
-              <div className="skeleton-stack" style={{marginTop: '16px'}}>
-                <span className="skeleton-line" />
-                <span className="skeleton-line short" />
-                <span className="skeleton-line" />
-              </div>
-              <div className="skeleton-stack" style={{marginTop: '16px'}}>
-                <span className="skeleton-line" />
-                <span className="skeleton-line short" />
-              </div>
+              return (
+                <div key={`prop-${prop.id}`} className={`prop-card ${isBoys ? 'boys-prop' : isGirls ? 'girls-prop' : ''}`}>
+                  <div className="prop-header">
+                    <h3>{prop.title}</h3>
+                    <span className={`prop-category ${prop.team_type?.toLowerCase().includes('boys') ? 'boys' : prop.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
+                      {prop.team_type}
+                    </span>
+                  </div>
+                  
+                  {prop.description && (
+                    <p className="prop-description">{prop.description}</p>
+                  )}
+
+                  <div className="prop-expiry-row">
+                    <span className={`prop-expiry ${propLocked ? 'expired' : ''}`}>
+                      {prop.expires_at ? (countdown.isPast ? 'Expired' : `Expires in ${countdown.label}`) : 'No expiry set'}
+                    </span>
+                  </div>
+
+                  <div className={`prop-betting-section ${prop.options && prop.options.length === 1 ? 'single-option' : ''}`}>
+                    {/* Determine if this is a custom options prop or legacy yes/no */}
+                    {prop.options && prop.options.length > 0 ? (
+                      // Custom options
+                      prop.options.map((option, idx) => {
+                        const optionKey = option.toLowerCase().replace(/\s+/g, '-');
+                        const odds = prop.option_odds ? prop.option_odds[option] : null;
+                        
+                        return (
+                          <div key={idx} className={`prop-option-bet ${idx === 0 ? 'yes' : 'no'}`}>
+                            <div className="option-header">
+                              <span className="option-label">{option}</span>
+                              <span className="option-odds">{odds || 1.5}x</span>
+                            </div>
+                            <input
+                              type="number"
+                              placeholder="Bet amount"
+                              min="0.01"
+                              step="0.01"
+                              value={propBetAmounts[`${prop.id}-${optionKey}`] || ''}
+                              onChange={(e) => handlePropAmountChange(prop.id, optionKey, e.target.value)}
+                              className="prop-bet-input"
+                              disabled={propLocked}
+                            />
+                            <button
+                              className={`prop-bet-btn ${idx === 0 ? 'yes' : 'no'}-btn`}
+                              onClick={() => handlePlacePropBet(prop.id, optionKey, propLocked)}
+                              disabled={propLocked || propBetLoading[`${prop.id}-${optionKey}`]}
+                              style={{
+                                opacity: (propLocked || propBetLoading[`${prop.id}-${optionKey}`]) ? 0.6 : 1,
+                                cursor: (propLocked || propBetLoading[`${prop.id}-${optionKey}`]) ? 'not-allowed' : 'pointer'
+                              }}
+                            >
+                              {propBetLoading[`${prop.id}-${optionKey}`] ? 'Placing...' : (propLocked ? 'Closed' : `Bet ${option}`)}
+                            </button>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      // Legacy yes/no options
+                      <>
+                        <div className="prop-option-bet yes">
+                          <div className="option-header">
+                            <span className="option-label">YES</span>
+                            <span className="option-odds">{prop.yes_odds}x</span>
+                          </div>
+                          <input
+                            type="number"
+                            placeholder="Pick amount"
+                            min="0.01"
+                            step="0.01"
+                            value={propBetAmounts[`${prop.id}-yes`] || ''}
+                            onChange={(e) => handlePropAmountChange(prop.id, 'yes', e.target.value)}
+                            className="prop-bet-input"
+                            disabled={propLocked}
+                          />
+                          <button
+                            className="prop-bet-btn yes-btn"
+                            onClick={() => handlePlacePropBet(prop.id, 'yes', propLocked)}
+                            disabled={propLocked || propBetLoading[`${prop.id}-yes`]}
+                            style={{
+                              opacity: (propLocked || propBetLoading[`${prop.id}-yes`]) ? 0.6 : 1,
+                              cursor: (propLocked || propBetLoading[`${prop.id}-yes`]) ? 'not-allowed' : 'pointer'
+                            }}
+                          >
+                            {propBetLoading[`${prop.id}-yes`] ? 'Placing...' : (propLocked ? 'Closed' : 'Pick YES')}
+                          </button>
+                        </div>
+
+                        <div className="prop-option-bet no">
+                          <div className="option-header">
+                            <span className="option-label">NO</span>
+                            <span className="option-odds">{prop.no_odds}x</span>
+                          </div>
+                          <input
+                            type="number"
+                            placeholder="Pick amount"
+                            min="0.01"
+                            step="0.01"
+                            value={propBetAmounts[`${prop.id}-no`] || ''}
+                            onChange={(e) => handlePropAmountChange(prop.id, 'no', e.target.value)}
+                            className="prop-bet-input"
+                            disabled={propLocked}
+                          />
+                          <button
+                            className="prop-bet-btn no-btn"
+                            onClick={() => handlePlacePropBet(prop.id, 'no', propLocked)}
+                            disabled={propLocked || propBetLoading[`${prop.id}-no`]}
+                            style={{
+                              opacity: (propLocked || propBetLoading[`${prop.id}-no`]) ? 0.6 : 1,
+                              cursor: (propLocked || propBetLoading[`${prop.id}-no`]) ? 'not-allowed' : 'pointer'
+                            }}
+                          >
+                            {propBetLoading[`${prop.id}-no`] ? 'Placing...' : (propLocked ? 'Closed' : 'Pick NO')}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {prop.expires_at && (
+                    <div className="prop-expires">
+                      Expires: {new Date(prop.expires_at).toLocaleDateString()}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      <div className="place-picks-layout">
+        <div className="place-picks-left">
+          <div className="filter-buttons filter-segmented">
+            <button 
+              className={`filter-btn ${teamFilter === 'all' ? 'active' : ''}`}
+              onClick={() => setTeamFilter('all')}
+            >
+              All
+            </button>
+            <button 
+              className={`filter-btn ${teamFilter === 'boys' ? 'active' : ''}`}
+              onClick={() => setTeamFilter('boys')}
+            >
+              Boys
+            </button>
+            <button 
+              className={`filter-btn ${teamFilter === 'girls' ? 'active' : ''}`}
+              onClick={() => setTeamFilter('girls')}
+            >
+              Girls
+            </button>
+          </div>
+
+          {loading ? (
+            <div className="games-list">
+              {Array.from({ length: 6 }).map((_, idx) => (
+                <div className="game-card-display skeleton-card" key={idx}>
+                  <div className="skeleton-row">
+                    <span className="skeleton-badge" />
+                    <span className="skeleton-pill" />
+                  </div>
+                  <div className="skeleton-block" style={{height: '24px', marginTop: '10px'}} />
+                  <div className="skeleton-block" style={{height: '18px', width: '60%', marginTop: '6px'}} />
+                  <div className="skeleton-stack" style={{marginTop: '16px'}}>
+                    <span className="skeleton-line" />
+                    <span className="skeleton-line short" />
+                    <span className="skeleton-line" />
+                  </div>
+                  <div className="skeleton-stack" style={{marginTop: '16px'}}>
+                    <span className="skeleton-line" />
+                    <span className="skeleton-line short" />
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      ) : (
-        <>
-          {/* All Picks - Games and Props Combined */}
-          <div style={{marginBottom: '3rem'}}>
-            <div className="games-grid">
-              {games.length === 0 && activePropBets.length === 0 ? (
+          ) : (
+            <div className="games-list">
+              {filteredGames.length === 0 ? (
                 <div className="empty-state">
-                  <p>No picks available at the moment</p>
+                  <p>{activePropBets.length === 0 ? 'No picks available at the moment' : 'No games match this filter'}</p>
                 </div>
               ) : (
-                <>
-                {/* Render Prop Bets */}
-                {activePropBets.map(prop => {
-                  const expiresAt = prop.expires_at ? new Date(prop.expires_at) : null;
-                  const countdown = getCountdown(expiresAt);
-                  const propLocked = countdown.isPast || prop.status !== 'active';
-                  const isBoys = prop.team_type?.toLowerCase().includes('boys');
-                  const isGirls = prop.team_type?.toLowerCase().includes('girls');
+                filteredGames.map(game => {
+                  const startDate = buildDateFromParts(game);
+                  const countdown = getCountdown(startDate);
+                  const gameLocked = countdown.isPast || isClosedStatus(game.status);
+                  const isSelected = selectedGameId === game.id.toString();
 
                   return (
-                  <div key={`prop-${prop.id}`} className={`prop-card ${isBoys ? 'boys-prop' : isGirls ? 'girls-prop' : ''}`}>
-                    <div className="prop-header">
-                      <h3>{prop.title}</h3>
-                      <span className={`prop-category ${prop.team_type?.toLowerCase().includes('boys') ? 'boys' : prop.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
-                        {prop.team_type}
+                    <button
+                      key={game.id}
+                      type="button"
+                      className={`game-card-btn ${isSelected ? 'active' : ''} ${gameLocked ? 'locked' : ''} ${game.team_type?.toLowerCase().includes('boys') ? 'boys-game' : game.team_type?.toLowerCase().includes('girls') ? 'girls-game' : ''}`}
+                      onClick={() => {
+                        if (!gameLocked) {
+                          const willBeSelected = !isSelected;
+                          setSelectedGameId(isSelected ? '' : game.id.toString());
+                          if (!isSelected) {
+                            setSelectedTeam('');
+                            setConfidence('');
+                            setAmount('');
+                            // Scroll to form after state updates
+                            setTimeout(() => {
+                              if (expandedBetRef.current && willBeSelected) {
+                                expandedBetRef.current.scrollIntoView({ 
+                                  behavior: 'smooth', 
+                                  block: 'start'
+                                });
+                              }
+                            }, 100);
+                          }
+                        }
+                      }}
+                      disabled={gameLocked}
+                    >
+                      <div className="game-card-header">
+                        <span className={`game-badge ${game.team_type?.toLowerCase().includes('boys') ? 'boys' : game.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
+                          {game.team_type?.toLowerCase().includes('boys') ? '🏀 ' : game.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{game.team_type}
+                        </span>
+                        {game.location && (
+                          <span className="game-card-location">{game.location}</span>
+                        )}
+                      </div>
+                      <div className="game-card-matchup">
+                        <div className="game-card-team">
+                          <span className="team-name-text">{game.home_team}</span>
+                          <span className="team-tag home">Home</span>
+                        </div>
+                        <div className="game-card-vs">vs</div>
+                        <div className="game-card-team">
+                          <span className="team-name-text">{game.away_team}</span>
+                          <span className="team-tag away">Away</span>
+                        </div>
+                      </div>
+                      <div className="game-card-meta">
+                        <span className="game-card-date">{formatDate(game.game_date)}</span>
+                        <span className="game-card-time">{formatTime(game.game_time)}</span>
+                        {countdown && (
+                          <span className={`countdown-chip ${countdown.isPast ? 'countdown-closed' : ''}`}>
+                            {countdown.isPast ? 'Closed' : countdown.label}
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="place-picks-right">
+          <div
+            ref={expandedBetRef}
+            className={`pick-form-panel ${selectedGame?.team_type?.toLowerCase().includes('boys') ? 'boys-game' : selectedGame?.team_type?.toLowerCase().includes('girls') ? 'girls-game' : ''}`}
+          >
+            {selectedGame ? (
+              <>
+                <div className="pick-form-header">
+                  <div className="pick-form-title">
+                    {selectedGame.home_team} vs {selectedGame.away_team}
+                  </div>
+                  <div className="pick-form-meta">
+                    <span>{formatDate(selectedGame.game_date)}</span>
+                    <span>{formatTime(selectedGame.game_time)}</span>
+                    {selectedGameCountdown && (
+                      <span className={`countdown-chip ${selectedGameCountdown.isPast ? 'countdown-closed' : ''}`}>
+                        {selectedGameCountdown.isPast ? 'Closed' : selectedGameCountdown.label}
                       </span>
-                    </div>
-                    
-                    {prop.description && (
-                      <p className="prop-description">{prop.description}</p>
                     )}
+                  </div>
+                </div>
 
-                    <div className="prop-expiry-row">
-                      <span className={`prop-expiry ${propLocked ? 'expired' : ''}`}>
-                        {prop.expires_at ? (countdown.isPast ? 'Expired' : `Expires in ${countdown.label}`) : 'No expiry set'}
-                      </span>
-                    </div>
-
-                    <div className={`prop-betting-section ${prop.options && prop.options.length === 1 ? 'single-option' : ''}`}>
-                      {/* Determine if this is a custom options prop or legacy yes/no */}
-                      {prop.options && prop.options.length > 0 ? (
-                        // Custom options
-                        prop.options.map((option, idx) => {
-                          const optionKey = option.toLowerCase().replace(/\s+/g, '-');
-                          const odds = prop.option_odds ? prop.option_odds[option] : null;
-                          
-                          return (
-                            <div key={idx} className={`prop-option-bet ${idx === 0 ? 'yes' : 'no'}`}>
-                              <div className="option-header">
-                                <span className="option-label">{option}</span>
-                                <span className="option-odds">{odds || 1.5}x</span>
-                              </div>
-                              <input
-                                type="number"
-                                placeholder="Bet amount"
-                                min="0.01"
-                                step="0.01"
-                                value={propBetAmounts[`${prop.id}-${optionKey}`] || ''}
-                                onChange={(e) => handlePropAmountChange(prop.id, optionKey, e.target.value)}
-                                className="prop-bet-input"
-                                disabled={propLocked}
-                              />
-                              <button
-                                className={`prop-bet-btn ${idx === 0 ? 'yes' : 'no'}-btn`}
-                                onClick={() => handlePlacePropBet(prop.id, optionKey, propLocked)}
-                                disabled={propLocked || propBetLoading[`${prop.id}-${optionKey}`]}
-                                style={{
-                                  opacity: (propLocked || propBetLoading[`${prop.id}-${optionKey}`]) ? 0.6 : 1,
-                                  cursor: (propLocked || propBetLoading[`${prop.id}-${optionKey}`]) ? 'not-allowed' : 'pointer'
-                                }}
-                              >
-                                {propBetLoading[`${prop.id}-${optionKey}`] ? 'Placing...' : (propLocked ? 'Closed' : `Bet ${option}`)}
-                              </button>
-                            </div>
-                          );
-                        })
-                      ) : (
-                        // Legacy yes/no options
+                <form onSubmit={handlePlaceGameBet} className="expanded-bet-form">
+                  <div className="form-group">
+                    <label>Step 1: Who Will Win?</label>
+                    <p className="field-help">Click on the team you think will win this game</p>
+                    <div className="team-selection">
+                      {/* Always show Valiants first (left) */}
+                      {selectedGame.home_team.toLowerCase().includes('valiant') ? (
                         <>
-                          <div className="prop-option-bet yes">
-                            <div className="option-header">
-                              <span className="option-label">YES</span>
-                              <span className="option-odds">{prop.yes_odds}x</span>
-                            </div>
-                            <input
-                              type="number"
-                              placeholder="Pick amount"
-                              min="0.01"
-                              step="0.01"
-                              value={propBetAmounts[`${prop.id}-yes`] || ''}
-                              onChange={(e) => handlePropAmountChange(prop.id, 'yes', e.target.value)}
-                              className="prop-bet-input"
-                              disabled={propLocked}
-                            />
-                            <button
-                              className="prop-bet-btn yes-btn"
-                              onClick={() => handlePlacePropBet(prop.id, 'yes', propLocked)}
-                              disabled={propLocked || propBetLoading[`${prop.id}-yes`]}
-                              style={{
-                                opacity: (propLocked || propBetLoading[`${prop.id}-yes`]) ? 0.6 : 1,
-                                cursor: (propLocked || propBetLoading[`${prop.id}-yes`]) ? 'not-allowed' : 'pointer'
-                              }}
-                            >
-                              {propBetLoading[`${prop.id}-yes`] ? 'Placing...' : (propLocked ? 'Closed' : 'Pick YES')}
-                            </button>
-                          </div>
-
-                          <div className="prop-option-bet no">
-                            <div className="option-header">
-                              <span className="option-label">NO</span>
-                              <span className="option-odds">{prop.no_odds}x</span>
-                            </div>
-                            <input
-                              type="number"
-                              placeholder="Pick amount"
-                              min="0.01"
-                              step="0.01"
-                              value={propBetAmounts[`${prop.id}-no`] || ''}
-                              onChange={(e) => handlePropAmountChange(prop.id, 'no', e.target.value)}
-                              className="prop-bet-input"
-                              disabled={propLocked}
-                            />
-                            <button
-                              className="prop-bet-btn no-btn"
-                              onClick={() => handlePlacePropBet(prop.id, 'no', propLocked)}
-                              disabled={propLocked || propBetLoading[`${prop.id}-no`]}
-                              style={{
-                                opacity: (propLocked || propBetLoading[`${prop.id}-no`]) ? 0.6 : 1,
-                                cursor: (propLocked || propBetLoading[`${prop.id}-no`]) ? 'not-allowed' : 'pointer'
-                              }}
-                            >
-                              {propBetLoading[`${prop.id}-no`] ? 'Placing...' : (propLocked ? 'Closed' : 'Pick NO')}
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            className={`team-btn valiant ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
+                            onClick={() => setSelectedTeam(selectedGame.home_team)}
+                          >
+                            <span className="team-name">{selectedGame.home_team}</span>
+                            <span className="team-label">Home</span>
+                          </button>
+                          <button
+                            type="button"
+                            className={`team-btn opponent ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
+                            onClick={() => setSelectedTeam(selectedGame.away_team)}
+                          >
+                            <span className="team-name">{selectedGame.away_team}</span>
+                            <span className="team-label">Away</span>
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            className={`team-btn valiant ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
+                            onClick={() => setSelectedTeam(selectedGame.away_team)}
+                          >
+                            <span className="team-name">{selectedGame.away_team}</span>
+                            <span className="team-label">Away</span>
+                          </button>
+                          <button
+                            type="button"
+                            className={`team-btn opponent ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
+                            onClick={() => setSelectedTeam(selectedGame.home_team)}
+                          >
+                            <span className="team-name">{selectedGame.home_team}</span>
+                            <span className="team-label">Home</span>
+                          </button>
                         </>
                       )}
                     </div>
-
-                    {prop.expires_at && (
-                      <div className="prop-expires">
-                        Expires: {new Date(prop.expires_at).toLocaleDateString()}
-                      </div>
-                    )}
                   </div>
-                  );
-                })}
 
-                {/* Render Games with Card-based Expandable UI */}
-                {games
-                  .filter(game => {
-                    if (teamFilter === 'all') return true;
-                    if (teamFilter === 'boys') return game.team_type?.toLowerCase().includes('boys');
-                    if (teamFilter === 'girls') return game.team_type?.toLowerCase().includes('girls');
-                    return true;
-                  })
-                  .map(game => {
-                    const startDate = buildDateFromParts(game);
-                    const countdown = getCountdown(startDate);
-                    const gameLocked = countdown.isPast || isClosedStatus(game.status);
-                    const isSelected = selectedGameId === game.id.toString();
+                  <div className="form-group">
+                    <label>Step 2: How Sure Are You?</label>
+                    <p className="field-help">Choose your confidence level - higher confidence = bigger rewards if you win!</p>
+                    <div className="confidence-selection">
+                      <button
+                        type="button"
+                        className={`confidence-btn low ${confidence === 'low' ? 'active' : ''}`}
+                        onClick={() => setConfidence('low')}
+                      >
+                        <span className="confidence-label">Low</span>
+                        <span className="confidence-multiplier">1.2x</span>
+                        <span className="confidence-desc">Win 20% more</span>
+                      </button>
+                      <button
+                        type="button"
+                        className={`confidence-btn medium ${confidence === 'medium' ? 'active' : ''}`}
+                        onClick={() => setConfidence('medium')}
+                      >
+                        <span className="confidence-label">Medium</span>
+                        <span className="confidence-multiplier">1.5x</span>
+                        <span className="confidence-desc">Win 50% more</span>
+                      </button>
+                      <button
+                        type="button"
+                        className={`confidence-btn high ${confidence === 'high' ? 'active' : ''}`}
+                        onClick={() => setConfidence('high')}
+                      >
+                        <span className="confidence-label">High</span>
+                        <span className="confidence-multiplier">2.0x</span>
+                        <span className="confidence-desc">Double your stake!</span>
+                      </button>
+                    </div>
+                  </div>
 
-                    return (
-                      <React.Fragment key={game.id}>
-                        <button
-                          type="button"
-                          className={`game-card-btn ${isSelected ? 'active' : ''} ${gameLocked ? 'locked' : ''} ${game.team_type?.toLowerCase().includes('boys') ? 'boys-game' : game.team_type?.toLowerCase().includes('girls') ? 'girls-game' : ''}`}
-                          onClick={() => {
-                            if (!gameLocked) {
-                              const willBeSelected = !isSelected;
-                              setSelectedGameId(isSelected ? '' : game.id.toString());
-                              if (!isSelected) {
-                                setSelectedTeam('');
-                                setConfidence('');
-                                setAmount('');
-                                // Scroll to expanded section after state updates
-                                setTimeout(() => {
-                                  if (expandedBetRef.current && willBeSelected) {
-                                    expandedBetRef.current.scrollIntoView({ 
-                                      behavior: 'smooth', 
-                                      block: 'center'
-                                    });
-                                  }
-                                }, 100);
+                  {hasExistingBetOnSelectedGame ? (
+                    <div className="form-group">
+                      <label htmlFor="amount">Pick Amount</label>
+                      <div className="status-banner status-success">
+                        Pick Already Placed
+                      </div>
+                    </div>
+                  ) : selectedGameLocked ? (
+                    <div className="form-group">
+                      <label htmlFor="amount">Pick Amount</label>
+                      <div className="status-banner status-closed">
+                        Picking Closed
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="form-group">
+                        <label htmlFor="amount">Step 3: How Much to Stake?</label>
+                        <p className="field-help">Enter how many Valiant Bucks you want to stake - Your balance: <strong>{formatCurrency(balance)}</strong></p>
+                        <div className="amount-input-wrapper">
+                          <input
+                            id="amount"
+                            type="number"
+                            step="1"
+                            min={balance > 0 ? 1 : 0}
+                            value={amount}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setAmount(val);
+                              
+                              // Clear previous debounce timer
+                              if (debounceTimerRef.current) {
+                                clearTimeout(debounceTimerRef.current);
                               }
-                            }
-                          }}
-                          disabled={gameLocked}
-                        >
-                          <div className="game-card-header">
-                            <span className={`game-badge ${game.team_type?.toLowerCase().includes('boys') ? 'boys' : game.team_type?.toLowerCase().includes('girls') ? 'girls' : ''}`}>
-                              {game.team_type?.toLowerCase().includes('boys') ? '🏀 ' : game.team_type?.toLowerCase().includes('girls') ? '🏀 ' : ''}{game.team_type}
-                            </span>
-                            {countdown && (
-                              <span className={`countdown-chip ${countdown.isPast ? 'countdown-closed' : ''}`}>
-                                {countdown.isPast ? 'Closed' : countdown.label}
-                              </span>
-                            )}
-                          </div>
-                          <div className="game-card-matchup">
-                            <div className="game-card-team">
-                              <span className="team-name-text">{game.home_team}</span>
-                              <span className="team-tag home">Home</span>
-                            </div>
-                            <div className="game-card-vs">vs</div>
-                            <div className="game-card-team">
-                              <span className="team-name-text">{game.away_team}</span>
-                              <span className="team-tag away">Away</span>
-                            </div>
-                          </div>
-                          <div className="game-card-details">
-                            <span className="game-card-date">{formatDate(game.game_date)}</span>
-                            <span className="game-card-time">{formatTime(game.game_time)}</span>
-                          </div>
-                          {game.location && (
-                            <div className="game-card-location">{game.location}</div>
-                          )}
-                        </button>
-                        
-                        {isSelected && selectedGame && (
-                          <div ref={expandedBetRef} className="bet-details-expanded">
-                            <form onSubmit={handlePlaceGameBet} className="expanded-bet-form">
-                              <div className="form-group">
-                                <label>Step 1: Who Will Win?</label>
-                                <p className="field-help">Click on the team you think will win this game</p>
-                                <div className="team-selection">
-                                  {/* Always show Valiants first (left) */}
-                                  {selectedGame.home_team.toLowerCase().includes('valiant') ? (
-                                    <>
-                                      <button
-                                        type="button"
-                                        className={`team-btn valiant ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
-                                        onClick={() => setSelectedTeam(selectedGame.home_team)}
-                                      >
-                                        <span className="team-name">{selectedGame.home_team}</span>
-                                        <span className="team-label">Home</span>
-                                      </button>
-                                      <button
-                                        type="button"
-                                        className={`team-btn opponent ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
-                                        onClick={() => setSelectedTeam(selectedGame.away_team)}
-                                      >
-                                        <span className="team-name">{selectedGame.away_team}</span>
-                                        <span className="team-label">Away</span>
-                                      </button>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <button
-                                        type="button"
-                                        className={`team-btn valiant ${selectedTeam === selectedGame.away_team ? 'active' : ''}`}
-                                        onClick={() => setSelectedTeam(selectedGame.away_team)}
-                                      >
-                                        <span className="team-name">{selectedGame.away_team}</span>
-                                        <span className="team-label">Away</span>
-                                      </button>
-                                      <button
-                                        type="button"
-                                        className={`team-btn opponent ${selectedTeam === selectedGame.home_team ? 'active' : ''}`}
-                                        onClick={() => setSelectedTeam(selectedGame.home_team)}
-                                      >
-                                        <span className="team-name">{selectedGame.home_team}</span>
-                                        <span className="team-label">Home</span>
-                                      </button>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-
-                              <div className="form-group">
-                                <label>Step 2: How Sure Are You?</label>
-                                <p className="field-help">Choose your confidence level - higher confidence = bigger rewards if you win!</p>
-                                <div className="confidence-selection">
-                                  <button
-                                    type="button"
-                                    className={`confidence-btn low ${confidence === 'low' ? 'active' : ''}`}
-                                    onClick={() => setConfidence('low')}
-                                  >
-                                    <span className="confidence-label">Low</span>
-                                    <span className="confidence-multiplier">1.2x</span>
-                                    <span className="confidence-desc">Win 20% more</span>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className={`confidence-btn medium ${confidence === 'medium' ? 'active' : ''}`}
-                                    onClick={() => setConfidence('medium')}
-                                  >
-                                    <span className="confidence-label">Medium</span>
-                                    <span className="confidence-multiplier">1.5x</span>
-                                    <span className="confidence-desc">Win 50% more</span>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className={`confidence-btn high ${confidence === 'high' ? 'active' : ''}`}
-                                    onClick={() => setConfidence('high')}
-                                  >
-                                    <span className="confidence-label">High</span>
-                                    <span className="confidence-multiplier">2.0x</span>
-                                    <span className="confidence-desc">Double your stake!</span>
-                                  </button>
-                                </div>
-                              </div>
-
-                              {hasExistingBetOnSelectedGame ? (
-                                <div className="form-group">
-                                  <label htmlFor="amount">Pick Amount</label>
-                                  <div style={{padding: '12px', background: 'rgba(102, 187, 106, 0.15)', border: '1px solid rgba(102, 187, 106, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#66bb6a', fontWeight: 'bold'}}>
-                                    Pick Already Placed
-                                  </div>
-                                </div>
-                              ) : selectedGameLocked ? (
-                                <div className="form-group">
-                                  <label htmlFor="amount">Pick Amount</label>
-                                  <div style={{padding: '12px', background: 'rgba(239, 83, 80, 0.15)', border: '1px solid rgba(239, 83, 80, 0.4)', borderRadius: '8px', textAlign: 'center', color: '#ef5350', fontWeight: 'bold'}}>
-                                    Picking Closed
-                                  </div>
-                                </div>
-                              ) : (
-                                <>
-                                  <div className="form-group">
-                                    <label htmlFor="amount">Step 3: How Much to Stake?</label>
-                                    <p className="field-help">Enter how many Valiant Bucks you want to stake - Your balance: <strong>{formatCurrency(balance)}</strong></p>
-                                    <div className="amount-input-wrapper">
-                                      <input
-                                        id="amount"
-                                        type="number"
-                                        step="1"
-                                        min={balance > 0 ? 1 : 0}
-                                        value={amount}
-                                        onChange={(e) => {
-                                          const val = e.target.value;
-                                          setAmount(val);
-                                          
-                                          // Clear previous debounce timer
-                                          if (debounceTimerRef.current) {
-                                            clearTimeout(debounceTimerRef.current);
-                                          }
-                                          
-                                          // Debounce validation by 300ms
-                                          debounceTimerRef.current = setTimeout(() => {
-                                            const numeric = parseFloat(val);
-                                            if (balance > 0 && !Number.isNaN(numeric) && numeric > balance) {
-                                              setAmount(balance.toString());
-                                            }
-                                          }, 300);
-                                        }}
-                                        placeholder={balance > 0 ? 'Enter amount' : 'Balance too low'}
-                                        required
-                                        className="amount-input"
-                                        disabled={balance <= 0}
-                                      />
-                                      <button 
-                                        type="button" 
-                                        className="max-btn"
-                                        onClick={() => balance > 0 && setAmount(balance.toString())}
-                                        disabled={balance <= 0}
-                                      >
-                                        MAX
-                                      </button>
-                                    </div>
-                                    {amount && selectedTeam && confidence && parseFloat(amount) > 0 && (
-                                      <div className="bet-slip-preview">
-                                        <div className="bet-slip-header">
-                                          <span className="bet-slip-title">Your Bet Slip</span>
-                                          <span className="bet-slip-team">{selectedTeam}</span>
-                                        </div>
-                                        <div className="bet-slip-body">
-                                          <div className="bet-slip-row">
-                                            <span className="bet-slip-label">Amount Wagered</span>
-                                            <span className="bet-slip-value">{formatCurrency(parseFloat(amount))}</span>
-                                          </div>
-                                          <div className="bet-slip-row">
-                                            <span className="bet-slip-label">Confidence Multiplier</span>
-                                            <span className="bet-slip-value confidence-value">
-                                              <span className={`confidence-badge ${confidence}`}>{confidence.toUpperCase()}</span>
-                                              <span>{confidenceMultipliers[confidence]}x</span>
-                                            </span>
-                                          </div>
-                                          {/* Show bonus info for all game types */}
-                                          {selectedGame?.team_type?.toLowerCase().includes('girls') ? (
-                                            <div className="bet-slip-row bonus-row">
-                                              <span className="bet-slip-label">💗 Girls Game Bonus</span>
-                                              <span className="bet-slip-value bonus-value">+10% to +25%</span>
-                                            </div>
-                                          ) : selectedGame?.team_type?.toLowerCase().includes('boys') ? (
-                                            <div className="bet-slip-row bonus-row">
-                                              <span className="bet-slip-label">🏀 Boys Game Bonus</span>
-                                              <span className="bet-slip-value bonus-value">+5% to +15%</span>
-                                            </div>
-                                          ) : (
-                                            <div className="bet-slip-row bonus-row">
-                                              <span className="bet-slip-label">⭐ Betting Bonus</span>
-                                              <span className="bet-slip-value bonus-value">+2% to +12%</span>
-                                            </div>
-                                          )}
-                                          <div className="bet-slip-divider"></div>
-                                          <div className="bet-slip-row payout">
-                                            <span className="bet-slip-label">Base Payout</span>
-                                            <span className="bet-slip-value payout-value">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</span>
-                                          </div>
-                                          {/* Show potential bonus payout for all game types */}
-                                          {selectedGame?.team_type?.toLowerCase().includes('girls') ? (
-                                            <div className="bet-slip-row bonus-payout">
-                                              <span className="bet-slip-label">💗 With Girls Bonus</span>
-                                              <span className="bet-slip-value bonus-payout-value">Up to {formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence] * 1.25)}</span>
-                                            </div>
-                                          ) : selectedGame?.team_type?.toLowerCase().includes('boys') ? (
-                                            <div className="bet-slip-row bonus-payout">
-                                              <span className="bet-slip-label">🏀 With Boys Bonus</span>
-                                              <span className="bet-slip-value bonus-payout-value">Up to {formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence] * 1.15)}</span>
-                                            </div>
-                                          ) : (
-                                            <div className="bet-slip-row bonus-payout">
-                                              <span className="bet-slip-label">⭐ With Streak Bonus</span>
-                                              <span className="bet-slip-value bonus-payout-value">Up to {formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence] * 1.12)}</span>
-                                            </div>
-                                          )}
-                                          <div className="bet-slip-row profit">
-                                            <span className="bet-slip-label">Profit if Won</span>
-                                            <span className="bet-slip-value profit-value">+{formatCurrency((parseFloat(amount) * confidenceMultipliers[confidence]) - parseFloat(amount))}</span>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    )}
-                                  </div>
-
-                                  <button 
-                                    type="submit" 
-                                    className="btn btn-primary" 
-                                    disabled={!selectedTeam || !confidence || !amount || balance <= 0 || selectedGameLocked || isSubmittingBet}
-                                  >
-                                    {isSubmittingBet ? 'Placing...' : `Lock In Pick for ${formatCurrency(parseFloat(amount || 0))}`}
-                                  </button>
-                                </>
-                              )}
-                            </form>
+                              
+                              // Debounce validation by 300ms
+                              debounceTimerRef.current = setTimeout(() => {
+                                const numeric = parseFloat(val);
+                                if (balance > 0 && !Number.isNaN(numeric) && numeric > balance) {
+                                  setAmount(balance.toString());
+                                }
+                              }, 300);
+                            }}
+                            placeholder={balance > 0 ? 'Enter amount' : 'Balance too low'}
+                            required
+                            className="amount-input"
+                            disabled={balance <= 0}
+                          />
+                          <button 
+                            type="button" 
+                            className="max-btn"
+                            onClick={() => balance > 0 && setAmount(balance.toString())}
+                            disabled={balance <= 0}
+                          >
+                            MAX
+                          </button>
+                        </div>
+                        {amount && confidence && parseFloat(amount) > 0 && (
+                          <div className="potential-win">
+                            Potential win: {formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}
                           </div>
                         )}
-                      </React.Fragment>
-                    );
-                  })}
-                </>
-              )}
-            </div>
-          </div>
-        </>
-      )}
+                        {amount && selectedTeam && confidence && parseFloat(amount) > 0 && (
+                          <div className="bet-slip-preview">
+                            <div className="bet-slip-header">
+                              <span className="bet-slip-title">Your Bet Slip</span>
+                              <span className="bet-slip-team">{selectedTeam}</span>
+                            </div>
+                            <div className="bet-slip-body">
+                              <div className="bet-slip-row">
+                                <span className="bet-slip-label">Amount Wagered</span>
+                                <span className="bet-slip-value">{formatCurrency(parseFloat(amount))}</span>
+                              </div>
+                              <div className="bet-slip-row">
+                                <span className="bet-slip-label">Confidence Multiplier</span>
+                                <span className="bet-slip-value confidence-value">
+                                  <span className={`confidence-badge ${confidence}`}>{confidence.toUpperCase()}</span>
+                                  <span>{confidenceMultipliers[confidence]}x</span>
+                                </span>
+                              </div>
+                              {/* Show bonus info for all game types */}
+                              {selectedGame?.team_type?.toLowerCase().includes('girls') ? (
+                                <div className="bet-slip-row bonus-row">
+                                  <span className="bet-slip-label">💗 Girls Game Bonus</span>
+                                  <span className="bet-slip-value bonus-value">+10% to +25%</span>
+                                </div>
+                              ) : selectedGame?.team_type?.toLowerCase().includes('boys') ? (
+                                <div className="bet-slip-row bonus-row">
+                                  <span className="bet-slip-label">🏀 Boys Game Bonus</span>
+                                  <span className="bet-slip-value bonus-value">+5% to +15%</span>
+                                </div>
+                              ) : (
+                                <div className="bet-slip-row bonus-row">
+                                  <span className="bet-slip-label">⭐ Betting Bonus</span>
+                                  <span className="bet-slip-value bonus-value">+2% to +12%</span>
+                                </div>
+                              )}
+                              <div className="bet-slip-divider"></div>
+                              <div className="bet-slip-row payout">
+                                <span className="bet-slip-label">Base Payout</span>
+                                <span className="bet-slip-value payout-value">{formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence])}</span>
+                              </div>
+                              {/* Show potential bonus payout for all game types */}
+                              {selectedGame?.team_type?.toLowerCase().includes('girls') ? (
+                                <div className="bet-slip-row bonus-payout">
+                                  <span className="bet-slip-label">💗 With Girls Bonus</span>
+                                  <span className="bet-slip-value bonus-payout-value">Up to {formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence] * 1.25)}</span>
+                                </div>
+                              ) : selectedGame?.team_type?.toLowerCase().includes('boys') ? (
+                                <div className="bet-slip-row bonus-payout">
+                                  <span className="bet-slip-label">🏀 With Boys Bonus</span>
+                                  <span className="bet-slip-value bonus-payout-value">Up to {formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence] * 1.15)}</span>
+                                </div>
+                              ) : (
+                                <div className="bet-slip-row bonus-payout">
+                                  <span className="bet-slip-label">⭐ With Streak Bonus</span>
+                                  <span className="bet-slip-value bonus-payout-value">Up to {formatCurrency(parseFloat(amount) * confidenceMultipliers[confidence] * 1.12)}</span>
+                                </div>
+                              )}
+                              <div className="bet-slip-row profit">
+                                <span className="bet-slip-label">Profit if Won</span>
+                                <span className="bet-slip-value profit-value">+{formatCurrency((parseFloat(amount) * confidenceMultipliers[confidence]) - parseFloat(amount))}</span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
 
-      <div className="info-accordions">
+                      <button 
+                        type="submit" 
+                        className="btn btn-primary pick-form-submit" 
+                        disabled={!selectedTeam || !confidence || !amount || balance <= 0 || selectedGameLocked || isSubmittingBet}
+                      >
+                        {isSubmittingBet ? 'Placing...' : `Lock In Pick for ${formatCurrency(parseFloat(amount || 0))}`}
+                      </button>
+                    </>
+                  )}
+                </form>
+              </>
+            ) : (
+              <div className="pick-form-empty">
+                <h3>Select a game</h3>
+                <p>Choose a game from the list to start your pick.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="info-accordions info-accordions-muted">
         <details className="info-accordion">
           <summary className="info-summary">
             <span className="info-title">Quick Guide</span>

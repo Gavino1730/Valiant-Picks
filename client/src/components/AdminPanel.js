@@ -31,6 +31,8 @@ function AdminPanel() {
   const [showEmailList, setShowEmailList] = useState(false);
   const [editingPropBet, setEditingPropBet] = useState(null);
   const [userSearch, setUserSearch] = useState('');
+  const [selectedGameIds, setSelectedGameIds] = useState([]);
+  const [openGameMenuId, setOpenGameMenuId] = useState(null);
   
   // Game creation form
   const [showCompletedGames, setShowCompletedGames] = useState(false);
@@ -82,6 +84,11 @@ function AdminPanel() {
   useEffect(() => {
     localStorage.setItem('adminPanelTab', tab);
   }, [tab]);
+
+  useEffect(() => {
+    setSelectedGameIds([]);
+    setOpenGameMenuId(null);
+  }, [tab, gameFilter]);
 
   // Scroll modal into view when it opens
   useEffect(() => {
@@ -330,6 +337,62 @@ function AdminPanel() {
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to delete game');
     }
+  };
+
+  const toggleGameSelection = (gameId) => {
+    setSelectedGameIds(prev => (
+      prev.includes(gameId) ? prev.filter(id => id !== gameId) : [...prev, gameId]
+    ));
+  };
+
+  const setSelectedGames = (ids, shouldSelect) => {
+    setSelectedGameIds(prev => {
+      const next = new Set(prev);
+      ids.forEach(id => {
+        if (shouldSelect) {
+          next.add(id);
+        } else {
+          next.delete(id);
+        }
+      });
+      return Array.from(next);
+    });
+  };
+
+  const clearSelectedGames = () => setSelectedGameIds([]);
+
+  const handleBulkVisibility = async (isVisible) => {
+    if (selectedGameIds.length === 0) return;
+    if (!window.confirm(`Set visibility to ${isVisible ? 'Show' : 'Hide'} for ${selectedGameIds.length} selected games?`)) {
+      return;
+    }
+    try {
+      await Promise.all(
+        selectedGameIds.map(gameId => apiClient.put(`/games/${gameId}/visibility`, { isVisible }))
+      );
+      fetchGames();
+      clearSelectedGames();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to update visibility for selected games');
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedGameIds.length === 0) return;
+    if (!window.confirm(`Delete ${selectedGameIds.length} selected games? All related bets will be refunded.`)) {
+      return;
+    }
+    try {
+      await Promise.all(selectedGameIds.map(gameId => apiClient.delete(`/games/${gameId}`)));
+      fetchGames();
+      clearSelectedGames();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to delete selected games');
+    }
+  };
+
+  const toggleGameMenu = (gameId) => {
+    setOpenGameMenuId(prev => (prev === gameId ? null : gameId));
   };
 
   const handlePropBetFormChange = (e) => {
@@ -716,6 +779,26 @@ function AdminPanel() {
   };
 
   if (loading) return <div className="card">Loading...</div>;
+
+  const boysGamesCount = games.filter(g => g.team_type === 'Boys Basketball').length;
+  const girlsGamesCount = games.filter(g => g.team_type === 'Girls Basketball').length;
+
+  const activeGames = games.filter(game => {
+    if (gameFilter === 'boys') return game.team_type === 'Boys Basketball' && !game.result;
+    if (gameFilter === 'girls') return game.team_type === 'Girls Basketball' && !game.result;
+    return !game.result;
+  });
+
+  const completedGames = games.filter(game => {
+    if (gameFilter === 'boys') return game.team_type === 'Boys Basketball' && game.result;
+    if (gameFilter === 'girls') return game.team_type === 'Girls Basketball' && game.result;
+    return game.result;
+  });
+
+  const activeIds = activeGames.map(game => game.id);
+  const completedIds = completedGames.map(game => game.id);
+  const isAllActiveSelected = activeIds.length > 0 && activeIds.every(id => selectedGameIds.includes(id));
+  const isAllCompletedSelected = completedIds.length > 0 && completedIds.every(id => selectedGameIds.includes(id));
 
   return (
     <div className="admin-panel">

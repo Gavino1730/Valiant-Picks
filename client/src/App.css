@@ -291,6 +291,7 @@ body {
   .nav-center .nav-link:hover {
     background: var(--header-hover) !important;
     color: var(--header-text) !important;
+    border-color: transparent !important;
   }
 
   .nav-center .nav-link.active {
@@ -383,6 +384,7 @@ body {
 
   .nav-user-trigger:hover {
     background: var(--header-hover) !important;
+    border-color: transparent !important;
   }
 
   .nav-username {

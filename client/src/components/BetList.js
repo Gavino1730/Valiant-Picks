@@ -258,12 +258,12 @@ function BetList() {
           <div className="bet-table-wrapper ds-table-wrapper">
             <table className="bet-table ds-table">
               <colgroup>
-                <col style={{ width: '34%' }} />
-                <col style={{ width: '18%' }} />
-                <col style={{ width: '12%' }} />
-                <col style={{ width: '12%' }} />
-                <col style={{ width: '12%' }} />
-                <col style={{ width: '12%' }} />
+                <col style={{ width: '36%' }} />
+                <col style={{ width: '20%' }} />
+                <col style={{ width: '11%' }} />
+                <col style={{ width: '11%' }} />
+                <col style={{ width: '8%' }} />
+                <col style={{ width: '14%' }} />
               </colgroup>
               <thead>
                 <tr>
