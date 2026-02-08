@@ -151,7 +151,9 @@ body {
   -webkit-appearance: none;
   appearance: none;
   min-height: 44px;
-  line-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 
@@ -166,6 +168,9 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.18) !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
 }
 
 .notification-icon-btn:hover {
@@ -185,6 +190,12 @@ body {
   font-weight: 600;
   border-color: rgba(255, 255, 255, 0.45) !important;
   box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.6);
+}
+
+.nav-right button.active {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: #ffffff !important;
 }
 
 .nav-center button.nav-secondary {
@@ -407,8 +418,14 @@ body {
 
 @media (max-width: 680px) {
   .navbar {
-    grid-template-columns: auto 1fr auto;
     padding: 0.6rem 0.5rem;
+  }
+
+  .nav-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .nav-center {
@@ -419,42 +436,42 @@ body {
 .user-info {
   display: flex;
   align-items: center;
-  padding: 0.5rem 0.9rem;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(59, 130, 246, 0.1));
-  border: 1px solid rgba(37, 99, 235, 0.4);
+  padding: 0 0.75rem;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 8px;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
   flex-shrink: 0;
   position: relative;
   z-index: 2;
+  max-width: 160px;
 }
 
 .username {
-  color: #ffffff;
-  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
   font-size: 0.95rem;
   white-space: nowrap;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  letter-spacing: 0.3px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   position: relative;
   z-index: 2;
+  max-width: 120px;
 }
 
 .notification-badge {
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -4px;
+  right: -4px;
   background: #ef5350;
   color: white;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  padding: 2px 6px;
+  padding: 1px 5px;
   border-radius: 10px;
-  min-width: 18px;
+  min-width: 16px;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(239, 83, 80, 0.5);
+  box-shadow: none;
   z-index: 3;
 }
 
@@ -463,40 +480,43 @@ body {
   align-items: center;
   gap: 0.4rem;
   padding: 0 0.75rem;
-  background: rgba(255, 255, 255, 0.08);
+  height: 44px;
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 8px;
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
   box-shadow: none;
   flex-shrink: 0;
   margin: 0;
-  height: 34px;
-  border-top: none;
   margin-top: 0;
-  padding-top: 0;
   position: relative;
   z-index: 2;
 }
 
 .nav-right .balance-label {
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   white-space: nowrap;
   position: relative;
   z-index: 2;
 }
 
 .nav-right .balance-amount {
-  color: #cfe9d0;
+  color: #e4ece6;
   position: relative;
   z-index: 2;
-  font-weight: 600;
-  font-size: 0.85rem;
+  font-weight: 500;
+  font-size: 0.86rem;
   white-space: nowrap;
   text-shadow: none;
   letter-spacing: 0.2px;
+}
+
+.nav-center button:focus-visible,
+.nav-right button:focus-visible,
+.mobile-menu-toggle:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 2px;
 }
 
 /* ===== CONTAINER ===== */
@@ -779,32 +799,19 @@ table tbody tr:hover {
 /* ===== MOBILE MENU ===== */
 .mobile-menu-toggle {
   display: none;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 10px;
   padding: 0.65rem 0.85rem;
   cursor: pointer;
   transition: all 0.3s ease;
   z-index: 1001;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   align-items: center;
   gap: 0.6rem;
-  animation: menuPulse 2s ease-in-out infinite;
-}
-
-@keyframes menuPulse {
-  0%, 100% {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(255, 255, 255, 0.4);
-  }
-  50% {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 0 4px rgba(255, 255, 255, 0);
-  }
 }
 
 .mobile-menu-toggle:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
-  transform: scale(1.05);
-  animation: none;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .mobile-menu-toggle:active {
@@ -826,7 +833,6 @@ table tbody tr:hover {
   background: white;
   border-radius: 3px;
   transition: all 0.3s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .menu-text {
@@ -1079,15 +1085,19 @@ table tbody tr:hover {
   .navbar {
     padding: 1rem 1rem;
     gap: 1rem;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    justify-items: stretch;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1100;
     width: 100%;
+  }
+
+  .nav-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
   }
 
   .nav-brand {

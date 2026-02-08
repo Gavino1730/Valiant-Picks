@@ -5,7 +5,7 @@ function Footer({ onNavigate }) {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <div className="footer-links">
+        <div className="footer-row footer-nav">
           <button 
             className="footer-link"
             onClick={() => onNavigate('about')}
@@ -20,9 +20,11 @@ function Footer({ onNavigate }) {
             Terms
           </button>
         </div>
-        <div className="footer-credit">
+        <div className="footer-row footer-copy">
           <p>© 2026 Valiant Picks.</p>
-          <p className="footer-disclaimer">Valiant Picks is an independent platform and is not affiliated with, endorsed by, or associated with any school, organization, or institution.</p>
+        </div>
+        <div className="footer-row footer-disclaimer-row">
+          <p className="footer-disclaimer-text">Valiant Picks is an independent platform and is not affiliated with, endorsed by, or associated with any school, organization, or institution.</p>
         </div>
       </div>
     </footer>
