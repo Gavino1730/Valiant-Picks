@@ -5,7 +5,6 @@ import '../styles/Teams.css';
 function Teams() {
   const [activeTab, setActiveTab] = useState('boys');
   const [contentTab, setContentTab] = useState('roster'); // 'schedule' or 'roster'
-  const [rosterExpanded, setRosterExpanded] = useState(true);
   const [teams, setTeams] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -157,147 +156,276 @@ function Teams() {
     fetchTeams();
   }, [fetchTeams]);
 
-  const TeamSection = ({ team }) => (
-    <div className="team-section">
-      <div className="team-header">
-        <h2>{team.name}</h2>
-        <div className="team-stats">
-          <div className="stat">
-            <span className="label">Overall Record</span>
-            <span className="value">{team.record_wins}-{team.record_losses}</span>
-          </div>
-          <div className="stat">
-            <span className="label">League Record</span>
-            <span className="value">{team.league_record}</span>
-          </div>
-          <div className="stat">
-            <span className="label">Rank</span>
-            <span className="value">#{team.ranking}</span>
-          </div>
-        </div>
-      </div>
+  const TeamSection = ({ team }) => {
+    const rosterStorageKey = `teamsRosterExpanded:${team.id}`;
+    const [searchTerm, setSearchTerm] = useState('');
+    const [gradeFilter, setGradeFilter] = useState('all');
+    const [sortBy, setSortBy] = useState('number');
+    const [expandedPlayers, setExpandedPlayers] = useState(() => {
+      try {
+        const stored = sessionStorage.getItem(rosterStorageKey);
+        return stored ? JSON.parse(stored) : {};
+      } catch (err) {
+        return {};
+      }
+    });
 
-      <div className="team-info-section">
-        <div className="coaching-staff">
-          <h3>Head Coach</h3>
-          <div className="coach-info">
-            <div className="coach">
-              <strong>{team.coach_name}</strong>
+    useEffect(() => {
+      try {
+        const stored = sessionStorage.getItem(rosterStorageKey);
+        setExpandedPlayers(stored ? JSON.parse(stored) : {});
+      } catch (err) {
+        setExpandedPlayers({});
+      }
+    }, [rosterStorageKey]);
+
+    useEffect(() => {
+      try {
+        sessionStorage.setItem(rosterStorageKey, JSON.stringify(expandedPlayers));
+      } catch (err) {
+        // ignore session storage errors
+      }
+    }, [expandedPlayers, rosterStorageKey]);
+
+    const players = Array.isArray(team.players) ? team.players : [];
+    const grades = Array.from(new Set(players.map(player => player.grade))).sort((a, b) => {
+      const numA = Number(a);
+      const numB = Number(b);
+      if (!Number.isNaN(numA) && !Number.isNaN(numB)) return numA - numB;
+      return String(a).localeCompare(String(b));
+    });
+
+    const filteredPlayers = players
+      .filter(player => {
+        const matchesSearch = player.name.toLowerCase().includes(searchTerm.toLowerCase().trim());
+        const matchesGrade = gradeFilter === 'all' || String(player.grade) === String(gradeFilter);
+        return matchesSearch && matchesGrade;
+      })
+      .sort((a, b) => {
+        if (sortBy === 'name') {
+          return a.name.localeCompare(b.name);
+        }
+        return Number(a.number) - Number(b.number);
+      });
+
+    const toggleExpanded = (playerKey) => {
+      setExpandedPlayers(prev => ({
+        ...prev,
+        [playerKey]: !prev[playerKey]
+      }));
+    };
+
+    const expandAll = () => {
+      const next = {};
+      filteredPlayers.forEach(player => {
+        const key = `${player.number}-${player.name}`;
+        next[key] = true;
+      });
+      setExpandedPlayers(next);
+    };
+
+    const collapseAll = () => {
+      setExpandedPlayers({});
+    };
+
+    const renderRoster = () => (
+      <div className="roster-section">
+        <h3>Varsity Roster</h3>
+        <div className="roster-controls">
+          <div className="roster-controls-inputs">
+            <label className="roster-control">
+              <span>Search</span>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search by player name"
+              />
+            </label>
+            <label className="roster-control">
+              <span>Grade</span>
+              <select
+                value={gradeFilter}
+                onChange={(event) => setGradeFilter(event.target.value)}
+              >
+                <option value="all">All</option>
+                {grades.map(grade => (
+                  <option key={grade} value={grade}>{grade}</option>
+                ))}
+              </select>
+            </label>
+            <label className="roster-control">
+              <span>Sort</span>
+              <select
+                value={sortBy}
+                onChange={(event) => setSortBy(event.target.value)}
+              >
+                <option value="number">Jersey #</option>
+                <option value="name">Name</option>
+              </select>
+            </label>
+          </div>
+          <div className="roster-controls-actions">
+            <div className="roster-count">{filteredPlayers.length} result{filteredPlayers.length === 1 ? '' : 's'}</div>
+            <div className="roster-buttons">
+              <button type="button" onClick={expandAll}>Expand all</button>
+              <button type="button" onClick={collapseAll}>Collapse all</button>
             </div>
           </div>
-          {team.coach_bio && (
-            <p className="coach-bio">{team.coach_bio}</p>
-          )}
         </div>
 
-        <div className="team-description">
-          <h3>About the Team</h3>
-          <p>{team.description}</p>
-        </div>
-      </div>
-
-      <div className="content-tabs">
-        <button 
-          className={`content-tab-btn ${contentTab === 'roster' ? 'active' : ''}`}
-          onClick={() => setContentTab('roster')}
-        >
-          👥 Roster
-        </button>
-        <button 
-          className={`content-tab-btn ${contentTab === 'schedule' ? 'active' : ''}`}
-          onClick={() => setContentTab('schedule')}
-        >
-          📅 Schedule
-        </button>
-      </div>
-
-      <div className="desktop-roster-section">
-        <button 
-          className="expand-roster-btn"
-          onClick={() => setRosterExpanded(!rosterExpanded)}
-        >
-          {rosterExpanded ? '▼' : '▶'} Varsity Roster
-        </button>
-        {rosterExpanded && (
-          <div className="roster-table">
-            {(team.players || []).map(player => (
-              <div key={player.number} className="player-row">
-                <div className="player-header">
-                  <span className="player-number">#{player.number}</span>
-                  <span className="player-name">{player.name}</span>
-                  <span className="player-grade">Grade {player.grade}</span>
-                  <span className="player-height">{player.height}</span>
-                </div>
-                <div className="player-bio">
-                  {player.bio}
-                </div>
-              </div>
-            ))}
+        <div className="roster-table">
+          <div className="roster-header">
+            <div className="roster-col-number">#</div>
+            <div className="roster-col-name">Player</div>
+            <div className="roster-col-grade">Grade</div>
+            <div className="roster-col-preview">Description</div>
+            <div className="roster-col-expand">Details</div>
           </div>
-        )}
-      </div>
-
-      {contentTab === 'roster' && (
-        <div className="roster-section mobile-roster">
-          <h3>Varsity Roster</h3>
-          <div className="roster-table">
-            {(team.players || []).map(player => (
-              <div key={player.number} className="player-row">
-                <div className="player-header">
-                  <span className="player-number">#{player.number}</span>
-                  <span className="player-name">{player.name}</span>
-                  <span className="player-grade">Grade {player.grade}</span>
-                  <span className="player-height">{player.height}</span>
-                </div>
-                <div className="player-bio">
-                  {player.bio}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {contentTab === 'schedule' && (
-        <div className="schedule-section">
-          <h3>Varsity Schedule</h3>
-          <div className="schedule-table">
-            <div className="schedule-header">
-              <div>Result</div>
-              <div>Score</div>
-              <div>Type</div>
-              <div>Date</div>
-              <div>Time</div>
-              <div>Opponent</div>
-              <div>Location</div>
-            </div>
-            {(team.schedule || []).map((game, idx) => {
-              const formatDate = (dateStr) => {
-                if (!dateStr) return '';
-                const parts = dateStr.split('/');
-                if (parts.length !== 3) return dateStr;
-                const [m, d, y] = parts;
-                return `${(m || '').padStart(2, '0')}/${(d || '').padStart(2, '0')}/${y}`;
-              };
+          <div className="roster-rows">
+            {filteredPlayers.map(player => {
+              const playerKey = `${player.number}-${player.name}`;
+              const isExpanded = Boolean(expandedPlayers[playerKey]);
               return (
-              <div key={idx} className={`schedule-row ${game.result === 'W' ? 'win' : game.result === 'L' ? 'loss' : 'scheduled'}`}>
-                <div className="result">{game.result}</div>
-                <div className="mobile-content">
-                  <div className="opponent-main">vs. {game.opponent}</div>
-                  <div className="game-date">{formatDate(game.date)}</div>
+                <div
+                  key={playerKey}
+                  className={`roster-row ${isExpanded ? 'expanded' : ''}`}
+                >
+                  <div
+                    className="roster-row-main"
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isExpanded}
+                    onClick={() => toggleExpanded(playerKey)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        toggleExpanded(playerKey);
+                      }
+                    }}
+                  >
+                    <span className="player-number">#{player.number}</span>
+                    <span className="player-name">{player.name}</span>
+                    <span className="player-grade">Grade {player.grade}</span>
+                    <span className="player-preview">{player.bio}</span>
+                    <span className="player-expand" aria-hidden="true">{isExpanded ? '−' : '+'}</span>
+                  </div>
+                  <div className="roster-row-details" aria-hidden={!isExpanded}>
+                    <p className="player-bio">{player.bio}</p>
+                  </div>
                 </div>
-                <div className="location-badge">{game.location}</div>
-                <div className="desktop-only">{game.score}</div>
-                <div className="desktop-only">{game.type}</div>
-                <div className="desktop-only">{game.time}</div>
-              </div>
-            );
+              );
             })}
           </div>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+
+    return (
+      <div className="team-section">
+        <div className="team-header">
+          <h2>{team.name}</h2>
+          <div className="team-stats">
+            <div className="stat">
+              <span className="label">Overall Record</span>
+              <span className="value">{team.record_wins}-{team.record_losses}</span>
+            </div>
+            <div className="stat">
+              <span className="label">League Record</span>
+              <span className="value">{team.league_record}</span>
+            </div>
+            <div className="stat">
+              <span className="label">Rank</span>
+              <span className="value">#{team.ranking}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="team-info-section">
+          <div className="coaching-staff">
+            <h3>Head Coach</h3>
+            <div className="coach-info">
+              <div className="coach">
+                <strong>{team.coach_name}</strong>
+              </div>
+            </div>
+            {team.coach_bio && (
+              <p className="coach-bio">{team.coach_bio}</p>
+            )}
+          </div>
+
+          <div className="team-description">
+            <h3>About the Team</h3>
+            <p>{team.description}</p>
+          </div>
+        </div>
+
+        <div className="content-tabs">
+          <button 
+            className={`content-tab-btn ${contentTab === 'roster' ? 'active' : ''}`}
+            onClick={() => setContentTab('roster')}
+          >
+            👥 Roster
+          </button>
+          <button 
+            className={`content-tab-btn ${contentTab === 'schedule' ? 'active' : ''}`}
+            onClick={() => setContentTab('schedule')}
+          >
+            📅 Schedule
+          </button>
+        </div>
+
+        <div className="desktop-roster-section">
+          {renderRoster()}
+        </div>
+
+        {contentTab === 'roster' && (
+          <div className="mobile-roster">
+            {renderRoster()}
+          </div>
+        )}
+
+        {contentTab === 'schedule' && (
+          <div className="schedule-section">
+            <h3>Varsity Schedule</h3>
+            <div className="schedule-table">
+              <div className="schedule-header">
+                <div>Result</div>
+                <div>Score</div>
+                <div>Type</div>
+                <div>Date</div>
+                <div>Time</div>
+                <div>Opponent</div>
+                <div>Location</div>
+              </div>
+              {(team.schedule || []).map((game, idx) => {
+                const formatDate = (dateStr) => {
+                  if (!dateStr) return '';
+                  const parts = dateStr.split('/');
+                  if (parts.length !== 3) return dateStr;
+                  const [m, d, y] = parts;
+                  return `${(m || '').padStart(2, '0')}/${(d || '').padStart(2, '0')}/${y}`;
+                };
+                return (
+                <div key={idx} className={`schedule-row ${game.result === 'W' ? 'win' : game.result === 'L' ? 'loss' : 'scheduled'}`}>
+                  <div className="result">{game.result}</div>
+                  <div className="mobile-content">
+                    <div className="opponent-main">vs. {game.opponent}</div>
+                    <div className="game-date">{formatDate(game.date)}</div>
+                  </div>
+                  <div className="location-badge">{game.location}</div>
+                  <div className="desktop-only">{game.score}</div>
+                  <div className="desktop-only">{game.type}</div>
+                  <div className="desktop-only">{game.time}</div>
+                </div>
+              );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   if (loading) return <div className="teams-page"><p>Loading teams...</p></div>;
   if (!Array.isArray(teams) || teams.length === 0) {

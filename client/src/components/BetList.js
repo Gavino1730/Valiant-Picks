@@ -215,7 +215,7 @@ function BetList() {
       {error && <div className="alert alert-error">{error}</div>}
 
       {/* Filter Tabs */}
-      <div className="bet-filters tabs">
+      <div className="bet-filters bet-filters--sticky tabs">
         <button 
           className={`tab-button ${filter === 'all' ? 'active' : ''}`}
           onClick={() => setFilter('all')}
@@ -255,6 +255,57 @@ function BetList() {
         </div>
       ) : (
         <div className="bets-list">
+          <div className="bet-mobile-list">
+            {filteredBets.map(bet => {
+              const profit = (parseFloat(bet.potential_win || 0) - parseFloat(bet.amount || 0));
+              const resultText = bet.status === 'pending' ? 'Pending' : bet.outcome === 'won' ? 'Won' : bet.outcome === 'lost' ? 'Lost' : 'Pending';
+              const resultClass = bet.status === 'pending'
+                ? 'status--pending'
+                : bet.outcome === 'won'
+                ? 'status--won'
+                : 'status--lost';
+              const profitDisplay = bet.outcome === 'won'
+                ? formatSignedCurrency(profit)
+                : bet.outcome === 'lost'
+                ? formatSignedCurrency(-bet.amount)
+                : '—';
+
+              return (
+                <div key={bet.id} className="bet-mobile-card">
+                  <div className="bet-mobile-header">
+                    <div className="bet-mobile-matchup">
+                      <span className="team-type-badge">{bet.games?.team_type || 'Game'}</span>
+                      <div className="bet-mobile-title">{bet.games?.home_team} vs {bet.games?.away_team}</div>
+                    </div>
+                    <span className={`bet-result-badge ${resultClass}`}>{resultText}</span>
+                  </div>
+
+                  <div className="bet-mobile-pick-row">
+                    <span className="bet-mobile-pick">{bet.selected_team}</span>
+                    <span className={`confidence-badge ${getConfidenceColor(bet.bet_type)}`}>
+                      {(bet.bet_type || 'n/a').toUpperCase()}
+                    </span>
+                  </div>
+
+                  <div className="bet-mobile-amounts">
+                    <div className="bet-mobile-amount">
+                      <span className="bet-mobile-label">Wager</span>
+                      <span className="bet-mobile-value u-num">{formatCurrency(bet.amount)}</span>
+                    </div>
+                    <div className="bet-mobile-amount">
+                      <span className="bet-mobile-label">Profit</span>
+                      <span className={`bet-mobile-value u-num ${getValueClass(bet.outcome === 'lost' ? -bet.amount : profit)}`}>
+                        {profitDisplay}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="bet-mobile-date">{formatPlacedAt(bet.created_at)}</div>
+                </div>
+              );
+            })}
+          </div>
+
           <div className="bet-table-wrapper ds-table-wrapper">
             <table className="bet-table ds-table">
               <colgroup>

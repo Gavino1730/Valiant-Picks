@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../utils/axios';
 import AdminTeams from './AdminTeams';
+import AdminLayout from './admin/AdminLayout';
+import AdminHeader from './admin/AdminHeader';
+import AdminToolbar from './admin/AdminToolbar';
+import AdminTable from './admin/AdminTable';
+import AdminCard from './admin/AdminCard';
+import AdminBadge from './admin/AdminBadge';
+import AdminActionsMenu from './admin/AdminActionsMenu';
 import '../styles/AdminPanel.css';
+import '../styles/AdminDesignSystem.css';
 import { formatCurrency } from '../utils/currency';
 import { formatTime } from '../utils/time';
 
@@ -13,14 +21,13 @@ function AdminPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [tab, setTab] = useState(() => {
-    // Load saved tab from localStorage, default to 'games'
     return localStorage.getItem('adminPanelTab') || 'games';
   });
   const [selectedUser, setSelectedUser] = useState(null);
   const [newBalance, setNewBalance] = useState('');
   const [editingGame, setEditingGame] = useState(null);
   const [gameStatusModal, setGameStatusModal] = useState(null);
-  const [gameFilter, setGameFilter] = useState('all'); // 'all', 'boys', 'girls'
+  const [gameFilter, setGameFilter] = useState('all');
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingBet, setEditingBet] = useState(null);
   const [editingBetOutcome, setEditingBetOutcome] = useState('');
@@ -31,13 +38,10 @@ function AdminPanel() {
   const [showEmailList, setShowEmailList] = useState(false);
   const [editingPropBet, setEditingPropBet] = useState(null);
   const [userSearch, setUserSearch] = useState('');
-  const [selectedGameIds, setSelectedGameIds] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const [openGameMenuId, setOpenGameMenuId] = useState(null);
-  
-  // Game creation form
   const [showCompletedGames, setShowCompletedGames] = useState(false);
-  const [gameForm, setGameForm] = useState({
+  const [selectedGameIds, setSelectedGameIds] = useState([]);
+
+  const gameFormDefaults = {
     teamType: 'Boys Basketball',
     homeTeam: '',
     awayTeam: '',
@@ -52,9 +56,10 @@ function AdminPanel() {
     overOdds: '',
     underOdds: '',
     notes: ''
-  });
+  };
 
-  // Prop pick creation form
+  const [gameForm, setGameForm] = useState(gameFormDefaults);
+
   const [propBetForm, setPropBetForm] = useState({
     title: '',
     description: '',
@@ -81,17 +86,10 @@ function AdminPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Save current tab to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('adminPanelTab', tab);
   }, [tab]);
 
-  useEffect(() => {
-    setSelectedGameIds([]);
-    setOpenGameMenuId(null);
-  }, [tab, gameFilter]);
-
-  // Scroll modal into view when it opens
   useEffect(() => {
     if (selectedUser) {
       const modalContent = document.querySelector('.user-options-modal');
@@ -103,7 +101,6 @@ function AdminPanel() {
     }
   }, [selectedUser]);
 
-  // Fetch user bets and transactions when selectedUser changes
   useEffect(() => {
     if (!selectedUser) {
       setUserBets([]);
@@ -113,16 +110,14 @@ function AdminPanel() {
     setUserHistoryLoading(true);
     Promise.all([
       apiClient.get('/bets/all').then(res => res.data.filter(b => b.user_id === selectedUser)),
-      apiClient.get('/transactions').then(res => {
-        // Since transactions endpoint doesn't support filtering by user, filter client-side
-        // or return empty array if endpoint fails
+      apiClient.get('/transactions').then(() => {
         return [];
       }).catch(() => [])
     ]).then(([bets, txs]) => {
       setUserBets(bets);
       setUserTransactions(txs);
       setUserHistoryLoading(false);
-    }).catch(err => {
+    }).catch(() => {
       setUserHistoryLoading(false);
     });
   }, [selectedUser]);
@@ -220,22 +215,7 @@ function AdminPanel() {
     try {
       await apiClient.post('/games', gameForm);
       alert('Game created successfully!');
-      setGameForm({
-        teamType: 'Boys Basketball',
-        homeTeam: '',
-        awayTeam: '',
-        gameDate: '',
-        gameTime: '',
-        location: '',
-        winningOdds: '',
-        losingOdds: '',
-        spread: '',
-        spreadOdds: '',
-        overUnder: '',
-        overOdds: '',
-        underOdds: '',
-        notes: ''
-      });
+      setGameForm(gameFormDefaults);
       fetchGames();
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to create game');
@@ -394,11 +374,6 @@ function AdminPanel() {
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to delete selected games');
     }
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const toggleGameMenu = (gameId) => {
-    setOpenGameMenuId(prev => (prev === gameId ? null : gameId));
   };
 
   const handlePropBetFormChange = (e) => {
@@ -810,37 +785,95 @@ function AdminPanel() {
   // eslint-disable-next-line no-unused-vars
   const isAllCompletedSelected = completedIds.length > 0 && completedIds.every(id => selectedGameIds.includes(id));
 
+  const headerConfig = {
+    games: {
+      title: 'Manage Games',
+      subtitle: 'Create, edit, and resolve games.'
+    },
+    propbets: {
+      title: 'Prop Picks',
+      subtitle: 'Create, edit, and resolve prop picks.'
+    },
+    bets: {
+      title: 'View All Picks',
+      subtitle: 'Review and manage all user picks.'
+    },
+    users: {
+      title: 'Manage Users',
+      subtitle: 'Roles, balances, and account actions.'
+    },
+    teams: {
+      title: 'Manage Teams',
+      subtitle: 'Update team info, schedules, and rosters.'
+    }
+  };
+
+  const headerActions = {
+    games: (
+      <button
+        className="admin-button admin-button--primary"
+        type="button"
+        onClick={() => setShowCreateForm(prev => !prev)}
+      >
+        {showCreateForm ? 'Close Create Form' : 'Create Game'}
+      </button>
+    ),
+    propbets: editingPropBet ? (
+      <button
+        className="admin-button admin-button--secondary"
+        type="button"
+        onClick={handleCancelEditPropBet}
+      >
+        Cancel Edit
+      </button>
+    ) : null,
+    users: (
+      <button
+        className="admin-button admin-button--secondary"
+        type="button"
+        onClick={() => setShowEmailList(true)}
+      >
+        Export Emails
+      </button>
+    ),
+    bets: null,
+    teams: null
+  };
+
+  const { title, subtitle } = headerConfig[tab] || headerConfig.games;
+
   return (
-    <div className="admin-panel">
-      {error && <div className="alert alert-error">{error}</div>}
+    <AdminLayout className="admin-panel">
+      {error && <div className="admin-alert admin-alert--error">{error}</div>}
+
+      <AdminHeader title={title} subtitle={subtitle} actions={headerActions[tab]} />
 
       <div className="admin-mobile-nav">
         {adminTabs.map((t) => (
           <button
             key={t.key}
-            className={`mobile-admin-pill ${tab === t.key ? 'active' : ''}`}
+            className={`admin-mobile-pill ${tab === t.key ? 'active' : ''}`}
             onClick={() => setTab(t.key)}
           >
-            <span className="pill-icon">{t.icon}</span>
-            <span className="pill-label">{t.label}</span>
+            {t.label}
           </button>
         ))}
       </div>
 
-      <div className="tabs">
-        <button className={`tab-btn ${tab === 'games' ? 'active' : ''}`} onClick={() => setTab('games')}>
+      <div className="admin-tabs">
+        <button className={`admin-tab ${tab === 'games' ? 'active' : ''}`} onClick={() => setTab('games')}>
           Manage Games
         </button>
-        <button className={`tab-btn ${tab === 'propbets' ? 'active' : ''}`} onClick={() => setTab('propbets')}>
+        <button className={`admin-tab ${tab === 'propbets' ? 'active' : ''}`} onClick={() => setTab('propbets')}>
           Prop Picks
         </button>
-        <button className={`tab-btn ${tab === 'bets' ? 'active' : ''}`} onClick={() => setTab('bets')}>
+        <button className={`admin-tab ${tab === 'bets' ? 'active' : ''}`} onClick={() => setTab('bets')}>
           View All Picks
         </button>
-        <button className={`tab-btn ${tab === 'users' ? 'active' : ''}`} onClick={() => setTab('users')}>
+        <button className={`admin-tab ${tab === 'users' ? 'active' : ''}`} onClick={() => setTab('users')}>
           Manage Users
         </button>
-        <button className={`tab-btn ${tab === 'teams' ? 'active' : ''}`} onClick={() => setTab('teams')}>
+        <button className={`admin-tab ${tab === 'teams' ? 'active' : ''}`} onClick={() => setTab('teams')}>
           Manage Teams
         </button>
       </div>
@@ -917,8 +950,8 @@ function AdminPanel() {
 
           {/* Create Game Form (Collapsible) */}
           {showCreateForm && (
-            <div className="admin-game-form-card admin-game-form-card--create">
-              <h3 className="admin-form-title">Create New Game</h3>
+            <AdminCard className="admin-form-card">
+              <h3 className="admin-section__title">Create New Game</h3>
               <form onSubmit={handleCreateGame} className="game-form">
                 <div className="form-row">
                   <div className="form-group">
@@ -1032,15 +1065,15 @@ function AdminPanel() {
                   </div>
                 </div>
 
-                <button type="submit" className="btn admin-btn admin-btn--primary">Create Game</button>
+                <button type="submit" className="admin-button admin-button--primary">Create Game</button>
               </form>
-            </div>
+            </AdminCard>
           )}
 
           {/* Edit Game Form */}
           {editingGame && (
-            <div className="admin-game-form-card admin-game-form-card--edit">
-              <h3 className="admin-form-title">Edit Game</h3>
+            <AdminCard className="admin-form-card">
+              <h3 className="admin-section__title">Edit Game</h3>
               <form onSubmit={handleUpdateGame} className="game-form">
                 <div className="form-row">
                   <div className="form-group">
@@ -1079,12 +1112,12 @@ function AdminPanel() {
                     <input type="text" name="notes" value={editingGame.notes || ''} onChange={handleEditingGameChange} />
                   </div>
                 </div>
-                <div className="admin-form-actions">
-                  <button type="submit" className="btn admin-btn admin-btn--primary">Save Changes</button>
-                  <button type="button" className="btn admin-btn" onClick={() => setEditingGame(null)}>Cancel</button>
+                <div className="admin-actions-inline">
+                  <button type="submit" className="admin-button admin-button--primary">Save Changes</button>
+                  <button type="button" className="admin-button admin-button--secondary" onClick={() => setEditingGame(null)}>Cancel</button>
                 </div>
               </form>
-            </div>
+            </AdminCard>
           )}
           
           {/* Games List */}
@@ -1137,8 +1170,10 @@ function AdminPanel() {
                       </div>
                     </div>
                     <div className="admin-game-card__badges">
-                      <span className="badge badge--scheduled">Scheduled</span>
-                      {game.is_visible === false && <span className="badge badge--hidden">Hidden</span>}
+                      <AdminBadge variant="neutral">{game.status || 'Scheduled'}</AdminBadge>
+                      <AdminBadge variant={game.is_visible === false ? 'warning' : 'success'}>
+                        {game.is_visible === false ? 'Hidden' : 'Visible'}
+                      </AdminBadge>
                     </div>
                   </div>
 
@@ -1162,32 +1197,18 @@ function AdminPanel() {
                       />
                       <span className="toggle-slider"></span>
                     </label>
-                    <button className="btn admin-btn admin-btn--primary" onClick={() => handleEditGame(game)}>
+                    <button className="admin-button admin-button--primary" onClick={() => handleEditGame(game)}>
                       Edit
                     </button>
-                    <div className="admin-overflow">
+                    <AdminActionsMenu label="Actions">
                       <button
                         type="button"
-                        className="btn admin-btn admin-btn--ghost"
-                        onClick={() => toggleGameMenu(game.id)}
+                        className="admin-actions-menu__item"
+                        onClick={() => handleOpenGameStatus(game)}
                       >
-                        More
+                        Set Outcome
                       </button>
-                      {openGameMenuId === game.id && (
-                        <div className="admin-overflow-menu">
-                          <button
-                            type="button"
-                            className="admin-overflow-item"
-                            onClick={() => {
-                              handleOpenGameStatus(game);
-                              setOpenGameMenuId(null);
-                            }}
-                          >
-                            Outcome
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    </AdminActionsMenu>
                   </div>
                 </div>
               ))}
@@ -1245,8 +1266,10 @@ function AdminPanel() {
                         {game.result ? `Winner: ${game.result}` : 'Winner: —'}
                       </div>
                       <div className="admin-game-card__badges">
-                        <span className="badge badge--completed">Completed</span>
-                        {game.is_visible === false && <span className="badge badge--hidden">Hidden</span>}
+                        <AdminBadge variant="neutral">Completed</AdminBadge>
+                        <AdminBadge variant={game.is_visible === false ? 'warning' : 'success'}>
+                          {game.is_visible === false ? 'Hidden' : 'Visible'}
+                        </AdminBadge>
                       </div>
                       <div className="admin-game-card__actions admin-game-card__actions--compact">
                         <label className="toggle-switch admin-toggle-compact">
@@ -1257,32 +1280,18 @@ function AdminPanel() {
                           />
                           <span className="toggle-slider"></span>
                         </label>
-                        <button className="btn admin-btn admin-btn--primary" onClick={() => handleEditGame(game)}>
+                        <button className="admin-button admin-button--primary" onClick={() => handleEditGame(game)}>
                           Edit
                         </button>
-                        <div className="admin-overflow">
+                        <AdminActionsMenu label="Actions">
                           <button
                             type="button"
-                            className="btn admin-btn admin-btn--ghost"
-                            onClick={() => toggleGameMenu(game.id)}
+                            className="admin-actions-menu__item admin-actions-menu__item--destructive"
+                            onClick={() => handleDeleteGame(game.id)}
                           >
-                            More
+                            Delete
                           </button>
-                          {openGameMenuId === game.id && (
-                            <div className="admin-overflow-menu">
-                              <button
-                                type="button"
-                                className="admin-overflow-item admin-overflow-item--danger"
-                                onClick={() => {
-                                  handleDeleteGame(game.id);
-                                  setOpenGameMenuId(null);
-                                }}
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          )}
-                        </div>
+                        </AdminActionsMenu>
                       </div>
                     </div>
                   ))}
@@ -1295,307 +1304,317 @@ function AdminPanel() {
 
       {tab === 'propbets' && (
         <div className="admin-section">
-          <h3>{editingPropBet ? 'Edit Prop Pick' : 'Create Prop Pick'}</h3>
-          {editingPropBet && (
-            <div style={{background: '#2196f3', color: 'white', padding: '12px 20px', borderRadius: '8px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <span>✏️ Editing: {editingPropBet.title}</span>
-              <button 
-                type="button" 
-                onClick={handleCancelEditPropBet}
-                style={{background: 'white', color: '#2196f3', border: 'none', padding: '6px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: '600'}}
-              >
-                Cancel Edit
-              </button>
-            </div>
-          )}
-          <form onSubmit={editingPropBet ? handleUpdatePropBetDetails : handleCreatePropBet} className="game-form">
-            <div className="form-row">
-              <div className="form-group full-width">
-                <label htmlFor="propTitle">Title *</label>
-                <input 
-                  id="propTitle" 
-                  type="text" 
-                  name="title" 
-                  value={propBetForm.title} 
-                  onChange={handlePropBetFormChange}
-                  placeholder="e.g., Which team will win?"
-                  required 
-                />
+          <AdminCard className="admin-form-card">
+            <h3 className="admin-section__title">{editingPropBet ? 'Edit Prop Pick' : 'Create Prop Pick'}</h3>
+            {editingPropBet && (
+              <div className="admin-alert">
+                Editing: {editingPropBet.title}
               </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group full-width">
-                <label htmlFor="propDescription">Description</label>
-                <textarea 
-                  id="propDescription" 
-                  name="description" 
-                  value={propBetForm.description} 
-                  onChange={handlePropBetFormChange}
-                  placeholder="Add details about this prop pick"
-                  rows="3"
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="propTeamType">Category</label>
-                <select 
-                  id="propTeamType" 
-                  name="teamType" 
-                  value={propBetForm.teamType} 
-                  onChange={handlePropBetFormChange}
-                >
-                  <option value="General">General</option>
-                  <option value="Boys Basketball">Boys Basketball</option>
-                  <option value="Girls Basketball">Girls Basketball</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="expiresAt">Expires At</label>
-                <input 
-                  id="expiresAt" 
-                  type="datetime-local" 
-                  name="expiresAt" 
-                  value={propBetForm.expiresAt} 
-                  onChange={handlePropBetFormChange}
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group full-width">
-                <label>Pick Options *</label>
-                <p style={{fontSize: '0.9rem', color: '#888a9b', marginBottom: '1rem'}}>
-                  For parlays, use a single "YES" option. For regular props, add multiple options (e.g., "Team A wins", "Team B wins")
-                </p>
-                
-                {propBetForm.options.map((option, index) => (
-                  <div key={index} style={{display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'flex-end'}}>
-                    <div style={{flex: 1}}>
-                      <label style={{fontSize: '0.85rem'}}>Option {index + 1} Name *</label>
-                      <input 
-                        type="text" 
-                        value={option} 
-                        onChange={(e) => handleOptionChange(index, e.target.value)}
-                        placeholder={index === 0 ? "e.g., Valiants win" : "e.g., Opponent wins"}
-                        style={{width: '100%'}}
-                        required
-                      />
-                    </div>
-                    <div style={{minWidth: '150px'}}>
-                      <label style={{fontSize: '0.85rem'}}>Odds *</label>
-                      <input 
-                        type="number" 
-                        step="0.01" 
-                        value={propBetForm.optionOdds[option] || ''} 
-                        onChange={(e) => handleOddsChange(option, e.target.value)}
-                        placeholder="e.g., 1.75"
-                        style={{width: '100%'}}
-                      />
-                    </div>
-                    {propBetForm.options.length > 1 && (
-                      <button 
-                        type="button" 
-                        onClick={() => removePropBetOption(index)}
-                        style={{padding: '0.5rem 1rem', background: '#ef5350', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
-                      >
-                        Remove
-                      </button>
-                    )}
-                  </div>
-                ))}
-                
-                <button 
-                  type="button" 
-                  onClick={addPropBetOption}
-                  style={{marginTop: '0.5rem', padding: '0.5rem 1rem', background: '#66bb6a', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
-                >
-                  + Add Option
-                </button>
-              </div>
-            </div>
-
-            <button type="submit" className="btn">{editingPropBet ? 'Update Prop Pick' : 'Create Prop Pick'}</button>
-          </form>
-
-          <h3>Active Prop Picks</h3>
-          {propBets.length === 0 ? (
-            <p style={{color: '#b8c5d6'}}>No prop picks created yet</p>
-          ) : (
-            <div className="prop-bets-grid">
-              {propBets.map(propBet => (
-                <div key={propBet.id} className="prop-bet-card">
-                  <div className="prop-card-header">
-                    <div>
-                      <h4 style={{margin: '0 0 8px 0', color: '#1f4e99', fontSize: '1.3rem', fontWeight: '700'}}>{propBet.title}</h4>
-                      {propBet.description && <p style={{color: '#b8c5d6', margin: '0', fontSize: '0.95rem', lineHeight: '1.4'}}>{propBet.description}</p>}
-                    </div>
-                    <div style={{display: 'flex', gap: '8px', alignItems: 'flex-start', flexShrink: 0}}>
-                      <div className="prop-status-badge" style={{background: propBet.status === 'active' ? 'rgba(102, 187, 106, 0.2)' : 'rgba(239, 83, 80, 0.2)', color: propBet.status === 'active' ? '#66bb6a' : '#ef5350', padding: '6px 14px', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase'}}>
-                        {propBet.status}
-                      </div>
-                      <div className="prop-status-badge" style={{background: propBet.is_visible ? 'rgba(33, 150, 243, 0.2)' : 'rgba(158, 158, 158, 0.2)', color: propBet.is_visible ? '#2196f3' : '#9e9e9e', padding: '6px 14px', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700}}>
-                        {propBet.is_visible ? '👁️ VISIBLE' : '🚫 HIDDEN'}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="prop-card-info">
-                    <div className="info-row">
-                      <span className="info-label">📂 Category</span>
-                      <span className="info-value" style={{fontWeight: '600', color: '#e0e0e0'}}>{propBet.team_type}</span>
-                    </div>
-                    <div className="info-row">
-                      <span className="info-label">🎲 Options & Odds</span>
-                      <div className="info-value" style={{display: 'flex', gap: '12px', flexWrap: 'wrap'}}>
-                        {propBet.options && propBet.options.length > 0 ? (
-                          propBet.options.map((option, idx) => {
-                            const odds = propBet.option_odds ? propBet.option_odds[option] : null;
-                            return (
-                              <span key={idx} style={{
-                                background: idx === 0 ? 'rgba(102, 187, 106, 0.15)' : 'rgba(239, 83, 80, 0.15)',
-                                padding: '4px 12px',
-                                borderRadius: '6px',
-                                border: `1px solid ${idx === 0 ? 'rgba(102, 187, 106, 0.4)' : 'rgba(239, 83, 80, 0.4)'}`,
-                                color: idx === 0 ? '#66bb6a' : '#ef5350',
-                                fontWeight: '600',
-                                fontSize: '0.9rem'
-                              }}>
-                                {option}: {odds || propBet.yes_odds}x
-                              </span>
-                            );
-                          })
-                        ) : (
-                          <>
-                            <span style={{background: 'rgba(102, 187, 106, 0.15)', padding: '4px 12px', borderRadius: '6px', border: '1px solid rgba(102, 187, 106, 0.4)', color: '#66bb6a', fontWeight: '600', fontSize: '0.9rem'}}>
-                              YES: {propBet.yes_odds}x
-                            </span>
-                            <span style={{background: 'rgba(239, 83, 80, 0.15)', padding: '4px 12px', borderRadius: '6px', border: '1px solid rgba(239, 83, 80, 0.4)', color: '#ef5350', fontWeight: '600', fontSize: '0.9rem'}}>
-                              NO: {propBet.no_odds}x
-                            </span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    {propBet.expires_at && (
-                      <div className="info-row">
-                        <span className="info-label">⏰ Expires</span>
-                        <span className="info-value" style={{color: '#ffb74d', fontWeight: '500'}}>
-                          {new Date(propBet.expires_at).toLocaleString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                            hour: 'numeric',
-                            minute: '2-digit'
-                          })}
-                        </span>
-                      </div>
-                    )}
-                    {propBet.outcome && (
-                      <div className="info-row">
-                        <span className="info-label">🏆 Outcome</span>
-                        <span className="info-value" style={{
-                          color: propBet.outcome === 'yes' ? '#66bb6a' : '#ef5350',
-                          fontWeight: '700',
-                          fontSize: '1rem',
-                          textTransform: 'uppercase',
-                          background: propBet.outcome === 'yes' ? 'rgba(102, 187, 106, 0.15)' : 'rgba(239, 83, 80, 0.15)',
-                          padding: '4px 12px',
-                          borderRadius: '6px'
-                        }}>
-                          {(propBet.options && propBet.options[propBet.outcome === 'yes' ? 0 : 1]) || propBet.outcome.toUpperCase()}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="prop-card-actions-improved">
-                    <div className="visibility-toggle-section">
-                      <label className="toggle-switch">
-                        <input 
-                          type="checkbox" 
-                          checked={propBet.is_visible}
-                          onChange={() => handleTogglePropVisibility(propBet.id)}
-                        />
-                        <span className="toggle-slider"></span>
-                      </label>
-                      <span className="toggle-label-improved">{propBet.is_visible ? 'Visible to Users' : 'Hidden from Users'}</span>
-                    </div>
-                    <button 
-                      className="prop-action-btn-new edit"
-                      onClick={() => handleEditPropBet(propBet)}
-                      style={{background: '#2196f3', color: 'white', marginBottom: '8px'}}
-                    >
-                      ✏️ Edit Prop
-                    </button>
-                    {propBet.status === 'active' && (
-                      <div className="prop-action-buttons-grid">
-                        {propBet.options && propBet.options.length > 0 ? (
-                          propBet.options.map((option, idx) => (
-                            <button 
-                              key={idx}
-                              className={`prop-action-btn-new ${idx === 0 ? 'resolve-yes' : 'resolve-no'}`}
-                              onClick={() => handleUpdatePropBet(propBet.id, 'resolved', idx === 0 ? 'yes' : 'no')}
-                            >
-                              {idx === 0 ? '✅' : '❌'} Resolve: {option}
-                            </button>
-                          ))
-                        ) : (
-                          <>
-                            <button className="prop-action-btn-new resolve-yes" onClick={() => handleUpdatePropBet(propBet.id, 'resolved', 'yes')}>
-                              ✅ Resolve: YES
-                            </button>
-                            <button className="prop-action-btn-new resolve-no" onClick={() => handleUpdatePropBet(propBet.id, 'resolved', 'no')}>
-                              ❌ Resolve: NO
-                            </button>
-                          </>
-                        )}
-                        <button className="prop-action-btn-new cancel" onClick={() => handleUpdatePropBet(propBet.id, 'cancelled', null)}>
-                          ⚠️ Cancel Prop
-                        </button>
-                      </div>
-                    )}
-                    <button className="prop-action-btn-new delete" onClick={() => handleDeletePropBet(propBet.id)}>
-                      🗑️ Delete Permanently
-                    </button>
-                  </div>
+            )}
+            <form onSubmit={editingPropBet ? handleUpdatePropBetDetails : handleCreatePropBet} className="game-form">
+              <div className="form-row">
+                <div className="form-group full-width">
+                  <label htmlFor="propTitle">Title *</label>
+                  <input
+                    id="propTitle"
+                    type="text"
+                    name="title"
+                    value={propBetForm.title}
+                    onChange={handlePropBetFormChange}
+                    placeholder="e.g., Which team will win?"
+                    required
+                  />
                 </div>
-              ))}
-            </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group full-width">
+                  <label htmlFor="propDescription">Description</label>
+                  <textarea
+                    id="propDescription"
+                    name="description"
+                    value={propBetForm.description}
+                    onChange={handlePropBetFormChange}
+                    placeholder="Add details about this prop pick"
+                    rows="3"
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="propTeamType">Category</label>
+                  <select
+                    id="propTeamType"
+                    name="teamType"
+                    value={propBetForm.teamType}
+                    onChange={handlePropBetFormChange}
+                  >
+                    <option value="General">General</option>
+                    <option value="Boys Basketball">Boys Basketball</option>
+                    <option value="Girls Basketball">Girls Basketball</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="expiresAt">Expires At</label>
+                  <input
+                    id="expiresAt"
+                    type="datetime-local"
+                    name="expiresAt"
+                    value={propBetForm.expiresAt}
+                    onChange={handlePropBetFormChange}
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group full-width">
+                  <label>Pick Options *</label>
+                  <p className="admin-help-text">
+                    For parlays, use a single "YES" option. For regular props, add multiple options (e.g., "Team A wins", "Team B wins")
+                  </p>
+
+                  {propBetForm.options.map((option, index) => (
+                    <div key={index} className="admin-option-row">
+                      <div className="admin-option-field">
+                        <label>Option {index + 1} Name *</label>
+                        <input
+                          type="text"
+                          value={option}
+                          onChange={(e) => handleOptionChange(index, e.target.value)}
+                          placeholder={index === 0 ? "e.g., Valiants win" : "e.g., Opponent wins"}
+                          required
+                        />
+                      </div>
+                      <div className="admin-option-field admin-option-field--odds">
+                        <label>Odds *</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={propBetForm.optionOdds[option] || ''}
+                          onChange={(e) => handleOddsChange(option, e.target.value)}
+                          placeholder="e.g., 1.75"
+                        />
+                      </div>
+                      {propBetForm.options.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removePropBetOption(index)}
+                          className="admin-button admin-button--destructive admin-button--compact"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={addPropBetOption}
+                    className="admin-button admin-button--secondary admin-button--compact"
+                  >
+                    Add Option
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" className="admin-button admin-button--primary">
+                {editingPropBet ? 'Update Prop Pick' : 'Create Prop Pick'}
+              </button>
+            </form>
+          </AdminCard>
+
+          <h3 className="admin-section__title">Active Prop Picks</h3>
+          {propBets.length === 0 ? (
+            <div className="admin-empty-state">No prop picks created yet</div>
+          ) : (
+            <AdminTable>
+              <thead>
+                <tr>
+                  <th>Prop</th>
+                  <th>Category</th>
+                  <th>Options & Odds</th>
+                  <th>Status</th>
+                  <th>Visibility</th>
+                  <th>Expires</th>
+                  <th>Outcome</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {propBets.map(propBet => {
+                  const statusVariant = propBet.status === 'active'
+                    ? 'success'
+                    : propBet.status === 'cancelled'
+                      ? 'danger'
+                      : 'neutral';
+
+                  return (
+                    <tr key={propBet.id}>
+                      <td>
+                        <div className="admin-card-title">{propBet.title}</div>
+                        {propBet.description && <div className="admin-muted">{propBet.description}</div>}
+                      </td>
+                      <td>{propBet.team_type}</td>
+                      <td>
+                        <div className="admin-pill-group">
+                          {propBet.options && propBet.options.length > 0 ? (
+                            propBet.options.map((option, idx) => {
+                              const odds = propBet.option_odds ? propBet.option_odds[option] : null;
+                              return (
+                                <span key={idx} className="admin-pill">
+                                  {option}: {odds || propBet.yes_odds}x
+                                </span>
+                              );
+                            })
+                          ) : (
+                            <>
+                              <span className="admin-pill">YES: {propBet.yes_odds}x</span>
+                              <span className="admin-pill">NO: {propBet.no_odds}x</span>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                      <td>
+                        <AdminBadge variant={statusVariant}>{propBet.status}</AdminBadge>
+                      </td>
+                      <td>
+                        <label className="toggle-switch admin-toggle-compact">
+                          <input
+                            type="checkbox"
+                            checked={propBet.is_visible}
+                            onChange={() => handleTogglePropVisibility(propBet.id)}
+                          />
+                          <span className="toggle-slider"></span>
+                        </label>
+                      </td>
+                      <td>
+                        {propBet.expires_at
+                          ? new Date(propBet.expires_at).toLocaleString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              hour: 'numeric',
+                              minute: '2-digit'
+                            })
+                          : '—'}
+                      </td>
+                      <td>
+                        {propBet.outcome ? (
+                          <AdminBadge variant={propBet.outcome === 'yes' ? 'success' : 'danger'}>
+                            {(propBet.options && propBet.options[propBet.outcome === 'yes' ? 0 : 1]) || propBet.outcome}
+                          </AdminBadge>
+                        ) : (
+                          '—'
+                        )}
+                      </td>
+                      <td>
+                        <div className="admin-actions-inline">
+                          <button
+                            className="admin-button admin-button--primary admin-button--compact"
+                            onClick={() => handleEditPropBet(propBet)}
+                          >
+                            Edit
+                          </button>
+                          <AdminActionsMenu label="Actions">
+                            {propBet.status === 'active' && (
+                              propBet.options && propBet.options.length > 0 ? (
+                                propBet.options.map((option, idx) => (
+                                  <button
+                                    key={idx}
+                                    type="button"
+                                    className="admin-actions-menu__item"
+                                    onClick={() => handleUpdatePropBet(propBet.id, 'resolved', idx === 0 ? 'yes' : 'no')}
+                                  >
+                                    Resolve: {option}
+                                  </button>
+                                ))
+                              ) : (
+                                <>
+                                  <button
+                                    type="button"
+                                    className="admin-actions-menu__item"
+                                    onClick={() => handleUpdatePropBet(propBet.id, 'resolved', 'yes')}
+                                  >
+                                    Resolve: YES
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="admin-actions-menu__item"
+                                    onClick={() => handleUpdatePropBet(propBet.id, 'resolved', 'no')}
+                                  >
+                                    Resolve: NO
+                                  </button>
+                                </>
+                              )
+                            )}
+                            <button
+                              type="button"
+                              className="admin-actions-menu__item"
+                              onClick={() => handleUpdatePropBet(propBet.id, 'cancelled', null)}
+                            >
+                              Cancel Prop
+                            </button>
+                            <button
+                              type="button"
+                              className="admin-actions-menu__item admin-actions-menu__item--destructive"
+                              onClick={() => handleDeletePropBet(propBet.id)}
+                            >
+                              Delete
+                            </button>
+                          </AdminActionsMenu>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </AdminTable>
           )}
         </div>
       )}
 
       {tab === 'bets' && (
         <>
-          <div className="stats" style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
-            <div className="stat-card" style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '25px', borderRadius: '12px', border: '2px solid #2196f3', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}> 
-              <h4 style={{margin: '0 0 10px 0', color: '#64b5f6', fontSize: '0.9rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px'}}>📊 Total Picks</h4>
-              <p style={{margin: '0', fontSize: '2.5rem', fontWeight: 'bold', color: '#1f4e99'}}>{allBets.length}</p>
-            </div>
-            <div className="stat-card" style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '25px', borderRadius: '12px', border: '2px solid #ff9800', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <h4 style={{margin: '0 0 10px 0', color: '#ffb74d', fontSize: '0.9rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px'}}>⏳ Pending</h4>
-              <p style={{margin: '0', fontSize: '2.5rem', fontWeight: 'bold', color: '#ffb74d'}}>{allBets.filter(b => b.status === 'pending').length}</p>
-            </div>
-            <div className="stat-card" style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '25px', borderRadius: '12px', border: '2px solid #66bb6a', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <h4 style={{margin: '0 0 10px 0', color: '#81c784', fontSize: '0.9rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px'}}>✅ Won</h4>
-              <p style={{margin: '0', fontSize: '2.5rem', fontWeight: 'bold', color: '#81c784'}}>{allBets.filter(b => b.outcome === 'won').length}</p>
-            </div>
-            <div className="stat-card" style={{background: 'linear-gradient(135deg, #1e2139 0%, #161b2e 100%)', padding: '25px', borderRadius: '12px', border: '2px solid #ef5350', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s ease'}} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <h4 style={{margin: '0 0 10px 0', color: '#e57373', fontSize: '0.9rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px'}}>❌ Lost</h4>
-              <p style={{margin: '0', fontSize: '2.5rem', fontWeight: 'bold', color: '#e57373'}}>{allBets.filter(b => b.outcome === 'lost').length}</p>
-            </div>
+          <div className="admin-card-grid admin-stats-grid">
+            <AdminCard className="admin-stat-card">
+              <div className="admin-stat-label">Total Picks</div>
+              <div className="admin-stat-value">{allBets.length}</div>
+            </AdminCard>
+            <AdminCard className="admin-stat-card">
+              <div className="admin-stat-label">Pending</div>
+              <div className="admin-stat-value">{allBets.filter(b => b.status === 'pending').length}</div>
+            </AdminCard>
+            <AdminCard className="admin-stat-card">
+              <div className="admin-stat-label">Won</div>
+              <div className="admin-stat-value">{allBets.filter(b => b.outcome === 'won').length}</div>
+            </AdminCard>
+            <AdminCard className="admin-stat-card">
+              <div className="admin-stat-label">Lost</div>
+              <div className="admin-stat-value">{allBets.filter(b => b.outcome === 'lost').length}</div>
+            </AdminCard>
           </div>
 
-          <div className="card">
-            <h3>All Picks</h3>
-            <p style={{marginBottom: '15px', color: '#b8c5d6'}}>
+          <AdminCard>
+            <h3 className="admin-section__title">All Picks</h3>
+            <p className="admin-help-text">
               Picks are automatically completed when you set game outcomes or prop pick results. You can also manually resolve picks below.
             </p>
-            <div className="bets-table-wrapper">
-              <table className="bets-table">
+            <AdminTable>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>User</th>
+                  <th>Game / Prop</th>
+                  <th>Selection</th>
+                  <th>Stake</th>
+                  <th>Odds</th>
+                  <th>Status</th>
+                  <th>Outcome</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -2504,7 +2523,7 @@ function AdminPanel() {
           </div>
         </div>
       )}
-    </div>
+    </AdminLayout>
   );
 }
 
