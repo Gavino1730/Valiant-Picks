@@ -5,8 +5,6 @@ import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import OnboardingModal from './components/OnboardingModal';
 import RivalryWeekPopup from './components/RivalryWeekPopup';
-import SpiritWeekBanner from './components/SpiritWeekBanner';
-import SpiritWeekFloater from './components/SpiritWeekFloater';
 import Footer from './components/Footer';
 import { ToastProvider, useToast } from './components/ToastProvider';
 import './styles/Toast.css';
@@ -312,8 +310,6 @@ function AppContent() {
     <ToastProvider>
     <div className="app">
       <GiftBalanceWatcher user={currentUser} updateUser={updateUser} />
-      {/* Spirit Week Banner */}
-      <SpiritWeekBanner />
       {/* Rivalry Week Popup */}
       <RivalryWeekPopup 
         enabled={rivalryWeekConfig.enabled}
@@ -520,8 +516,6 @@ function AppContent() {
       {token && <Footer onNavigate={handlePageChange} />}
       
       {token && <OnboardingModal />}
-      
-      {token && <SpiritWeekFloater />}
     </div>
     </ToastProvider>
   );

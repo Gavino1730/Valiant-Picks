@@ -45,7 +45,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [showSpinWheel, setShowSpinWheel] = useState(false);
   const [hasCheckedSpinWheel, setHasCheckedSpinWheel] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const spiritWeekCalendarRef = React.useRef(null);
   // TEMPORARILY DISABLED - stats state (used in commented-out stats overview section)
   // const [stats, setStats] = useState({
   //   totalBets: 0,
@@ -55,96 +54,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   //   winRate: 0,
   //   totalWinnings: 0
   // });
-
-  // Spirit Week Data - Broadway Theme
-  const [spiritWeekData] = useState({
-    theme: "Battle of the Broadways",
-    weekOf: "February 2-6, 2026",
-    description: "Spirit Week kicks off Monday, February 2nd! Earn points daily by checking in at the front lobby during lunch, with bonus points for themed outfits and activities. The lip sync challenge and hall transformations are worth the most points!",
-    dressUpDays: [
-      { 
-        day: "Monday, Feb 2", 
-        theme: "Opening Night Monday", 
-        singlePoints: "Black top + black bottom",
-        doublePoints: "Dress fancy like attending opening night of a Broadway play!"
-      },
-      { 
-        day: "Tuesday, Feb 3", 
-        theme: "Twinning Tuesday (Jersey Out)", 
-        singlePoints: "Twin with a friend - 3 matching items",
-        doublePoints: "3 matching items with a JERSEY (Blue Crew Jersey Out for OES games)"
-      },
-      { 
-        day: "Wednesday, Feb 4", 
-        theme: "Wicked Wednesday", 
-        singlePoints: "3 articles of pink or green",
-        doublePoints: "Pink & green with Wicked accessory (broom, wand, witch hat)"
-      },
-      { 
-        day: "Thursday, Feb 5", 
-        theme: "Hakuna Matata Thursday", 
-        singlePoints: "2 pajama items (sweatpants don't count!)",
-        doublePoints: "3 sleep articles: matching top/bottom/slippers OR bathrobe OR onesie!"
-      },
-      { 
-        day: "Friday, Feb 6", 
-        theme: '"Be Your Broadway" Friday', 
-        singlePoints: "3 articles of your class colors",
-        doublePoints: "Dress like a character from your Broadway show!"
-      }
-    ],
-    events: [
-      { day: "Daily at Lunch", event: "Spirit check-in at front lobby & Sadie Hawkins ticket sales" },
-      { day: "Mon-Thu Lunch", event: "Lip Sync Practices (Valiants Gym) - Each class different day" },
-      { day: "Monday, Feb 2", event: "Hall decorations judged" },
-      { day: "Tuesday, Feb 3", event: "🎯 Tug-O-War Assembly + Blue Crew Jersey Out (OES games) + Class banners due" },
-      { day: "Wednesday, Feb 4", event: "Wig Snatching in the Courtyard" },
-      { day: "Friday, Feb 6", event: "🎤 Spirit Week Lip Sync Assembly - Ultimate bragging rights!" },
-      { day: "Saturday, Feb 7", event: "💃 Sadie Hawkins Dance @ Valley Catholic - 8:00 PM" }
-    ],
-    prepWeek: [
-      { day: "Friday, Jan 30", time: "12:30-4:30 PM", activity: "Prep Week Collaboration" },
-      { day: "Sunday, Feb 1", time: "12:00-6:00 PM", activity: "Major Setup Weekend (Service hours available!)" }
-    ],
-    grades: [
-      {
-        grade: "Freshmen",
-        subtheme: "Wicked",
-        colors: "Pink & Green",
-        color: "#00C853",
-        icon: "🧙‍♀️",
-        points: 850,
-        lipSyncPractice: "Monday Lunch"
-      },
-      {
-        grade: "Sophomores",
-        subtheme: "Lion King",
-        colors: "Orange & Yellow",
-        color: "#FF9800",
-        icon: "🦁",
-        points: 720,
-        lipSyncPractice: "Tuesday Lunch"
-      },
-      {
-        grade: "Juniors",
-        subtheme: "Grease",
-        colors: "Pink & Black",
-        color: "#E91E63",
-        icon: "🎸",
-        points: 1240,
-        lipSyncPractice: "Wednesday Lunch"
-      },
-      {
-        grade: "Seniors",
-        subtheme: "Hamilton",
-        colors: "Red, White & Blue",
-        color: "#1976D2",
-        icon: "🎩",
-        points: 1050,
-        lipSyncPractice: "Thursday Lunch"
-      }
-    ]
-  });
 
   // Flex Schedule - HIDDEN FOR NOW
   /* const [flexSchedule] = useState({
@@ -411,33 +320,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       await fetchUserProfile();
     }
   };
-
-  // Calculate spirit week leader
-  const spiritLeader = React.useMemo(() => {
-    const sorted = [...spiritWeekData.grades].sort((a, b) => b.points - a.points);
-    return sorted[0];
-  }, [spiritWeekData]);
   
-  // Get solid color for each grade - memoized for performance
-  const getGradeColor = React.useCallback((gradeName) => {
-    switch(gradeName) {
-      case 'Freshmen': // Wicked - Green
-        return '#00C853';
-      case 'Sophomores': // Lion King - Orange
-        return '#FF9800';
-      case 'Juniors': // Grease - Pink
-        return '#E91E63';
-      case 'Seniors': // Hamilton - Blue
-        return '#1976D2';
-      default:
-        return '#9E9E9E'; // Default gray
-    }
-  }, []);
-  
-  // Scroll to Spirit Week Calendar
-  const scrollToCalendar = () => {
-    spiritWeekCalendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
   return (
     <div className="dashboard school-dashboard">
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
@@ -568,92 +451,12 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       <div className="dashboard-grid school-grid">
         {/* Left Column */}
         <div className="dashboard-main-column">
-          {/* Spirit Week Quick Preview - Top Banner */}
-          <div className="spirit-week-preview-banner">
-            <div className="preview-banner-content">
-              <div className="preview-banner-icon">🎭</div>
-              <div className="preview-banner-info">
-                <h4>Spirit Week 2026: Battle of the Broadways</h4>
-                <p>Feb 2-6 • Daily dress-up themes, events & grade competition!</p>
-              </div>
-            </div>
-            <button 
-              className="btn btn-primary preview-banner-btn"
-              onClick={scrollToCalendar}
-            >
-              📅 View Spirit Week Schedule
-            </button>
-          </div>
-
-          {/* Grade Rankings - Top Priority */}
-          <div className="card spirit-week-card" style={{marginBottom: '1.5rem'}}>
-            <div className="spirit-week-header" style={{marginBottom: '1rem'}}>
-              <h3 style={{margin: 0}}>🎭 Spirit Week 2026: Battle of the Broadways</h3>
-            </div>
-            {/* Current Leader Banner */}
-            <div className="spirit-leader-banner" style={{borderColor: spiritLeader.color, marginBottom: '1.5rem'}}>
-              <span className="leader-icon" style={{fontSize: '2.5rem'}}>{spiritLeader.icon}</span>
-              <div className="leader-info">
-                <div className="leader-label">Current Leader</div>
-                <div className="leader-grade" style={{color: spiritLeader.color}}>{spiritLeader.grade}</div>
-                <div className="leader-subtheme">{spiritLeader.subtheme}</div>
-              </div>
-              <div className="leader-points">{spiritLeader.points} pts</div>
-            </div>
-
-            <div className="spirit-leaderboard">
-              <h4>🏆 Grade Rankings</h4>
-              {[...spiritWeekData.grades]
-                .sort((a, b) => b.points - a.points)
-                .map((grade, index) => {
-                  const maxPoints = Math.max(...spiritWeekData.grades.map(g => g.points), 1);
-                  const percentage = (grade.points / maxPoints) * 100;
-                  
-                  return (
-                    <div key={index} className="grade-bar-item">
-                      <div className="grade-bar-header">
-                        <div className="grade-bar-info">
-                          <span className="grade-bar-rank">#{index + 1}</span>
-                          <span className="grade-bar-icon">{grade.icon}</span>
-                          <div className="grade-bar-text">
-                            <span className="grade-bar-name" style={{color: grade.color}}>{grade.grade}</span>
-                            <span className="grade-bar-theme">{grade.subtheme}</span>
-                          </div>
-                        </div>
-                        <span className="grade-bar-points" style={{color: grade.color}}>{grade.points} pts</span>
-                      </div>
-                      <div className="grade-bar-container">
-                        <div 
-                          className="grade-bar-fill" 
-                          style={{
-                            width: `${percentage}%`,
-                            background: getGradeColor(grade.grade),
-                            boxShadow: `0 2px 8px ${grade.color}40`
-                          }}
-                        >
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-            
-            {/* View Calendar Button */}
-            <button 
-              className="btn btn-primary view-calendar-btn"
-              onClick={scrollToCalendar}
-              style={{ 
-                marginTop: '1.5rem', 
-                width: '100%',
-                background: 'linear-gradient(135deg, #004f9e 0%, #0066cc 100%)',
-                fontSize: '1rem',
-                fontWeight: '600',
-                padding: '0.9rem'
-              }}
-            >
-              📅 View Full Spirit Week Schedule Below ⬇️
-            </button>
-          </div>
+          {/* Spin Wheel Modal */}
+          <SpinWheel 
+            isOpen={showSpinWheel} 
+            onClose={() => setShowSpinWheel(false)}
+            onPrizeWon={handleSpinWheelPrize} 
+          />
 
           {/* Place a Pick CTA - TEMPORARILY HIDDEN
           <div className="card pick-cta-card">
@@ -699,86 +502,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             onClose={() => setShowSpinWheel(false)}
             onPrizeWon={handleSpinWheelPrize} 
           />
-
-          {/* Scroll Indicator */}
-          <div className="scroll-indicator">
-            <div className="scroll-text">📅 Spirit Week Calendar Below</div>
-            <div className="scroll-arrow">⬇</div>
-          </div>
-
-          {/* Spirit Week Tracker */}
-          <div ref={spiritWeekCalendarRef} className="card spirit-week-card">
-            <div className="spirit-week-header">
-              <h3>🎭 Spirit Week 2026: {spiritWeekData.theme}</h3>
-              <span className="spirit-week-date">{spiritWeekData.weekOf}</span>
-            </div>
-            <p className="spirit-week-description">
-              {spiritWeekData.description}
-            </p>
-            
-            {/* Combined Spirit Week Schedule */}
-            <div className="spirit-week-events">
-              <h4>📅 Spirit Week Schedule</h4>
-              <div className="events-timeline">
-                {spiritWeekData.dressUpDays.map((dressUp, idx) => {
-                  // Find matching events for this day
-                  const dayEvents = spiritWeekData.events.filter(event => 
-                    event.day.includes(dressUp.day.split(',')[1]?.trim()) || 
-                    (dressUp.day.includes('Monday') && event.day.includes('Monday')) ||
-                    (dressUp.day.includes('Tuesday') && event.day.includes('Tuesday')) ||
-                    (dressUp.day.includes('Wednesday') && event.day.includes('Wednesday')) ||
-                    (dressUp.day.includes('Thursday') && event.day.includes('Thursday')) ||
-                    (dressUp.day.includes('Friday') && event.day.includes('Friday'))
-                  );
-                  
-                  return (
-                    <div key={idx} className="timeline-item dress-up-day">
-                      <span className="timeline-day">{dressUp.day}</span>
-                      <div className="dress-up-details">
-                        <div className="dress-up-theme">👔 {dressUp.theme}</div>
-                        <div className="dress-up-points">
-                          <div className="points-option">
-                            <span className="points-badge single">Single Points</span>
-                            <span className="points-desc">{dressUp.singlePoints}</span>
-                          </div>
-                          <div className="points-option">
-                            <span className="points-badge double">Double Points</span>
-                            <span className="points-desc">{dressUp.doublePoints}</span>
-                          </div>
-                        </div>
-                        {/* Show daily events */}
-                        {dayEvents.length > 0 && (
-                          <div style={{marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.1)'}}>
-                            {dayEvents.map((event, eventIdx) => (
-                              <div key={eventIdx} style={{fontSize: '0.9rem', color: '#b8c5d6', marginBottom: '0.35rem'}}>
-                                📌 {event.event}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-                
-                {/* Show remaining events that don't match dress-up days */}
-                {spiritWeekData.events
-                  .filter(event => 
-                    !event.day.includes('Monday, Feb') && 
-                    !event.day.includes('Tuesday, Feb') && 
-                    !event.day.includes('Wednesday, Feb') && 
-                    !event.day.includes('Thursday, Feb') && 
-                    !event.day.includes('Friday, Feb')
-                  )
-                  .map((event, idx) => (
-                    <div key={`extra-${idx}`} className="timeline-item">
-                      <span className="timeline-day">{event.day}</span>
-                      <span className="timeline-event">{event.event}</span>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Right Sidebar */}

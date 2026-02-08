@@ -92,45 +92,6 @@
   letter-spacing: 0.3px;
 }
 
-.spirit-week-badge {
-  background: linear-gradient(180deg, #1a0f08 0%, #2d1810 100%);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 900;
-  font-size: 1rem;
-  margin: 1rem auto 0;
-  display: inline-block;
-  box-shadow: 
-    0 0 20px rgba(255, 140, 0, 0.6),
-    0 4px 16px rgba(0, 0, 0, 0.8),
-    inset 0 0 30px rgba(255, 140, 0, 0.1);
-  animation: badgePulse 2s ease-in-out infinite;
-  border: 3px solid #ff8c00;
-  text-shadow: 
-    0 0 10px #ff8c00,
-    0 0 20px #ff6f00,
-    2px 2px 4px rgba(0, 0, 0, 0.8);
-  letter-spacing: 0.5px;
-}
-
-@keyframes badgePulse {
-  0%, 100% { 
-    transform: scale(1);
-    box-shadow: 
-      0 0 20px rgba(255, 140, 0, 0.6),
-      0 4px 16px rgba(0, 0, 0, 0.8),
-      inset 0 0 30px rgba(255, 140, 0, 0.1);
-  }
-  50% { 
-    transform: scale(1.05);
-    box-shadow: 
-      0 0 30px rgba(255, 140, 0, 0.8),
-      0 6px 24px rgba(0, 0, 0, 0.9),
-      inset 0 0 40px rgba(255, 140, 0, 0.2);
-  }
-}
-
 /* ===== OVERVIEW STATS ===== */
 .overview-stats {
   display: grid;
