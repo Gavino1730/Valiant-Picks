@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/Leaderboard.css';
 import '../styles/Skeleton.css';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency, formatSignedCurrency, formatSignedPercentage, getValueClass } from '../utils/formatting';
 import { LeaderboardRowSkeleton } from './Skeleton';
 
 function Leaderboard() {
@@ -102,44 +102,15 @@ function Leaderboard() {
     return getUsersWithStats().sort((a, b) => b.balance - a.balance);
   };
 
-  const formatSignedCurrency = (value) => {
-    if (!Number.isFinite(value)) {
-      return formatCurrency(0);
-    }
-    const absValue = Math.abs(value);
-    const formatted = formatCurrency(absValue);
-    if (value > 0) {
-      return `+${formatted}`;
-    }
-    if (value < 0) {
-      return `-${formatted}`;
-    }
-    return formatted;
-  };
-
-  const formatRoi = (roi) => {
-    if (!Number.isFinite(roi)) {
-      return '0.00%';
-    }
-    const absValue = Math.abs(roi).toFixed(2);
-    if (roi > 0) {
-      return `+${absValue}%`;
-    }
-    if (roi < 0) {
-      return `-${absValue}%`;
-    }
-    return `${absValue}%`;
-  };
-
   if (loading) {
     return (
-      <div className="leaderboard-page">
-        <div className="leaderboard-header">
+      <div className="leaderboard-page ds-page">
+        <div className="leaderboard-header page-header">
           <h1>Leaderboard</h1>
           <p>Ranked by Valiant Bucks balance</p>
         </div>
-        <div className="leaderboard-table-wrapper">
-          <table className="leaderboard-table">
+        <div className="leaderboard-table-wrapper ds-table-wrapper">
+          <table className="leaderboard-table ds-table">
             <colgroup>
               <col style={{ width: '70px' }} />
               <col style={{ width: '32%' }} />
@@ -152,10 +123,10 @@ function Leaderboard() {
               <tr>
                 <th className="th-rank">Rank</th>
                 <th>Player</th>
-                <th className="th-right">Balance</th>
-                <th className="th-right">Profit</th>
-                <th className="th-center">Record</th>
-                <th className="th-right">ROI</th>
+                <th className="th-right u-align-right">Balance</th>
+                <th className="th-right u-align-right">Profit</th>
+                <th className="th-center u-align-center">Record</th>
+                <th className="th-right u-align-right">ROI</th>
               </tr>
             </thead>
             <tbody>
@@ -177,8 +148,8 @@ function Leaderboard() {
   const paginatedUsers = rankedUsers.slice(pageStartIndex, pageStartIndex + PAGE_SIZE);
 
   return (
-    <div className="leaderboard-page">
-      <div className="leaderboard-header">
+    <div className="leaderboard-page ds-page">
+      <div className="leaderboard-header page-header">
         <h1>Leaderboard</h1>
         <p className="subtitle">Track performance across all players</p>
       </div>
@@ -205,8 +176,8 @@ function Leaderboard() {
           </div>
         ) : (
           <>
-            <div className="leaderboard-table-wrapper">
-              <table className="leaderboard-table">
+            <div className="leaderboard-table-wrapper ds-table-wrapper">
+              <table className="leaderboard-table ds-table">
                 <colgroup>
                   <col style={{ width: '70px' }} />
                   <col style={{ width: '32%' }} />
@@ -219,10 +190,10 @@ function Leaderboard() {
                   <tr>
                     <th className="th-rank">Rank</th>
                     <th>Player</th>
-                    <th className="th-right">Balance</th>
-                    <th className="th-right">Profit</th>
-                    <th className="th-center">Record</th>
-                    <th className="th-right">ROI</th>
+                    <th className="th-right u-align-right">Balance</th>
+                    <th className="th-right u-align-right">Profit</th>
+                    <th className="th-center u-align-center">Record</th>
+                    <th className="th-right u-align-right">ROI</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -231,7 +202,7 @@ function Leaderboard() {
                     const roi = user.stats.roi || 0;
                     return (
                       <tr key={user.id} className={`leaderboard-row ${rank <= 3 ? `rank-${rank}` : ''}`}>
-                        <td className="rank-cell">
+                        <td className="td-rank">
                           <span className={`rank-badge ${rank <= 3 ? `rank-${rank}` : ''}`}>{rank}</span>
                         </td>
                         <td className="username-cell">
@@ -240,19 +211,19 @@ function Leaderboard() {
                             {user.is_admin && <span className="admin-badge">ADMIN</span>}
                           </div>
                         </td>
-                        <td className="numeric balance-cell">{formatCurrency(user.balance)}</td>
+                        <td className="td-right u-align-right u-num">
                         <td className={`numeric profit-cell ${user.stats.netProfit >= 0 ? 'positive' : 'negative'}`}>
                           {formatSignedCurrency(user.stats.netProfit)}
-                        </td>
-                        <td className="record-cell">
+                        <td className={`td-right u-align-right u-num ${getValueClass(user.stats.netProfit)}`}>
+                          {formatSignedCurrency(user.stats.netProfit)}
                           <span className="wins">{user.stats.wonBets}W</span>
-                          <span className="separator">–</span>
+                        <td className="td-center u-align-center u-num">
                           <span className="losses">{user.stats.lostBets}L</span>
                         </td>
                         <td className={`numeric roi-cell ${roi >= 0 ? 'positive' : 'negative'}`}>
                           {formatRoi(roi)}
-                        </td>
-                      </tr>
+                        <td className={`td-right u-align-right u-num ${getValueClass(user.stats.roi)}`}>
+                          {formatSignedPercentage(user.stats.roi)}
                     );
                   })}
                 </tbody>

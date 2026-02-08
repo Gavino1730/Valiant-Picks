@@ -5,15 +5,7 @@
 }
 
 html {
-  background-color: #0f1419;
-}
-
-:root {
-  --card-radius: 10px;
-  --card-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
-  --card-shadow-hover: 0 10px 28px rgba(0, 0, 0, 0.35);
-  --card-border: rgba(255, 255, 255, 0.1);
-  --icon-color: rgba(255, 255, 255, 0.9);
+  background-color: var(--color-bg);
 }
 
 body {
@@ -22,8 +14,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #e0e0e0;
-  background-color: #0f1419;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
   margin: 0;
   overflow-x: hidden;
   /* Prevent white overscroll background on mobile */
@@ -35,7 +27,7 @@ body {
 }
 
 #root {
-  background-color: #0f1419;
+  background-color: var(--color-bg);
   min-height: 100vh;
 }
 
@@ -43,35 +35,38 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+  background: var(--color-bg);
   width: 100%;
   position: relative;
   overflow: hidden;
 }
 
 .navbar {
-  background: #0d47a1;
-  color: white;
-  padding: 0.5rem 1.25rem;
+  background: var(--color-brand);
+  color: #ffffff;
+  padding: 0;
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1100;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid var(--color-border);
   width: 100%;
-  min-height: 64px;
+  min-height: 60px;
+  height: 60px;
 }
 
 .nav-inner {
-  max-width: 1280px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  padding: 0 var(--space-5);
+  min-height: 60px;
 }
 
 .nav-brand {
@@ -105,12 +100,12 @@ body {
 
 .nav-center {
   display: flex;
-  gap: 0.6rem;
+  gap: 0.5rem;
   align-items: center;
   justify-content: center;
   flex-wrap: nowrap;
   flex: 1;
-  padding: 0 0.5rem;
+  padding: 0 0.25rem;
   min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
@@ -126,7 +121,7 @@ body {
 
 .nav-right {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.6rem;
   align-items: center;
   justify-content: flex-end;
   flex-wrap: nowrap;
@@ -137,15 +132,15 @@ body {
 
 .nav-center button,
 .nav-right button {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
   cursor: pointer;
-  padding: 0 0.9rem;
-  border-radius: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   font-weight: 500;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   white-space: nowrap;
   flex-shrink: 0;
   -webkit-appearance: none;
@@ -165,7 +160,7 @@ body {
   width: 44px;
   height: 44px;
   background: transparent !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   display: inline-flex !important;
@@ -174,13 +169,13 @@ body {
 }
 
 .notification-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.32) !important;
 }
 
 .nav-center button:hover,
 .nav-right button:hover {
-  background: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.14) !important;
   border-color: rgba(255, 255, 255, 0.32) !important;
 }
 
@@ -188,66 +183,65 @@ body {
   background: rgba(255, 255, 255, 0.14) !important;
   color: #ffffff !important;
   font-weight: 600;
-  border-color: rgba(255, 255, 255, 0.45) !important;
-  box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 255, 255, 0.32) !important;
+  box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.45);
 }
 
 .nav-right button.active {
   background: rgba(255, 255, 255, 0.12) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
   color: #ffffff !important;
 }
 
-.nav-center button.nav-secondary {
-  opacity: 0.75;
+ .nav-center button.nav-admin {
+  opacity: 0.65;
   font-weight: 500;
-}
-.nav-center button.nav-admin {
-  opacity: 0.6;
-  font-weight: 500;
+  font-size: 0.8rem;
 }
 
 .nav-center button.nav-admin.active {
   opacity: 0.85;
 }
 
-
-.nav-center button.nav-secondary:hover {
-  opacity: 0.9;
-}
-
 /* Bold flashing animation for Place Picks button */
 .nav-center button.place-picks-btn {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
+  background: transparent !important;
+  border-color: transparent !important;
   position: relative;
   z-index: 2;
-  font-weight: 600 !important;
-  color: #ffffff !important;
+  font-weight: 500 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .nav-center button.place-picks-btn.active {
-  background: rgba(255, 255, 255, 0.16) !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
 }
 
 .logout-btn {
   background: transparent !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
-  color: rgba(255, 255, 255, 0.8) !important;
+  border-color: transparent !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.8rem;
+  padding: 6px 10px;
 }
 
 .logout-btn:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
+  background: transparent !important;
+  border-color: transparent !important;
   color: #ffffff !important;
+  text-decoration: underline;
 }
 
 /* Responsive navbar for smaller desktops */
 @media (max-width: 1200px) {
   .navbar {
-    padding: 0.75rem 1rem;
+    padding: 0;
     column-gap: 0.75rem;
+  }
+
+  .nav-inner {
+    padding: 0 20px;
   }
 
   .nav-brand {
@@ -268,28 +262,30 @@ body {
 
   .nav-center button,
   .nav-right button {
-    padding: 0.45rem 0.75rem;
+    padding: 6px 10px;
     font-size: 0.8rem;
   }
 
   .user-info {
-    padding: 0.45rem 0.75rem;
+    padding: 0 8px;
+    height: 34px;
   }
 
   .username {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
   }
 
   .nav-right .balance-display {
-    padding: 0.45rem 0.75rem;
+    padding: 0 8px;
+    height: 34px;
   }
 
   .nav-right .balance-label {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
   }
 
   .nav-right .balance-amount {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 }
 
@@ -313,8 +309,12 @@ body {
   }
 
   .navbar {
-    padding: 0.7rem 1rem;
+    padding: 0;
     gap: 0.5rem;
+  }
+
+  .nav-inner {
+    padding: 0 18px;
   }
 
   .nav-brand {
@@ -331,29 +331,30 @@ body {
 
   .nav-center {
     gap: 0.35rem;
-    padding: 0 0.25rem;
+    padding: 0 0.2rem;
   }
 
   .nav-center button {
-    padding: 0.45rem 0.7rem;
+    padding: 6px 10px;
     font-size: 0.8rem;
   }
 
   .nav-right button {
-    padding: 0.45rem 0.7rem;
+    padding: 6px 10px;
     font-size: 0.8rem;
   }
 
   .nav-right .balance-display {
-    padding: 0.45rem 0.75rem;
+    padding: 0 8px;
+    height: 34px;
   }
 
   .nav-right .balance-label {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
   }
 
   .nav-right .balance-amount {
-    font-size: 0.9rem;
+    font-size: 0.82rem;
   }
 
   .username {
@@ -361,14 +362,19 @@ body {
   }
 
   .user-info {
-    padding: 0.45rem 0.7rem;
+    padding: 0 8px;
+    height: 34px;
   }
 }
 
 @media (max-width: 900px) {
   .navbar {
-    padding: 0.65rem 0.8rem;
+    padding: 0;
     column-gap: 0.5rem;
+  }
+
+  .nav-inner {
+    padding: 0 16px;
   }
 
   .nav-brand {
@@ -386,39 +392,41 @@ body {
 
   .nav-center button,
   .nav-right button {
-    padding: 0.4rem 0.6rem;
+    padding: 6px 8px;
     font-size: 0.75rem;
   }
 
   .user-info {
-    padding: 0.4rem 0.6rem;
+    padding: 0 6px;
+    height: 32px;
   }
 
   .username {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
   }
 
   .nav-right .balance-display {
-    padding: 0.4rem 0.6rem;
+    padding: 0 6px;
+    height: 32px;
   }
 
   .nav-right .balance-label {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .nav-right .balance-amount {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
   }
 
   .notification-icon-btn {
     font-size: 0.85rem !important;
-    padding: 0.5rem !important;
+    padding: 0 !important;
   }
 }
 
 @media (max-width: 680px) {
   .navbar {
-    padding: 0.6rem 0.5rem;
+    padding: 0;
   }
 
   .nav-inner {
@@ -426,6 +434,7 @@ body {
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 0.5rem;
+    padding: 0 16px;
   }
 
   .nav-center {
@@ -436,10 +445,10 @@ body {
 .user-info {
   display: flex;
   align-items: center;
-  padding: 0 0.75rem;
-  height: 44px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 0 10px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
   flex-shrink: 0;
   position: relative;
@@ -448,9 +457,9 @@ body {
 }
 
 .username {
-  color: rgba(255, 255, 255, 0.95);
-  font-weight: 600;
-  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 500;
+  font-size: 0.85rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -478,11 +487,11 @@ body {
 .nav-right .balance-display {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0 0.75rem;
-  height: 44px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  gap: 0.35rem;
+  padding: 0 10px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
   box-shadow: none;
   flex-shrink: 0;
@@ -493,9 +502,9 @@ body {
 }
 
 .nav-right .balance-label {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.65);
   font-weight: 500;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   white-space: nowrap;
   position: relative;
   z-index: 2;
@@ -505,8 +514,8 @@ body {
   color: #e4ece6;
   position: relative;
   z-index: 2;
-  font-weight: 500;
-  font-size: 0.86rem;
+  font-weight: 600;
+  font-size: 0.82rem;
   white-space: nowrap;
   text-shadow: none;
   letter-spacing: 0.2px;
@@ -522,50 +531,44 @@ body {
 /* ===== CONTAINER ===== */
 .container {
   flex: 1;
-  padding: 1rem 2rem;
-  max-width: 1400px;
+  padding: var(--space-5) var(--space-6);
+  max-width: var(--container-max-width);
   margin: 0 auto;
   width: 100%;
   min-height: 500px;
 }
 
 .card {
-  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
-  border-radius: var(--card-radius);
-  padding: 2rem;
-  box-shadow: var(--card-shadow);
-  margin-bottom: 2rem;
-  border: 1px solid var(--card-border);
-  transition: all 0.3s ease;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-5);
+  border: 1px solid var(--color-border);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   position: relative;
   overflow: hidden;
   contain: layout;
 }
 
 .card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.2), transparent);
+  content: none;
 }
 
 .card:hover {
   box-shadow: var(--card-shadow-hover);
-  border-color: rgba(255, 255, 255, 0.18);
-  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }
 
 .card h1,
 .card h2,
 .card h3 {
-  color: #1f4e99;
-  margin-bottom: 1.5rem;
-  font-size: 1.5rem;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-4);
+  font-size: var(--font-section);
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.4px;
 }
 
 .card h2 {
@@ -573,40 +576,40 @@ body {
 }
 
 .card h3 {
-  font-size: 1.1rem;
-  color: #b8c5d6;
+  font-size: 1.05rem;
+  color: var(--color-text-secondary);
 }
 
 .card h4 {
-  color: #1f4e99;
-  font-size: 1rem;
+  color: var(--color-text-primary);
+  font-size: 0.98rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-3);
 }
 
 .card p {
-  color: #b8c5d6;
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }
 
 .btn {
-  background: linear-gradient(135deg, #1f4e99 0%, #2563eb 100%);
+  background: var(--color-brand);
   color: #ffffff;
-  border: 2px solid transparent;
-  padding: 0.85rem 2rem;
-  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: var(--font-small);
   font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 16px rgba(31, 78, 153, 0.3);
-  letter-spacing: 0.3px;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  letter-spacing: 0.2px;
 }
 
 .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(31, 78, 153, 0.4);
-  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  transform: translateY(-1px);
+  box-shadow: var(--card-shadow-hover);
+  background: var(--color-brand-strong);
 }
 
 .btn:active {
@@ -614,57 +617,60 @@ body {
 }
 
 .btn:disabled {
-  background: #444;
-  color: #999;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, #444a6b 0%, #3a3f52 100%);
-  color: #e0e0e0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:hover {
-  background: linear-gradient(135deg, #555b7f 0%, #4a5064 100%);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: var(--card-shadow-hover);
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, #ef5350 0%, #d32f2f 100%);
-  color: white;
-  box-shadow: 0 4px 12px rgba(239, 83, 80, 0.3);
+  background: rgba(239, 83, 80, 0.18);
+  color: #f3a2a2;
+  border: 1px solid rgba(239, 83, 80, 0.35);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-danger:hover {
-  background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
-  box-shadow: 0 6px 16px rgba(239, 83, 80, 0.4);
+  background: rgba(239, 83, 80, 0.25);
+  box-shadow: var(--card-shadow-hover);
 }
 
 .btn-success {
-  background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
-  color: white;
-  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.3);
+  background: rgba(76, 175, 80, 0.18);
+  color: #a6e3b3;
+  border: 1px solid rgba(76, 175, 80, 0.35);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-success:hover {
-  background: linear-gradient(135deg, #81c784 0%, #388e3c 100%);
-  box-shadow: 0 6px 16px rgba(102, 187, 106, 0.4);
+  background: rgba(76, 175, 80, 0.25);
+  box-shadow: var(--card-shadow-hover);
 }
 
 /* ===== FORMS ===== */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-4);
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.6rem;
   font-weight: 600;
-  color: #1f4e99;
-  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-small);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -674,18 +680,18 @@ body {
 .form-group textarea {
   width: 100%;
   padding: 0.85rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  font-size: 0.95rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-body);
   font-family: inherit;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.05);
-  color: #e0e0e0;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-primary);
 }
 
 .form-group select option {
-  background: #1e2139;
-  color: #e0e0e0;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
   padding: 8px;
 }
 
@@ -698,8 +704,8 @@ body {
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: rgba(31, 78, 153, 0.5);
-  box-shadow: 0 0 0 3px rgba(31, 78, 153, 0.1);
+  border-color: rgba(77, 163, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(77, 163, 255, 0.12);
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -799,15 +805,17 @@ table tbody tr:hover {
 /* ===== MOBILE MENU ===== */
 .mobile-menu-toggle {
   display: none;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 10px;
-  padding: 0.65rem 0.85rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 0 0.75rem;
+  height: 44px;
+  min-width: 44px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.2s ease, border-color 0.2s ease;
   z-index: 1001;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.4rem;
 }
 
 .mobile-menu-toggle:hover {
@@ -821,15 +829,15 @@ table tbody tr:hover {
 .hamburger {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  width: 26px;
-  height: 20px;
+  gap: 4px;
+  width: 20px;
+  height: 16px;
 }
 
 .hamburger span {
   display: block;
   width: 100%;
-  height: 3px;
+  height: 2px;
   background: white;
   border-radius: 3px;
   transition: all 0.3s ease;
@@ -837,10 +845,9 @@ table tbody tr:hover {
 
 .menu-text {
   color: white;
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.2px;
 }
 
 .hamburger.open span:nth-child(1) {
@@ -862,9 +869,9 @@ table tbody tr:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
   z-index: 1050;
   animation: fadeIn 0.3s ease;
 }
@@ -878,8 +885,8 @@ table tbody tr:hover {
   max-width: 85vw;
   height: 100vh;
   height: 100dvh;
-  background: linear-gradient(180deg, #0d47a1 0%, #1565c0 50%, #0d47a1 100%);
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5);
+  background: #0d47a1;
+  box-shadow: -6px 0 16px rgba(0, 0, 0, 0.35);
   z-index: 1060;
   transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -894,15 +901,34 @@ table tbody tr:hover {
 }
 
 .mobile-menu-header {
-  padding: 1.25rem 1rem;
-  background: rgba(0, 0, 0, 0.2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 1rem;
   flex-shrink: 0;
-  min-height: 70px; /* Account for navbar height */
+  min-height: 56px;
+}
+
+.mobile-menu-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.mobile-menu-logo {
+  height: 24px;
+  width: 24px;
+  filter: none;
+}
+
+.mobile-menu-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.3px;
 }
 
 .mobile-user-info {
@@ -931,7 +957,7 @@ table tbody tr:hover {
 
 .mobile-menu-nav {
   flex: 1;
-  padding: 1rem 0 1rem 0;
+  padding: 0.5rem 0 0.75rem 0;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -942,38 +968,35 @@ table tbody tr:hover {
 .mobile-menu-nav button {
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.9);
-  padding: 1rem 1.25rem;
+  color: rgba(255, 255, 255, 0.95);
+  padding: 0.75rem 1.25rem;
   text-align: left;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 0.98rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  border-left: 3px solid transparent;
+  border-left: 2px solid transparent;
   position: relative;
+  min-height: 44px;
 }
 
 .mobile-menu-nav button:hover {
   background: rgba(255, 255, 255, 0.1);
-  border-left-color: rgba(31, 78, 153, 0.5);
+  border-left-color: rgba(255, 255, 255, 0.4);
 }
 
 .mobile-menu-nav button.active {
-  background: rgba(31, 78, 153, 0.15);
-  border-left-color: #1f4e99;
+  background: rgba(255, 255, 255, 0.16);
+  border-left-color: rgba(255, 255, 255, 0.7);
   color: white;
   font-weight: 700;
 }
 
-.mobile-menu-nav button.active .menu-icon {
-  transform: scale(1.2);
-}
-
 .menu-icon {
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   transition: transform 0.2s ease;
 }
 
@@ -982,7 +1005,7 @@ table tbody tr:hover {
   background: #e91e63;
   color: white;
   border-radius: 12px;
-  padding: 0.2rem 0.6rem;
+  padding: 0.15rem 0.5rem;
   font-size: 0.75rem;
   font-weight: 700;
   min-width: 20px;
@@ -990,11 +1013,11 @@ table tbody tr:hover {
 }
 
 .mobile-menu-footer {
-  padding: 1rem 1.25rem 2rem 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 1.25rem 1.25rem 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
   margin-top: auto;
   flex-shrink: 0;
-  background: rgba(0, 0, 0, 0.1);
+  background: transparent;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -1002,12 +1025,12 @@ table tbody tr:hover {
 
 .mobile-logout-btn {
   width: 100%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: white;
-  padding: 0.9rem;
+  padding: 0.75rem;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1018,8 +1041,8 @@ table tbody tr:hover {
 }
 
 .mobile-logout-btn:hover {
-  background: linear-gradient(135deg, rgba(255, 82, 82, 0.3) 0%, rgba(255, 82, 82, 0.15) 100%);
-  border-color: rgba(255, 82, 82, 0.5);
+  background: rgba(255, 82, 82, 0.18);
+  border-color: rgba(255, 82, 82, 0.45);
 }
 
 /* ===== RESPONSIVE ===== */
@@ -1083,7 +1106,7 @@ table tbody tr:hover {
 
 @media (max-width: 768px) {
   .navbar {
-    padding: 1rem 1rem;
+    padding: 0;
     gap: 1rem;
     position: fixed;
     top: 0;
@@ -1091,25 +1114,28 @@ table tbody tr:hover {
     right: 0;
     z-index: 1100;
     width: 100%;
+    height: 60px;
   }
 
   .nav-inner {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 0.75rem;
+    padding: 0 16px;
+    min-height: 60px;
   }
 
   .nav-brand {
-    font-size: 1.1rem;
-    gap: 0.75rem;
+    font-size: 1rem;
+    gap: 0.5rem;
     flex-shrink: 0;
     position: static;
     left: auto;
   }
 
   .logo-img {
-    height: 28px;
+    height: 24px;
   }
 
   /* Hide desktop navigation on mobile */
@@ -1137,7 +1163,7 @@ table tbody tr:hover {
 
   .container {
     padding: 1.5rem 1rem;
-    padding-top: calc(84px + 1.5rem + env(safe-area-inset-top));
+    padding-top: calc(60px + 1.5rem + env(safe-area-inset-top));
     width: 100%;
     margin: 0 auto;
     max-width: 100%;
@@ -1199,8 +1225,8 @@ table tbody tr:hover {
 
 @media (max-width: 480px) {
   .navbar {
-    padding: 0.7rem 0.75rem;
-    grid-template-columns: 1fr auto;
+    padding: 0;
+    height: 60px;
     position: fixed;
     top: 0;
     left: 0;
@@ -1209,7 +1235,7 @@ table tbody tr:hover {
   }
 
   .nav-brand {
-    font-size: 1rem;
+    font-size: 0.98rem;
     gap: 0.4rem;
   }
 
@@ -1234,7 +1260,7 @@ table tbody tr:hover {
 
   .container {
     padding: 0.75rem;
-    padding-top: calc(68px + 0.75rem + env(safe-area-inset-top));
+    padding-top: calc(60px + 0.75rem + env(safe-area-inset-top));
     max-width: 100%;
   }
 
@@ -1356,10 +1382,15 @@ table tbody tr:hover {
   }
 }
 
+@media (max-width: 420px) {
+  .menu-text {
+    display: none;
+  }
+}
+
 /* Hide logo and brand text on very small screens */
 @media (max-width: 380px) {
   .navbar {
-    grid-template-columns: auto 1fr;
     position: fixed;
     top: 0;
     left: 0;

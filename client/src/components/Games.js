@@ -454,47 +454,6 @@ function Games({ user, updateUser }) {
         <p className="page-subtitle">Select a game and make your predictions</p>
       </div>
 
-      {/* Beginner Help Section */}
-      <div className="help-banner">
-        <div className="help-icon">?</div>
-        <div className="help-content">
-          <h3>Quick Guide</h3>
-          <p><strong>Game Picks:</strong> Predict which team wins. Choose your confidence level (Low 1.2x, Medium 1.5x, High 2.0x) to multiply your winnings!</p>
-          <p><strong>Prop Bets:</strong> Special predictions like "Will the team score over 50 points?" Simple YES or NO picks with custom odds.</p>
-        </div>
-      </div>
-
-      {/* Bonus Info Banner - Shows all available bonuses */}
-      <div className="bonus-promo-banner all-bonuses">
-        <div className="bonus-promo-icon">🎁</div>
-        <div className="bonus-promo-content">
-          <h3>Earn Bonus Payouts on Every Pick!</h3>
-          <div className="all-bonus-grid">
-            <div className="bonus-category girls">
-              <span className="bonus-category-icon">💗</span>
-              <span className="bonus-category-name">Girls Games</span>
-              <span className="bonus-category-range">+10% to +25%</span>
-            </div>
-            <div className="bonus-category boys">
-              <span className="bonus-category-icon">🏀</span>
-              <span className="bonus-category-name">Boys Games</span>
-              <span className="bonus-category-range">+5% to +15%</span>
-            </div>
-            <div className="bonus-category streak">
-              <span className="bonus-category-icon">🔥</span>
-              <span className="bonus-category-name">Streak Bonus</span>
-              <span className="bonus-category-range">+3% to +5%</span>
-            </div>
-            <div className="bonus-category weekend">
-              <span className="bonus-category-icon">📅</span>
-              <span className="bonus-category-name">Weekend</span>
-              <span className="bonus-category-range">+5% Extra</span>
-            </div>
-          </div>
-          <p className="bonus-tip">💡 Build consecutive bet streaks to maximize your bonus multipliers!</p>
-        </div>
-      </div>
-
       {message && (
         <div className={`alert ${message.includes('Error') || message.includes('Insufficient') ? 'alert-error' : 'alert-success'}`}>
           {message}
@@ -506,19 +465,19 @@ function Games({ user, updateUser }) {
             className={`filter-btn ${teamFilter === 'all' ? 'active' : ''}`}
             onClick={() => setTeamFilter('all')}
           >
-            All Games
+            All
           </button>
           <button 
             className={`filter-btn ${teamFilter === 'boys' ? 'active' : ''}`}
             onClick={() => setTeamFilter('boys')}
           >
-            Boys Basketball
+            Boys
           </button>
           <button 
             className={`filter-btn ${teamFilter === 'girls' ? 'active' : ''}`}
             onClick={() => setTeamFilter('girls')}
           >
-            Girls Basketball
+            Girls
           </button>
         </div>
 
@@ -743,9 +702,15 @@ function Games({ user, updateUser }) {
                             )}
                           </div>
                           <div className="game-card-matchup">
-                            <div className="game-card-team">{game.home_team}</div>
-                            <div className="game-card-vs">VS</div>
-                            <div className="game-card-team">{game.away_team}</div>
+                            <div className="game-card-team">
+                              <span className="team-name-text">{game.home_team}</span>
+                              <span className="team-tag home">Home</span>
+                            </div>
+                            <div className="game-card-vs">vs</div>
+                            <div className="game-card-team">
+                              <span className="team-name-text">{game.away_team}</span>
+                              <span className="team-tag away">Away</span>
+                            </div>
                           </div>
                           <div className="game-card-details">
                             <span className="game-card-date">{formatDate(game.game_date)}</span>
@@ -984,6 +949,54 @@ function Games({ user, updateUser }) {
           </div>
         </>
       )}
+
+      <div className="info-accordions">
+        <details className="info-accordion">
+          <summary className="info-summary">
+            <span className="info-title">Quick Guide</span>
+            <span className="info-meta">How picks work</span>
+          </summary>
+          <div className="info-content">
+            <ul className="info-list">
+              <li><strong>Game picks:</strong> Choose the winner and a confidence level (Low 1.2x, Medium 1.5x, High 2.0x).</li>
+              <li><strong>Prop bets:</strong> YES/NO or custom options with their own odds.</li>
+              <li><strong>One pick per game.</strong></li>
+            </ul>
+          </div>
+        </details>
+
+        <details className="info-accordion">
+          <summary className="info-summary">
+            <span className="info-title">Bonus Payouts</span>
+            <span className="info-meta">Applied to winnings</span>
+          </summary>
+          <div className="info-content">
+            <div className="bonus-list">
+              <div className="bonus-row">
+                <span className="bonus-row-icon">💗</span>
+                <span className="bonus-row-label">Girls Games</span>
+                <span className="bonus-row-range">+10% to +25%</span>
+              </div>
+              <div className="bonus-row">
+                <span className="bonus-row-icon">🏀</span>
+                <span className="bonus-row-label">Boys Games</span>
+                <span className="bonus-row-range">+5% to +15%</span>
+              </div>
+              <div className="bonus-row">
+                <span className="bonus-row-icon">🔥</span>
+                <span className="bonus-row-label">Streak Bonus</span>
+                <span className="bonus-row-range">+3% to +5%</span>
+              </div>
+              <div className="bonus-row">
+                <span className="bonus-row-icon">📅</span>
+                <span className="bonus-row-label">Weekend</span>
+                <span className="bonus-row-range">+5% Extra</span>
+              </div>
+            </div>
+            <p className="bonus-helper">Tip: streaks and weekend picks add extra boosts.</p>
+          </div>
+        </details>
+      </div>
     </div>
   );
 }

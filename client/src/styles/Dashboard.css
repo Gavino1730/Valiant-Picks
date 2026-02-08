@@ -3238,6 +3238,28 @@
   padding-right: 0;
 }
 
+@media (max-width: 768px) {
+  .dashboard.school-dashboard {
+    max-width: 100%;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .dashboard.school-dashboard .dashboard-grid,
+  .dashboard.school-dashboard .school-grid {
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard.school-dashboard .dashboard-main-column,
+  .dashboard.school-dashboard .dashboard-sidebar {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+
 /* Standardize card radius and reduce glow */
 .dashboard .card,
 .dashboard .stat-card,

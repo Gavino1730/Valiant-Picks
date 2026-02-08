@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/BetList.css';
 import '../styles/Confetti.css';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency, formatSignedCurrency, getValueClass } from '../utils/formatting';
 import Confetti from './Confetti';
 
 function BetList() {
@@ -143,14 +143,14 @@ function BetList() {
   }
 
   return (
-    <div className="bet-list-container">
+    <div className="bet-list-container ds-page">
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
       
       {winNotification && (
         <div className="win-notification">
           <span className="win-notification-emoji">🎉</span>
           <div>You Won!</div>
-          <div className="win-notification-amount">+{formatCurrency(winNotification.amount)}</div>
+          <div className={`win-notification-amount u-num ${getValueClass(winNotification.amount)}`}>{formatSignedCurrency(winNotification.amount)}</div>
           <div style={{fontSize: '1.2rem', marginTop: '0.5rem'}}>{winNotification.team}</div>
         </div>
       )}
@@ -159,12 +159,12 @@ function BetList() {
         <div className="loss-notification">
           <span className="loss-notification-emoji">😔</span>
           <div>Better luck next time!</div>
-          <div style={{fontSize: '1rem', marginTop: '0.5rem', opacity: 0.9}}>-{formatCurrency(lossNotification.amount)}</div>
+          <div className={`u-num ${getValueClass(-lossNotification.amount)}`} style={{fontSize: '1rem', marginTop: '0.5rem', opacity: 0.9}}>{formatSignedCurrency(-lossNotification.amount)}</div>
         </div>
       )}
       
       {/* Header Section */}
-      <div className="bet-list-header">
+      <div className="bet-list-header page-header">
         <div className="header-title">
           <h1>My Picks</h1>
           <p className="subtitle">Track your picking history and performance</p>
@@ -173,40 +173,40 @@ function BetList() {
 
       {/* Stats Overview */}
       <div className="bet-stats-grid">
-        <div className="bet-stat-card">
+        <div className="bet-stat-card stat-card">
           <div className="stat-icon stat-icon-total">📊</div>
           <div className="stat-info">
             <span className="stat-label">Total Picks</span>
             <span className="stat-value">{stats.total}</span>
           </div>
         </div>
-        <div className="bet-stat-card">
+        <div className="bet-stat-card stat-card">
           <div className="stat-icon stat-icon-won">🏆</div>
           <div className="stat-info">
             <span className="stat-label">Won</span>
             <span className="stat-value">{stats.won}</span>
           </div>
         </div>
-        <div className="bet-stat-card">
+        <div className="bet-stat-card stat-card">
           <div className="stat-icon stat-icon-lost">❌</div>
           <div className="stat-info">
             <span className="stat-label">Lost</span>
             <span className="stat-value">{stats.lost}</span>
           </div>
         </div>
-        <div className="bet-stat-card">
+        <div className="bet-stat-card stat-card">
           <div className="stat-icon stat-icon-wagered">💰</div>
           <div className="stat-info">
             <span className="stat-label">Total Wagered</span>
             <span className="stat-value">{formatCurrency(stats.totalWagered)}</span>
           </div>
         </div>
-        <div className="bet-stat-card">
+        <div className="bet-stat-card stat-card">
           <div className="stat-icon stat-icon-profit">💵</div>
           <div className="stat-info">
             <span className="stat-label">Total Profit</span>
-            <span className={`stat-value ${stats.totalWinnings >= 0 ? 'profit-positive' : 'profit-negative'}`}>
-              {stats.totalWinnings >= 0 ? '+' : ''}{formatCurrency(stats.totalWinnings)}
+            <span className={`stat-value u-num ${getValueClass(stats.totalWinnings)}`}>
+              {formatSignedCurrency(stats.totalWinnings)}
             </span>
           </div>
         </div>
@@ -268,27 +268,27 @@ function BetList() {
               </div>
 
               {/* Selected Team Highlight */}
-              <div className="bet-picked-team">
+              <div className="bet-filters tabs">
                 <span className="bet-picked-label">Your Pick</span>
-                <span className="bet-picked-team-name">{bet.selected_team}</span>
+                  className={`tab-button ${filter === 'all' ? 'active' : ''}`}
               </div>
 
               {/* Bet Details Grid */}
               <div className="bet-item-details">
                 <div className="detail-box">
-                  <span className="detail-label">Pick Amount</span>
+                  className={`tab-button ${filter === 'pending' ? 'active' : ''}`}
                   <span className="detail-amount">{formatCurrency(bet.amount)}</span>
                 </div>
                 <div className="detail-box">
                   <span className="detail-label">Confidence</span>
                   <span className={`confidence-badge ${getConfidenceColor(bet.bet_type)}`}>
-                    {bet.bet_type?.toUpperCase()} ({bet.odds}x)
+                  className={`tab-button ${filter === 'won' ? 'active' : ''}`}
                   </span>
                 </div>
                 <div className="detail-box">
                   <span className="detail-label">Potential Win</span>
                   <span className="detail-potential">{formatCurrency(bet.potential_win)}</span>
-                </div>
+                  className={`tab-button ${filter === 'lost' ? 'active' : ''}`}
                 {bet.outcome && (
                   <div className="detail-box">
                     <span className="detail-label">Result</span>

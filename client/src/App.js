@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
+import './styles/design-system.css';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import OnboardingModal from './components/OnboardingModal';
@@ -123,6 +124,9 @@ function AppContent() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [unreadCount, setUnreadCount] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef(null);
+  const mobileMenuCloseRef = useRef(null);
+  const mobileMenuToggleRef = useRef(null);
   const profilePollRef = useRef({ timeoutId: null, delay: 15000, inFlight: false });
   const previousNotificationIds = useRef(new Set());
   
@@ -139,6 +143,81 @@ function AppContent() {
       }
     }
   }, [token, user]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) {
+      return undefined;
+    }
+
+    const menuElement = mobileMenuRef.current;
+    if (!menuElement) {
+      return undefined;
+    }
+
+    const previousActiveElement = document.activeElement;
+    const focusableSelectors = [
+      'button:not([disabled])',
+      '[href]',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])'
+    ];
+
+    const getFocusableElements = () => Array.from(
+      menuElement.querySelectorAll(focusableSelectors.join(','))
+    );
+
+    const focusFirstElement = () => {
+      const focusableElements = getFocusableElements();
+      if (focusableElements.length > 0) {
+        focusableElements[0].focus();
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMobileMenuOpen(false);
+        if (mobileMenuToggleRef.current) {
+          mobileMenuToggleRef.current.focus();
+        }
+        return;
+      }
+
+      if (event.key !== 'Tab') {
+        return;
+      }
+
+      const focusableElements = getFocusableElements();
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      const isShift = event.shiftKey;
+
+      if (isShift && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!isShift && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    setTimeout(focusFirstElement, 0);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      if (previousActiveElement && previousActiveElement.focus) {
+        previousActiveElement.focus();
+      }
+    };
+  }, [mobileMenuOpen]);
 
   const fetchUnreadCount = useCallback(async () => {
     try {
@@ -342,14 +421,14 @@ function AppContent() {
             <button onClick={() => handlePageChange('bets')} className={page === 'bets' ? 'active' : ''}>
               My Picks
             </button>
-            <button onClick={() => handlePageChange('leaderboard')} className={`nav-secondary ${page === 'leaderboard' ? 'active' : ''}`}>
+            <button onClick={() => handlePageChange('leaderboard')} className={page === 'leaderboard' ? 'active' : ''}>
               Leaderboard
             </button>
-            <button onClick={() => handlePageChange('howto')} className={`nav-secondary ${page === 'howto' ? 'active' : ''}`}>
+            <button onClick={() => handlePageChange('howto')} className={page === 'howto' ? 'active' : ''}>
               How to Use
             </button>
             {user && (user.is_admin || user.isAdminUser) && (
-              <button onClick={() => handlePageChange('admin')} className={`nav-secondary nav-admin ${page === 'admin' ? 'active' : ''}`}>
+              <button onClick={() => handlePageChange('admin')} className={`nav-admin ${page === 'admin' ? 'active' : ''}`}>
                 Admin
               </button>
             )}
@@ -382,13 +461,16 @@ function AppContent() {
             className="mobile-menu-toggle" 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
+            ref={mobileMenuToggleRef}
           >
             <span className={`hamburger ${mobileMenuOpen ? 'open' : ''}`}>
               <span></span>
               <span></span>
               <span></span>
             </span>
-            <span className="menu-text">MENU</span>
+            <span className="menu-text">Menu</span>
           </button>
         </div>
       </nav>
@@ -399,9 +481,34 @@ function AppContent() {
       )}
 
       {/* Mobile Slide-out Menu */}
-      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
-        {/* Spacing at Top */}
+      <div
+        id="mobile-menu"
+        className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}
+        ref={mobileMenuRef}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!mobileMenuOpen}
+      >
         <div className="mobile-menu-header">
+          <div className="mobile-menu-brand">
+            <img
+              src="/assets/transparent.png"
+              alt="Valiant Picks"
+              className="mobile-menu-logo"
+              width="24"
+              height="24"
+              loading="eager"
+            />
+            <span className="mobile-menu-title">Valiant Picks</span>
+          </div>
+          <button
+            className="mobile-close-btn"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-label="Close menu"
+            ref={mobileMenuCloseRef}
+          >
+            ✕
+          </button>
         </div>
 
         {/* Navigation Menu */}
