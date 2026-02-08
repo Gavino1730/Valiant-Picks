@@ -32,9 +32,6 @@ function AdminPanel() {
   const [editingBet, setEditingBet] = useState(null);
   const [editingBetOutcome, setEditingBetOutcome] = useState('');
   const [editingBetTeam, setEditingBetTeam] = useState('');
-  const [userBets, setUserBets] = useState([]);
-  const [userTransactions, setUserTransactions] = useState([]);
-  const [userHistoryLoading, setUserHistoryLoading] = useState(false);
   const [showEmailList, setShowEmailList] = useState(false);
   const [editingPropBet, setEditingPropBet] = useState(null);
   const [userSearch, setUserSearch] = useState('');
