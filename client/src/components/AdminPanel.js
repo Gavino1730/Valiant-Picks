@@ -1567,20 +1567,6 @@ function AdminPanel() {
                 </tr>
               </thead>
               <tbody>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>User</th>
-                    <th>Game / Prop</th>
-                    <th>Selection</th>
-                    <th>Stake</th>
-                    <th>Odds</th>
-                    <th>Status</th>
-                    <th>Outcome</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
                   {allBets.map(bet => (
                     <tr key={bet.id}>
                       <td>{bet.id}</td>
