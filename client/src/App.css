@@ -715,29 +715,29 @@ body {
 
 /* ===== ALERTS ===== */
 .alert {
-  padding: 1.2rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
   border-left: 4px solid;
   font-weight: 500;
 }
 
 .alert-error {
-  background-color: rgba(239, 83, 80, 0.1);
-  color: #ef9a9a;
-  border-color: #ef5350;
+  background-color: rgba(239, 83, 80, 0.12);
+  color: #f3a2a2;
+  border-color: var(--color-danger);
 }
 
 .alert-success {
-  background-color: rgba(102, 187, 106, 0.1);
-  color: #a5d6a7;
-  border-color: #66bb6a;
+  background-color: rgba(76, 175, 80, 0.12);
+  color: #a6e3b3;
+  border-color: var(--color-success);
 }
 
 .alert-warning {
-  background-color: rgba(255, 193, 7, 0.1);
-  color: #ffe082;
-  border-color: #fbc02d;
+  background-color: rgba(246, 196, 83, 0.12);
+  color: #ffe1a3;
+  border-color: var(--color-warning);
 }
 
 /* ===== TYPOGRAPHY ===== */

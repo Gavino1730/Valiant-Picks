@@ -145,6 +145,11 @@
   box-shadow: none;
 }
 
+.btn-sm {
+  padding: 0.45rem 0.9rem;
+  font-size: var(--font-micro);
+}
+
 .btn-secondary {
   background: rgba(255, 255, 255, 0.08);
   color: var(--color-text-primary);

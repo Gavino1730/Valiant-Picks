@@ -354,7 +354,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
           <div className="win-notification">
             <span className="win-notification-emoji">🎉</span>
             <div className="win-notification-title">You Won!</div>
-            <div className="win-notification-amount">+{formatCurrency(winNotification.amount)}</div>
+            <div className="win-notification-amount status--won u-num">+{formatCurrency(winNotification.amount)}</div>
             <div className="win-notification-team">{winNotification.team}</div>
           </div>
         )}
@@ -363,7 +363,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
           <div className="loss-notification">
             <span className="loss-notification-emoji">😢</span>
             <div className="loss-notification-title">Loss</div>
-            <div className="loss-notification-amount">-{formatCurrency(lossNotification.amount)}</div>
+            <div className="loss-notification-amount status--lost u-num">-{formatCurrency(lossNotification.amount)}</div>
             <div className="loss-notification-team">{lossNotification.team}</div>
           </div>
         )}

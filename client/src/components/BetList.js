@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/BetList.css';
 import '../styles/Confetti.css';
-import { formatCurrency, formatSignedCurrency, getValueClass } from '../utils/formatting';
+import { formatCurrency, formatSignedCurrency, getValueClass, formatDate } from '../utils/formatting';
 import Confetti from './Confetti';
 
 function BetList() {
@@ -265,7 +265,7 @@ function BetList() {
                   <span className="team-type-badge">{bet.games?.team_type || 'Game'}</span>
                   <h3 className="team-name">{bet.games?.home_team} vs {bet.games?.away_team}</h3>
                   {bet.games?.game_date && (
-                    <span className="game-date-badge">📅 {(parseLocalDateOnly(bet.games.game_date) || new Date(bet.games.game_date)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    <span className="game-date-badge">📅 {formatDate(parseLocalDateOnly(bet.games.game_date) || bet.games.game_date)}</span>
                   )}
                 </div>
                 <div className="bet-status-badge">

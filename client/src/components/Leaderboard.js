@@ -224,6 +224,7 @@ function Leaderboard() {
                         <td className={`td-right u-align-right u-num ${getValueClass(roi)}`}>
                           {formatSignedPercentage(roi)}
                         </td>
+                      </tr>
                     );
                   })}
                 </tbody>
