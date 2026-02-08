@@ -8,56 +8,61 @@
 
 .page-header {
   text-align: center;
-  margin-bottom: 3rem;
-  padding: 2rem 0;
+  margin: 0 auto 2rem;
+  padding: 1.5rem 0 1rem;
   position: relative;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .page-header h2 {
-  color: #ffd700;
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: 900;
-  text-shadow: 
-    0 0 15px #ff8c00,
-    2px 2px 4px rgba(0, 0, 0, 0.8),
-    0 0 25px rgba(255, 140, 0, 0.5);
-  letter-spacing: 1px;
+  color: #e6d18a;
+  font-size: 2.3rem;
+  margin-bottom: 0.35rem;
+  font-weight: 800;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  letter-spacing: 0.5px;
 }
 
 .page-subtitle {
-  color: #888a9b;
-  font-size: 1.1rem;
+  color: #a9b3c3;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 560px;
+  margin: 0 auto;
 }
 
 /* Help Banner */
 .help-banner {
-  background: linear-gradient(135deg, rgba(102, 187, 106, 0.12), rgba(76, 175, 80, 0.08));
-  border: 2px solid rgba(102, 187, 106, 0.3);
+  background: rgba(102, 187, 106, 0.06);
+  border: 1px solid rgba(102, 187, 106, 0.2);
   border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 2rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   align-items: flex-start;
 }
 
 .help-icon {
-  font-size: 2rem;
+  font-size: 1.5rem;
   flex-shrink: 0;
 }
 
 .help-content h3 {
-  color: #66bb6a;
-  font-size: 1.1rem;
+  color: #9fc7a4;
+  font-size: 1rem;
   font-weight: 700;
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.5rem 0;
 }
 
 .help-content p {
   color: #b8c5d6;
   font-size: 0.9rem;
-  line-height: 1.6;
+  line-height: 1.7;
   margin: 0 0 0.5rem 0;
 }
 
@@ -72,16 +77,16 @@
 
 /* Bonus Promotion Banner */
 .bonus-promo-banner {
-  background: linear-gradient(135deg, rgba(255, 105, 180, 0.15), rgba(255, 20, 147, 0.08));
-  border: 2px solid rgba(255, 105, 180, 0.4);
+  background: rgba(31, 78, 153, 0.08);
+  border: 1px solid rgba(31, 78, 153, 0.2);
   border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 2rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   align-items: flex-start;
-  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
-  animation: pulseGlow 3s ease-in-out infinite;
+  box-shadow: none;
+  animation: none;
 }
 
 @keyframes pulseGlow {
@@ -94,9 +99,9 @@
 }
 
 .bonus-promo-icon {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   flex-shrink: 0;
-  animation: bounce 2s ease-in-out infinite;
+  animation: none;
 }
 
 @keyframes bounce {
@@ -109,22 +114,22 @@
 }
 
 .bonus-promo-content h3 {
-  color: #ff69b4;
-  font-size: 1.2rem;
+  color: #c7d6f2;
+  font-size: 1.1rem;
   font-weight: 700;
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.6rem 0;
 }
 
 .bonus-promo-content p {
-  color: #e9f1ff;
-  font-size: 0.95rem;
+  color: #c7d2e3;
+  font-size: 0.9rem;
   line-height: 1.6;
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.75rem 0;
 }
 
 .bonus-promo-content strong {
-  color: #ff69b4;
-  font-weight: 800;
+  color: #e5efff;
+  font-weight: 700;
 }
 
 .bonus-tiers {
@@ -134,32 +139,33 @@
 }
 
 .bonus-tier {
-  background: rgba(255, 105, 180, 0.2);
-  color: #ff69b4;
+  background: rgba(255, 255, 255, 0.06);
+  color: #c7d2e3;
   padding: 0.5rem 0.875rem;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.85rem;
   font-weight: 700;
-  border: 1px solid rgba(255, 105, 180, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 /* All Bonuses Banner Styles */
 .bonus-promo-banner.all-bonuses {
-  background: linear-gradient(135deg, rgba(31, 78, 153, 0.2), rgba(30, 136, 229, 0.15));
-  border: 2px solid rgba(30, 136, 229, 0.4);
-  box-shadow: 0 4px 15px rgba(30, 136, 229, 0.2);
+  background: rgba(31, 78, 153, 0.08);
+  border: 1px solid rgba(31, 78, 153, 0.2);
+  box-shadow: none;
 }
 
 .bonus-promo-banner.all-bonuses h3 {
-  color: #64b5f6;
-  margin-bottom: 1rem;
+  color: #d6e1f5;
+  margin-bottom: 0.8rem;
 }
 
 .all-bonus-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+  align-items: stretch;
 }
 
 @media (max-width: 768px) {
@@ -178,72 +184,78 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.75rem;
-  border-radius: 8px;
+  padding: 0.7rem;
+  border-radius: 10px;
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  min-height: 88px;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .bonus-category:hover {
-  transform: translateY(-2px);
+  transform: none;
 }
 
 .bonus-category.girls {
-  background: rgba(255, 105, 180, 0.2);
-  border: 1px solid rgba(255, 105, 180, 0.4);
+  background: rgba(255, 105, 180, 0.08);
+  border: 1px solid rgba(255, 105, 180, 0.2);
 }
 
 .bonus-category.boys {
-  background: rgba(255, 152, 0, 0.2);
-  border: 1px solid rgba(255, 152, 0, 0.4);
+  background: rgba(255, 152, 0, 0.08);
+  border: 1px solid rgba(255, 152, 0, 0.2);
 }
 
 .bonus-category.streak {
-  background: rgba(239, 83, 80, 0.2);
-  border: 1px solid rgba(239, 83, 80, 0.4);
+  background: rgba(239, 83, 80, 0.08);
+  border: 1px solid rgba(239, 83, 80, 0.2);
 }
 
 .bonus-category.weekend {
-  background: rgba(102, 187, 106, 0.2);
-  border: 1px solid rgba(102, 187, 106, 0.4);
+  background: rgba(102, 187, 106, 0.08);
+  border: 1px solid rgba(102, 187, 106, 0.2);
 }
 
 .bonus-category-icon {
-  font-size: 1.5rem;
-  margin-bottom: 0.25rem;
+  font-size: 1.2rem;
+  margin-bottom: 0.2rem;
 }
 
 .bonus-category-name {
-  font-size: 0.8rem;
-  color: #b8c5d6;
+  font-size: 0.78rem;
+  color: #c7d2e3;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 .bonus-category-range {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
   margin-top: 0.25rem;
 }
 
 .bonus-category.girls .bonus-category-range {
-  color: #ff69b4;
+  color: #e7a8c5;
 }
 
 .bonus-category.boys .bonus-category-range {
-  color: #ff9800;
+  color: #e9b57a;
 }
 
 .bonus-category.streak .bonus-category-range {
-  color: #ef5350;
+  color: #e3a3a0;
 }
 
 .bonus-category.weekend .bonus-category-range {
-  color: #66bb6a;
+  color: #a8d2af;
 }
 
 .bonus-tip {
   color: #b8c5d6;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   margin: 0;
   text-align: center;
 }
@@ -278,25 +290,28 @@
 /* ===== TABS ===== */
 .tabs {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding-bottom: 0;
   overflow-x: auto;
 }
 
 .tab-btn {
-  background: none;
-  border: none;
-  color: #888a9b;
-  padding: 1rem 1.5rem;
-  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  color: #a9b3c3;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  border-bottom: 3px solid transparent;
+  border-bottom: 2px solid transparent;
   white-space: nowrap;
+  border-radius: 8px 8px 0 0;
+  min-width: 140px;
+  text-align: center;
 }
 
 .tab-btn:hover {
@@ -304,15 +319,49 @@
 }
 
 .tab-btn.active {
-  color: #1f4e99;
-  border-bottom-color: #1f4e99;
+  color: #e7efff;
+  background: rgba(31, 78, 153, 0.2);
+  border-color: rgba(31, 78, 153, 0.5);
+  border-bottom-color: rgba(31, 78, 153, 0.5);
+}
+
+/* Filter tabs */
+.games-page .filter-buttons {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.games-page .filter-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #cdd6e5;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.games-page .filter-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.games-page .filter-btn.active {
+  background: rgba(31, 78, 153, 0.35);
+  border-color: rgba(31, 78, 153, 0.6);
+  color: #ffffff;
 }
 
 /* ===== GAMES GRID ===== */
 .games-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 /* Tablet optimizations */
@@ -348,40 +397,40 @@
 }
 
 .game-card-display {
-  background: linear-gradient(135deg, #1e2139 0%, #252945 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  background: rgba(30, 33, 57, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   padding: 1.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
 }
 
 /* Boys Basketball - Subtle Blue Hue */
 .game-card-display.boys-game {
-  background: linear-gradient(135deg, rgba(30, 136, 229, 0.1) 0%, rgba(21, 101, 192, 0.05) 100%);
-  border-color: rgba(30, 136, 229, 0.25);
+  background: rgba(31, 78, 153, 0.08);
+  border-color: rgba(31, 78, 153, 0.25);
 }
 
 /* Girls Basketball - Subtle Pink Hue */
 .game-card-display.girls-game {
-  background: linear-gradient(135deg, rgba(233, 30, 99, 0.1) 0%, rgba(194, 24, 91, 0.05) 100%);
-  border-color: rgba(233, 30, 99, 0.25);
+  background: rgba(194, 24, 91, 0.08);
+  border-color: rgba(194, 24, 91, 0.25);
 }
 
 .game-card-display:hover {
-  transform: translateY(-4px);
-  border-color: rgba(31, 78, 153, 0.3);
-  box-shadow: 0 8px 24px rgba(31, 78, 153, 0.2);
+  transform: translateY(-2px);
+  border-color: rgba(31, 78, 153, 0.35);
+  box-shadow: 0 6px 16px rgba(31, 78, 153, 0.12);
 }
 
 .game-card-display.boys-game:hover {
-  border-color: rgba(30, 136, 229, 0.5);
-  box-shadow: 0 8px 24px rgba(30, 136, 229, 0.3);
+  border-color: rgba(31, 78, 153, 0.45);
+  box-shadow: 0 6px 16px rgba(31, 78, 153, 0.18);
 }
 
 .game-card-display.girls-game:hover {
-  border-color: rgba(233, 30, 99, 0.5);
-  box-shadow: 0 8px 24px rgba(233, 30, 99, 0.3);
+  border-color: rgba(194, 24, 91, 0.45);
+  box-shadow: 0 6px 16px rgba(194, 24, 91, 0.18);
 }
 
 .game-header {
@@ -471,7 +520,7 @@
     font-size: 1.1rem;
   }
 
-  .filter-btn {
+  .games-page .filter-btn {
     padding: 0.7rem 1.25rem;
     font-size: 0.9rem;
   }
@@ -1458,10 +1507,10 @@
 
 /* ===== EXPANDABLE CARD-BASED BETTING UI ===== */
 .game-card-btn {
-  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: rgba(24, 29, 48, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
-  padding: 1.25rem;
+  padding: 1.2rem;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: left;
@@ -1472,28 +1521,28 @@
 }
 
 .game-card-btn:hover:not(.locked) {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  border-color: rgba(33, 150, 243, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  border-color: rgba(31, 78, 153, 0.45);
 }
 
 .game-card-btn.active {
-  border-color: #2196f3;
-  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.4);
+  border-color: #1f4e99;
+  box-shadow: 0 4px 12px rgba(31, 78, 153, 0.2);
 }
 
 .game-card-btn.locked {
   opacity: 0.6;
   cursor: not-allowed;
-  background: linear-gradient(135deg, #1a1c2e 0%, #12141f 100%);
+  background: rgba(18, 20, 31, 0.9);
 }
 
 .game-card-btn.boys-game {
-  border-left: 4px solid #2196f3;
+  border-left: 3px solid rgba(31, 78, 153, 0.8);
 }
 
 .game-card-btn.girls-game {
-  border-left: 4px solid #e91e63;
+  border-left: 3px solid rgba(194, 24, 91, 0.75);
 }
 
 .game-card-header {
@@ -1506,69 +1555,70 @@
 }
 
 .game-badge {
-  background: rgba(33, 150, 243, 0.2);
-  color: #64b5f6;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.game-badge.boys {
-  background: rgba(33, 150, 243, 0.2);
-  color: #64b5f6;
-}
-
-.game-badge.girls {
-  background: rgba(233, 30, 99, 0.2);
-  color: #f48fb1;
-}
-
-.countdown-chip {
-  background: rgba(102, 187, 106, 0.2);
-  color: #81c784;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  background: rgba(31, 78, 153, 0.18);
+  color: #c7d6f2;
+  padding: 0.35rem 0.7rem;
+  border-radius: 8px;
   font-size: 0.8rem;
   font-weight: 600;
 }
 
+.game-badge.boys {
+  background: rgba(31, 78, 153, 0.18);
+  color: #c7d6f2;
+}
+
+.game-badge.girls {
+  background: rgba(194, 24, 91, 0.18);
+  color: #e7b6cc;
+}
+
+.countdown-chip {
+  background: rgba(102, 187, 106, 0.12);
+  color: #a8d2af;
+  padding: 0.35rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
 .countdown-chip.countdown-closed {
-  background: rgba(239, 83, 80, 0.2);
-  color: #ef5350;
+  background: rgba(239, 83, 80, 0.12);
+  color: #e3a3a0;
 }
 
 .game-card-matchup {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin: 1rem 0;
+  margin: 0.9rem 0;
   gap: 1rem;
 }
 
 .game-card-team {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: #e9f1ff;
+  color: #e7eefc;
   flex: 1;
   text-align: center;
 }
 
 .game-card-vs {
-  font-size: 0.9rem;
-  color: #888a9b;
+  font-size: 0.85rem;
+  color: #9aa4b5;
   font-weight: 600;
   padding: 0 0.5rem;
+  letter-spacing: 0.5px;
 }
 
 .game-card-details {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  color: #b8c5d6;
-  font-size: 0.9rem;
+  gap: 0.75rem;
+  color: #a9b3c3;
+  font-size: 0.85rem;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 
 .game-card-date,
@@ -1578,18 +1628,28 @@
   gap: 0.25rem;
 }
 
+.game-card-date {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.game-card-time {
+  color: #9aa4b2;
+  font-weight: 500;
+}
+
 .game-card-location {
   width: 100%;
   text-align: center;
-  color: #888a9b;
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
+  color: #8d98a8;
+  font-size: 0.8rem;
+  margin-top: 0.4rem;
 }
 
 /* Expanded Betting Details */
 .bet-details-expanded {
   background: rgba(30, 33, 57, 0.8);
-  border: 2px solid rgba(33, 150, 243, 0.3);
+  border: 1px solid rgba(31, 78, 153, 0.35);
   border-radius: 12px;
   padding: 1.25rem;
   margin-top: 1rem;
@@ -1689,10 +1749,13 @@
 }
 
 .team-label {
-  font-size: 0.8rem;
-  color: #888a9b;
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  color: #9aa4b5;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
 /* Confidence Selection */

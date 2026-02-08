@@ -290,41 +290,6 @@
     font-size: 0.85rem;
   }
 
-  .leaderboard-table thead {
-    display: none;
-  }
-
-  .leaderboard-table tr {
-    display: block;
-    margin-bottom: 1rem;
-    border: 1px solid rgba(31, 78, 153, 0.1);
-    border-radius: 8px;
-    padding: 0.8rem;
-    background: rgba(31, 78, 153, 0.05);
-  }
-
-  .leaderboard-table td {
-    display: block;
-    text-align: right;
-    padding: 0.4rem 0;
-    border: none;
-  }
-
-  .leaderboard-table td::before {
-    content: attr(data-label);
-    float: left;
-    font-weight: bold;
-    color: #1f4e99;
-  }
-
-  .leaderboard-table .rank {
-    text-align: left;
-  }
-
-  .leaderboard-table .rank::before {
-    content: "Rank: ";
-  }
-
   /* Teams page mobile */
   .team-section {
     padding: 1rem;

@@ -501,24 +501,21 @@ function Games({ user, updateUser }) {
         </div>
       )}
 
-      <div className="filter-buttons" style={{marginBottom: '20px', display: 'flex', gap: '10px', justifyContent: 'center'}}>
+      <div className="filter-buttons">
           <button 
-            className={`btn ${teamFilter === 'all' ? 'active' : ''}`}
-            style={{padding: '8px 16px', background: teamFilter === 'all' ? '#1e88e5' : 'rgba(255,255,255,0.1)'}}
+            className={`filter-btn ${teamFilter === 'all' ? 'active' : ''}`}
             onClick={() => setTeamFilter('all')}
           >
             All Games
           </button>
           <button 
-            className={`btn ${teamFilter === 'boys' ? 'active' : ''}`}
-            style={{padding: '8px 16px', background: teamFilter === 'boys' ? '#1e88e5' : 'rgba(255,255,255,0.1)'}}
+            className={`filter-btn ${teamFilter === 'boys' ? 'active' : ''}`}
             onClick={() => setTeamFilter('boys')}
           >
             Boys Basketball
           </button>
           <button 
-            className={`btn ${teamFilter === 'girls' ? 'active' : ''}`}
-            style={{padding: '8px 16px', background: teamFilter === 'girls' ? '#1e88e5' : 'rgba(255,255,255,0.1)'}}
+            className={`filter-btn ${teamFilter === 'girls' ? 'active' : ''}`}
             onClick={() => setTeamFilter('girls')}
           >
             Girls Basketball

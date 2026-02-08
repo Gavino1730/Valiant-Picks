@@ -317,77 +317,80 @@ function AppContent() {
       />
 
       <nav className="navbar">
-        <div className="nav-brand" onClick={() => handlePageChange('dashboard')} style={{ cursor: 'pointer' }}>
-          <img 
-            src="/assets/transparent.png" 
-            alt="Valiant Picks" 
-            className="logo-img"
-            width="48"
-            height="48"
-            loading="eager"
-          />
-          <span>Valiant Picks</span>
-        </div>
-        <div className="nav-center">
-          <button onClick={() => handlePageChange('dashboard')} className={page === 'dashboard' ? 'active' : ''}>
-            Dashboard
-          </button>
-          <button onClick={() => handlePageChange('games')} className={`place-picks-btn${page === 'games' ? ' active' : ''}`}>
-            Place Picks
-          </button>
-          <button onClick={() => handlePageChange('teams')} className={page === 'teams' ? 'active' : ''}>
-            Teams
-          </button>
-          <button onClick={() => handlePageChange('bets')} className={page === 'bets' ? 'active' : ''}>
-            My Picks
-          </button>
-          <button onClick={() => handlePageChange('leaderboard')} className={page === 'leaderboard' ? 'active' : ''}>
-            Leaderboard
-          </button>
-          <button onClick={() => handlePageChange('howto')} className={page === 'howto' ? 'active' : ''}>
-            How to Use
-          </button>
-          {user && (user.is_admin || user.isAdminUser) && (
-            <button onClick={() => handlePageChange('admin')} className={page === 'admin' ? 'active' : ''}>
-              Admin
+        <div className="nav-inner">
+          <div className="nav-brand" onClick={() => handlePageChange('dashboard')} style={{ cursor: 'pointer' }}>
+            <img 
+              src="/assets/transparent.png" 
+              alt="Valiant Picks" 
+              className="logo-img"
+              width="48"
+              height="48"
+              loading="eager"
+            />
+            <span>Valiant Picks</span>
+          </div>
+          <div className="nav-center">
+            <button onClick={() => handlePageChange('dashboard')} className={page === 'dashboard' ? 'active' : ''}>
+              Dashboard
             </button>
-          )}
-        </div>
-        <div className="nav-right">
-          <div className="balance-display">
-            <span className="balance-label">Balance:</span>
-            <span className="balance-amount">{formatCurrency(currentUser?.balance || 0)}</span>
-          </div>
-          <button 
-            onClick={() => handlePageChange('notifications')} 
-            className={`notification-icon-btn ${page === 'notifications' ? 'active' : ''}`}
-          >
-            🔔
-            {unreadCount > 0 && (
-              <span className="notification-badge">{unreadCount}</span>
+            <button onClick={() => handlePageChange('games')} className={`place-picks-btn${page === 'games' ? ' active' : ''}`}>
+              Place Picks
+            </button>
+            <button onClick={() => handlePageChange('teams')} className={page === 'teams' ? 'active' : ''}>
+              Teams
+            </button>
+            <button onClick={() => handlePageChange('bets')} className={page === 'bets' ? 'active' : ''}>
+              My Picks
+            </button>
+            <button onClick={() => handlePageChange('leaderboard')} className={`nav-secondary ${page === 'leaderboard' ? 'active' : ''}`}>
+              Leaderboard
+            </button>
+            <button onClick={() => handlePageChange('howto')} className={`nav-secondary ${page === 'howto' ? 'active' : ''}`}>
+              How to Use
+            </button>
+            {user && (user.is_admin || user.isAdminUser) && (
+              <button onClick={() => handlePageChange('admin')} className={`nav-secondary nav-admin ${page === 'admin' ? 'active' : ''}`}>
+                Admin
+              </button>
             )}
-          </button>
-          <div className="user-info">
-            <span className="username">{currentUser?.username || 'User'}</span>
           </div>
-          <button onClick={handleLogout} className="logout-btn">
-            Logout
+          <div className="nav-right">
+            <div className="balance-display" aria-label="Account balance">
+              <span className="balance-label">Balance</span>
+              <span className="balance-amount">{formatCurrency(currentUser?.balance || 0)}</span>
+            </div>
+            <button 
+              onClick={() => handlePageChange('notifications')} 
+              className={`notification-icon-btn ${page === 'notifications' ? 'active' : ''}`}
+              aria-label={unreadCount > 0 ? `Notifications, ${unreadCount} unread` : 'Notifications'}
+            >
+              🔔
+              {unreadCount > 0 && (
+                <span className="notification-badge" aria-hidden="true">{unreadCount}</span>
+              )}
+            </button>
+            <div className="user-info" title={currentUser?.username || 'User'}>
+              <span className="username">{currentUser?.username || 'User'}</span>
+            </div>
+            <button onClick={handleLogout} className="logout-btn" aria-label="Log out">
+              Logout
+            </button>
+          </div>
+          
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="mobile-menu-toggle" 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={`hamburger ${mobileMenuOpen ? 'open' : ''}`}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+            <span className="menu-text">MENU</span>
           </button>
         </div>
-        
-        {/* Mobile Menu Toggle */}
-        <button 
-          className="mobile-menu-toggle" 
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <span className={`hamburger ${mobileMenuOpen ? 'open' : ''}`}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-          <span className="menu-text">MENU</span>
-        </button>
       </nav>
 
       {/* Mobile Menu Overlay */}

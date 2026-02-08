@@ -3225,3 +3225,87 @@
     padding-bottom: 80px; /* Space for bottom nav */
   }
 }
+
+/* ===== DASHBOARD REFINEMENTS ===== */
+.dashboard.school-dashboard {
+  max-width: 100%;
+  margin: 0;
+}
+
+.dashboard.school-dashboard .dashboard-grid {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Standardize card radius and reduce glow */
+.dashboard .card,
+.dashboard .stat-card,
+.dashboard .bet-card,
+.dashboard .stat-compact,
+.dashboard .upcoming-game-card,
+.dashboard .activity-card,
+.dashboard .spin-wheel-card,
+.dashboard .quick-links-card,
+.dashboard .welcome-card-primary,
+.dashboard .upcoming-section,
+.dashboard .recent-activity-section,
+.dashboard .game-info-card,
+.dashboard .potential-win-card {
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow) !important;
+  border-color: var(--card-border);
+}
+
+.dashboard .card:hover,
+.dashboard .stat-card:hover,
+.dashboard .bet-card:hover,
+.dashboard .upcoming-game-card:hover,
+.dashboard .activity-card:hover,
+.dashboard .spin-wheel-card:hover,
+.dashboard .quick-links-card:hover {
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+/* Reduce visual noise on compact stats */
+.dashboard .stat-compact {
+  animation: none;
+  box-shadow: var(--card-shadow) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dashboard .stat-compact::before {
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.35), transparent);
+  opacity: 0.35;
+  animation: none;
+}
+
+/* Standardize icon styling and weight */
+.dashboard .stat-emoji,
+.dashboard .stat-icon,
+.dashboard .banner-icon,
+.dashboard .notification-banner-icon,
+.dashboard .recent-winners-icon,
+.dashboard .alert-icon,
+.dashboard .leader-icon,
+.dashboard .grade-bar-icon,
+.dashboard .event-icon,
+.dashboard .win-notification-emoji,
+.dashboard .loss-notification-emoji {
+  font-weight: 600;
+  line-height: 1;
+  color: var(--icon-color);
+  text-shadow: none;
+  filter: none;
+}
+
+/* Increase contrast for blue overlays on dark blue */
+.dashboard .balance-display-large {
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.dashboard .balance-display-large .balance-label {
+  color: #e8f1ff;
+}

@@ -4,7 +4,6 @@ import '../styles/Footer.css';
 function Footer({ onNavigate }) {
   return (
     <footer className="footer">
-      <div className="footer-sparkle-line">✨ 🎭 ⭐ 🎪 ✨</div>
       <div className="footer-content">
         <div className="footer-links">
           <button 

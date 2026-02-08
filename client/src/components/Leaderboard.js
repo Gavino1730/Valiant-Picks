@@ -10,6 +10,9 @@ function Leaderboard() {
   const [bets, setBets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const PAGE_SIZE = 25;
 
   useEffect(() => {
     fetchData();
@@ -18,6 +21,10 @@ function Leaderboard() {
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [users.length, bets.length]);
 
   const fetchData = async () => {
     try {
@@ -69,6 +76,7 @@ function Leaderboard() {
       .filter(b => b.outcome === 'won')
       .reduce((sum, b) => sum + (b.potential_win || 0), 0);
     const winRate = resolvedCount > 0 ? ((wonBets / resolvedCount) * 100) : 0;
+    const roi = totalWagered > 0 ? ((netProfit / totalWagered) * 100) : 0;
     return {
       totalBets,
       resolvedCount,
@@ -79,6 +87,7 @@ function Leaderboard() {
       totalWinnings,
       netProfit,
       winRate,
+      roi,
     };
   };
 
@@ -93,11 +102,33 @@ function Leaderboard() {
     return getUsersWithStats().sort((a, b) => b.balance - a.balance);
   };
 
-  const formatWinRate = (winRate) => {
-    if (!Number.isFinite(winRate)) {
-      return '0';
+  const formatSignedCurrency = (value) => {
+    if (!Number.isFinite(value)) {
+      return formatCurrency(0);
     }
-    return winRate.toFixed(2).replace(/\.00$/, '');
+    const absValue = Math.abs(value);
+    const formatted = formatCurrency(absValue);
+    if (value > 0) {
+      return `+${formatted}`;
+    }
+    if (value < 0) {
+      return `-${formatted}`;
+    }
+    return formatted;
+  };
+
+  const formatRoi = (roi) => {
+    if (!Number.isFinite(roi)) {
+      return '0.00%';
+    }
+    const absValue = Math.abs(roi).toFixed(2);
+    if (roi > 0) {
+      return `+${absValue}%`;
+    }
+    if (roi < 0) {
+      return `-${absValue}%`;
+    }
+    return `${absValue}%`;
   };
 
   if (loading) {
@@ -105,12 +136,34 @@ function Leaderboard() {
       <div className="leaderboard-page">
         <div className="leaderboard-header">
           <h1>Leaderboard</h1>
-          <p>Top performers ranked by Valiant Bucks balance</p>
+          <p>Ranked by Valiant Bucks balance</p>
         </div>
-        <div className="leaderboard-table">
-          {Array.from({ length: 10 }).map((_, idx) => (
-            <LeaderboardRowSkeleton key={idx} />
-          ))}
+        <div className="leaderboard-table-wrapper">
+          <table className="leaderboard-table">
+            <colgroup>
+              <col style={{ width: '70px' }} />
+              <col style={{ width: '32%' }} />
+              <col style={{ width: '140px' }} />
+              <col style={{ width: '140px' }} />
+              <col style={{ width: '120px' }} />
+              <col style={{ width: '110px' }} />
+            </colgroup>
+            <thead>
+              <tr>
+                <th className="th-rank">Rank</th>
+                <th>Player</th>
+                <th className="th-right">Balance</th>
+                <th className="th-right">Profit</th>
+                <th className="th-center">Record</th>
+                <th className="th-right">ROI</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from({ length: 10 }).map((_, idx) => (
+                <LeaderboardRowSkeleton key={idx} />
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     );
@@ -118,12 +171,16 @@ function Leaderboard() {
 
   const rankedUsers = getSortedUsers();
   const totalPicks = bets.length;
+  const totalPages = Math.max(1, Math.ceil(rankedUsers.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const pageStartIndex = (safePage - 1) * PAGE_SIZE;
+  const paginatedUsers = rankedUsers.slice(pageStartIndex, pageStartIndex + PAGE_SIZE);
 
   return (
     <div className="leaderboard-page">
       <div className="leaderboard-header">
-        <h1>🏆 Leaderboard</h1>
-        <p className="subtitle">Track your picks and compete with other players</p>
+        <h1>Leaderboard</h1>
+        <p className="subtitle">Track performance across all players</p>
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
@@ -133,12 +190,10 @@ function Leaderboard() {
         <div className="stat-card">
           <div className="stat-card-value">{users.length}</div>
           <div className="stat-card-label">Active Players</div>
-          <div className="stat-card-icon">👥</div>
         </div>
         <div className="stat-card">
           <div className="stat-card-value">{totalPicks}</div>
           <div className="stat-card-label">Total Picks</div>
-          <div className="stat-card-icon">🎲</div>
         </div>
       </div>
 
@@ -149,48 +204,83 @@ function Leaderboard() {
             <p>No players yet. Be the first to place a pick!</p>
           </div>
         ) : (
-          rankedUsers.map((user, index) => (
-            <div key={user.id} className={`leaderboard-row rank-${index + 1}`}>
-              <div className="rank-cell">
-                <div className="rank-number">
-                  {index === 0 && '🥇'}
-                  {index === 1 && '🥈'}
-                  {index === 2 && '🥉'}
-                  {index > 2 && `#${index + 1}`}
-                </div>
-              </div>
-              
-              <div className="user-cell">
-                <div className="user-info">
-                  <div className="user-name-row">
-                    <span className="user-name">{user.username}</span>
-                  </div>
-                  {user.is_admin && <span className="admin-badge">ADMIN</span>}
-                </div>
-              </div>
-                
-                <div className="stats-cell balance-cell">
-                  <div className="cell-label">Balance</div>
-                  <div className="cell-value balance">{formatCurrency(user.balance)}</div>
-                </div>
-
-                <div className="stats-cell">
-                  <div className="cell-label">Record</div>
-                  <div className="cell-value record">
-                    <span className="wins">{user.stats.wonBets}W</span>
-                    <span className="separator">•</span>
-                    <span className="losses">{user.stats.lostBets}L</span>
-                  </div>
-                </div>
-
-                <div className="stats-cell">
-                  <div className="cell-label">Win Rate</div>
-                  <div className={`cell-value win-rate ${parseFloat(user.stats.winRate) >= 50 ? 'positive' : parseFloat(user.stats.winRate) === 0 ? 'neutral' : 'negative'}`}>
-                    {formatWinRate(user.stats.winRate)}%
-                  </div>
-                </div>
+          <>
+            <div className="leaderboard-table-wrapper">
+              <table className="leaderboard-table">
+                <colgroup>
+                  <col style={{ width: '70px' }} />
+                  <col style={{ width: '32%' }} />
+                  <col style={{ width: '140px' }} />
+                  <col style={{ width: '140px' }} />
+                  <col style={{ width: '120px' }} />
+                  <col style={{ width: '110px' }} />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th className="th-rank">Rank</th>
+                    <th>Player</th>
+                    <th className="th-right">Balance</th>
+                    <th className="th-right">Profit</th>
+                    <th className="th-center">Record</th>
+                    <th className="th-right">ROI</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedUsers.map((user, index) => {
+                    const rank = pageStartIndex + index + 1;
+                    const roi = user.stats.roi || 0;
+                    return (
+                      <tr key={user.id} className={`leaderboard-row ${rank <= 3 ? `rank-${rank}` : ''}`}>
+                        <td className="rank-cell">
+                          <span className={`rank-badge ${rank <= 3 ? `rank-${rank}` : ''}`}>{rank}</span>
+                        </td>
+                        <td className="username-cell">
+                          <div className="user-name-row">
+                            <span className="user-name">{user.username}</span>
+                            {user.is_admin && <span className="admin-badge">ADMIN</span>}
+                          </div>
+                        </td>
+                        <td className="numeric balance-cell">{formatCurrency(user.balance)}</td>
+                        <td className={`numeric profit-cell ${user.stats.netProfit >= 0 ? 'positive' : 'negative'}`}>
+                          {formatSignedCurrency(user.stats.netProfit)}
+                        </td>
+                        <td className="record-cell">
+                          <span className="wins">{user.stats.wonBets}W</span>
+                          <span className="separator">–</span>
+                          <span className="losses">{user.stats.lostBets}L</span>
+                        </td>
+                        <td className={`numeric roi-cell ${roi >= 0 ? 'positive' : 'negative'}`}>
+                          {formatRoi(roi)}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
-          ))
+
+            <div className="pagination">
+              <button
+                type="button"
+                className="pagination-btn"
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={safePage === 1}
+              >
+                Previous
+              </button>
+              <div className="pagination-info">
+                Page {safePage} of {totalPages}
+              </div>
+              <button
+                type="button"
+                className="pagination-btn"
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={safePage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>

@@ -20,8 +20,8 @@ function Teams() {
         league_record: '0-0',
         ranking: 3,
         coach_name: 'Bryan Fraser',
-        coach_bio: 'Head Coach Bryan Fraser is an OG hooper out of Sacramento with 11 years on the sideline and zero tolerance for bad basketball.',
-        description: 'Depth for days and pace that never slows. The floor is spaced with shooters, the rim is under constant threat, and there\'s no such thing as taking a possession off. The goal is simple, win state. Anything less is a failure.',
+        coach_bio: 'Head Coach Bryan Fraser brings 11 seasons of experience with a disciplined, defense-first approach.',
+        description: 'A balanced roster that values spacing, tempo, and connected team defense. The focus is on efficient possessions and consistent execution.',
         schedule: [
           { result: 'W', score: '83-58', type: 'Non League', date: '12/3/25', time: '7:30 pm', opponent: 'Knappa', location: 'Away' },
           { result: 'W', score: '88-41', type: 'Non League', date: '12/5/25', time: '7:30 pm', opponent: 'Gladstone', location: 'Home' },
@@ -50,19 +50,19 @@ function Teams() {
           { result: 'Scheduled', score: '-', type: 'Non League', date: '2/14/26', time: 'Noon', opponent: 'Neah Kah Nie', location: 'Home' }
         ],
         players: [
-          { number: 1, name: 'Cooper Bonnett', position: 'G', grade: '12', height: '5\'10"', bio: 'White Chocolate with a Beaverton passport. Thinks he\'s from the trenches, actually runs the streets of Beaverton. Lil Bloodhound Coop hunts defenders, sniffs out ankles, and lets you know about it after.' },
-          { number: 2, name: 'Alex Post', position: 'G', grade: '11', height: '6\'1"', bio: 'Cannot be guarded by modern defensive schemes. The AP quicklay is folklore at this point. You play perfect defense, he scores anyway, shrugs, jogs back.' },
-          { number: 3, name: 'Gavin Galan', position: 'F', grade: '12', height: '6\'2"', bio: 'Granola powered menace. Loves nature, hikes, trees, then immediately drops his shoulder and commits violence in the lane. Walking technical foul. Will fight you, will get T\'d up, will not score.' },
-          { number: 4, name: 'Kye Fixter', position: 'F', grade: '11', height: '6\'0"', bio: 'Shifty Kye. Ankles evaporate on contact. Defender leans once and it\'s over. Lives off of fade away buckets, no matter the distance.' },
-          { number: 5, name: 'Marcos Mueller', position: 'G', grade: '12', height: '6\'3"', bio: 'Straight from the streets of Ecuador, allegedly. Jumper is completely broken. Never smiles. Never talks. Pierced ears confuse defenders even more.' },
-          { number: 10, name: 'Matthew Gunther', position: 'G', grade: '12', height: '5\'9"', bio: 'Golden retriever energy but deadly. Always ready to eat. Silent but dangerous. Plays like John Stockton if Stockton never said a word and just ruined your offense quietly.' },
-          { number: 11, name: 'Tyler Eddy', position: 'G', grade: '10', height: '6\'0"', bio: 'Going to the league. At least spiritually. Plays like every possession is a mixtape clip. Wants smoke at all times.' },
-          { number: 15, name: 'Elijah Schaal', position: 'G', grade: '12', height: '6\'0"', bio: 'Actual saint. Would help you up after fouling you hard. Then rebounds like Dennis Rodman and outsmarts everyone on the floor. Effort is through the roof.' },
-          { number: 20, name: 'Hank Lomber', position: 'F', grade: '11', height: '6\'3"', bio: 'Absolute wildcard. Will randomly pull from three with no warning and drain it. Looks harmless until he\'s cooking you for no reason.' },
-          { number: 22, name: 'Sam Robbins', position: 'F', grade: '10', height: '6\'7"', bio: '6\'7 post with confidence to match. Strong in the paint, strong aura. Knows exactly what\'s going on at all times.' },
-          { number: 23, name: 'Garrett Frank', position: 'G', grade: '11', height: '5\'11"', bio: 'G6. Human highlight reel. If he gets a lane, the rim is in danger. Dunks so hard the gym shakes.' },
-          { number: 24, name: 'Michael Mehta', position: 'G', grade: '12', height: '6\'1"', bio: 'The Pharaoh. Elite shooter. Brain operates at genius speed and also forgets every single play. Somehow still ends up wide open.' },
-          { number: 44, name: 'Liam Plep', position: 'C', grade: '12', height: '6\'8"', bio: 'Big body. Screens so lethal they should be illegal. You hit one and question your life choices.' }
+          { number: 1, name: 'Cooper Bonnett', position: 'G', grade: '12', height: '5\'10"', bio: 'Senior guard and primary ball-handler who sets the pace and creates looks for teammates.' },
+          { number: 2, name: 'Alex Post', position: 'G', grade: '11', height: '6\'1"', bio: 'Scoring guard with range and touch, reliable in late-clock situations.' },
+          { number: 3, name: 'Gavin Galan', position: 'F', grade: '12', height: '6\'2"', bio: 'Physical forward who rebounds and defends multiple spots.' },
+          { number: 4, name: 'Kye Fixter', position: 'F', grade: '11', height: '6\'0"', bio: 'Wing scorer with a quick first step and a steady mid-range game.' },
+          { number: 5, name: 'Marcos Mueller', position: 'G', grade: '12', height: '6\'3"', bio: 'Combo guard who defends hard and can stretch the floor.' },
+          { number: 10, name: 'Matthew Gunther', position: 'G', grade: '12', height: '5\'9"', bio: 'Steady point guard who organizes the offense and values the ball.' },
+          { number: 11, name: 'Tyler Eddy', position: 'G', grade: '10', height: '6\'0"', bio: 'Athletic guard with aggressive drives and energy in transition.' },
+          { number: 15, name: 'Elijah Schaal', position: 'G', grade: '12', height: '6\'0"', bio: 'High-motor guard who rebounds and makes smart reads.' },
+          { number: 20, name: 'Hank Lomber', position: 'F', grade: '11', height: '6\'3"', bio: 'Versatile forward who hits open threes and crashes the glass.' },
+          { number: 22, name: 'Sam Robbins', position: 'F', grade: '10', height: '6\'7"', bio: 'Tall forward with touch around the rim and strong positioning.' },
+          { number: 23, name: 'Garrett Frank', position: 'G', grade: '11', height: '5\'11"', bio: 'Explosive guard who attacks the rim and pressures the ball.' },
+          { number: 24, name: 'Michael Mehta', position: 'G', grade: '12', height: '6\'1"', bio: 'Sharpshooter with quick release and smart spacing instincts.' },
+          { number: 44, name: 'Liam Plep', position: 'C', grade: '12', height: '6\'8"', bio: 'Rim-protecting center who sets solid screens and finishes inside.' }
         ]
       },
       {
@@ -74,8 +74,8 @@ function Teams() {
         league_record: '0-0',
         ranking: 8,
         coach_name: 'Patrick Thomas',
-        coach_bio: 'Head Coach Patrick Thomas is an English teacher who somehow blends grammar, conditioning, and controlled insanity into a system that overwhelms opponents and stacks wins.',
-        description: 'Pure pressure from the opening tip. A relentless full court press, nonstop energy, shooters all over the floor, and substitutions so constant the other team never finds a rhythm. Games turn into chaos fast and stay that way.',
+        coach_bio: 'Head Coach Patrick Thomas emphasizes conditioning, communication, and disciplined execution.',
+        description: 'An up-tempo team that values pressure defense, ball movement, and depth. The approach is consistent energy with smart rotations.',
         schedule: [
           { result: 'W', score: '44-31', type: 'Non League', date: '12/3/25', time: '6:00 pm', opponent: 'Knappa', location: 'Away' },
           { result: 'W', score: '56-7', type: 'Non League', date: '12/5/25', time: '6:00 pm', opponent: 'Gladstone', location: 'Home' },
@@ -104,18 +104,18 @@ function Teams() {
           { result: 'Scheduled', score: '-', type: 'Non League', date: '2/14/26', time: '10:30 am', opponent: 'Neah Kah Nie', location: 'Home' }
         ],
         players: [
-          { number: 2, name: 'Brooke Wilson', position: 'G', grade: '12', height: '5\'6"', bio: 'The Cookie. Three point shooter specialist. If she\'s open, scoreboard changes immediately. Defense panics when she crosses half court.' },
-          { number: 4, name: 'Rachel Pippin', position: 'G', grade: '9', height: '5\'3"', bio: 'Little sister of cornball legend Zach Pippin. Freshman with insane ball knowledge. Absolute dog on defense. Shooter with confidence way beyond her age.' },
-          { number: 5, name: 'Ava Henry', position: 'F', grade: '12', height: '5\'7"', bio: 'Somehow always tan and a bacon enthusiast. Reliable on the court, questionable behind the wheel. Energy never drops.' },
-          { number: 12, name: 'Katelyn Sheridan', position: 'F', grade: '11', height: '5\'10"', bio: 'Athletic and annoying in the paint. Makes shots harder just by existing.' },
-          { number: 14, name: 'Calista Everson', position: 'G', grade: '12', height: '5\'7"', bio: 'Red headed wrecking ball. Full speed, full contact, zero fear. Plays like every possession owes her money.' },
-          { number: 15, name: 'Allison Jacobs', position: 'F', grade: '11', height: '5\'7"', bio: 'Runs the streets of Banks. Fearless, physical, and confident. Not backing down from anyone, ever.' },
-          { number: 22, name: 'Maya Taha', position: 'P', grade: '10', height: '5\'8"', bio: 'Cool, calm, collected. When chaos hits, she\'s unfazed. Keeps the team steady.' },
-          { number: 23, name: 'Mia Verzani', position: 'G', grade: '11', height: '5\'5"', bio: 'Controlled chaos in every direction. Energy everywhere. Chaos incarnate. Defense has no idea what\'s coming next.' },
-          { number: 24, name: 'Emmee Kinder', position: 'P', grade: '12', height: '5\'10"', bio: 'Dog in the post. Physical, relentless, and tough. Lives in the paint and loves it.' },
-          { number: 31, name: 'Scarlett Thomson', position: 'G', grade: '10', height: '5\'7"', bio: 'Motor never shuts off. Hustle machine. Always moving, always annoying.' },
-          { number: 33, name: 'Nicole Arbaugh', position: 'G', grade: '11', height: '5\'5"', bio: 'Kneebrace Nicole. Still grinding. Still competing. Still not afraid of contact.' },
-          { number: 34, name: 'Ava Marshall Thansophon', position: 'G', grade: '10', height: '5\'9"', bio: 'Hurt but still locked in. Brings energy, vibes, and support from the sidelines.' }
+          { number: 2, name: 'Brooke Wilson', position: 'G', grade: '12', height: '5\'6"', bio: 'Senior guard and spot-up shooter with consistent range.' },
+          { number: 4, name: 'Rachel Pippin', position: 'G', grade: '9', height: '5\'3"', bio: 'Young guard with strong handle and on-ball defense.' },
+          { number: 5, name: 'Ava Henry', position: 'F', grade: '12', height: '5\'7"', bio: 'Two-way wing who brings steady effort and rebounding.' },
+          { number: 12, name: 'Katelyn Sheridan', position: 'F', grade: '11', height: '5\'10"', bio: 'Forward with length who defends the paint and finishes inside.' },
+          { number: 14, name: 'Calista Everson', position: 'G', grade: '12', height: '5\'7"', bio: 'Aggressive guard who pressures the ball and attacks gaps.' },
+          { number: 15, name: 'Allison Jacobs', position: 'F', grade: '11', height: '5\'7"', bio: 'Physical forward who rebounds and plays through contact.' },
+          { number: 22, name: 'Maya Taha', position: 'P', grade: '10', height: '5\'8"', bio: 'Calm point guard who keeps tempo and makes safe passes.' },
+          { number: 23, name: 'Mia Verzani', position: 'G', grade: '11', height: '5\'5"', bio: 'High-energy guard who creates pressure and pushes pace.' },
+          { number: 24, name: 'Emmee Kinder', position: 'P', grade: '12', height: '5\'10"', bio: 'Post player who anchors the paint and boxes out.' },
+          { number: 31, name: 'Scarlett Thomson', position: 'G', grade: '10', height: '5\'7"', bio: 'Hustle guard who provides defense and transition speed.' },
+          { number: 33, name: 'Nicole Arbaugh', position: 'G', grade: '11', height: '5\'5"', bio: 'Gritty guard who competes on defense and battles for loose balls.' },
+          { number: 34, name: 'Ava Marshall Thansophon', position: 'G', grade: '10', height: '5\'9"', bio: 'Versatile guard who supports the rotation and brings energy.' }
         ]
       }
     ];
@@ -172,7 +172,7 @@ function Teams() {
           </div>
           <div className="stat">
             <span className="label">Rank</span>
-            <span className="value" style={{fontSize: '1.2rem'}}>#{team.ranking}</span>
+            <span className="value">#{team.ranking}</span>
           </div>
         </div>
       </div>

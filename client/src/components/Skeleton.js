@@ -43,20 +43,26 @@ export function GameCardSkeleton() {
 
 export function LeaderboardRowSkeleton() {
   return (
-    <div className="leaderboard-row skeleton-row">
-      <div className="rank-column">
-        <Skeleton variant="circle" width="32px" height="32px" />
-      </div>
-      <div className="user-column">
-        <Skeleton variant="text" width="120px" height="18px" />
-      </div>
-      <div className="balance-column">
-        <Skeleton variant="text" width="80px" height="20px" />
-      </div>
-      <div className="stats-column">
+    <tr className="leaderboard-row skeleton-row">
+      <td className="rank-cell">
+        <Skeleton variant="circle" width="26px" height="26px" />
+      </td>
+      <td>
+        <Skeleton variant="text" width="140px" height="16px" />
+      </td>
+      <td className="numeric">
+        <Skeleton variant="text" width="90px" height="16px" />
+      </td>
+      <td className="numeric">
+        <Skeleton variant="text" width="90px" height="16px" />
+      </td>
+      <td className="numeric">
+        <Skeleton variant="text" width="70px" height="16px" />
+      </td>
+      <td className="numeric">
         <Skeleton variant="text" width="60px" height="16px" />
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }
 

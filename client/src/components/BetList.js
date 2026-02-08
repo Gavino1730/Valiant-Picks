@@ -268,9 +268,9 @@ function BetList() {
               </div>
 
               {/* Selected Team Highlight */}
-              <div style={{padding: '8px 12px', background: 'rgba(33, 150, 243, 0.1)', borderRadius: '6px', marginBottom: '12px', borderLeft: '3px solid #2196f3'}}>
-                <span style={{fontSize: '0.85rem', color: '#90caf9'}}>Your Pick: </span>
-                <span style={{fontSize: '0.95rem', fontWeight: '600', color: '#2196f3'}}>{bet.selected_team}</span>
+              <div className="bet-picked-team">
+                <span className="bet-picked-label">Your Pick</span>
+                <span className="bet-picked-team-name">{bet.selected_team}</span>
               </div>
 
               {/* Bet Details Grid */}
