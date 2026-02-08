@@ -255,65 +255,67 @@ function BetList() {
         </div>
       ) : (
         <div className="bets-list">
-          {filteredBets.map(bet => {
-            const profit = (parseFloat(bet.potential_win || 0) - parseFloat(bet.amount || 0));
-            return (
-              <div key={bet.id} className={`bet-item ${bet.outcome ? `bet-${bet.outcome}` : 'bet-pending'}`}>
-              {/* Bet Header */}
-              <div className="bet-item-header">
-                <div className="bet-team-info">
-                  <span className="team-type-badge">{bet.games?.team_type || 'Game'}</span>
-                  <h3 className="team-name">{bet.games?.home_team} vs {bet.games?.away_team}</h3>
-                  {bet.games?.game_date && (
-                    <span className="game-date-badge">📅 {formatDate(parseLocalDateOnly(bet.games.game_date) || bet.games.game_date)}</span>
-                  )}
-                </div>
-                <div className="bet-status-badge">
-                  {bet.status === 'pending' && <span className="badge badge-pending status--pending">Pending</span>}
-                  {bet.outcome === 'won' && <span className="badge badge-won status--won">Won</span>}
-                  {bet.outcome === 'lost' && <span className="badge badge-lost status--lost">Lost</span>}
-                </div>
-              </div>
-
-              {/* Selected Team Highlight */}
-              <div className="bet-picked-team">
-                <span className="bet-picked-label">Your Pick</span>
-                <span className="bet-picked-team-name">{bet.selected_team}</span>
-              </div>
-
-              {/* Bet Details Grid */}
-              <div className="bet-item-details">
-                <div className="detail-box">
-                  <span className="detail-label">Wager</span>
-                  <span className="detail-amount">{formatCurrency(bet.amount)}</span>
-                </div>
-                <div className="detail-box">
-                  <span className="detail-label">Confidence</span>
-                  <span className={`confidence-badge ${getConfidenceColor(bet.bet_type)}`}>
-                    {(bet.bet_type || 'n/a').toUpperCase()}
-                  </span>
-                </div>
-                <div className="detail-box">
-                  <span className="detail-label">Potential Win</span>
-                  <span className="detail-potential">{formatCurrency(bet.potential_win)}</span>
-                </div>
-                {bet.outcome && (
-                  <div className="detail-box">
-                    <span className="detail-label">Result</span>
-                    <span className={`detail-result u-num ${bet.outcome === 'won' ? 'result-won status--won' : 'result-lost status--lost'}`}>
-                      {bet.outcome === 'won' ? formatSignedCurrency(profit) : formatSignedCurrency(-bet.amount)}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Bet Footer */}
-              <div className="bet-item-footer">
-                <span className="bet-date">📅 Pick placed: {formatPlacedAt(bet.created_at)}</span>
-              </div>
-              </div>
-            );
-          })}
+          <div className="bet-table-wrapper ds-table-wrapper">
+            <table className="bet-table ds-table">
+              <colgroup>
+                <col style={{ width: '34%' }} />
+                <col style={{ width: '18%' }} />
+                <col style={{ width: '12%' }} />
+                <col style={{ width: '12%' }} />
+                <col style={{ width: '12%' }} />
+                <col style={{ width: '12%' }} />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Game</th>
+                  <th>Pick</th>
+                  <th className="u-align-right">Wager</th>
+                  <th className="u-align-right">Potential</th>
+                  <th className="u-align-center">Status</th>
+                  <th className="u-align-right">Placed</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredBets.map(bet => {
+                  const profit = (parseFloat(bet.potential_win || 0) - parseFloat(bet.amount || 0));
+                  return (
+                    <tr key={bet.id}>
+                      <td>
+                        <div className="bet-game-cell">
+                          <span className="team-type-badge">{bet.games?.team_type || 'Game'}</span>
+                          <div className="bet-game-title">{bet.games?.home_team} vs {bet.games?.away_team}</div>
+                          {bet.games?.game_date && (
+                            <div className="bet-game-date">{formatDate(parseLocalDateOnly(bet.games.game_date) || bet.games.game_date)}</div>
+                          )}
+                        </div>
+                      </td>
+                      <td>
+                        <div className="bet-pick-cell">
+                          <div className="bet-picked-team-name">{bet.selected_team}</div>
+                          <span className={`confidence-badge ${getConfidenceColor(bet.bet_type)}`}>
+                            {(bet.bet_type || 'n/a').toUpperCase()}
+                          </span>
+                          {bet.outcome && (
+                            <span className={`bet-result-inline u-num ${bet.outcome === 'won' ? 'status--won' : 'status--lost'}`}>
+                              {bet.outcome === 'won' ? formatSignedCurrency(profit) : formatSignedCurrency(-bet.amount)}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="u-align-right u-num">{formatCurrency(bet.amount)}</td>
+                      <td className="u-align-right u-num">{formatCurrency(bet.potential_win)}</td>
+                      <td className="u-align-center">
+                        {bet.status === 'pending' && <span className="badge badge-pending status--pending">Pending</span>}
+                        {bet.outcome === 'won' && <span className="badge badge-won status--won">Won</span>}
+                        {bet.outcome === 'lost' && <span className="badge badge-lost status--lost">Lost</span>}
+                      </td>
+                      <td className="u-align-right u-num">{formatPlacedAt(bet.created_at)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

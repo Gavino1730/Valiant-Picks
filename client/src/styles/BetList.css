@@ -106,14 +106,14 @@
 
 .header-title h1 {
   font-size: 2.1rem;
-  color: #1f4e99;
+  color: var(--color-text-primary);
   margin: 0 0 0.25rem 0;
   font-weight: 600;
   letter-spacing: -0.3px;
 }
 
 .subtitle {
-  color: #7f8596;
+  color: var(--color-text-secondary);
   font-size: 0.98rem;
   margin: 0;
   line-height: 1.4;
@@ -647,5 +647,47 @@
   .bet-item-details {
     grid-template-columns: 1fr;
     width: 100%;
+  }
+}
+
+/* ===== BET TABLE ===== */
+.bet-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.bet-table {
+  min-width: 860px;
+}
+
+.bet-game-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.bet-game-title {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.bet-game-date {
+  font-size: var(--font-micro);
+  color: var(--color-text-secondary);
+}
+
+.bet-pick-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.bet-result-inline {
+  font-size: var(--font-small);
+}
+
+@media (max-width: 768px) {
+  .bet-table {
+    min-width: 720px;
   }
 }
