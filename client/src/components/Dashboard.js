@@ -321,8 +321,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     }
   };
   
-  const balance = user?.balance || 0;
-
   return (
     <div className="dashboard school-dashboard">
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
