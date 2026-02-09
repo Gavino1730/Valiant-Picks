@@ -508,7 +508,7 @@
 
 .admin-game-card__teams {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 6px;
   font-size: 0.9rem;
   font-weight: 600;
@@ -518,10 +518,11 @@
 
 .admin-game-card__teams .team {
   min-width: 0;
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  max-width: none;
+  overflow: visible;
+  text-overflow: unset;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .admin-game-card__teams .vs {
@@ -533,9 +534,10 @@
   font-size: 0.75rem;
   color: var(--admin-muted);
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .admin-game-card__badges {

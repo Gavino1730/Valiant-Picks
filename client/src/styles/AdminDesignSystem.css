@@ -228,6 +228,10 @@
   gap: 16px;
 }
 
+.admin-stats-grid {
+  margin-bottom: 12px;
+}
+
 .admin-card-title {
   margin: 0 0 6px;
   font-weight: 700;

@@ -1222,15 +1222,13 @@ function AdminPanel() {
                     <button className="admin-button admin-button--primary" onClick={() => handleEditGame(game)}>
                       Edit
                     </button>
-                    <AdminActionsMenu label="Actions">
-                      <button
-                        type="button"
-                        className="admin-actions-menu__item"
-                        onClick={() => handleOpenGameStatus(game)}
-                      >
-                        Set Outcome
-                      </button>
-                    </AdminActionsMenu>
+                    <button
+                      type="button"
+                      className="admin-button admin-button--secondary"
+                      onClick={() => handleOpenGameStatus(game)}
+                    >
+                      Set Outcome
+                    </button>
                   </div>
                 </div>
               ))}
