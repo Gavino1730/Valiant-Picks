@@ -684,13 +684,36 @@ function AdminPanel() {
   };
 
   const handleOpenGameStatus = (game) => {
+    const isValiantsHome = game.home_team === 'Valiants';
+    const isValiantsAway = game.away_team === 'Valiants';
+    const valiantIsHome = isValiantsHome || (!isValiantsHome && !isValiantsAway);
+    const valiantTeam = isValiantsHome || isValiantsAway ? 'Valiants' : game.home_team;
+    const opponentTeam = isValiantsHome
+      ? game.away_team
+      : isValiantsAway
+        ? game.home_team
+        : game.away_team;
+    const valiantScore = isValiantsHome
+      ? game.home_score
+      : isValiantsAway
+        ? game.away_score
+        : game.home_score;
+    const opponentScore = isValiantsHome
+      ? game.away_score
+      : isValiantsAway
+        ? game.home_score
+        : game.away_score;
+
     setGameStatusModal({
       id: game.id,
       homeTeam: game.home_team,
       awayTeam: game.away_team,
+      valiantIsHome,
+      valiantTeam,
+      opponentTeam,
       status: game.status || 'upcoming',
-      homeScore: game.home_score || '',
-      awayScore: game.away_score || '',
+      valiantScore: valiantScore ?? '',
+      opponentScore: opponentScore ?? '',
       winner: game.result || ''
     });
   };
@@ -700,16 +723,33 @@ function AdminPanel() {
     
     try {
       setLoading(true);
-      const { id, status, homeScore, awayScore, winner } = gameStatusModal;
-      
-      const updateData = {
+      const {
+        id,
         status,
-        homeScore: homeScore ? parseInt(homeScore) : undefined,
-        awayScore: awayScore ? parseInt(awayScore) : undefined
-      };
+        winner,
+        valiantScore,
+        opponentScore,
+        valiantIsHome
+      } = gameStatusModal;
 
-      // If status is completed and winner is set, resolve bets
+      if (status === 'completed' && !winner) {
+        alert('Please select a winner before entering the final score.');
+        return;
+      }
+
+      if (status === 'completed' && (valiantScore === '' || opponentScore === '')) {
+        alert('Please enter both scores before completing the game.');
+        return;
+      }
+      
+      const updateData = { status };
+
       if (status === 'completed' && winner) {
+        const homeScoreValue = valiantIsHome ? valiantScore : opponentScore;
+        const awayScoreValue = valiantIsHome ? opponentScore : valiantScore;
+
+        updateData.homeScore = homeScoreValue !== '' ? parseInt(homeScoreValue, 10) : undefined;
+        updateData.awayScore = awayScoreValue !== '' ? parseInt(awayScoreValue, 10) : undefined;
         updateData.winningTeam = winner;
       }
 
@@ -2143,7 +2183,7 @@ function AdminPanel() {
           <div className="modal-content admin-modal" onClick={(e) => e.stopPropagation()}>
             <h3>Manage Game Status</h3>
             <p className="admin-muted">
-              {gameStatusModal.homeTeam} vs {gameStatusModal.awayTeam}
+              {gameStatusModal.valiantTeam} vs {gameStatusModal.opponentTeam}
             </p>
 
             <div className="form-group admin-modal__section">
@@ -2158,38 +2198,50 @@ function AdminPanel() {
               </select>
             </div>
 
-            <div className="admin-form-row">
-              <div className="form-group">
-                <label>{gameStatusModal.homeTeam} Score</label>
-                <input
-                  type="number"
-                  value={gameStatusModal.homeScore}
-                  onChange={(e) => setGameStatusModal({ ...gameStatusModal, homeScore: e.target.value })}
-                  placeholder="0"
-                />
-              </div>
-              <div className="form-group">
-                <label>{gameStatusModal.awayTeam} Score</label>
-                <input
-                  type="number"
-                  value={gameStatusModal.awayScore}
-                  onChange={(e) => setGameStatusModal({ ...gameStatusModal, awayScore: e.target.value })}
-                  placeholder="0"
-                />
-              </div>
-            </div>
-
             {gameStatusModal.status === 'completed' && (
               <div className="form-group admin-modal__section">
                 <label>Winner (resolves bets)</label>
-                <select
-                  value={gameStatusModal.winner}
-                  onChange={(e) => setGameStatusModal({ ...gameStatusModal, winner: e.target.value })}
-                >
-                  <option value="">-- Select Winner --</option>
-                  <option value={gameStatusModal.homeTeam}>{gameStatusModal.homeTeam} (Home)</option>
-                  <option value={gameStatusModal.awayTeam}>{gameStatusModal.awayTeam} (Away)</option>
-                </select>
+                <div className="admin-modal__winner-buttons">
+                  <button
+                    type="button"
+                    className={`admin-button admin-button--secondary admin-button--toggle ${gameStatusModal.winner === gameStatusModal.valiantTeam ? 'is-active' : ''}`}
+                    onClick={() => setGameStatusModal({ ...gameStatusModal, winner: gameStatusModal.valiantTeam })}
+                  >
+                    {gameStatusModal.valiantTeam}
+                  </button>
+                  <button
+                    type="button"
+                    className={`admin-button admin-button--secondary admin-button--toggle ${gameStatusModal.winner === gameStatusModal.opponentTeam ? 'is-active' : ''}`}
+                    onClick={() => setGameStatusModal({ ...gameStatusModal, winner: gameStatusModal.opponentTeam })}
+                  >
+                    {gameStatusModal.opponentTeam}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {gameStatusModal.status === 'completed' && gameStatusModal.winner && (
+              <div className="admin-form-row">
+                <div className="form-group">
+                  <label>{gameStatusModal.valiantTeam} Score</label>
+                  <input
+                    type="number"
+                    value={gameStatusModal.valiantScore}
+                    onChange={(e) => setGameStatusModal({ ...gameStatusModal, valiantScore: e.target.value })}
+                    placeholder="0"
+                    min="0"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>{gameStatusModal.opponentTeam} Score</label>
+                  <input
+                    type="number"
+                    value={gameStatusModal.opponentScore}
+                    onChange={(e) => setGameStatusModal({ ...gameStatusModal, opponentScore: e.target.value })}
+                    placeholder="0"
+                    min="0"
+                  />
+                </div>
               </div>
             )}
 

@@ -492,6 +492,18 @@
   flex-wrap: wrap;
 }
 
+.admin-modal__winner-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-modal__winner-buttons .admin-button {
+  flex: 1;
+  min-width: 160px;
+  justify-content: center;
+}
+
 .admin-panel .form-group label,
 .admin-panel label {
   color: var(--admin-muted);
