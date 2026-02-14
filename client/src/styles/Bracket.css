@@ -326,15 +326,15 @@
 /* Bracket Grid Layout - Tournament style */
 .bracket-grid {
   display: grid;
-  grid-template-columns: minmax(220px, auto) minmax(180px, auto) minmax(160px, auto) minmax(200px, auto);
-  gap: 32px;
-  margin-bottom: 40px;
-  padding: 40px 32px 32px;
+  grid-template-columns: minmax(180px, auto) minmax(160px, auto) minmax(140px, auto) minmax(180px, auto);
+  gap: 20px;
+  margin-bottom: 32px;
+  padding: 24px 20px 20px;
   background: var(--color-surface);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   border: 1.5px solid rgba(31, 78, 153, 0.25);
-  min-height: 720px;
+  min-height: 480px;
   align-items: stretch;
   position: relative;
 }
@@ -365,10 +365,10 @@
 .bracket-round {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 20px;
+  gap: 10px;
+  padding: 12px;
   background: linear-gradient(180deg, rgba(31, 78, 153, 0.08) 0%, rgba(31, 78, 153, 0.04) 100%);
-  border-radius: 14px;
+  border-radius: 12px;
   border: 2px solid rgba(31, 78, 153, 0.2);
   position: relative;
   overflow: hidden;
@@ -379,8 +379,8 @@
   content: '';
   position: absolute;
   top: 50%;
-  right: -32px;
-  width: 28px;
+  right: -20px;
+  width: 18px;
   height: 3px;
   background: linear-gradient(90deg, rgba(100, 181, 246, 0.3) 0%, rgba(100, 181, 246, 0) 100%);
   transform: translateY(-50%);
@@ -403,14 +403,14 @@
 }
 
 .bracket-round h2 {
-  margin: 0 0 12px;
-  font-size: 15px;
+  margin: 0 0 8px;
+  font-size: 13px;
   font-weight: 700;
   color: #64b5f6;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   text-align: center;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
   border-bottom: 2px solid rgba(100, 181, 246, 0.35);
   position: relative;
   z-index: 1;
@@ -419,19 +419,19 @@
 .bracket-games {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   justify-content: space-around;
   flex: 1;
-  padding: 8px 0;
+  padding: 4px 0;
 }
 
 .bracket-game {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 16px;
+  gap: 6px;
+  padding: 10px;
   background: var(--color-surface-raised);
-  border-radius: 10px;
+  border-radius: 8px;
   border: 2px solid rgba(31, 78, 153, 0.25);
   transition: all 0.2s ease;
   position: relative;
@@ -441,9 +441,9 @@
 .bracket-game::after {
   content: '';
   position: absolute;
-  right: -32px;
+  right: -20px;
   top: 50%;
-  width: 24px;
+  width: 18px;
   height: 2px;
   background: linear-gradient(90deg, rgba(100, 181, 246, 0.2) 0%, rgba(100, 181, 246, 0) 100%);
   transform: translateY(-50%);
@@ -460,7 +460,7 @@
 }
 
 .bracket-game.championship-game {
-  padding: 24px 16px;
+  padding: 16px 12px;
   background: linear-gradient(135deg, rgba(30, 136, 229, 0.15) 0%, rgba(30, 136, 229, 0.06) 100%);
   border: 2px solid rgba(100, 181, 246, 0.5);
   box-shadow: 0 8px 24px rgba(30, 136, 229, 0.2);
@@ -478,14 +478,14 @@
 }
 
 .game-label {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   color: #64b5f6;
   letter-spacing: 0.08em;
   text-align: center;
-  margin-bottom: 6px;
-  padding-bottom: 4px;
+  margin-bottom: 4px;
+  padding-bottom: 3px;
   border-bottom: 1px solid rgba(100, 181, 246, 0.2);
 }
 
@@ -503,12 +503,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 14px 16px;
+  gap: 6px;
+  padding: 10px 12px;
   background: var(--color-surface);
   border: 1.5px solid rgba(31, 78, 153, 0.25);
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   color: #b8c5d6;
   cursor: pointer;
@@ -569,10 +569,10 @@
 
 .team-seed {
   font-weight: 700;
-  min-width: 26px;
+  min-width: 22px;
   color: #64b5f6;
   flex-shrink: 0;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .team-btn.selected .team-seed {
@@ -612,7 +612,7 @@
 
 /* Championship Game Special Styling */
 .championship-game {
-  padding: 24px 18px;
+  padding: 16px 14px;
   background: linear-gradient(135deg, rgba(30, 136, 229, 0.15) 0%, rgba(30, 136, 229, 0.08) 100%);
   border: 2px solid rgba(100, 181, 246, 0.5);
   box-shadow: 0 8px 24px rgba(30, 136, 229, 0.2);
@@ -621,8 +621,8 @@
 
 .championship-icon {
   text-align: center;
-  font-size: 36px;
-  margin-bottom: 12px;
+  font-size: 28px;
+  margin-bottom: 8px;
   animation: bounce 2s ease-in-out infinite;
 }
 

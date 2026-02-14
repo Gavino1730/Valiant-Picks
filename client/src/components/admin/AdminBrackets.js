@@ -7,7 +7,7 @@ import '../../styles/AdminDesignSystem.css';
 const roundLabels = {
   1: 'Quarterfinals',
   2: 'Semifinals',
-  3: 'Final'
+  3: 'Finals'
 };
 
 const makeSeedDefaults = () => {

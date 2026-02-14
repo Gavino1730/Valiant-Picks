@@ -6,9 +6,9 @@ import '../styles/Bracket.css';
 
 
 const ROUND_LABELS = {
-  1: 'Round 1',
-  2: 'Round 2',
-  3: 'Round 3',
+  1: 'Quarterfinals',
+  2: 'Semifinals',
+  3: 'Finals',
   4: 'Championship'
 };
 
@@ -93,6 +93,19 @@ function Bracket({ updateUser }) {
   const getTeamName = (teamId) => {
     const team = teamById[teamId];
     return team ? team.name : 'TBD';
+  };
+
+  const getGameLabel = (game, round) => {
+    if (!game) return 'TBD';
+    
+    const team1 = teamById[game.team1_id];
+    const team2 = teamById[game.team2_id];
+    
+    if (team1 && team2) {
+      return `${team1.seed} vs ${team2.seed}`;
+    }
+    
+    return 'TBD';
   };
 
   const applyRound1Pick = (gameNumber, teamId) => {
@@ -320,20 +333,20 @@ function Bracket({ updateUser }) {
           <div className="instructions-grid">
             <div className="instruction-card">
               <div className="instruction-number">1</div>
-              <h4>Select Teams in Round 1</h4>
+              <h4>Select Teams in Quarterfinals</h4>
               <p>Click on any team name in the first column to select your pick. Only teams you pick will be eligible to advance.</p>
             </div>
             
             <div className="instruction-card">
               <div className="instruction-number">2</div>
               <h4>Watch Picks Cascade</h4>
-              <p>As you make picks in Round 1, your selected teams will automatically appear as options in Round 2.</p>
+              <p>As you make picks in the Quarterfinals, your selected teams will automatically appear as options in the Semifinals.</p>
             </div>
             
             <div className="instruction-card">
               <div className="instruction-number">3</div>
               <h4>Complete All Rounds</h4>
-              <p>Continue making picks through each round. You must complete all 8 Round 1 picks, 4 Round 2 picks, 2 Round 3 picks, and 1 Championship pick.</p>
+              <p>Continue making picks through each round. You must complete all 8 Quarterfinal picks, 4 Semifinal picks, 2 Finals picks, and 1 Championship pick.</p>
             </div>
             
             <div className="instruction-card">
@@ -365,7 +378,7 @@ function Bracket({ updateUser }) {
               const selected = picks.round1[makeGameKey(game.game_number)];
               return (
                 <div key={game.id} className="bracket-game" data-game-idx={idx}>
-                  <div className="game-label">G{game.game_number}</div>
+                  <div className="game-label">{getGameLabel(game, 1)}</div>
                   {[game.team1_id, game.team2_id].map((teamId, tidx) => (
                     <button
                       key={teamId || tidx}
@@ -396,7 +409,7 @@ function Bracket({ updateUser }) {
 
               return (
                 <div key={gameNum} className="bracket-game" data-game-idx={gameNum - 1}>
-                  <div className="game-label">G{gameNum}</div>
+                  <div className="game-label">{getGameLabel(game, 2)}</div>
                   {options.length === 0 && <div className="bracket-placeholder">—</div>}
                   {options.map((teamId) => (
                     <button
@@ -427,7 +440,7 @@ function Bracket({ updateUser }) {
 
               return (
                 <div key={gameNum} className="bracket-game" data-game-idx={gameNum - 1}>
-                  <div className="game-label">G{gameNum}</div>
+                  <div className="game-label">{getGameLabel(game, 3)}</div>
                   {options.length === 0 && <div className="bracket-placeholder">—</div>}
                   {options.map((teamId) => (
                     <button
@@ -482,19 +495,19 @@ function Bracket({ updateUser }) {
       {!entry && (
         <div className="bracket-progress">
           <div className="progress-item">
-            <span className="progress-label">Round 1</span>
+            <span className="progress-label">Quarterfinals</span>
             <span className={`progress-count ${Object.keys(picks.round1).length === 8 ? 'complete' : ''}`}>
               {Object.keys(picks.round1).length}/8
             </span>
           </div>
           <div className="progress-item">
-            <span className="progress-label">Round 2</span>
+            <span className="progress-label">Semifinals</span>
             <span className={`progress-count ${Object.keys(picks.round2).length === 4 ? 'complete' : ''}`}>
               {Object.keys(picks.round2).length}/4
             </span>
           </div>
           <div className="progress-item">
-            <span className="progress-label">Round 3</span>
+            <span className="progress-label">Finals</span>
             <span className={`progress-count ${Object.keys(picks.round3).length === 2 ? 'complete' : ''}`}>
               {Object.keys(picks.round3).length}/2
             </span>
