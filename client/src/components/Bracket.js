@@ -269,7 +269,6 @@ function Bracket({ updateUser }) {
           >
             View Live Bracket
           </button>
-          </button>
           <button
             type="button"
             className="bracket-link"
