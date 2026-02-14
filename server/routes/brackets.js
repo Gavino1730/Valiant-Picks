@@ -6,21 +6,23 @@ const User = require('../models/User');
 const Transaction = require('../models/Transaction');
 
 const ROUND_POINTS = {
-  1: 10,
-  2: 20,
-  3: 40
+  1: 5,    // 8 games × 5 pts = 40 pts max
+  2: 10,   // 4 games × 10 pts = 40 pts max
+  3: 20,   // 2 games × 20 pts = 40 pts max
+  4: 40    // 1 game × 40 pts = 40 pts max
 };
 
 const normalizePickKey = (gameNumber) => `game${gameNumber}`;
 
 const coercePicks = (picks) => {
   if (!picks || typeof picks !== 'object') {
-    return { round1: {}, round2: {}, round3: {} };
+    return { round1: {}, round2: {}, round3: {}, round4: {} };
   }
   return {
     round1: picks.round1 || {},
     round2: picks.round2 || {},
-    round3: picks.round3 || {}
+    round3: picks.round3 || {},
+    round4: picks.round4 || {}
   };
 };
 
@@ -28,7 +30,7 @@ const computePoints = (picks, winnersByRound) => {
   const safePicks = coercePicks(picks);
   let points = 0;
 
-  [1, 2, 3].forEach((round) => {
+  [1, 2, 3, 4].forEach((round) => {
     const roundWinners = winnersByRound[round] || {};
     Object.entries(roundWinners).forEach(([gameKey, winnerId]) => {
       if (!winnerId) return;
@@ -484,52 +486,114 @@ router.post('/:id/entries', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'You already submitted a bracket' });
     }
 
-    const { data: round1Games, error: gamesError } = await supabase
+    // Get all games for this bracket
+    const { data: allGames, error: gamesError } = await supabase
       .from('bracket_games')
       .select('id, round, game_number, team1_id, team2_id')
       .eq('bracket_id', req.params.id)
-      .eq('round', 1)
+      .order('round', { ascending: true })
       .order('game_number', { ascending: true });
 
     if (gamesError) throw gamesError;
-    if (!round1Games || round1Games.length !== 4) {
+    if (!allGames || allGames.length === 0) {
       return res.status(400).json({ error: 'Bracket games not seeded yet' });
     }
 
+    // Group games by round
+    const gamesByRound = allGames.reduce((acc, game) => {
+      if (!acc[game.round]) acc[game.round] = [];
+      acc[game.round].push(game);
+      return acc;
+    }, {});
+
     const safePicks = coercePicks(picks);
 
-    const round1PickMap = {};
+    // Validate Round 1: All 8 picks must be valid (one of the team1/team2 for that game)
+    const round1Games = gamesByRound[1] || [];
+    if (round1Games.length !== 8) {
+      return res.status(400).json({ error: 'Invalid bracket structure - expected 8 quarterfinal games' });
+    }
+
+    const round1Picks = {};
     for (const game of round1Games) {
       const pick = safePicks.round1[normalizePickKey(game.game_number)];
       if (!pick) {
-        return res.status(400).json({ error: 'Complete all quarterfinal picks' });
+        return res.status(400).json({ error: `Complete all Round 1 picks (game ${game.game_number} missing)` });
       }
       if (pick !== game.team1_id && pick !== game.team2_id) {
-        return res.status(400).json({ error: 'Quarterfinal pick must be one of the teams' });
+        return res.status(400).json({ error: `Round 1 game ${game.game_number} pick must be one of the teams` });
       }
-      round1PickMap[game.game_number] = pick;
+      round1Picks[game.game_number] = pick;
     }
 
-    const semi1Teams = [round1PickMap[1], round1PickMap[2]];
-    const semi2Teams = [round1PickMap[3], round1PickMap[4]];
-
-    const semi1Pick = safePicks.round2[normalizePickKey(1)];
-    const semi2Pick = safePicks.round2[normalizePickKey(2)];
-
-    if (!semi1Pick || !semi2Pick) {
-      return res.status(400).json({ error: 'Complete all semifinal picks' });
+    // Validate Round 2: 4 picks, each must be a winner from the corresponding games
+    // Game 1: from R1 games 1-2, Game 2: from R1 games 3-4, Game 3: from R1 games 5-6, Game 4: from R1 games 7-8
+    const round2Games = gamesByRound[2] || [];
+    if (round2Games.length !== 4) {
+      return res.status(400).json({ error: 'Invalid bracket structure - expected 4 semifinal games' });
     }
 
-    if (!semi1Teams.includes(semi1Pick) || !semi2Teams.includes(semi2Pick)) {
-      return res.status(400).json({ error: 'Semifinal picks must come from your quarterfinal winners' });
+    const round2Picks = {};
+    const round2Validations = [
+      { gameNum: 1, allowedFrom: [1, 2] },
+      { gameNum: 2, allowedFrom: [3, 4] },
+      { gameNum: 3, allowedFrom: [5, 6] },
+      { gameNum: 4, allowedFrom: [7, 8] }
+    ];
+
+    for (const validation of round2Validations) {
+      const pick = safePicks.round2[normalizePickKey(validation.gameNum)];
+      if (!pick) {
+        return res.status(400).json({ error: `Complete all Round 2 picks (game ${validation.gameNum} missing)` });
+      }
+      const allowedTeams = validation.allowedFrom.map(rNum => round1Picks[rNum]);
+      if (!allowedTeams.includes(pick)) {
+        return res.status(400).json({ error: `Round 2 game ${validation.gameNum} must come from Round 1 winners` });
+      }
+      round2Picks[validation.gameNum] = pick;
     }
 
-    const finalTeams = [semi1Pick, semi2Pick];
-    const finalPick = safePicks.round3[normalizePickKey(1)];
-    if (!finalPick || !finalTeams.includes(finalPick)) {
-      return res.status(400).json({ error: 'Final pick must be one of your semifinal winners' });
+    // Validate Round 3: 2 picks, each from corresponding R2 winners
+    // Game 1: from R2 games 1-2, Game 2: from R2 games 3-4
+    const round3Games = gamesByRound[3] || [];
+    if (round3Games.length !== 2) {
+      return res.status(400).json({ error: 'Invalid bracket structure - expected 2 final games' });
     }
 
+    const round3Picks = {};
+    const round3Validations = [
+      { gameNum: 1, allowedFrom: [1, 2] },
+      { gameNum: 2, allowedFrom: [3, 4] }
+    ];
+
+    for (const validation of round3Validations) {
+      const pick = safePicks.round3[normalizePickKey(validation.gameNum)];
+      if (!pick) {
+        return res.status(400).json({ error: `Complete all Round 3 picks (game ${validation.gameNum} missing)` });
+      }
+      const allowedTeams = validation.allowedFrom.map(rNum => round2Picks[rNum]);
+      if (!allowedTeams.includes(pick)) {
+        return res.status(400).json({ error: `Round 3 game ${validation.gameNum} must come from Round 2 winners` });
+      }
+      round3Picks[validation.gameNum] = pick;
+    }
+
+    // Validate Round 4 (Championship): 1 pick from R3 winners
+    const round4Games = gamesByRound[4] || [];
+    if (round4Games.length !== 1) {
+      return res.status(400).json({ error: 'Invalid bracket structure - expected 1 championship game' });
+    }
+
+    const round4Pick = safePicks.round4[normalizePickKey(1)];
+    if (!round4Pick) {
+      return res.status(400).json({ error: 'Complete the championship pick' });
+    }
+    const allowedChampionshipTeams = [round3Picks[1], round3Picks[2]];
+    if (!allowedChampionshipTeams.includes(round4Pick)) {
+      return res.status(400).json({ error: 'Championship pick must come from your Round 3 winners' });
+    }
+
+    // Deduct entry fee if applicable
     if (Number(bracket.entry_fee || 0) > 0) {
       const user = await User.findById(req.user.id);
       if (!user) {
@@ -548,19 +612,22 @@ router.post('/:id/entries', authenticateToken, async (req, res) => {
       await User.updateBalance(req.user.id, -Number(bracket.entry_fee));
     }
 
-    const { data: entry, error: entryError } = await supabase
+    // Insert the bracket entry
+    const { data: entry, error: insertError } = await supabase
       .from('bracket_entries')
-      .insert([{ 
+      .insert({
         bracket_id: req.params.id,
         user_id: req.user.id,
-        picks: safePicks
-      }])
+        picks: safePicks,
+        points: 0,
+        payout: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
       .select()
       .single();
 
-    if (entryError) throw entryError;
-
-    await recalcEntries(req.params.id);
+    if (insertError) throw insertError;
 
     res.status(201).json(entry);
   } catch (err) {

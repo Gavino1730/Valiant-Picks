@@ -1,28 +1,24 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../utils/axios';
 import { formatCurrency } from '../utils/currency';
 import '../styles/Bracket.css';
 
-const roundLabels = {
-  1: 'Quarterfinals',
-  2: 'Semifinals',
-  3: 'Final'
-};
 
-const round1SeedPairs = [
-  [1, 8],
-  [4, 5],
-  [2, 7],
-  [3, 6]
-];
+const ROUND_LABELS = {
+  1: 'Round 1',
+  2: 'Round 2',
+  3: 'Round 3',
+  4: 'Championship'
+};
 
 const makeGameKey = (gameNumber) => `game${gameNumber}`;
 
 const normalizePicks = (picks) => ({
   round1: picks?.round1 || {},
   round2: picks?.round2 || {},
-  round3: picks?.round3 || {}
+  round3: picks?.round3 || {},
+  round4: picks?.round4 || {}
 });
 
 function Bracket({ updateUser }) {
@@ -31,34 +27,26 @@ function Bracket({ updateUser }) {
   const [teams, setTeams] = useState([]);
   const [games, setGames] = useState([]);
   const [entry, setEntry] = useState(null);
-  const [picks, setPicks] = useState({ round1: {}, round2: {}, round3: {} });
+  const [picks, setPicks] = useState({ round1: {}, round2: {}, round3: {}, round4: {} });
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
-  const teamsBySeed = useMemo(() => {
+  const teamById = useMemo(() => {
     return teams.reduce((acc, team) => {
-      acc[team.seed] = team;
+      acc[team.id] = team;
       return acc;
     }, {});
   }, [teams]);
 
   const gamesByRound = useMemo(() => {
     return games.reduce((acc, game) => {
-      if (!acc[game.round]) acc[game.round] = {};
-      acc[game.round][game.game_number] = game;
+      if (!acc[game.round]) acc[game.round] = [];
+      acc[game.round].push(game);
       return acc;
     }, {});
   }, [games]);
-
-  const round1Matchups = useMemo(() => {
-    return round1SeedPairs.map(([seed1, seed2], index) => ({
-      gameNumber: index + 1,
-      team1: teamsBySeed[seed1],
-      team2: teamsBySeed[seed2]
-    }));
-  }, [teamsBySeed]);
 
   useEffect(() => {
     const loadBracket = async () => {
@@ -79,12 +67,16 @@ function Bracket({ updateUser }) {
         setGames(payload.games || []);
 
         if (payload.bracket?.id) {
-          const entryRes = await apiClient.get(`/brackets/${payload.bracket.id}/entries/me`);
-          if (entryRes.data) {
-            const normalized = normalizePicks(entryRes.data.picks);
-            setEntry(entryRes.data);
-            setPicks(normalized);
-          } else {
+          try {
+            const entryRes = await apiClient.get(`/brackets/${payload.bracket.id}/entries/me`);
+            if (entryRes.data) {
+              const normalized = normalizePicks(entryRes.data.picks);
+              setEntry(entryRes.data);
+              setPicks(normalized);
+            } else {
+              setEntry(null);
+            }
+          } catch (err) {
             setEntry(null);
           }
         }
@@ -98,84 +90,102 @@ function Bracket({ updateUser }) {
     loadBracket();
   }, []);
 
+  const getTeamName = (teamId) => {
+    const team = teamById[teamId];
+    return team ? team.name : 'TBD';
+  };
+
   const applyRound1Pick = (gameNumber, teamId) => {
-    setPicks((prev) => {
-      const next = normalizePicks(prev);
-      next.round1[makeGameKey(gameNumber)] = teamId;
-
-      const semi1Teams = [next.round1.game1, next.round1.game2].filter(Boolean);
-      const semi2Teams = [next.round1.game3, next.round1.game4].filter(Boolean);
-
-      if (next.round2.game1 && !semi1Teams.includes(next.round2.game1)) {
-        next.round2.game1 = undefined;
-      }
-      if (next.round2.game2 && !semi2Teams.includes(next.round2.game2)) {
-        next.round2.game2 = undefined;
-      }
-
-      const finalTeams = [next.round2.game1, next.round2.game2].filter(Boolean);
-      if (next.round3.game1 && !finalTeams.includes(next.round3.game1)) {
-        next.round3.game1 = undefined;
-      }
-
-      return { ...next };
-    });
+    setPicks((prev) => ({
+      ...prev,
+      round1: {
+        ...prev.round1,
+        [makeGameKey(gameNumber)]: teamId
+      },
+      round2: {},
+      round3: {},
+      round4: {}
+    }));
   };
 
   const applyRound2Pick = (gameNumber, teamId) => {
-    setPicks((prev) => {
-      const next = normalizePicks(prev);
-      next.round2[makeGameKey(gameNumber)] = teamId;
+    setPicks((prev) => ({
+      ...prev,
+      round2: {
+        ...prev.round2,
+        [makeGameKey(gameNumber)]: teamId
+      },
+      round3: {},
+      round4: {}
+    }));
+  };
 
-      const finalTeams = [next.round2.game1, next.round2.game2].filter(Boolean);
-      if (next.round3.game1 && !finalTeams.includes(next.round3.game1)) {
-        next.round3.game1 = undefined;
+  const applyRound3Pick = (gameNumber, teamId) => {
+    setPicks((prev) => ({
+      ...prev,
+      round3: {
+        ...prev.round3,
+        [makeGameKey(gameNumber)]: teamId
+      },
+      round4: {}
+    }));
+  };
+
+  const applyRound4Pick = (teamId) => {
+    setPicks((prev) => ({
+      ...prev,
+      round4: {
+        game1: teamId
       }
-
-      return { ...next };
-    });
+    }));
   };
 
-  const applyRound3Pick = (teamId) => {
-    setPicks((prev) => {
-      const next = normalizePicks(prev);
-      next.round3.game1 = teamId;
-      return { ...next };
-    });
-  };
+  // Get available options for each round based on previous picks
+  const getR1Games = () => gamesByRound[1]?.sort((a, b) => a.game_number - b.game_number) || [];
 
-  const getTeamName = (teamId) => {
-    const match = teams.find((team) => team.id === teamId);
-    return match?.name || 'TBD';
-  };
-
-  const round2Options = useMemo(() => {
-    return {
-      game1: [picks.round1.game1, picks.round1.game2].filter(Boolean),
-      game2: [picks.round1.game3, picks.round1.game4].filter(Boolean)
+  const getR2Options = (gameNumber) => {
+    // Round 2 Game 1: from R1 games 1-2 winners
+    // Round 2 Game 2: from R1 games 3-4 winners
+    // Round 2 Game 3: from R1 games 5-6 winners
+    // Round 2 Game 4: from R1 games 7-8 winners
+    const mappings = {
+      1: [1, 2],
+      2: [3, 4],
+      3: [5, 6],
+      4: [7, 8]
     };
-  }, [picks.round1]);
+    const gameNums = mappings[gameNumber] || [];
+    return gameNums.map((gNum) => picks.round1[makeGameKey(gNum)]).filter(Boolean);
+  };
 
-  const finalOptions = useMemo(() => {
-    return [picks.round2.game1, picks.round2.game2].filter(Boolean);
-  }, [picks.round2]);
+  const getR3Options = (gameNumber) => {
+    // Round 3 Game 1: from R2 games 1-2 winners
+    // Round 3 Game 2: from R2 games 3-4 winners
+    const mappings = {
+      1: [1, 2],
+      2: [3, 4]
+    };
+    const gameNums = mappings[gameNumber] || [];
+    return gameNums.map((gNum) => picks.round2[makeGameKey(gNum)]).filter(Boolean);
+  };
+
+  const getR4Options = () => {
+    // Championship: from R3 games 1-2 winners
+    return [picks.round3[makeGameKey(1)], picks.round3[makeGameKey(2)]].filter(Boolean);
+  };
 
   const canSubmit = useMemo(() => {
     return (
-      picks.round1.game1 &&
-      picks.round1.game2 &&
-      picks.round1.game3 &&
-      picks.round1.game4 &&
-      picks.round2.game1 &&
-      picks.round2.game2 &&
-      picks.round3.game1
+      Object.keys(picks.round1).length === 8 &&
+      Object.keys(picks.round2).length === 4 &&
+      Object.keys(picks.round3).length === 2 &&
+      picks.round4.game1 !== undefined
     );
   }, [picks]);
 
   const handleSubmit = async () => {
-    if (!bracket) return;
     if (!canSubmit) {
-      setError('Complete all picks before submitting.');
+      setError('Complete all picks before submitting');
       return;
     }
 
@@ -184,14 +194,11 @@ function Bracket({ updateUser }) {
       setError('');
       setMessage('');
 
-      const response = await apiClient.post(`/brackets/${bracket.id}/entries`, { picks });
-      setEntry(response.data);
-      setMessage('Bracket submitted!');
+      await apiClient.post(`/brackets/${bracket.id}/entries`, { picks });
 
-      if (updateUser) {
-        const profileRes = await apiClient.get('/users/profile');
-        updateUser(profileRes.data);
-      }
+      setEntry({ ...entry, picks });
+      setMessage('Bracket submitted successfully!');
+      if (updateUser) updateUser();
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to submit bracket');
     } finally {
@@ -203,7 +210,7 @@ function Bracket({ updateUser }) {
     return (
       <div className="bracket-page">
         <div className="bracket-header">
-          <h1>3A State Bracket</h1>
+          <h1>Championship Bracket</h1>
           <p>Loading bracket...</p>
         </div>
       </div>
@@ -214,7 +221,7 @@ function Bracket({ updateUser }) {
     return (
       <div className="bracket-page">
         <div className="bracket-header">
-          <h1>3A State Bracket</h1>
+          <h1>Championship Bracket</h1>
           <p className="bracket-subtitle">Bracket coming soon.</p>
         </div>
       </div>
@@ -228,7 +235,7 @@ function Bracket({ updateUser }) {
       <div className="bracket-header">
         <div>
           <h1>{bracket.name}</h1>
-          <p className="bracket-subtitle">{bracket.season || '3A State Basketball'}</p>
+          <p className="bracket-subtitle">{bracket.season || 'Championship Tournament'}</p>
         </div>
         <div className="bracket-meta">
           <div className="bracket-meta__item">
@@ -248,7 +255,7 @@ function Bracket({ updateUser }) {
           className="bracket-link"
           onClick={() => navigate('/bracket-leaderboard')}
         >
-          View Bracket Leaderboard
+          View Leaderboard
         </button>
         {entry && (
           <div className="bracket-entry-summary">
@@ -265,110 +272,126 @@ function Bracket({ updateUser }) {
         <div className="bracket-alert bracket-alert--info">Bracket entries are locked.</div>
       )}
 
-      <div style={{ position: 'relative' }}>
-        <svg
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            zIndex: 0
-          }}
-        >
-          {/* Round 1 to Round 2 connectors */}
-          <g stroke="rgba(86, 177, 255, 0.3)" strokeWidth="2" fill="none">
-            {/* Game 1-2 to Semifinal 1 */}
-            <path d="M 295 80 L 340 150 L 340 160" />
-            <path d="M 295 200 L 340 150 L 340 160" />
-            {/* Game 3-4 to Semifinal 2 */}
-            <path d="M 295 310 L 340 340 L 340 350" />
-            <path d="M 295 440 L 340 340 L 340 350" />
-          </g>
-
-          {/* Round 2 to Round 3 connectors */}
-          <g stroke="rgba(86, 177, 255, 0.3)" strokeWidth="2" fill="none">
-            {/* Semifinal 1 to Finals */}
-            <path d="M 550 180 L 590 220 L 590 235" />
-            {/* Semifinal 2 to Finals */}
-            <path d="M 550 370 L 590 220 L 590 235" />
-          </g>
-        </svg>
-
-        <div className="bracket-grid" style={{ position: 'relative', zIndex: 1 }}>
+      <div className="bracket-grid">
+        {/* Round 1 */}
         <div className="bracket-round">
-          <h2>{roundLabels[1]}</h2>
-          {round1Matchups.map((matchup) => {
-            const winner = gamesByRound[1]?.[matchup.gameNumber]?.winner_team_id || null;
-            const selected = picks.round1[makeGameKey(matchup.gameNumber)];
-            return (
-              <div key={matchup.gameNumber} className="bracket-matchup">
-                <div className="bracket-matchup__label">Game {matchup.gameNumber}</div>
-                {[matchup.team1, matchup.team2].map((team) => (
-                  <button
-                    key={team?.id || `${matchup.gameNumber}-tbd-${team?.seed}`}
-                    type="button"
-                    className={`bracket-team ${selected === team?.id ? 'selected' : ''}`}
-                    onClick={() => applyRound1Pick(matchup.gameNumber, team?.id)}
-                    disabled={!team || bracketLocked || !!entry}
-                  >
-                    <span className="seed">#{team?.seed || '-'}</span>
-                    <span className="name">{team?.name || 'TBD'}</span>
-                    {winner === team?.id && <span className="winner-badge">W</span>}
-                  </button>
-                ))}
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="bracket-round">
-          <h2>{roundLabels[2]}</h2>
-          {[1, 2].map((gameNumber) => {
-            const options = round2Options[makeGameKey(gameNumber)] || [];
-            const winner = gamesByRound[2]?.[gameNumber]?.winner_team_id || null;
-            const selected = picks.round2[makeGameKey(gameNumber)];
-            return (
-              <div key={gameNumber} className="bracket-matchup">
-                <div className="bracket-matchup__label">Game {gameNumber}</div>
-                {options.length === 0 && <div className="bracket-placeholder">Pick quarterfinal winners</div>}
-                {options.map((teamId) => (
-                  <button
-                    key={teamId}
-                    type="button"
-                    className={`bracket-team ${selected === teamId ? 'selected' : ''}`}
-                    onClick={() => applyRound2Pick(gameNumber, teamId)}
-                    disabled={bracketLocked || !!entry}
-                  >
-                    <span className="name">{getTeamName(teamId)}</span>
-                    {winner === teamId && <span className="winner-badge">W</span>}
-                  </button>
-                ))}
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="bracket-round">
-          <h2>{roundLabels[3]}</h2>
-          <div className="bracket-matchup">
-            <div className="bracket-matchup__label">Championship</div>
-            {finalOptions.length === 0 && <div className="bracket-placeholder">Pick semifinal winners</div>}
-            {finalOptions.map((teamId) => (
-              <button
-                key={teamId}
-                type="button"
-                className={`bracket-team ${picks.round3.game1 === teamId ? 'selected' : ''}`}
-                onClick={() => applyRound3Pick(teamId)}
-                disabled={bracketLocked || !!entry}
-              >
-                <span className="name">{getTeamName(teamId)}</span>
-                {gamesByRound[3]?.[1]?.winner_team_id === teamId && <span className="winner-badge">W</span>}
-              </button>
-            ))}
+          <h2>{ROUND_LABELS[1]}</h2>
+          <div className="bracket-games">
+            {getR1Games().map((game) => {
+              const winner = game.winner_team_id;
+              const selected = picks.round1[makeGameKey(game.game_number)];
+              return (
+                <div key={game.id} className="bracket-game">
+                  <div className="game-label">G{game.game_number}</div>
+                  {[game.team1_id, game.team2_id].map((teamId, idx) => (
+                    <button
+                      key={teamId || idx}
+                      className={`team-btn ${selected === teamId ? 'selected' : ''}`}
+                      onClick={() => applyRound1Pick(game.game_number, teamId)}
+                      disabled={!teamId || bracketLocked || !!entry}
+                    >
+                      <span className="team-seed">#{teamById[teamId]?.seed || '?'}</span>
+                      <span className="team-name">{getTeamName(teamId)}</span>
+                      {winner === teamId && <span className="winner-badge">✓</span>}
+                    </button>
+                  ))}
+                </div>
+              );
+            })}
           </div>
         </div>
+
+        {/* Round 2 */}
+        <div className="bracket-round">
+          <h2>{ROUND_LABELS[2]}</h2>
+          <div className="bracket-games">
+            {[1, 2, 3, 4].map((gameNum) => {
+              const options = getR2Options(gameNum);
+              const game = gamesByRound[2]?.find((g) => g.game_number === gameNum);
+              const winner = game?.winner_team_id;
+              const selected = picks.round2[makeGameKey(gameNum)];
+
+              return (
+                <div key={gameNum} className="bracket-game">
+                  <div className="game-label">G{gameNum}</div>
+                  {options.length === 0 && <div className="bracket-placeholder">—</div>}
+                  {options.map((teamId) => (
+                    <button
+                      key={teamId}
+                      className={`team-btn ${selected === teamId ? 'selected' : ''}`}
+                      onClick={() => applyRound2Pick(gameNum, teamId)}
+                      disabled={bracketLocked || !!entry}
+                    >
+                      <span className="team-name">{getTeamName(teamId)}</span>
+                      {winner === teamId && <span className="winner-badge">✓</span>}
+                    </button>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Round 3 */}
+        <div className="bracket-round">
+          <h2>{ROUND_LABELS[3]}</h2>
+          <div className="bracket-games">
+            {[1, 2].map((gameNum) => {
+              const options = getR3Options(gameNum);
+              const game = gamesByRound[3]?.find((g) => g.game_number === gameNum);
+              const winner = game?.winner_team_id;
+              const selected = picks.round3[makeGameKey(gameNum)];
+
+              return (
+                <div key={gameNum} className="bracket-game">
+                  <div className="game-label">G{gameNum}</div>
+                  {options.length === 0 && <div className="bracket-placeholder">—</div>}
+                  {options.map((teamId) => (
+                    <button
+                      key={teamId}
+                      className={`team-btn ${selected === teamId ? 'selected' : ''}`}
+                      onClick={() => applyRound3Pick(gameNum, teamId)}
+                      disabled={bracketLocked || !!entry}
+                    >
+                      <span className="team-name">{getTeamName(teamId)}</span>
+                      {winner === teamId && <span className="winner-badge">✓</span>}
+                    </button>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Round 4 (Championship) */}
+        <div className="bracket-round">
+          <h2>{ROUND_LABELS[4]}</h2>
+          <div className="bracket-games">
+            {(() => {
+              const options = getR4Options();
+              const game = gamesByRound[4]?.[0];
+              const winner = game?.winner_team_id;
+              const selected = picks.round4.game1;
+
+              return (
+                <div className="bracket-game">
+                  <div className="game-label">Championship</div>
+                  {options.length === 0 && <div className="bracket-placeholder">—</div>}
+                  {options.map((teamId) => (
+                    <button
+                      key={teamId}
+                      className={`team-btn ${selected === teamId ? 'selected' : ''}`}
+                      onClick={() => applyRound4Pick(teamId)}
+                      disabled={bracketLocked || !!entry}
+                    >
+                      <span className="team-name">{getTeamName(teamId)}</span>
+                      {winner === teamId && <span className="winner-badge">✓</span>}
+                    </button>
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
         </div>
       </div>
 
