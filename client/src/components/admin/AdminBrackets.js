@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import apiClient from '../../utils/axios';
 import AdminCard from './AdminCard';
 import AdminToolbar from './AdminToolbar';
@@ -50,20 +50,7 @@ function AdminBrackets() {
     }, {});
   }, [games]);
 
-  const fetchBrackets = async () => {
-    try {
-      const response = await apiClient.get('/brackets/admin');
-      const list = response.data || [];
-      setBrackets(list);
-      if (!selectedBracketId && list.length > 0) {
-        setSelectedBracketId(list[0].id);
-      }
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to load brackets');
-    }
-  };
-
-  const fetchBracketDetails = async (id) => {
+  const fetchBracketDetails = useCallback(async (id) => {
     if (!id) return;
     try {
       const response = await apiClient.get(`/brackets/${id}`);
@@ -90,9 +77,22 @@ function AdminBrackets() {
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to load bracket details');
     }
-  };
+  }, []);
 
   useEffect(() => {
+    const fetchBrackets = async () => {
+      try {
+        const response = await apiClient.get('/brackets/admin');
+        const list = response.data || [];
+        setBrackets(list);
+        if (!selectedBracketId && list.length > 0) {
+          setSelectedBracketId(list[0].id);
+        }
+      } catch (err) {
+        setError(err.response?.data?.error || 'Failed to load brackets');
+      }
+    };
+
     const init = async () => {
       setLoading(true);
       await fetchBrackets();
@@ -105,7 +105,7 @@ function AdminBrackets() {
     if (selectedBracketId) {
       fetchBracketDetails(selectedBracketId);
     }
-  }, [selectedBracketId]);
+  }, [selectedBracketId, fetchBracketDetails]);
 
   const handleCreateBracket = async (event) => {
     event.preventDefault();
