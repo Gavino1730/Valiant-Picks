@@ -30,11 +30,33 @@
   font-weight: 600;
   border: none;
   cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.bracket-link:hover {
+  background: #003d7a;
+  opacity: 1;
+}
+
+.bracket-link:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .leaderboard-header .subtitle {
   margin: 6px 0 0;
   color: var(--color-text-secondary);
+}
+
+.leaderboard-header .subtitle--small {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.leaderboard-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .leaderboard-table {

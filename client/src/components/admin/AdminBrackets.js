@@ -178,6 +178,25 @@ function AdminBrackets() {
     }
   };
 
+  const handleDeleteBracket = async () => {
+    if (!selectedBracketId) return;
+    
+    if (!window.confirm(`Are you sure you want to delete the bracket "${bracket?.name}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await apiClient.delete(`/brackets/${selectedBracketId}`);
+      setMessage('Bracket deleted successfully');
+      setError('');
+      setBracket(null);
+      setSelectedBracketId('');
+      await fetchBrackets();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to delete bracket');
+    }
+  };
+
   if (loading) {
     return <div className="admin-loading">Loading brackets...</div>;
   }
@@ -314,7 +333,16 @@ function AdminBrackets() {
                   <option value="completed">Completed</option>
                 </select>
               </div>
-              <button type="submit" className="admin-button admin-button--primary">Save Settings</button>
+              <div className="admin-toolbar">
+                <button type="submit" className="admin-button admin-button--primary">Save Settings</button>
+                <button 
+                  type="button" 
+                  className="admin-button admin-button--destructive" 
+                  onClick={handleDeleteBracket}
+                >
+                  Delete Bracket
+                </button>
+              </div>
             </form>
           </AdminCard>
 

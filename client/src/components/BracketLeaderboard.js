@@ -10,29 +10,36 @@ function BracketLeaderboard() {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [lastRefresh, setLastRefresh] = useState(null);
+
+  const loadLeaderboard = async () => {
+    try {
+      setLoading(true);
+      const response = await apiClient.get('/brackets/active');
+      if (!response.data?.bracket) {
+        setBracket(null);
+        setEntries([]);
+        return;
+      }
+
+      setBracket(response.data.bracket);
+      const leaderboardRes = await apiClient.get(`/brackets/${response.data.bracket.id}/leaderboard`);
+      setEntries(leaderboardRes.data || []);
+      setLastRefresh(new Date().toLocaleTimeString());
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to load bracket leaderboard');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadLeaderboard = async () => {
-      try {
-        setLoading(true);
-        const response = await apiClient.get('/brackets/active');
-        if (!response.data?.bracket) {
-          setBracket(null);
-          setEntries([]);
-          return;
-        }
-
-        setBracket(response.data.bracket);
-        const leaderboardRes = await apiClient.get(`/brackets/${response.data.bracket.id}/leaderboard`);
-        setEntries(leaderboardRes.data || []);
-      } catch (err) {
-        setError(err.response?.data?.error || 'Failed to load bracket leaderboard');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadLeaderboard();
+    
+    // Auto-refresh leaderboard every 10 seconds
+    const interval = setInterval(loadLeaderboard, 10000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   const rankedEntries = useMemo(() => {
@@ -66,14 +73,25 @@ function BracketLeaderboard() {
         <div>
           <h1>{bracket.name} Leaderboard</h1>
           <p className="subtitle">Points and payouts for submitted brackets</p>
+          {lastRefresh && <p className="subtitle subtitle--small">Last updated: {lastRefresh}</p>}
         </div>
-        <button
-          type="button"
-          className="bracket-link"
-          onClick={() => navigate('/bracket')}
-        >
-          Back to bracket
-        </button>
+        <div className="leaderboard-actions">
+          <button
+            type="button"
+            className="bracket-link"
+            onClick={loadLeaderboard}
+            disabled={loading}
+          >
+            {loading ? 'Refreshing...' : 'Refresh'}
+          </button>
+          <button
+            type="button"
+            className="bracket-link"
+            onClick={() => navigate('/bracket')}
+          >
+            Back to bracket
+          </button>
+        </div>
       </div>
 
       {error && <div className="bracket-alert bracket-alert--error">{error}</div>}

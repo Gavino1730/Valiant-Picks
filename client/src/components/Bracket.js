@@ -48,45 +48,45 @@ function Bracket({ updateUser }) {
     }, {});
   }, [games]);
 
-  useEffect(() => {
-    const loadBracket = async () => {
-      try {
-        setLoading(true);
-        const response = await apiClient.get('/brackets/active');
-        const payload = response.data;
+  const loadBracket = async () => {
+    try {
+      setLoading(true);
+      const response = await apiClient.get('/brackets/active');
+      const payload = response.data;
 
-        if (!payload?.bracket) {
-          setBracket(null);
-          setTeams([]);
-          setGames([]);
-          return;
-        }
+      if (!payload?.bracket) {
+        setBracket(null);
+        setTeams([]);
+        setGames([]);
+        return;
+      }
 
-        setBracket(payload.bracket);
-        setTeams(payload.teams || []);
-        setGames(payload.games || []);
+      setBracket(payload.bracket);
+      setTeams(payload.teams || []);
+      setGames(payload.games || []);
 
-        if (payload.bracket?.id) {
-          try {
-            const entryRes = await apiClient.get(`/brackets/${payload.bracket.id}/entries/me`);
-            if (entryRes.data) {
-              const normalized = normalizePicks(entryRes.data.picks);
-              setEntry(entryRes.data);
-              setPicks(normalized);
-            } else {
-              setEntry(null);
-            }
-          } catch (err) {
+      if (payload.bracket?.id) {
+        try {
+          const entryRes = await apiClient.get(`/brackets/${payload.bracket.id}/entries/me`);
+          if (entryRes.data) {
+            const normalized = normalizePicks(entryRes.data.picks);
+            setEntry(entryRes.data);
+            setPicks(normalized);
+          } else {
             setEntry(null);
           }
+        } catch (err) {
+          setEntry(null);
         }
-      } catch (err) {
-        setError(err.response?.data?.error || 'Failed to load bracket');
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to load bracket');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadBracket();
   }, []);
 
@@ -209,8 +209,10 @@ function Bracket({ updateUser }) {
 
       await apiClient.post(`/brackets/${bracket.id}/entries`, { picks });
 
-      setEntry({ ...entry, picks });
       setMessage('Bracket submitted successfully!');
+      
+      // Refresh bracket data to show the submission
+      await loadBracket();
       
       // Fetch updated user profile (balance may have changed due to entry fee)
       if (updateUser) {
