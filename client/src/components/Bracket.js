@@ -198,7 +198,16 @@ function Bracket({ updateUser }) {
 
       setEntry({ ...entry, picks });
       setMessage('Bracket submitted successfully!');
-      if (updateUser) updateUser();
+      
+      // Fetch updated user profile (balance may have changed due to entry fee)
+      if (updateUser) {
+        try {
+          const response = await apiClient.get('/users/profile');
+          updateUser(response.data);
+        } catch (err) {
+          console.error('Failed to fetch updated user profile:', err);
+        }
+      }
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to submit bracket');
     } finally {
@@ -252,8 +261,8 @@ function Bracket({ updateUser }) {
     <div className="bracket-page">
       <div className="bracket-header">
         <div>
-          <h1>{bracket.name}</h1>
-          <p className="bracket-subtitle">{bracket.season || 'Championship Tournament'}</p>
+          <h1>Championship Bracket</h1>
+          <p className="bracket-subtitle">3A Mens Basketball Tournament</p>
         </div>
         <div className="bracket-meta">
           <div className="bracket-meta__item">
@@ -263,6 +272,16 @@ function Bracket({ updateUser }) {
           <div className="bracket-meta__item">
             <span className="label">Payout</span>
             <span className="value">{formatCurrency(Number(bracket.payout_per_point || 0))} per point</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="beta-warning">
+        <div className="beta-warning-content">
+          <span className="beta-icon">⚠️</span>
+          <div className="beta-text">
+            <strong>Feature in Development</strong>
+            <p>This bracket feature is not yet in production. Brackets created here will not be saved or scored. This is a preview of the upcoming feature.</p>
           </div>
         </div>
       </div>
