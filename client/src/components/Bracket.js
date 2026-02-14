@@ -265,7 +265,38 @@ function Bracket({ updateUser }) {
         <div className="bracket-alert bracket-alert--info">Bracket entries are locked.</div>
       )}
 
-      <div className="bracket-grid">
+      <div style={{ position: 'relative' }}>
+        <svg
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            zIndex: 0
+          }}
+        >
+          {/* Round 1 to Round 2 connectors */}
+          <g stroke="rgba(86, 177, 255, 0.3)" strokeWidth="2" fill="none">
+            {/* Game 1-2 to Semifinal 1 */}
+            <path d="M 295 80 L 340 150 L 340 160" />
+            <path d="M 295 200 L 340 150 L 340 160" />
+            {/* Game 3-4 to Semifinal 2 */}
+            <path d="M 295 310 L 340 340 L 340 350" />
+            <path d="M 295 440 L 340 340 L 340 350" />
+          </g>
+
+          {/* Round 2 to Round 3 connectors */}
+          <g stroke="rgba(86, 177, 255, 0.3)" strokeWidth="2" fill="none">
+            {/* Semifinal 1 to Finals */}
+            <path d="M 550 180 L 590 220 L 590 235" />
+            {/* Semifinal 2 to Finals */}
+            <path d="M 550 370 L 590 220 L 590 235" />
+          </g>
+        </svg>
+
+        <div className="bracket-grid" style={{ position: 'relative', zIndex: 1 }}>
         <div className="bracket-round">
           <h2>{roundLabels[1]}</h2>
           {round1Matchups.map((matchup) => {
