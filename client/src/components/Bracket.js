@@ -369,6 +369,7 @@ function Bracket({ updateUser }) {
             ))}
           </div>
         </div>
+        </div>
       </div>
 
       {!entry && (
