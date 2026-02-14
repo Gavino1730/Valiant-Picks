@@ -41,6 +41,7 @@ const Leaderboard = lazyWithRetry(() => import('./components/Leaderboard'));
 const Teams = lazyWithRetry(() => import('./components/Teams'));
 const Games = lazyWithRetry(() => import('./components/Games'));
 const Bracket = lazyWithRetry(() => import('./components/Bracket'));
+const ActualBracket = lazyWithRetry(() => import('./components/ActualBracket'));
 const BracketLeaderboard = lazyWithRetry(() => import('./components/BracketLeaderboard'));
 const Notifications = lazyWithRetry(() => import('./components/Notifications'));
 const HowToUse = lazyWithRetry(() => import('./components/HowToUse'));
@@ -496,6 +497,7 @@ function AppContent() {
             <NavLink label="Teams" pageKey="teams" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="My Picks" pageKey="bets" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="Bracket" pageKey="bracket" currentPage={page} onNavigate={handlePageChange} />
+            <NavLink label="Results" pageKey="actual-bracket" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="Leaderboard" pageKey="leaderboard" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="How to Use" pageKey="howto" currentPage={page} onNavigate={handlePageChange} />
           </div>
@@ -654,6 +656,13 @@ function AppContent() {
             Bracket
           </button>
           <button 
+            onClick={() => handlePageChange('actual-bracket')} 
+            className={page === 'actual-bracket' ? 'active' : ''}
+          >
+            <span className="menu-icon">🏁</span>
+            Results
+          </button>
+          <button 
             onClick={() => handlePageChange('leaderboard')} 
             className={page === 'leaderboard' ? 'active' : ''}
           >
@@ -723,6 +732,7 @@ function AppContent() {
             <Route path="/teams" element={<Teams />} />
             <Route path="/bets" element={<BetList />} />
             <Route path="/bracket" element={<Bracket updateUser={updateUser} />} />
+            <Route path="/actual-bracket" element={<ActualBracket />} />
             <Route path="/bracket-leaderboard" element={<BracketLeaderboard />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/notifications" element={<Notifications />} />

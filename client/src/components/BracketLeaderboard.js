@@ -87,6 +87,13 @@ function BracketLeaderboard() {
           <button
             type="button"
             className="bracket-link"
+            onClick={() => navigate('/actual-bracket')}
+          >
+            View Results
+          </button>
+          <button
+            type="button"
+            className="bracket-link"
             onClick={() => navigate('/bracket')}
           >
             Back to bracket

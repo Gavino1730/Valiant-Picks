@@ -415,25 +415,37 @@ router.get('/:id', optionalAuth, async (req, res) => {
 
 router.get('/:id/leaderboard', optionalAuth, async (req, res) => {
   try {
-    const { data, error } = await supabase
+    const { data: entries, error: entriesError } = await supabase
       .from('bracket_entries')
-      .select(`
-        id,
-        points,
-        payout,
-        created_at,
-        users (
-          id,
-          username,
-          is_admin
-        )
-      `)
+      .select('id, points, payout, created_at, user_id')
       .eq('bracket_id', req.params.id)
       .order('points', { ascending: false });
 
-    if (error) throw error;
+    if (entriesError) throw entriesError;
 
-    const filtered = (data || []).filter((entry) => !entry.users?.is_admin);
+    if (!entries || entries.length === 0) {
+      return res.json([]);
+    }
+
+    // Get user info for each entry
+    const userIds = [...new Set(entries.map(e => e.user_id))];
+    const { data: users, error: usersError } = await supabase
+      .from('users')
+      .select('id, username, is_admin')
+      .in('id', userIds);
+
+    if (usersError) throw usersError;
+
+    // Merge user data into entries
+    const userMap = {};
+    (users || []).forEach(u => { userMap[u.id] = u; });
+
+    const enrichedEntries = entries.map(entry => ({
+      ...entry,
+      users: userMap[entry.user_id] || null
+    }));
+
+    const filtered = enrichedEntries.filter((entry) => !entry.users?.is_admin);
     res.json(filtered);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch bracket leaderboard: ' + err.message });
@@ -512,6 +524,7 @@ router.post('/:id/entries', authenticateToken, async (req, res) => {
   const { picks } = req.body;
 
   try {
+      console.log(`[BRACKET] User ${req.user.id} posting to ${req.params.id}`);
     const { data: bracket, error: bracketError } = await supabase
       .from('brackets')
       .select('*')
@@ -673,8 +686,6 @@ router.post('/:id/entries', authenticateToken, async (req, res) => {
         picks: safePicks,
         points: 0,
         payout: 0,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
       })
       .select()
       .single();
