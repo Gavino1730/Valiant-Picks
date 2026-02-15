@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../utils/axios';
 import { formatCurrency } from '../utils/currency';
@@ -32,6 +32,13 @@ function Bracket({ updateUser }) {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [entryStats, setEntryStats] = useState(null);
+  const [entryStatsError, setEntryStatsError] = useState('');
+  const [recentAdvance, setRecentAdvance] = useState(null);
+
+  const bracketScrollRef = useRef(null);
+  const bracketGridRef = useRef(null);
+  const roundRefs = useRef({});
 
   const teamById = useMemo(() => {
     return teams.reduce((acc, team) => {
@@ -90,6 +97,33 @@ function Bracket({ updateUser }) {
     loadBracket();
   }, []);
 
+  useEffect(() => {
+    if (!recentAdvance) return;
+
+    const timer = setTimeout(() => {
+      setRecentAdvance(null);
+    }, 700);
+
+    return () => clearTimeout(timer);
+  }, [recentAdvance]);
+
+  useEffect(() => {
+    if (!bracket?.id || entry) return;
+
+    const loadEntryStats = async () => {
+      try {
+        setEntryStatsError('');
+        const response = await apiClient.get(`/brackets/${bracket.id}/entry-stats`);
+        setEntryStats(response.data || null);
+        setEntryStatsError('');
+      } catch (err) {
+        setEntryStatsError('Stats unavailable');
+      }
+    };
+
+    loadEntryStats();
+  }, [bracket?.id, entry]);
+
   const isPickCorrect = (round, gameNumber, pickTeamId) => {
     if (!entry || !entry.picks) return null;
     
@@ -107,6 +141,23 @@ function Bracket({ updateUser }) {
   const getTeamSeed = (teamId) => {
     const team = teamById[teamId];
     return team ? team.seed : '?';
+  };
+
+  const getRoundPick = (round, gameNumber) => {
+    return picks[`round${round}`]?.[makeGameKey(gameNumber)];
+  };
+
+  const getDerivedTeamIds = (round, gameNumber, game) => {
+    if (round === 1) return [game.team1_id, game.team2_id];
+
+    const prevRound = round - 1;
+    const prevGame1 = (gameNumber * 2) - 1;
+    const prevGame2 = gameNumber * 2;
+    const team1Id = getRoundPick(prevRound, prevGame1) || null;
+    const team2Id = getRoundPick(prevRound, prevGame2) || null;
+
+    if (team1Id || team2Id) return [team1Id, team2Id];
+    return [game.team1_id, game.team2_id];
   };
 
   const applyRound1Pick = (gameNumber, teamId) => {
@@ -197,10 +248,114 @@ function Bracket({ updateUser }) {
     }
   };
 
+  const scrollToRound = (round) => {
+    const node = roundRefs.current[round];
+    if (!node) return;
+    node.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+  };
+
+  const scrollToBracket = () => {
+    if (!bracketGridRef.current) return;
+    bracketGridRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const triggerAdvance = (round, gameNumber, teamId) => {
+    const nextRound = round + 1;
+    if (nextRound > 4) return;
+
+    const nextGameNumber = Math.ceil(gameNumber / 2);
+    setRecentAdvance({ round: nextRound, gameNumber: nextGameNumber, teamId });
+
+    setTimeout(() => {
+      scrollToRound(nextRound);
+    }, 140);
+  };
+
+  const chooseWinner = (team1Id, team2Id, mode) => {
+    if (!team1Id || !team2Id) return team1Id || team2Id || null;
+
+    if (mode === 'random') {
+      return Math.random() > 0.5 ? team1Id : team2Id;
+    }
+
+    const seed1 = Number(teamById[team1Id]?.seed ?? 99);
+    const seed2 = Number(teamById[team2Id]?.seed ?? 99);
+
+    if (mode === 'favorites') {
+      return seed1 <= seed2 ? team1Id : team2Id;
+    }
+
+    return seed1 >= seed2 ? team1Id : team2Id;
+  };
+
+  const buildAutoPicks = (mode) => {
+    const round1Games = (gamesByRound[1] || []).sort((a, b) => a.game_number - b.game_number);
+    const round2Games = (gamesByRound[2] || []).sort((a, b) => a.game_number - b.game_number);
+    const round3Games = (gamesByRound[3] || []).sort((a, b) => a.game_number - b.game_number);
+    const round4Games = (gamesByRound[4] || []).sort((a, b) => a.game_number - b.game_number);
+
+    const round1 = {};
+    const round2 = {};
+    const round3 = {};
+    const round4 = {};
+
+    round1Games.forEach((game) => {
+      const winner = chooseWinner(game.team1_id, game.team2_id, mode);
+      if (winner) {
+        round1[makeGameKey(game.game_number)] = winner;
+      }
+    });
+
+    round2Games.forEach((game) => {
+      const team1Id = round1[makeGameKey((game.game_number * 2) - 1)];
+      const team2Id = round1[makeGameKey(game.game_number * 2)];
+      const winner = chooseWinner(team1Id, team2Id, mode);
+      if (winner) {
+        round2[makeGameKey(game.game_number)] = winner;
+      }
+    });
+
+    round3Games.forEach((game) => {
+      const team1Id = round2[makeGameKey((game.game_number * 2) - 1)];
+      const team2Id = round2[makeGameKey(game.game_number * 2)];
+      const winner = chooseWinner(team1Id, team2Id, mode);
+      if (winner) {
+        round3[makeGameKey(game.game_number)] = winner;
+      }
+    });
+
+    round4Games.forEach((game) => {
+      const team1Id = round3[makeGameKey((game.game_number * 2) - 1)];
+      const team2Id = round3[makeGameKey(game.game_number * 2)];
+      const winner = chooseWinner(team1Id, team2Id, mode);
+      if (winner) {
+        round4[makeGameKey(game.game_number)] = winner;
+      }
+    });
+
+    if (round4Games.length === 0) {
+      const team1Id = round3[makeGameKey(1)];
+      const team2Id = round3[makeGameKey(2)];
+      const winner = chooseWinner(team1Id, team2Id, mode);
+      if (winner) {
+        round4.game1 = winner;
+      }
+    }
+
+    return { round1, round2, round3, round4 };
+  };
+
+  const handleAutoPick = (mode) => {
+    if (bracketLocked || entry) return;
+    setError('');
+    setMessage('');
+    setPicks(buildAutoPicks(mode));
+  };
+
   const placeholderByRound = {
-    2: 'Awaiting Round 1 Picks',
-    3: 'Awaiting Quarterfinal Picks',
-    4: 'Awaiting Semifinal Picks'
+    2: 'Finish Round 1 to unlock',
+    3: 'Finish Quarterfinals to unlock',
+    4: 'Finish Semifinals to unlock'
   };
 
   const renderGame = (game, round) => {
@@ -212,8 +367,8 @@ function Bracket({ updateUser }) {
     const roundKey = `round${round}`;
     const pickKey = makeGameKey(gameNumber);
     const selectedTeamId = picks[roundKey]?.[pickKey];
-    const teamIds = [game.team1_id, game.team2_id];
-    const hasTeams = teamIds.some(Boolean);
+    const teamIds = getDerivedTeamIds(round, gameNumber, game);
+    const hasTeams = teamIds.every(Boolean);
 
     const handleTeamClick = (teamId) => {
       if (isDisabled || !teamId) return;
@@ -227,6 +382,8 @@ function Bracket({ updateUser }) {
       } else if (round === 4) {
         applyRound4Pick(teamId);
       }
+
+      triggerAdvance(round, gameNumber, teamId);
     };
 
     const getPickStatus = (teamId) => {
@@ -241,6 +398,9 @@ function Bracket({ updateUser }) {
       <div key={game.id} className={`bracket-game ${round === 4 ? 'championship-game' : ''}`}>
         {round === 4 && <div className="championship-icon">🏆</div>}
         <div className="game-label">Game {gameNumber}</div>
+        {round === 1 && !selectedTeamId && !isDisabled && (
+          <div className="bracket-ghost-hint">Click a team to advance</div>
+        )}
         {!hasTeams && (
           <div className="bracket-placeholder">{placeholderByRound[round] || 'Awaiting teams'}</div>
         )}
@@ -249,11 +409,16 @@ function Bracket({ updateUser }) {
             const isSelected = selectedTeamId === teamId;
             const pickStatus = getPickStatus(teamId);
             const isWinner = game.winner_team_id === teamId;
+            const shouldAdvance =
+              recentAdvance &&
+              recentAdvance.round === round &&
+              recentAdvance.gameNumber === gameNumber &&
+              recentAdvance.teamId === teamId;
 
             return (
               <button
                 key={teamId || idx}
-                className={`team-btn ${isSelected ? 'selected' : ''} ${pickStatus}`}
+                className={`team-btn ${isSelected ? 'selected' : ''} ${pickStatus} ${shouldAdvance ? 'just-advanced' : ''}`}
                 onClick={() => handleTeamClick(teamId)}
                 disabled={isDisabled || !teamId}
               >
@@ -295,9 +460,27 @@ function Bracket({ updateUser }) {
   }
 
   const bracketLocked = bracket.status !== 'open';
+  const roundTargets = { 1: 8, 2: 4, 3: 2, 4: 1 };
+  const roundCounts = {
+    1: Object.keys(picks.round1).length,
+    2: Object.keys(picks.round2).length,
+    3: Object.keys(picks.round3).length,
+    4: picks.round4.game1 !== undefined ? 1 : 0
+  };
+  const round1Complete = roundCounts[1] === roundTargets[1];
+  const round1Started = roundCounts[1] > 0 && !round1Complete;
+  const showQuickPicks = !entry && !bracketLocked;
 
   return (
     <div className="bracket-page">
+      {!entry && !bracketLocked && (
+        <div className="bracket-start-cta">
+          <button type="button" className="bracket-start-button" onClick={scrollToBracket}>
+            Start My Bracket
+          </button>
+          <p className="bracket-start-subtext">Takes about 2 minutes. No money. Just for fun.</p>
+        </div>
+      )}
       <div className="bracket-header">
         <div>
           <h1>Championship Bracket</h1>
@@ -348,8 +531,69 @@ function Bracket({ updateUser }) {
         )}
       </div>
 
+      {showQuickPicks && (
+        <div className="bracket-quick-picks">
+          <span className="quick-picks-label">Quick Pick</span>
+          <button
+            type="button"
+            className="quick-pick-btn"
+            onClick={() => handleAutoPick('favorites')}
+            disabled={bracketLocked || entry}
+          >
+            Auto fill favorites
+          </button>
+          <button
+            type="button"
+            className="quick-pick-btn"
+            onClick={() => handleAutoPick('random')}
+            disabled={bracketLocked || entry}
+          >
+            Auto fill random
+          </button>
+          <button
+            type="button"
+            className="quick-pick-btn"
+            onClick={() => handleAutoPick('higher-seeds')}
+            disabled={bracketLocked || entry}
+          >
+            Auto fill higher seeds
+          </button>
+        </div>
+      )}
+
       {error && <div className="bracket-alert bracket-alert--error">{error}</div>}
       {message && <div className="bracket-alert bracket-alert--success">{message}</div>}
+
+      {entry && (
+        <div className="bracket-success">
+          <div className="bracket-success__header">
+            <h3>Bracket submitted!</h3>
+            <p>Your picks are locked in. Good luck.</p>
+          </div>
+          <div className="bracket-snapshot">
+            <div className="snapshot-item">
+              <span className="snapshot-label">Champion</span>
+              <span className="snapshot-value">{getTeamName(picks.round4.game1)}</span>
+            </div>
+            <div className="snapshot-item">
+              <span className="snapshot-label">Round 1 picks</span>
+              <span className="snapshot-value">{roundCounts[1]} locked</span>
+            </div>
+            <div className="snapshot-item">
+              <span className="snapshot-label">Final four</span>
+              <span className="snapshot-value">{roundCounts[3]} picks</span>
+            </div>
+          </div>
+          <div className="bracket-success__actions">
+            <button type="button" className="bracket-link" onClick={() => navigate('/bracket-leaderboard')}>
+              View Leaderboard
+            </button>
+            <button type="button" className="bracket-link" onClick={() => navigate('/actual-bracket')}>
+              View Live Bracket
+            </button>
+          </div>
+        </div>
+      )}
 
       {bracketLocked && !entry && (
         <div className="bracket-alert bracket-alert--info">Bracket entries are locked.</div>
@@ -403,17 +647,61 @@ function Bracket({ updateUser }) {
         </div>
       )}
 
-      <div className="bracket-grid">
-        {[1, 2, 3, 4].map((round) => (
-          <div key={round} className={`bracket-round bracket-round--r${round}`}>
-            <h2>{ROUND_LABELS[round]}</h2>
+      {!entry && !bracketLocked && entryStats?.totalEntries > 0 && (
+        <div className="bracket-leaderboard-tease">
+          <h4>What other players picked</h4>
+          <div className="tease-items">
+            {entryStats.topChampionPick && (
+              <p>
+                {entryStats.topChampionPick.count} people picked {entryStats.topChampionPick.teamName} to win.
+              </p>
+            )}
+            {entryStats.rareUpset && (
+              <p>
+                Only {entryStats.rareUpset.percent}% picked {entryStats.rareUpset.teamName} as an upset.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+      {!entry && !bracketLocked && entryStatsError && (
+        <div className="bracket-alert bracket-alert--info">Leaderboard stats are warming up.</div>
+      )}
+
+      <div className="bracket-scroll" ref={bracketScrollRef}>
+        <div className="bracket-grid" ref={bracketGridRef}>
+          {[1, 2, 3, 4].map((round) => (
+            <div
+              key={round}
+              ref={(node) => {
+                if (node) roundRefs.current[round] = node;
+              }}
+              data-round={ROUND_LABELS[round]}
+              className={`bracket-round bracket-round--r${round}`}
+            >
+              <div className="round-header">
+                <h2>{ROUND_LABELS[round]}</h2>
+                <span
+                  className={`round-point-tag round-point-tag--r${round}`}
+                  title={round === 1 ? 'Low points' : 'Worth more points'}
+                >
+                  {round === 1 && 'Low points'}
+                  {round === 4 && 'Big points'}
+                  {round === 2 && 'More points'}
+                  {round === 3 && 'More points'}
+                </span>
+              </div>
+              {round === 1 && round1Started && (
+                <div className="round-hint">Nice. Keep going.</div>
+              )}
             <div className="bracket-games">
               {(gamesByRound[round] || [])
                 .sort((a, b) => a.game_number - b.game_number)
                 .map((game) => renderGame(game, round))}
             </div>
-          </div>
-        ))}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Progress Indicator */}
@@ -421,33 +709,68 @@ function Bracket({ updateUser }) {
         <div className="bracket-progress">
           <div className="progress-item">
             <span className="progress-label">Round 1</span>
-            <span className={`progress-count ${Object.keys(picks.round1).length === 8 ? 'complete' : ''}`}>
-              {Object.keys(picks.round1).length}/8
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{ width: `${Math.min((roundCounts[1] / roundTargets[1]) * 100, 100)}%` }}
+              />
+            </div>
+            <span className={`progress-count ${roundCounts[1] === roundTargets[1] ? 'complete' : ''}`}>
+              {roundCounts[1]}/{roundTargets[1]}
             </span>
           </div>
           <div className="progress-item">
             <span className="progress-label">Quarterfinals</span>
-            <span className={`progress-count ${Object.keys(picks.round2).length === 4 ? 'complete' : ''}`}>
-              {Object.keys(picks.round2).length}/4
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{ width: `${Math.min((roundCounts[2] / roundTargets[2]) * 100, 100)}%` }}
+              />
+            </div>
+            <span className={`progress-count ${roundCounts[2] === roundTargets[2] ? 'complete' : ''}`}>
+              {roundCounts[2]}/{roundTargets[2]}
             </span>
           </div>
           <div className="progress-item">
             <span className="progress-label">Semifinals</span>
-            <span className={`progress-count ${Object.keys(picks.round3).length === 2 ? 'complete' : ''}`}>
-              {Object.keys(picks.round3).length}/2
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{ width: `${Math.min((roundCounts[3] / roundTargets[3]) * 100, 100)}%` }}
+              />
+            </div>
+            <span className={`progress-count ${roundCounts[3] === roundTargets[3] ? 'complete' : ''}`}>
+              {roundCounts[3]}/{roundTargets[3]}
             </span>
           </div>
           <div className="progress-item">
             <span className="progress-label">Championship</span>
-            <span className={`progress-count ${picks.round4.game1 !== undefined ? 'complete' : ''}`}>
-              {picks.round4.game1 !== undefined ? '1' : '0'}/1
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{ width: `${Math.min((roundCounts[4] / roundTargets[4]) * 100, 100)}%` }}
+              />
+            </div>
+            <span className={`progress-count ${roundCounts[4] === roundTargets[4] ? 'complete' : ''}`}>
+              {roundCounts[4]}/{roundTargets[4]}
             </span>
           </div>
+          {round1Complete && (
+            <div className="round-complete">Round 1 complete, 8 picks locked.</div>
+          )}
         </div>
       )}
 
       {!entry && (
         <div className="bracket-submit">
+          <div className="bracket-confirm">
+            <h4>Before you submit</h4>
+            <ul>
+              <li>You can’t edit after submitting</li>
+              <li>This is just for fun</li>
+              <li>Leaderboard updates after games start</li>
+            </ul>
+          </div>
           <button
             type="button"
             className="bracket-submit-btn"

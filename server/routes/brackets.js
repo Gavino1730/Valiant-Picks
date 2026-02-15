@@ -452,6 +452,107 @@ router.get('/:id/leaderboard', optionalAuth, async (req, res) => {
   }
 });
 
+router.get('/:id/entry-stats', optionalAuth, async (req, res) => {
+  try {
+    const { data: entries, error: entriesError } = await supabase
+      .from('bracket_entries')
+      .select('picks')
+      .eq('bracket_id', req.params.id);
+
+    if (entriesError) throw entriesError;
+
+    if (!entries || entries.length === 0) {
+      return res.json({ totalEntries: 0 });
+    }
+
+    const [{ data: teams }, { data: round1Games }] = await Promise.all([
+      supabase
+        .from('bracket_teams')
+        .select('id, name, seed')
+        .eq('bracket_id', req.params.id),
+      supabase
+        .from('bracket_games')
+        .select('game_number, team1_id, team2_id')
+        .eq('bracket_id', req.params.id)
+        .eq('round', 1)
+    ]);
+
+    const teamById = (teams || []).reduce((acc, team) => {
+      acc[team.id] = team;
+      return acc;
+    }, {});
+
+    const underdogByGame = (round1Games || []).reduce((acc, game) => {
+      const team1 = teamById[game.team1_id];
+      const team2 = teamById[game.team2_id];
+      if (!team1 || !team2) return acc;
+
+      const underdog = Number(team1.seed) > Number(team2.seed) ? team1 : team2;
+      acc[game.game_number] = {
+        teamId: underdog.id,
+        teamName: underdog.name
+      };
+      return acc;
+    }, {});
+
+    const championCounts = {};
+    const gamePickCounts = {};
+
+    entries.forEach((entry) => {
+      const safePicks = coercePicks(entry.picks);
+      const championId = safePicks.round4?.game1;
+      if (championId) {
+        championCounts[championId] = (championCounts[championId] || 0) + 1;
+      }
+
+      Object.entries(safePicks.round1 || {}).forEach(([gameKey, teamId]) => {
+        const gameNumber = Number(String(gameKey).replace('game', ''));
+        if (!gameNumber || !teamId || !underdogByGame[gameNumber]) return;
+
+        if (!gamePickCounts[gameNumber]) {
+          gamePickCounts[gameNumber] = { total: 0, underdog: 0 };
+        }
+
+        gamePickCounts[gameNumber].total += 1;
+        if (teamId === underdogByGame[gameNumber].teamId) {
+          gamePickCounts[gameNumber].underdog += 1;
+        }
+      });
+    });
+
+    const totalEntries = entries.length;
+    let topChampionPick = null;
+
+    Object.entries(championCounts).forEach(([teamId, count]) => {
+      if (!topChampionPick || count > topChampionPick.count) {
+        topChampionPick = {
+          teamId,
+          teamName: teamById[teamId]?.name || 'Unknown',
+          count,
+          percent: Math.round((count / totalEntries) * 100)
+        };
+      }
+    });
+
+    let rareUpset = null;
+    Object.entries(gamePickCounts).forEach(([gameNumber, counts]) => {
+      if (!counts.total || !counts.underdog) return;
+      const percent = Math.round((counts.underdog / counts.total) * 100);
+      if (!rareUpset || percent < rareUpset.percent) {
+        rareUpset = {
+          teamId: underdogByGame[gameNumber]?.teamId || null,
+          teamName: underdogByGame[gameNumber]?.teamName || 'Unknown',
+          percent
+        };
+      }
+    });
+
+    res.json({ totalEntries, topChampionPick, rareUpset });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch bracket entry stats: ' + err.message });
+  }
+});
+
 router.get('/:id/entries/me', authenticateToken, async (req, res) => {
   try {
     const { data, error } = await supabase
