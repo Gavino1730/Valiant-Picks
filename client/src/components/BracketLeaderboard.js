@@ -73,6 +73,7 @@ function BracketLeaderboard() {
         <div>
           <h1>{bracket.name} Leaderboard</h1>
           <p className="subtitle">Points and payouts for submitted brackets</p>
+          <p className="subtitle subtitle--deadline">⏰ Picks must be submitted by February 26 at midnight</p>
           {lastRefresh && <p className="subtitle subtitle--small">Last updated: {lastRefresh}</p>}
         </div>
         <div className="leaderboard-actions">

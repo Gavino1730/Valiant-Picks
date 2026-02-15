@@ -478,19 +478,15 @@ function Bracket({ updateUser }) {
           <button type="button" className="bracket-start-button" onClick={scrollToBracket}>
             Start My Bracket
           </button>
-          <p className="bracket-start-subtext">Takes about 2 minutes. No money. Just for fun.</p>
         </div>
       )}
       <div className="bracket-header">
         <div>
           <h1>Championship Bracket</h1>
           <p className="bracket-subtitle">3A Mens Basketball Tournament</p>
+          <p className="bracket-deadline">⏰ Picks must be submitted by February 26 at midnight</p>
         </div>
         <div className="bracket-meta">
-          <div className="bracket-meta__item">
-            <span className="label">Entry Fee</span>
-            <span className="value">{formatCurrency(Number(bracket.entry_fee || 0))}</span>
-          </div>
           <div className="bracket-meta__item">
             <span className="label">Payout</span>
             <span className="value">{formatCurrency(Number(bracket.payout_per_point || 0))} per point</span>
@@ -631,7 +627,7 @@ function Bracket({ updateUser }) {
             <div className="instruction-card">
               <div className="instruction-number">4</div>
               <h4>Submit When Done</h4>
-              <p>When all 15 picks are complete, click "Submit Bracket". Once you submit, you can't change your picks. The payout is based on how many you get right!</p>
+              <p>When all 15 picks are complete, click "Submit Bracket". Once you submit, you can't change your picks. <strong>Deadline: February 26 at midnight.</strong> The payout is based on how many you get right!</p>
             </div>
           </div>
 
@@ -641,7 +637,6 @@ function Bracket({ updateUser }) {
               <li><strong>Balance Risk:</strong> Mix safe teams (seed 1-4) with some upsets to score big</li>
               <li><strong>Higher seeds beat lower seeds more:</strong> Seed 1 usually beats seed 16, but upsets happen!</li>
               <li><strong>Check the Leaderboard:</strong> See how other players picked - learn from the top scorers</li>
-              <li><strong>Entry fee:</strong> Make sure you have enough Valiant Bucks for the entry fee shown above</li>
             </ul>
           </div>
         </div>
@@ -767,7 +762,7 @@ function Bracket({ updateUser }) {
             <h4>Before you submit</h4>
             <ul>
               <li>You can’t edit after submitting</li>
-              <li>This is just for fun</li>
+              <li>Deadline: February 26 at midnight</li>
               <li>Leaderboard updates after games start</li>
             </ul>
           </div>

@@ -53,6 +53,11 @@
   opacity: 0.8;
 }
 
+.leaderboard-header .subtitle--deadline {
+  color: #ff6b35;
+  font-weight: 600;
+}
+
 .leaderboard-actions {
   display: flex;
   gap: 8px;

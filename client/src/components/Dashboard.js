@@ -384,7 +384,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
           
           <div className="playoff-teams">
             <div className="playoff-team boys-team">
-              <h3>👦 Boys Basketball</h3>
+              <h3>Boys Basketball</h3>
               <p className="playoff-champ">League Champions!</p>
               <div className="team-stats">
                 <div className="stat">
@@ -403,7 +403,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             </div>
 
             <div className="playoff-team girls-team">
-              <h3>👧 Girls Basketball</h3>
+              <h3>Girls Basketball</h3>
               <p className="playoff-champ">League Champions!</p>
               <div className="team-stats">
                 <div className="stat">
@@ -419,6 +419,27 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                   <span className="stat-value">#7</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Coming Soon - 3A Brackets */}
+      <div className="coming-soon-section">
+        <div className="coming-soon-content">
+          <div className="coming-soon-header">
+            <h2>Coming Soon</h2>
+            <span className="coming-soon-badge">UPCOMING</span>
+          </div>
+          <p className="coming-soon-description">Get ready for the 3A Basketball Playoffs!</p>
+          <div className="coming-soon-brackets">
+            <div className="bracket-preview boys-bracket">
+              <h3>3A Boys Basketball Bracket</h3>
+              <p className="bracket-status">Tournament bracket & betting coming soon</p>
+            </div>
+            <div className="bracket-preview girls-bracket">
+              <h3>3A Girls Basketball Bracket</h3>
+              <p className="bracket-status">Tournament bracket & betting coming soon</p>
             </div>
           </div>
         </div>

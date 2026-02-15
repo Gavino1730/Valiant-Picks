@@ -3056,6 +3056,137 @@
   }
 }
 
+/* Coming Soon Section */
+.coming-soon-section {
+  background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #1a237e 100%);
+  border: 3px solid #5c6bc0;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 32px rgba(92, 107, 192, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: slideDown 0.4s ease;
+}
+
+.coming-soon-content {
+  text-align: center;
+}
+
+.coming-soon-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.coming-soon-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #7986cb;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(92, 107, 192, 0.3);
+}
+
+.coming-soon-badge {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff5722 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.coming-soon-description {
+  font-size: 1.1rem;
+  color: #b0bec5;
+  margin: 0 0 1.5rem 0;
+  font-weight: 500;
+}
+
+.coming-soon-brackets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.bracket-preview {
+  background: rgba(92, 107, 192, 0.1);
+  border: 2px solid rgba(92, 107, 192, 0.3);
+  border-radius: 10px;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bracket-preview:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(92, 107, 192, 0.2);
+  border-color: rgba(92, 107, 192, 0.6);
+}
+
+.bracket-preview h3 {
+  font-size: 1.2rem;
+  color: #7986cb;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.bracket-status {
+  font-size: 0.95rem;
+  color: #90caf9;
+  margin: 0;
+  font-weight: 500;
+}
+
+.boys-bracket {
+  border-left: 4px solid #1976d2;
+}
+
+.girls-bracket {
+  border-left: 4px solid #d81b60;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .coming-soon-section {
+    padding: 1.5rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .coming-soon-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .coming-soon-description {
+    font-size: 1rem;
+  }
+
+  .coming-soon-brackets {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .bracket-preview {
+    padding: 1rem;
+  }
+
+  .bracket-preview h3 {
+    font-size: 1.1rem;
+  }
+}
+
 /* Upcoming Section */
 .upcoming-section h3 {
   color: #4a90e2;

@@ -64,6 +64,13 @@
   font-weight: 500;
 }
 
+.bracket-deadline {
+  margin: 8px 0 0;
+  color: #ff6b35;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .bracket-meta {
   display: flex;
   gap: 16px;
@@ -539,17 +546,6 @@
 
 .bracket-round:last-child::before {
   display: none;
-}
-
-.bracket-round::after {
-  content: attr(data-round);
-  position: absolute;
-  bottom: 8px;
-  right: 12px;
-  font-size: 12px;
-  color: rgba(100, 181, 246, 0.3);
-  font-weight: 600;
-  text-transform: uppercase;
 }
 
 .bracket-round h2 {
