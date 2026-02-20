@@ -115,10 +115,6 @@ const recomputeBracketGames = async (bracketId) => {
     return acc;
   }, {});
 
-  const round1 = byRound[1] || {};
-  const round2 = byRound[2] || {};
-  const round3 = byRound[3] || {};
-
   const updateGame = async (game, team1Id, team2Id) => {
     if (!game) return null;
     let winnerId = game.winner_team_id;
@@ -147,25 +143,40 @@ const recomputeBracketGames = async (bracketId) => {
     return { ...game, team1_id: team1Id, team2_id: team2Id, winner_team_id: winnerId, status };
   };
 
-  const round2Game1 = await updateGame(
-    round2[1],
-    round1[1]?.winner_team_id || null,
-    round1[2]?.winner_team_id || null
-  );
+  // Dynamically propagate winners round-by-round
+  const rounds = Object.keys(byRound).map(Number).sort((a, b) => a - b);
+  const updatedByRound = { ...byRound };
 
-  const round2Game2 = await updateGame(
-    round2[2],
-    round1[3]?.winner_team_id || null,
-    round1[4]?.winner_team_id || null
-  );
+  for (let i = 1; i < rounds.length; i++) {
+    const prevRound = rounds[i - 1];
+    const currRound = rounds[i];
+    const prevGames = updatedByRound[prevRound] || {};
+    const currGames = updatedByRound[currRound] || {};
+    const prevGameNumbers = Object.keys(prevGames).map(Number).sort((a, b) => a - b);
 
-  const round3Game1 = await updateGame(
-    round3[1],
-    round2Game1?.winner_team_id || null,
-    round2Game2?.winner_team_id || null
-  );
+    // Each game in this round gets winners from 2 consecutive previous-round games
+    const currGameNumbers = Object.keys(currGames).map(Number).sort((a, b) => a - b);
+    for (let g = 0; g < currGameNumbers.length; g++) {
+      const gameNum = currGameNumbers[g];
+      const prevIdx = g * 2;
+      const team1Source = prevGameNumbers[prevIdx];
+      const team2Source = prevGameNumbers[prevIdx + 1];
+      const team1Id = team1Source != null ? (prevGames[team1Source]?.winner_team_id || null) : null;
+      const team2Id = team2Source != null ? (prevGames[team2Source]?.winner_team_id || null) : null;
 
-  if (round3Game1?.winner_team_id) {
+      const updated = await updateGame(currGames[gameNum], team1Id, team2Id);
+      if (updated) {
+        if (!updatedByRound[currRound]) updatedByRound[currRound] = {};
+        updatedByRound[currRound][gameNum] = updated;
+      }
+    }
+  }
+
+  // Check if the final round's only game has a winner → bracket completed
+  const finalRound = rounds[rounds.length - 1];
+  const finalGames = updatedByRound[finalRound] || {};
+  const finalGameNums = Object.keys(finalGames).map(Number);
+  if (finalGameNums.length === 1 && finalGames[finalGameNums[0]]?.winner_team_id) {
     await supabase
       .from('brackets')
       .update({ status: 'completed', updated_at: new Date().toISOString() })
@@ -271,14 +282,16 @@ router.put('/:id', authenticateToken, adminOnly, async (req, res) => {
 router.put('/:id/teams', authenticateToken, adminOnly, async (req, res) => {
   const { teams } = req.body;
 
-  if (!Array.isArray(teams) || teams.length !== 8) {
-    return res.status(400).json({ error: 'Teams array must include 8 seeds' });
+  const VALID_SIZES = [8, 16];
+  if (!Array.isArray(teams) || !VALID_SIZES.includes(teams.length)) {
+    return res.status(400).json({ error: `Teams array must include 8 or 16 seeds (got ${Array.isArray(teams) ? teams.length : 0})` });
   }
 
+  const teamCount = teams.length;
   const seeds = teams.map((team) => Number(team.seed));
   const uniqueSeeds = new Set(seeds);
-  if (uniqueSeeds.size !== 8 || seeds.some((seed) => !Number.isInteger(seed) || seed < 1 || seed > 8)) {
-    return res.status(400).json({ error: 'Seeds must be unique numbers from 1 to 8' });
+  if (uniqueSeeds.size !== teamCount || seeds.some((seed) => !Number.isInteger(seed) || seed < 1 || seed > teamCount)) {
+    return res.status(400).json({ error: `Seeds must be unique numbers from 1 to ${teamCount}` });
   }
 
   try {
@@ -323,24 +336,55 @@ router.post('/:id/seed', authenticateToken, adminOnly, async (req, res) => {
       .eq('bracket_id', req.params.id);
 
     if (teamsError) throw teamsError;
-    if (!teams || teams.length !== 8) {
-      return res.status(400).json({ error: 'You must set all 8 teams before seeding games' });
+    const VALID_SIZES = [8, 16];
+    if (!teams || !VALID_SIZES.includes(teams.length)) {
+      return res.status(400).json({ error: 'You must set 8 or 16 teams before seeding games' });
     }
 
+    const teamCount = teams.length;
     const teamBySeed = teams.reduce((acc, team) => {
       acc[team.seed] = team.id;
       return acc;
     }, {});
 
-    const games = [
-      { round: 1, game_number: 1, team1_id: teamBySeed[1], team2_id: teamBySeed[8] },
-      { round: 1, game_number: 2, team1_id: teamBySeed[4], team2_id: teamBySeed[5] },
-      { round: 1, game_number: 3, team1_id: teamBySeed[2], team2_id: teamBySeed[7] },
-      { round: 1, game_number: 4, team1_id: teamBySeed[3], team2_id: teamBySeed[6] },
-      { round: 2, game_number: 1, team1_id: null, team2_id: null },
-      { round: 2, game_number: 2, team1_id: null, team2_id: null },
-      { round: 3, game_number: 1, team1_id: null, team2_id: null }
-    ].map((game) => ({
+    let games;
+    if (teamCount === 16) {
+      // 16-seed bracket: 8 R1, 4 R2, 2 R3, 1 R4
+      games = [
+        // Round 1 (8 games) - standard NCAA seeding
+        { round: 1, game_number: 1, team1_id: teamBySeed[1],  team2_id: teamBySeed[16] },
+        { round: 1, game_number: 2, team1_id: teamBySeed[8],  team2_id: teamBySeed[9] },
+        { round: 1, game_number: 3, team1_id: teamBySeed[5],  team2_id: teamBySeed[12] },
+        { round: 1, game_number: 4, team1_id: teamBySeed[4],  team2_id: teamBySeed[13] },
+        { round: 1, game_number: 5, team1_id: teamBySeed[6],  team2_id: teamBySeed[11] },
+        { round: 1, game_number: 6, team1_id: teamBySeed[3],  team2_id: teamBySeed[14] },
+        { round: 1, game_number: 7, team1_id: teamBySeed[7],  team2_id: teamBySeed[10] },
+        { round: 1, game_number: 8, team1_id: teamBySeed[2],  team2_id: teamBySeed[15] },
+        // Round 2 (4 games) - quarterfinals
+        { round: 2, game_number: 1, team1_id: null, team2_id: null },
+        { round: 2, game_number: 2, team1_id: null, team2_id: null },
+        { round: 2, game_number: 3, team1_id: null, team2_id: null },
+        { round: 2, game_number: 4, team1_id: null, team2_id: null },
+        // Round 3 (2 games) - semifinals
+        { round: 3, game_number: 1, team1_id: null, team2_id: null },
+        { round: 3, game_number: 2, team1_id: null, team2_id: null },
+        // Round 4 (1 game) - championship
+        { round: 4, game_number: 1, team1_id: null, team2_id: null }
+      ];
+    } else {
+      // 8-seed bracket: 4 R1, 2 R2, 1 R3
+      games = [
+        { round: 1, game_number: 1, team1_id: teamBySeed[1], team2_id: teamBySeed[8] },
+        { round: 1, game_number: 2, team1_id: teamBySeed[4], team2_id: teamBySeed[5] },
+        { round: 1, game_number: 3, team1_id: teamBySeed[2], team2_id: teamBySeed[7] },
+        { round: 1, game_number: 4, team1_id: teamBySeed[3], team2_id: teamBySeed[6] },
+        { round: 2, game_number: 1, team1_id: null, team2_id: null },
+        { round: 2, game_number: 2, team1_id: null, team2_id: null },
+        { round: 3, game_number: 1, team1_id: null, team2_id: null }
+      ];
+    }
+
+    games = games.map((game) => ({
       bracket_id: req.params.id,
       ...game
     }));
@@ -674,89 +718,50 @@ router.post('/:id/entries', authenticateToken, async (req, res) => {
 
     const safePicks = coercePicks(picks);
 
-    // Validate Round 1: All 8 picks must be valid (one of the team1/team2 for that game)
-    const round1Games = gamesByRound[1] || [];
-    if (round1Games.length !== 8) {
-      return res.status(400).json({ error: 'Invalid bracket structure - expected 8 Round 1 games' });
+    // Determine rounds present in bracket
+    const rounds = Object.keys(gamesByRound).map(Number).sort((a, b) => a - b);
+    if (rounds.length < 2) {
+      return res.status(400).json({ error: 'Invalid bracket structure - need at least 2 rounds' });
     }
 
-    const round1Picks = {};
-    for (const game of round1Games) {
-      const pick = safePicks.round1[normalizePickKey(game.game_number)];
-      if (!pick) {
-        return res.status(400).json({ error: `Complete all Round 1 picks (game ${game.game_number} missing)` });
+    // Validate picks round-by-round dynamically
+    const picksByRound = {};
+
+    for (let ri = 0; ri < rounds.length; ri++) {
+      const round = rounds[ri];
+      const roundKey = `round${round}`;
+      const roundGames = gamesByRound[round] || [];
+      const roundLabel = ri === rounds.length - 1 ? 'Championship' : `Round ${round}`;
+
+      picksByRound[round] = {};
+
+      for (const game of roundGames) {
+        const pick = safePicks[roundKey]?.[normalizePickKey(game.game_number)];
+        if (!pick) {
+          return res.status(400).json({ error: `Complete all ${roundLabel} picks (game ${game.game_number} missing)` });
+        }
+
+        if (ri === 0) {
+          // First round: pick must be one of the two seeded teams
+          if (pick !== game.team1_id && pick !== game.team2_id) {
+            return res.status(400).json({ error: `${roundLabel} game ${game.game_number} pick must be one of the teams` });
+          }
+        } else {
+          // Later rounds: pick must come from corresponding previous-round winners
+          const prevRound = rounds[ri - 1];
+          const prevPicks = picksByRound[prevRound] || {};
+          const prevGameNumbers = Object.keys(prevPicks).map(Number).sort((a, b) => a - b);
+          // Each game in this round pulls from 2 consecutive previous-round games
+          const prevIdx = (game.game_number - 1) * 2;
+          const allowedFrom = [prevGameNumbers[prevIdx], prevGameNumbers[prevIdx + 1]].filter(n => n != null);
+          const allowedTeams = allowedFrom.map(gn => prevPicks[gn]);
+          if (!allowedTeams.includes(pick)) {
+            return res.status(400).json({ error: `${roundLabel} game ${game.game_number} must come from Round ${prevRound} winners` });
+          }
+        }
+
+        picksByRound[round][game.game_number] = pick;
       }
-      if (pick !== game.team1_id && pick !== game.team2_id) {
-        return res.status(400).json({ error: `Round 1 game ${game.game_number} pick must be one of the teams` });
-      }
-      round1Picks[game.game_number] = pick;
-    }
-
-    // Validate Round 2: 4 picks, each must be a winner from the corresponding games
-    // Game 1: from R1 games 1-2, Game 2: from R1 games 3-4, Game 3: from R1 games 5-6, Game 4: from R1 games 7-8
-    const round2Games = gamesByRound[2] || [];
-    if (round2Games.length !== 4) {
-      return res.status(400).json({ error: 'Invalid bracket structure - expected 4 quarterfinal games' });
-    }
-
-    const round2Picks = {};
-    const round2Validations = [
-      { gameNum: 1, allowedFrom: [1, 2] },
-      { gameNum: 2, allowedFrom: [3, 4] },
-      { gameNum: 3, allowedFrom: [5, 6] },
-      { gameNum: 4, allowedFrom: [7, 8] }
-    ];
-
-    for (const validation of round2Validations) {
-      const pick = safePicks.round2[normalizePickKey(validation.gameNum)];
-      if (!pick) {
-        return res.status(400).json({ error: `Complete all Round 2 picks (game ${validation.gameNum} missing)` });
-      }
-      const allowedTeams = validation.allowedFrom.map(rNum => round1Picks[rNum]);
-      if (!allowedTeams.includes(pick)) {
-        return res.status(400).json({ error: `Round 2 game ${validation.gameNum} must come from Round 1 winners` });
-      }
-      round2Picks[validation.gameNum] = pick;
-    }
-
-    // Validate Round 3: 2 picks, each from corresponding R2 winners
-    // Game 1: from R2 games 1-2, Game 2: from R2 games 3-4
-    const round3Games = gamesByRound[3] || [];
-    if (round3Games.length !== 2) {
-      return res.status(400).json({ error: 'Invalid bracket structure - expected 2 semifinal games' });
-    }
-
-    const round3Picks = {};
-    const round3Validations = [
-      { gameNum: 1, allowedFrom: [1, 2] },
-      { gameNum: 2, allowedFrom: [3, 4] }
-    ];
-
-    for (const validation of round3Validations) {
-      const pick = safePicks.round3[normalizePickKey(validation.gameNum)];
-      if (!pick) {
-        return res.status(400).json({ error: `Complete all Round 3 picks (game ${validation.gameNum} missing)` });
-      }
-      const allowedTeams = validation.allowedFrom.map(rNum => round2Picks[rNum]);
-      if (!allowedTeams.includes(pick)) {
-        return res.status(400).json({ error: `Round 3 game ${validation.gameNum} must come from Round 2 winners` });
-      }
-      round3Picks[validation.gameNum] = pick;
-    }
-
-    // Validate Round 4 (Championship): 1 pick from R3 winners
-    const round4Games = gamesByRound[4] || [];
-    if (round4Games.length !== 1) {
-      return res.status(400).json({ error: 'Invalid bracket structure - expected 1 championship game' });
-    }
-
-    const round4Pick = safePicks.round4[normalizePickKey(1)];
-    if (!round4Pick) {
-      return res.status(400).json({ error: 'Complete the championship pick' });
-    }
-    const allowedChampionshipTeams = [round3Picks[1], round3Picks[2]];
-    if (!allowedChampionshipTeams.includes(round4Pick)) {
-      return res.status(400).json({ error: 'Championship pick must come from your Round 3 winners' });
     }
 
     // Deduct entry fee if applicable
