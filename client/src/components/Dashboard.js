@@ -397,7 +397,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                 </div>
                 <div className="stat">
                   <span className="stat-label">Overall Ranking</span>
-                  <span className="stat-value">#3</span>
+                  <span className="stat-value">#2</span>
                 </div>
               </div>
             </div>
@@ -416,7 +416,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                 </div>
                 <div className="stat">
                   <span className="stat-label">Overall Ranking</span>
-                  <span className="stat-value">#7</span>
+                  <span className="stat-value">#6</span>
                 </div>
               </div>
             </div>
