@@ -3,11 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import apiClient from '../utils/axios';
 import '../styles/Bracket.css';
 
-const ROUND_LABELS = {
-  1: 'Round 1',
-  2: 'Quarterfinals',
-  3: 'Semifinals',
-  4: 'Championship'
+const getRoundLabel = (round, totalRounds) => {
+  if (totalRounds === 3) {
+    if (round === 1) return 'Quarterfinals';
+    if (round === 2) return 'Semifinals';
+    if (round === 3) return 'Championship';
+  }
+
+  if (totalRounds === 4) {
+    if (round === 1) return 'Round 1';
+    if (round === 2) return 'Quarterfinals';
+    if (round === 3) return 'Semifinals';
+    if (round === 4) return 'Championship';
+  }
+
+  return `Round ${round}`;
+};
+
+const getRoundPlaceholder = (round, totalRounds) => {
+  const priorLabel = getRoundLabel(round - 1, totalRounds);
+  if (round === 1) return 'Game not scheduled';
+  if (round === totalRounds) return `Awaiting ${priorLabel} Results`;
+  return `Awaiting ${priorLabel}`;
 };
 
 function ActualBracket() {
@@ -32,6 +49,12 @@ function ActualBracket() {
       return acc;
     }, {});
   }, [games]);
+
+  const sortedRounds = useMemo(() => {
+    return Object.keys(gamesByRound).map(Number).sort((a, b) => a - b);
+  }, [gamesByRound]);
+
+  const totalRounds = sortedRounds.length;
 
   const loadBracket = async () => {
     try {
@@ -105,8 +128,6 @@ function ActualBracket() {
     );
   }
 
-  const getR1Games = () => gamesByRound[1]?.sort((a, b) => a.game_number - b.game_number) || [];
-
   return (
     <div className="bracket-page actual-bracket-page">
       <div className="bracket-header">
@@ -140,134 +161,49 @@ function ActualBracket() {
       {error && <div className="bracket-alert bracket-alert--error">{error}</div>}
 
       <div className="bracket-grid">
-        {/* Round 1 - 8 games */}
-        <div className="bracket-round bracket-round--r1">
-          <h2>{ROUND_LABELS[1]}</h2>
-          <div className="bracket-games">
-            {getR1Games().map((game, idx) => {
-              const winner = game.winner_team_id;
-              return (
-                <div key={game.id} className="bracket-game" data-game-idx={idx}>
-                  <div className="game-label">{getGameLabel(game)}</div>
-                  {[game.team1_id, game.team2_id].map((teamId, tidx) => (
+        {sortedRounds.map((round) => {
+          const roundGames = (gamesByRound[round] || []).sort((a, b) => a.game_number - b.game_number);
+          const isChampionshipRound = round === sortedRounds[sortedRounds.length - 1] && roundGames.length === 1;
+
+          return (
+            <div key={round} className={`bracket-round bracket-round--r${round}`}>
+              <h2>{getRoundLabel(round, totalRounds)}</h2>
+              <div className="bracket-games">
+                {roundGames.map((game, idx) => {
+                  const winner = game.winner_team_id;
+                  const hasTeams = game.team1_id || game.team2_id;
+
+                  return (
                     <div
-                      key={teamId || tidx}
-                      className={`team-display ${winner === teamId ? 'winner' : ''} ${winner && winner !== teamId ? 'loser' : ''}`}
+                      key={game.id}
+                      className={`bracket-game ${isChampionshipRound ? 'championship-game' : ''}`}
+                      data-game-idx={idx}
                     >
-                      <span className="team-seed">#{getTeamSeed(teamId)}</span>
-                      <span className="team-name">{getTeamName(teamId)}</span>
-                      {winner === teamId && <span className="winner-badge">✓</span>}
+                      {isChampionshipRound && <div className="championship-icon">🏆</div>}
+                      <div className="game-label">{getGameLabel(game)}</div>
+                      {!hasTeams && <div className="bracket-placeholder">{getRoundPlaceholder(round, totalRounds)}</div>}
+                      {hasTeams && (
+                        <>
+                          {[game.team1_id, game.team2_id].filter(Boolean).map((teamId) => (
+                            <div
+                              key={teamId}
+                              className={`team-display ${winner === teamId ? 'winner' : ''} ${winner && winner !== teamId ? 'loser' : ''} ${winner === teamId && isChampionshipRound ? 'champion' : ''}`}
+                            >
+                              <span className="team-seed">#{getTeamSeed(teamId)}</span>
+                              <span className="team-name">{getTeamName(teamId)}</span>
+                              {winner === teamId && <span className="winner-badge">✓</span>}
+                              {winner === teamId && isChampionshipRound && <span className="champion-label">CHAMPION</span>}
+                            </div>
+                          ))}
+                        </>
+                      )}
                     </div>
-                  ))}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Round 2 - 4 games */}
-        <div className="bracket-round bracket-round--r2">
-          <h2>{ROUND_LABELS[2]}</h2>
-          <div className="bracket-games">
-            {(gamesByRound[2] || []).sort((a, b) => a.game_number - b.game_number).map((game, idx) => {
-              const winner = game.winner_team_id;
-              const hasTeams = game.team1_id || game.team2_id;
-              
-              return (
-                <div key={game.id} className="bracket-game" data-game-idx={idx}>
-                  <div className="game-label">{getGameLabel(game)}</div>
-                  {!hasTeams && <div className="bracket-placeholder">Awaiting Round 1 Results</div>}
-                  {hasTeams && (
-                    <>
-                      {[game.team1_id, game.team2_id].filter(Boolean).map((teamId) => (
-                        <div
-                          key={teamId}
-                          className={`team-display ${winner === teamId ? 'winner' : ''} ${winner && winner !== teamId ? 'loser' : ''}`}
-                        >
-                          <span className="team-seed">#{getTeamSeed(teamId)}</span>
-                          <span className="team-name">{getTeamName(teamId)}</span>
-                          {winner === teamId && <span className="winner-badge">✓</span>}
-                        </div>
-                      ))}
-                    </>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Round 3 - 2 games (Semifinals) */}
-        <div className="bracket-round bracket-round--r3">
-          <h2>{ROUND_LABELS[3]}</h2>
-          <div className="bracket-games">
-            {(gamesByRound[3] || []).sort((a, b) => a.game_number - b.game_number).map((game, idx) => {
-              const winner = game.winner_team_id;
-              const hasTeams = game.team1_id || game.team2_id;
-              
-              return (
-                <div key={game.id} className="bracket-game" data-game-idx={idx}>
-                  <div className="game-label">{getGameLabel(game)}</div>
-                  {!hasTeams && <div className="bracket-placeholder">Awaiting Quarterfinal Results</div>}
-                  {hasTeams && (
-                    <>
-                      {[game.team1_id, game.team2_id].filter(Boolean).map((teamId) => (
-                        <div
-                          key={teamId}
-                          className={`team-display ${winner === teamId ? 'winner' : ''} ${winner && winner !== teamId ? 'loser' : ''}`}
-                        >
-                          <span className="team-seed">#{getTeamSeed(teamId)}</span>
-                          <span className="team-name">{getTeamName(teamId)}</span>
-                          {winner === teamId && <span className="winner-badge">✓</span>}
-                        </div>
-                      ))}
-                    </>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Round 4 (Championship) */}
-        <div className="bracket-round bracket-round--r4">
-          <h2>{ROUND_LABELS[4]}</h2>
-          <div className="bracket-games">
-            {(() => {
-              const game = gamesByRound[4]?.[0];
-              if (!game) return <div className="bracket-placeholder">Championship game not scheduled</div>;
-              
-              const winner = game.winner_team_id;
-              const hasTeams = game.team1_id || game.team2_id;
-
-              return (
-                <div className="bracket-game championship-game">
-                  <div className="championship-icon">🏆</div>
-                  {!hasTeams && <div className="bracket-placeholder">Awaiting Semifinal Results</div>}
-                  {hasTeams && (
-                    <>
-                      {[game.team1_id, game.team2_id].filter(Boolean).map((teamId) => (
-                        <div
-                          key={teamId}
-                          className={`team-display ${winner === teamId ? 'winner champion' : ''} ${winner && winner !== teamId ? 'loser' : ''}`}
-                        >
-                          <span className="team-seed">#{getTeamSeed(teamId)}</span>
-                          <span className="team-name">{getTeamName(teamId)}</span>
-                          {winner === teamId && (
-                            <>
-                              <span className="winner-badge">✓</span>
-                              <span className="champion-label">CHAMPION</span>
-                            </>
-                          )}
-                        </div>
-                      ))}
-                    </>
-                  )}
-                </div>
-              );
-            })()}
-          </div>
-        </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Legend */}

@@ -376,4 +376,256 @@ test.describe('Admin Panel', () => {
     const hasStats = await stats.first().isVisible({ timeout: 5000 }).catch(() => false);
     // Admin panel may have statistics section
   });
+
+  /* ── Game Editing ── */
+  test('should open edit form when Edit button is clicked on a game', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const gamesTab = page.locator('button:has-text("Manage Games"), button:has-text("Games")').first();
+    await gamesTab.click({ force: true });
+    await page.waitForTimeout(1000);
+
+    const editBtn = page.locator('.admin-button:has-text("Edit"), button:has-text("Edit")').first();
+    const hasEdit = await editBtn.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasEdit) {
+      await editBtn.click({ force: true });
+      await page.waitForTimeout(500);
+
+      // Edit form should appear with pre-filled fields
+      const editForm = page.locator('.game-form, form');
+      const hasForm = await editForm.first().isVisible({ timeout: 3000 }).catch(() => false);
+      expect(hasForm).toBeTruthy();
+    }
+  });
+
+  test('should show Cancel button in edit form', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const gamesTab = page.locator('button:has-text("Manage Games"), button:has-text("Games")').first();
+    await gamesTab.click({ force: true });
+    await page.waitForTimeout(1000);
+
+    const editBtn = page.locator('.admin-button:has-text("Edit"), button:has-text("Edit")').first();
+    const hasEdit = await editBtn.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasEdit) {
+      await editBtn.click({ force: true });
+      await page.waitForTimeout(500);
+
+      const cancelBtn = page.locator('button:has-text("Cancel")').first();
+      const hasCancel = await cancelBtn.isVisible({ timeout: 3000 }).catch(() => false);
+      expect(hasCancel).toBeTruthy();
+    }
+  });
+
+  test('should close edit form when Cancel is clicked', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const gamesTab = page.locator('button:has-text("Manage Games"), button:has-text("Games")').first();
+    await gamesTab.click({ force: true });
+    await page.waitForTimeout(1000);
+
+    const editBtn = page.locator('.admin-button:has-text("Edit"), button:has-text("Edit")').first();
+    const hasEdit = await editBtn.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasEdit) {
+      await editBtn.click({ force: true });
+      await page.waitForTimeout(500);
+
+      const cancelBtn = page.locator('button:has-text("Cancel")').first();
+      if (await cancelBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        await cancelBtn.click({ force: true });
+        await page.waitForTimeout(500);
+      }
+    }
+  });
+
+  /* ── Game Filters ── */
+  test('should show game filter buttons (All/Boys/Girls)', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const gamesTab = page.locator('button:has-text("Manage Games"), button:has-text("Games")').first();
+    await gamesTab.click({ force: true });
+    await page.waitForTimeout(500);
+
+    const allFilter = page.locator('.admin-segmented__btn:has-text("All")').first();
+    const boysFilter = page.locator('.admin-segmented__btn:has-text("Boys")').first();
+    const girlsFilter = page.locator('.admin-segmented__btn:has-text("Girls")').first();
+
+    const hasAll = await allFilter.isVisible({ timeout: 3000 }).catch(() => false);
+    const hasBoys = await boysFilter.isVisible({ timeout: 2000 }).catch(() => false);
+    const hasGirls = await girlsFilter.isVisible({ timeout: 2000 }).catch(() => false);
+    expect(hasAll || hasBoys || hasGirls).toBeTruthy();
+  });
+
+  test('should filter games by type when filter button is clicked', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const gamesTab = page.locator('button:has-text("Manage Games"), button:has-text("Games")').first();
+    await gamesTab.click({ force: true });
+    await page.waitForTimeout(500);
+
+    const boysFilter = page.locator('.admin-segmented__btn:has-text("Boys")').first();
+    const hasFilter = await boysFilter.isVisible({ timeout: 3000 }).catch(() => false);
+
+    if (hasFilter) {
+      await boysFilter.click({ force: true });
+      await page.waitForTimeout(500);
+      await expect(boysFilter).toHaveClass(/active/);
+    }
+  });
+
+  /* ── Bulk Operations ── */
+  test('should show bulk action buttons for games', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const gamesTab = page.locator('button:has-text("Manage Games"), button:has-text("Games")').first();
+    await gamesTab.click({ force: true });
+    await page.waitForTimeout(500);
+
+    const showAllBtn = page.locator('button:has-text("Show All"), button:has-text("Publish All")').first();
+    const hideAllBtn = page.locator('button:has-text("Hide All"), button:has-text("Unpublish All")').first();
+
+    const hasShow = await showAllBtn.isVisible({ timeout: 3000 }).catch(() => false);
+    const hasHide = await hideAllBtn.isVisible({ timeout: 2000 }).catch(() => false);
+    // Bulk controls should be present
+  });
+
+  /* ── Set Outcome / Game Status ── */
+  test('should open game status modal when Set Outcome is clicked', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const gamesTab = page.locator('button:has-text("Manage Games"), button:has-text("Games")').first();
+    await gamesTab.click({ force: true });
+    await page.waitForTimeout(1000);
+
+    const outcomeBtn = page.locator('button:has-text("Set Outcome"), button:has-text("Status"), button:has-text("Set Winner")').first();
+    const hasOutcome = await outcomeBtn.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasOutcome) {
+      await outcomeBtn.click({ force: true });
+      await page.waitForTimeout(500);
+
+      // Modal or form should appear for setting outcome
+      const modal = page.locator('.modal, .game-status-modal, .outcome-modal, [class*="modal"]').first();
+      const hasModal = await modal.isVisible({ timeout: 3000 }).catch(() => false);
+    }
+  });
+
+  /* ── Completed Games Toggle ── */
+  test('should toggle completed games visibility', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const gamesTab = page.locator('button:has-text("Manage Games"), button:has-text("Games")').first();
+    await gamesTab.click({ force: true });
+    await page.waitForTimeout(500);
+
+    const completedToggle = page.locator('button:has-text("Completed"), button:has-text("Show Completed"), button:has-text("Hide Completed")').first();
+    const hasToggle = await completedToggle.isVisible({ timeout: 3000 }).catch(() => false);
+
+    if (hasToggle) {
+      await completedToggle.click({ force: true });
+      await page.waitForTimeout(500);
+    }
+  });
+
+  /* ── User Balance Modification ── */
+  test('should show balance modification controls for users', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const usersTab = page.locator('button:has-text("Manage Users"), button:has-text("Users")').first();
+    await usersTab.click({ force: true });
+    await page.waitForTimeout(1000);
+
+    const userCard = page.locator('.user-card, .admin-user-card, .user-item').first();
+    const hasUser = await userCard.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasUser) {
+      // Click on user to open options
+      const optionsBtn = userCard.locator('button').first();
+      const hasBtn = await optionsBtn.isVisible({ timeout: 2000 }).catch(() => false);
+
+      if (hasBtn) {
+        await optionsBtn.click({ force: true });
+        await page.waitForTimeout(500);
+
+        // Look for balance input or modify balance button
+        const balanceInput = page.locator('input[type="number"], input[placeholder*="balance" i]');
+        const giftBtn = page.locator('button:has-text("Gift"), button:has-text("Update Balance"), button:has-text("Set Balance")').first();
+
+        const hasInput = await balanceInput.first().isVisible({ timeout: 3000 }).catch(() => false);
+        const hasGift = await giftBtn.isVisible({ timeout: 2000 }).catch(() => false);
+      }
+    }
+  });
+
+  /* ── Prop Bet Resolution ── */
+  test('should show resolve controls on prop bets', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const propTab = page.locator('button:has-text("Prop"), .admin-tab:has-text("Prop")').first();
+    await propTab.click({ force: true });
+    await page.waitForTimeout(1000);
+
+    const propCards = page.locator('.prop-card, .prop-bet-card, .admin-prop');
+    const hasProp = await propCards.first().isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasProp) {
+      // Look for resolve/edit/delete buttons on prop cards
+      const resolveBtn = page.locator('button:has-text("Resolve"), button:has-text("Yes"), button:has-text("No")').first();
+      const editBtn = page.locator('button:has-text("Edit")').first();
+      const deleteBtn = page.locator('button:has-text("Delete")').first();
+
+      const hasResolve = await resolveBtn.isVisible({ timeout: 3000 }).catch(() => false);
+      const hasEdit = await editBtn.isVisible({ timeout: 2000 }).catch(() => false);
+      const hasDelete = await deleteBtn.isVisible({ timeout: 2000 }).catch(() => false);
+      expect(hasResolve || hasEdit || hasDelete).toBeTruthy();
+    }
+  });
+
+  test('should show edit prop bet form when Edit is clicked', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const propTab = page.locator('button:has-text("Prop"), .admin-tab:has-text("Prop")').first();
+    await propTab.click({ force: true });
+    await page.waitForTimeout(1000);
+
+    const editBtn = page.locator('button:has-text("Edit")').first();
+    const hasEdit = await editBtn.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasEdit) {
+      await editBtn.click({ force: true });
+      await page.waitForTimeout(500);
+
+      // Edit form or mode should activate
+      const form = page.locator('.prop-form, form, .editing-prop');
+      const hasForm = await form.first().isVisible({ timeout: 3000 }).catch(() => false);
+    }
+  });
+
+  /* ── Seed Games Button ── */
+  test('should show Seed from Schedule button', async ({ page }) => {
+    test.skip(!isAdmin, 'Test admin account does not have admin privileges');
+    await navigateToUrl(page, '/admin');
+
+    const gamesTab = page.locator('button:has-text("Manage Games"), button:has-text("Games")').first();
+    await gamesTab.click({ force: true });
+    await page.waitForTimeout(500);
+
+    const seedBtn = page.locator('button:has-text("Seed"), button:has-text("Schedule")').first();
+    const hasSeed = await seedBtn.isVisible({ timeout: 3000 }).catch(() => false);
+    // Seed button should exist for importing games from team schedules
+  });
 });

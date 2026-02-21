@@ -4,14 +4,25 @@ import AdminCard from './AdminCard';
 import AdminToolbar from './AdminToolbar';
 import '../../styles/AdminDesignSystem.css';
 
-const roundLabels = {
-  1: 'Quarterfinals',
-  2: 'Semifinals',
-  3: 'Finals'
+const getRoundLabel = (round, totalRounds) => {
+  if (totalRounds === 3) {
+    if (round === 1) return 'Quarterfinals';
+    if (round === 2) return 'Semifinals';
+    if (round === 3) return 'Championship';
+  }
+
+  if (totalRounds === 4) {
+    if (round === 1) return 'Round 1';
+    if (round === 2) return 'Quarterfinals';
+    if (round === 3) return 'Semifinals';
+    if (round === 4) return 'Championship';
+  }
+
+  return `Round ${round}`;
 };
 
-const makeSeedDefaults = () => {
-  return Array.from({ length: 8 }).map((_, index) => ({
+const makeSeedDefaults = (teamCount = 16) => {
+  return Array.from({ length: teamCount }).map((_, index) => ({
     seed: index + 1,
     name: '',
     id: null
@@ -22,7 +33,7 @@ function AdminBrackets() {
   const [brackets, setBrackets] = useState([]);
   const [selectedBracketId, setSelectedBracketId] = useState('');
   const [bracket, setBracket] = useState(null);
-  const [teams, setTeams] = useState(makeSeedDefaults());
+  const [teams, setTeams] = useState(makeSeedDefaults(16));
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -32,15 +43,31 @@ function AdminBrackets() {
     season: '2026',
     entryFee: 0,
     payoutPerPoint: 1000,
-    status: 'open'
+    status: 'open',
+    bracketSize: 16
   });
   const [settingsForm, setSettingsForm] = useState({
     name: '',
     season: '',
     entryFee: 0,
     payoutPerPoint: 1000,
-    status: 'open'
+    status: 'open',
+    bracketSize: 16
   });
+
+  const sortedRounds = useMemo(() => {
+    return Object.keys(gamesByRound).map(Number).sort((a, b) => a - b);
+  }, [gamesByRound]);
+
+  const resizeTeams = useCallback((nextCount) => {
+    setTeams((prev) => {
+      const next = makeSeedDefaults(nextCount);
+      return next.map((slot) => {
+        const existing = prev.find((team) => team.seed === slot.seed);
+        return existing ? { ...slot, ...existing } : slot;
+      });
+    });
+  }, []);
 
   const gamesByRound = useMemo(() => {
     return games.reduce((acc, game) => {
@@ -56,7 +83,10 @@ function AdminBrackets() {
       const response = await apiClient.get(`/brackets/${id}`);
       setBracket(response.data.bracket);
       const incomingTeams = response.data.teams || [];
-      const seededTeams = makeSeedDefaults().map((seed) => {
+      const teamCount = incomingTeams.length === 8 || incomingTeams.length === 16
+        ? incomingTeams.length
+        : 16;
+      const seededTeams = makeSeedDefaults(teamCount).map((seed) => {
         const existing = incomingTeams.find((team) => team.seed === seed.seed);
         return {
           seed: seed.seed,
@@ -71,7 +101,8 @@ function AdminBrackets() {
         season: response.data.bracket.season || '',
         entryFee: response.data.bracket.entry_fee || 0,
         payoutPerPoint: response.data.bracket.payout_per_point || 1000,
-        status: response.data.bracket.status || 'open'
+        status: response.data.bracket.status || 'open',
+        bracketSize: teamCount
       });
       setError('');
     } catch (err) {
@@ -143,7 +174,16 @@ function AdminBrackets() {
   const handleSaveTeams = async () => {
     if (!selectedBracketId) return;
     try {
-      await apiClient.put(`/brackets/${selectedBracketId}/teams`, { teams });
+      const teamCount = Number(settingsForm.bracketSize || 16);
+      const payload = teams
+        .slice(0, teamCount)
+        .map((team) => ({
+          seed: team.seed,
+          name: team.name,
+          id: team.id
+        }));
+
+      await apiClient.put(`/brackets/${selectedBracketId}/teams`, { teams: payload });
       setMessage('Teams saved');
       setError('');
       await fetchBracketDetails(selectedBracketId);
@@ -256,6 +296,20 @@ function AdminBrackets() {
               <option value="completed">Completed</option>
             </select>
           </div>
+          <div className="admin-form-row">
+            <label htmlFor="bracket-size">Bracket Size</label>
+            <select
+              id="bracket-size"
+              value={createForm.bracketSize}
+              onChange={(event) => {
+                const bracketSize = Number(event.target.value);
+                setCreateForm((prev) => ({ ...prev, bracketSize }));
+              }}
+            >
+              <option value={8}>8 Teams</option>
+              <option value={16}>16 Teams</option>
+            </select>
+          </div>
           <button type="submit" className="admin-button admin-button--primary">Create Bracket</button>
         </form>
       </AdminCard>
@@ -314,6 +368,21 @@ function AdminBrackets() {
                   <option value="completed">Completed</option>
                 </select>
               </div>
+              <div className="admin-form-row">
+                <label htmlFor="settings-size">Bracket Size</label>
+                <select
+                  id="settings-size"
+                  value={settingsForm.bracketSize}
+                  onChange={(event) => {
+                    const bracketSize = Number(event.target.value);
+                    setSettingsForm((prev) => ({ ...prev, bracketSize }));
+                    resizeTeams(bracketSize);
+                  }}
+                >
+                  <option value={8}>8 Teams</option>
+                  <option value={16}>16 Teams</option>
+                </select>
+              </div>
               <button type="submit" className="admin-button admin-button--primary">Save Settings</button>
             </form>
           </AdminCard>
@@ -321,7 +390,7 @@ function AdminBrackets() {
           <AdminCard className="admin-section">
             <h3 className="admin-section__title">Teams & Seeding</h3>
             <div className="admin-form grid">
-              {teams.map((team) => (
+              {teams.slice(0, Number(settingsForm.bracketSize || 16)).map((team) => (
                 <div key={team.seed} className="admin-form-row">
                   <label htmlFor={`seed-${team.seed}`}>Seed {team.seed}</label>
                   <input
@@ -350,9 +419,9 @@ function AdminBrackets() {
 
           <AdminCard className="admin-section">
             <h3 className="admin-section__title">Results & Advancement</h3>
-            {[1, 2, 3].map((round) => (
+            {sortedRounds.map((round) => (
               <div key={round} className="admin-bracket-round">
-                <h4>{roundLabels[round]}</h4>
+                <h4>{getRoundLabel(round, sortedRounds.length)}</h4>
                 {(gamesByRound[round] || []).map((game) => (
                   <div key={game.id} className="admin-bracket-game">
                     <div className="admin-bracket-game__info">

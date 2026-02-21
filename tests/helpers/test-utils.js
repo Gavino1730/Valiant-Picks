@@ -215,14 +215,16 @@ async function getBalance(page) {
 
 // ── Check if admin user has admin access ───────────────────────────────────
 async function checkAdminAccess(page) {
-  await clearSession(page);
-  await loginAsAdmin(page);
-  await page.goto('/admin');
-  await page.waitForLoadState('domcontentloaded');
-  await dismissAllOverlays(page);
-
-  const tabBtns = page.locator('.admin-tab, .admin-mobile-pill');
-  return tabBtns.first().isVisible({ timeout: 5000 }).catch(() => false);
+  // Check localStorage for is_admin flag (set during login)
+  const isAdmin = await page.evaluate(() => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      return !!(user && user.is_admin);
+    } catch {
+      return false;
+    }
+  });
+  return isAdmin;
 }
 
 // ── Unique test data ───────────────────────────────────────────────────────

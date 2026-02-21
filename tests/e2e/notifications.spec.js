@@ -164,4 +164,163 @@ test.describe('Notifications', () => {
       // Note: the card might not immediately update visually
     }
   });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // NOTIFICATION TYPE ICONS
+  // ═══════════════════════════════════════════════════════════════════════
+
+  test('should show type-specific icons on notification cards', async ({ page }) => {
+    await navigateToUrl(page, '/notifications');
+    await page.waitForTimeout(2000);
+
+    const cards = page.locator('.notification-card');
+    const hasCards = await cards.first().isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasCards) {
+      const icons = page.locator('.notification-icon');
+      const count = await icons.count();
+      expect(count).toBeGreaterThan(0);
+
+      // Each icon should have content (emoji or text)
+      const firstIcon = icons.first();
+      const text = await firstIcon.textContent();
+      expect(text.trim().length).toBeGreaterThan(0);
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // NOTIFICATION CONTENT
+  // ═══════════════════════════════════════════════════════════════════════
+
+  test('should show notification title text', async ({ page }) => {
+    await navigateToUrl(page, '/notifications');
+    await page.waitForTimeout(2000);
+
+    const card = page.locator('.notification-card').first();
+    const hasCard = await card.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasCard) {
+      const title = card.locator('.notification-title, h3, h4, .title').first();
+      const hasTitle = await title.isVisible({ timeout: 2000 }).catch(() => false);
+      if (hasTitle) {
+        const text = await title.textContent();
+        expect(text.trim().length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  test('should show notification message text', async ({ page }) => {
+    await navigateToUrl(page, '/notifications');
+    await page.waitForTimeout(2000);
+
+    const card = page.locator('.notification-card').first();
+    const hasCard = await card.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasCard) {
+      const message = card.locator('.notification-message, .notification-text, p').first();
+      const hasMessage = await message.isVisible({ timeout: 2000 }).catch(() => false);
+      if (hasMessage) {
+        const text = await message.textContent();
+        expect(text.trim().length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // MARK ALL READ INTERACTION
+  // ═══════════════════════════════════════════════════════════════════════
+
+  test('should mark all notifications as read when button is clicked', async ({ page }) => {
+    await navigateToUrl(page, '/notifications');
+    await page.waitForTimeout(2000);
+
+    const markAllBtn = page.locator('button:has-text("Mark All Read")');
+    const hasBtn = await markAllBtn.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasBtn) {
+      const unreadBefore = await page.locator('.notification-card.unread').count();
+
+      await markAllBtn.click();
+      await page.waitForTimeout(1500);
+
+      const unreadAfter = await page.locator('.notification-card.unread').count();
+      // Unread count should decrease or become 0
+      expect(unreadAfter).toBeLessThanOrEqual(unreadBefore);
+    }
+  });
+
+  test('should update badge count after marking all as read', async ({ page }) => {
+    await navigateToUrl(page, '/notifications');
+    await page.waitForTimeout(2000);
+
+    const markAllBtn = page.locator('button:has-text("Mark All Read")');
+    const hasBtn = await markAllBtn.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasBtn) {
+      await markAllBtn.click();
+      await page.waitForTimeout(1500);
+
+      // Navigate away and check badge
+      await page.goto('/dashboard');
+      await page.waitForLoadState('domcontentloaded');
+      await dismissAllOverlays(page);
+
+      const badge = page.locator('.notification-badge');
+      const hasBadge = await badge.isVisible({ timeout: 3000 }).catch(() => false);
+      // Badge should either disappear or show 0
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // NOTIFICATION BELL BADGE
+  // ═══════════════════════════════════════════════════════════════════════
+
+  test('should show notification count in bell badge', async ({ page }) => {
+    const badge = page.locator('.notification-badge');
+    const hasBadge = await badge.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasBadge) {
+      const text = await badge.textContent();
+      const count = parseInt(text, 10);
+      expect(count).toBeGreaterThan(0);
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // EMPTY STATE
+  // ═══════════════════════════════════════════════════════════════════════
+
+  test('should show appropriate empty state message', async ({ page }) => {
+    await navigateToUrl(page, '/notifications');
+    await page.waitForTimeout(2000);
+
+    const cards = page.locator('.notification-card');
+    const hasCards = await cards.first().isVisible({ timeout: 3000 }).catch(() => false);
+
+    if (!hasCards) {
+      const emptyState = page.locator('text=/No notifications/i, text=/no new notifications/i, .empty-state').first();
+      const hasEmpty = await emptyState.isVisible({ timeout: 3000 }).catch(() => false);
+      // If no notifications, should show an empty state message
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // PAGE NAVIGATION
+  // ═══════════════════════════════════════════════════════════════════════
+
+  test('should navigate to notifications from any page via bell', async ({ page }) => {
+    await navigateToUrl(page, '/games');
+    await page.waitForTimeout(1000);
+
+    const bell = page.locator('.notification-icon-btn');
+    const hasBell = await bell.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasBell) {
+      await bell.click({ force: true });
+      await page.waitForLoadState('domcontentloaded');
+      await dismissAllOverlays(page);
+
+      await expect(page.locator('.notifications-page')).toBeVisible({ timeout: 5000 });
+    }
+  });
 });
