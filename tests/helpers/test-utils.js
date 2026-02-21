@@ -14,88 +14,98 @@ const TEST_ADMIN = {
 };
 
 // ── Dismiss ALL overlays (onboarding, spin-wheel, daily-reward) ────────────
-// The app shows popups after login: OnboardingModal, DailyReward, SpinWheel.
-// These overlays intercept pointer events, so we must dismiss them first.
 async function dismissAllOverlays(page) {
-  // Give popups time to render (they use a queue with delays)
   await page.waitForTimeout(1500);
 
-  // Keep dismissing for up to 3 passes (popups appear sequentially via queue)
-  for (let pass = 0; pass < 4; pass++) {
+  for (let pass = 0; pass < 5; pass++) {
     let dismissed = false;
 
-    // Spin Wheel overlay
+    // Spin Wheel close button
     const spinClose = page.locator('.spin-wheel-close');
-    if (await spinClose.isVisible({ timeout: 800 }).catch(() => false)) {
+    if (await spinClose.isVisible({ timeout: 600 }).catch(() => false)) {
       await spinClose.click({ force: true });
       dismissed = true;
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(400);
     }
 
-    // Spin Wheel overlay click-to-close
+    // Spin Wheel overlay background
     const spinOverlay = page.locator('.spin-wheel-overlay');
     if (await spinOverlay.isVisible({ timeout: 300 }).catch(() => false)) {
       await spinOverlay.click({ position: { x: 5, y: 5 }, force: true });
       dismissed = true;
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(400);
     }
 
-    // Daily Reward modal
-    const dailyClose = page.locator('.daily-reward-close, .daily-reward-overlay button:has-text("Close")').first();
+    // Daily Reward close/claim-later button
+    const dailyClose = page.locator('.close-button, .daily-reward-close').first();
     if (await dailyClose.isVisible({ timeout: 300 }).catch(() => false)) {
       await dailyClose.click({ force: true });
       dismissed = true;
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(400);
     }
 
-    // Daily Reward overlay click-to-close
+    // Daily Reward overlay background
     const dailyOverlay = page.locator('.daily-reward-overlay');
     if (await dailyOverlay.isVisible({ timeout: 300 }).catch(() => false)) {
       await dailyOverlay.click({ position: { x: 5, y: 5 }, force: true });
       dismissed = true;
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(400);
     }
 
-    // Onboarding modal
+    // Onboarding close button
     const onboardingClose = page.locator('[data-testid="onboarding-close"], .onboarding-close').first();
     if (await onboardingClose.isVisible({ timeout: 300 }).catch(() => false)) {
       await onboardingClose.click({ force: true });
       dismissed = true;
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(400);
     }
 
-    // "Let's Get Started" button on onboarding
+    // Onboarding "Let's Get Started" button
     const letsGo = page.locator('[data-testid="onboarding-start"]');
     if (await letsGo.isVisible({ timeout: 300 }).catch(() => false)) {
       await letsGo.click({ force: true });
       dismissed = true;
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(400);
+    }
+
+    // Rivalry Week popup
+    const rivalryClose = page.locator('.rivalry-close-btn');
+    if (await rivalryClose.isVisible({ timeout: 300 }).catch(() => false)) {
+      await rivalryClose.click({ force: true });
+      dismissed = true;
+      await page.waitForTimeout(400);
     }
 
     if (!dismissed) break;
   }
 }
 
+// ── Session clearing ───────────────────────────────────────────────────────
+async function clearSession(page) {
+  await page.context().clearCookies();
+  try {
+    await page.evaluate(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+  } catch {
+    // Page may not be loaded yet
+  }
+}
+
 // ── Login ──────────────────────────────────────────────────────────────────
-// The app renders the Login component directly when there is no JWT token.
-// There is NO "/login" route — the login form IS the landing page.
 async function login(page, username, password) {
   await clearSession(page);
-
   await page.goto('/');
   await page.waitForLoadState('domcontentloaded');
 
-  // The login form has #username and #password fields
   await page.locator('#username').waitFor({ state: 'visible', timeout: 10000 });
-
   await page.fill('#username', username);
   await page.fill('#password', password);
   await page.click('button[type="submit"]');
 
   // After success the navbar appears
   await page.locator('.navbar').waitFor({ state: 'visible', timeout: 15000 });
-
-  // Dismiss all popups/overlays
   await dismissAllOverlays(page);
 }
 
@@ -109,27 +119,25 @@ async function loginAsAdmin(page) {
 
 // ── Logout ─────────────────────────────────────────────────────────────────
 async function logout(page) {
-  // Dismiss any lingering overlays first
   await dismissAllOverlays(page);
 
-  // Desktop: button.logout-btn in the navbar
+  // Desktop logout button
   const logoutBtn = page.locator('button.logout-btn');
   if (await logoutBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
     await logoutBtn.click({ force: true });
   } else {
-    // Mobile: open the user menu
+    // User dropdown menu
     const userTrigger = page.locator('.nav-user-trigger');
     if (await userTrigger.isVisible({ timeout: 2000 }).catch(() => false)) {
       await userTrigger.click({ force: true });
       await page.locator('.nav-user-menu button:has-text("Logout")').click({ force: true });
     } else {
-      // Mobile hamburger menu logout
+      // Mobile hamburger → logout
       const mobileToggle = page.locator('.mobile-menu-toggle');
       if (await mobileToggle.isVisible({ timeout: 2000 }).catch(() => false)) {
         await mobileToggle.click({ force: true });
         await page.locator('.mobile-logout-btn').click({ force: true });
       } else {
-        // Fallback: just clear session
         await clearSession(page);
         await page.goto('/');
         return;
@@ -137,7 +145,6 @@ async function logout(page) {
     }
   }
 
-  // After logout the login form should reappear
   await page.locator('#username').waitFor({ state: 'visible', timeout: 10000 });
 }
 
@@ -146,11 +153,9 @@ async function register(page, username, email, password) {
   await clearSession(page);
   await page.goto('/');
   await page.waitForLoadState('domcontentloaded');
-
-  // Wait for login form
   await page.locator('#username').waitFor({ state: 'visible', timeout: 10000 });
 
-  // Switch to registration mode
+  // Switch to register mode
   await page.locator('button.toggle-link-btn:has-text("Create Account")').click();
   await page.locator('#email').waitFor({ state: 'visible', timeout: 5000 });
 
@@ -160,30 +165,16 @@ async function register(page, username, email, password) {
   await page.click('button[type="submit"]');
 }
 
-// ── Session clearing ───────────────────────────────────────────────────────
-async function clearSession(page) {
-  await page.context().clearCookies();
-  try {
-    await page.evaluate(() => {
-      localStorage.clear();
-      sessionStorage.clear();
-    });
-  } catch {
-    // No page loaded yet
-  }
-}
-
 // ── Navigation ─────────────────────────────────────────────────────────────
 async function navigateTo(page, label) {
-  // Dismiss overlays before navigating
   await dismissAllOverlays(page);
 
-  // Desktop nav: <button class="nav-link">
+  // Desktop nav links
   const navLink = page.locator(`.nav-link:has-text("${label}")`);
   if (await navLink.isVisible({ timeout: 2000 }).catch(() => false)) {
     await navLink.click({ force: true });
   } else {
-    // Mobile: hamburger → slide-out menu
+    // Mobile hamburger menu
     const mobileToggle = page.locator('.mobile-menu-toggle');
     if (await mobileToggle.isVisible({ timeout: 2000 }).catch(() => false)) {
       await mobileToggle.click({ force: true });
@@ -191,6 +182,13 @@ async function navigateTo(page, label) {
       await page.locator(`.mobile-menu-nav button:has-text("${label}")`).click({ force: true });
     }
   }
+  await page.waitForLoadState('domcontentloaded');
+  await dismissAllOverlays(page);
+}
+
+// ── Navigate directly via URL ──────────────────────────────────────────────
+async function navigateToUrl(page, path) {
+  await page.goto(path);
   await page.waitForLoadState('domcontentloaded');
   await dismissAllOverlays(page);
 }
@@ -212,7 +210,19 @@ async function navigateToAdminTab(page, tabLabel) {
 async function getBalance(page) {
   const balanceEl = page.locator('.balance-amount').first();
   const text = await balanceEl.textContent({ timeout: 5000 });
-  return parseFloat(text.replace(/[$,]/g, '')) || 0;
+  return parseFloat(text.replace(/[$,VB ]/g, '')) || 0;
+}
+
+// ── Check if admin user has admin access ───────────────────────────────────
+async function checkAdminAccess(page) {
+  await clearSession(page);
+  await loginAsAdmin(page);
+  await page.goto('/admin');
+  await page.waitForLoadState('domcontentloaded');
+  await dismissAllOverlays(page);
+
+  const tabBtns = page.locator('.tab-btn, .mobile-admin-pill');
+  return tabBtns.first().isVisible({ timeout: 5000 }).catch(() => false);
 }
 
 // ── Unique test data ───────────────────────────────────────────────────────
@@ -236,8 +246,10 @@ module.exports = {
   register,
   clearSession,
   navigateTo,
+  navigateToUrl,
   navigateToAdminTab,
   getBalance,
+  checkAdminAccess,
   generateTestData,
   dismissAllOverlays,
 };
