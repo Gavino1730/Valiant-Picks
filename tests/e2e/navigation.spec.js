@@ -236,10 +236,12 @@ test.describe('Mobile Menu', () => {
 
   test('should close mobile menu when close button is clicked', async ({ page }) => {
     const hamburger = page.locator('.mobile-menu-toggle');
+    await hamburger.scrollIntoViewIfNeeded();
     await hamburger.click({ force: true });
     await page.locator('.mobile-menu.open').waitFor({ state: 'visible', timeout: 3000 });
 
     const closeBtn = page.locator('.mobile-close-btn');
+    await closeBtn.scrollIntoViewIfNeeded();
     await closeBtn.click({ force: true });
     await page.waitForTimeout(1000);
 
@@ -275,10 +277,12 @@ test.describe('Mobile Menu', () => {
 
   test('should navigate to pages from mobile menu', async ({ page }) => {
     const hamburger = page.locator('.mobile-menu-toggle');
+    await hamburger.scrollIntoViewIfNeeded();
     await hamburger.click({ force: true });
     await page.locator('.mobile-menu.open').waitFor({ state: 'visible', timeout: 3000 });
 
     const gamesBtn = page.locator('.mobile-menu-nav button:has-text("Place Picks")');
+    await gamesBtn.scrollIntoViewIfNeeded();
     await gamesBtn.click({ force: true });
     await page.waitForURL(/\/games/, { timeout: 10000 }).catch(() => {});
     await page.waitForLoadState('domcontentloaded');
@@ -293,10 +297,13 @@ test.describe('Mobile Menu', () => {
 
   test('should close mobile menu after navigation', async ({ page }) => {
     const hamburger = page.locator('.mobile-menu-toggle');
+    await hamburger.scrollIntoViewIfNeeded();
     await hamburger.click({ force: true });
     await page.locator('.mobile-menu.open').waitFor({ state: 'visible', timeout: 3000 });
 
-    await page.locator('.mobile-menu-nav button:has-text("Teams")').click({ force: true });
+    const teamsBtn = page.locator('.mobile-menu-nav button:has-text("Teams")');
+    await teamsBtn.scrollIntoViewIfNeeded();
+    await teamsBtn.click({ force: true });
     await page.waitForURL(/\/teams/, { timeout: 10000 }).catch(() => {});
     await page.waitForLoadState('domcontentloaded');
     await dismissAllOverlays(page);

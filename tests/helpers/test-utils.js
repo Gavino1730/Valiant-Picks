@@ -8,7 +8,7 @@ const TEST_USER = {
 };
 
 const TEST_ADMIN = {
-  username: process.env.TEST_ADMIN_USERNAME || 'testadmin',
+  username: process.env.TEST_ADMIN_USERNAME || 'admin',
   email: process.env.TEST_ADMIN_EMAIL || 'admin@valiantpicks.com',
   password: process.env.TEST_ADMIN_PASSWORD || 'AdminPassword123!',
 };
