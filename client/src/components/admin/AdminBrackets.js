@@ -126,13 +126,13 @@ function AdminBrackets() {
           className={`ab-gender-btn ${gender === 'boys' ? 'active boys' : ''}`}
           onClick={() => setGender('boys')}
         >
-          🏀 Boys Bracket
+          Boys Bracket
         </button>
         <button
           className={`ab-gender-btn ${gender === 'girls' ? 'active girls' : ''}`}
           onClick={() => setGender('girls')}
         >
-          🎀 Girls Bracket
+          Girls Bracket
         </button>
       </div>
 

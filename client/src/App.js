@@ -157,6 +157,9 @@ function AppContent() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mobileBannerDismissed, setMobileBannerDismissed] = useState(
+    () => sessionStorage.getItem('mobileBannerDismissed') === 'true'
+  );
   const mobileMenuRef = useRef(null);
   const mobileMenuCloseRef = useRef(null);
   const mobileMenuToggleRef = useRef(null);
@@ -505,6 +508,16 @@ function AppContent() {
   return (
     <ToastProvider>
     <div className="app">
+      {!mobileBannerDismissed && (
+        <div className="mobile-only-banner">
+          <span>💻 Best experienced on a laptop or desktop! The bracket can be tricky to navigate on a phone — for the smoothest experience, open valiantpicks.com on your computer.</span>
+          <button
+            className="mobile-only-banner-close"
+            onClick={() => { setMobileBannerDismissed(true); sessionStorage.setItem('mobileBannerDismissed', 'true'); }}
+            aria-label="Dismiss"
+          >✕</button>
+        </div>
+      )}
       <GiftBalanceWatcher user={currentUser} updateUser={updateUser} />
       {/* Rivalry Week Popup */}
       <RivalryWeekPopup 

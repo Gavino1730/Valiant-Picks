@@ -1625,6 +1625,45 @@ table tbody tr:hover {
 }
 
 /* Hide logo and brand text on very small screens */
+.mobile-only-banner {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background-color: #004f9e;
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    position: relative;
+    z-index: 1200;
+  }
+
+  .mobile-only-banner span {
+    flex: 1;
+  }
+
+  .mobile-only-banner-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0 4px;
+    flex-shrink: 0;
+    line-height: 1;
+    opacity: 0.8;
+  }
+
+  .mobile-only-banner-close:hover {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 380px) {
   .navbar {
     position: fixed;

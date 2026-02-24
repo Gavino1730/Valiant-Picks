@@ -38,19 +38,22 @@ function Leaderboard() {
 
   const fetchData = async () => {
     try {
-      // Get all users
-      const usersRes = await apiClient.get('/users');
+      // Fetch users and bets simultaneously to avoid intermediate renders with stale data
+      const [usersRes, betsRes] = await Promise.all([
+        apiClient.get('/users'),
+        apiClient.get('/bets/all'),
+      ]);
+
       // Filter out admin account from displayed users
       const nonAdminUsers = usersRes.data.filter(u => u.username !== 'admin');
-      setUsers(nonAdminUsers);
-
-      // Get all bets
-      const betsRes = await apiClient.get('/bets/all');
       // Filter out admin bets to match filtered users
       const adminUser = usersRes.data.find(u => u.username === 'admin');
-      const nonAdminBets = adminUser 
+      const nonAdminBets = adminUser
         ? betsRes.data.filter(b => b.user_id !== adminUser.id)
         : betsRes.data;
+
+      // Set both at once so React 18 batches them into a single render
+      setUsers(nonAdminUsers);
       setBets(nonAdminBets);
       setError('');
     } catch (err) {
