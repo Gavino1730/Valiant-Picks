@@ -371,3 +371,68 @@
     text-align: right;
   }
 }
+
+/* ── Extra-small: card-style rows ─────────────── */
+@media (max-width: 360px) {
+  .bracket-leaderboard {
+    padding: 12px 8px 28px;
+  }
+
+  .bracket-leaderboard h1 {
+    font-size: 18px;
+  }
+
+  .leaderboard-table {
+    padding: 8px 4px;
+  }
+
+  /* Collapse to 3 columns: rank | user | score */
+  .leaderboard-row {
+    grid-template-columns: 36px 1fr 72px;
+    gap: 4px;
+    padding: 10px 4px;
+    font-size: 12px;
+  }
+
+  /* Hide accuracy & bucks columns in favour of score */
+  .leaderboard-row > *:nth-child(4),
+  .leaderboard-row > *:nth-child(5) {
+    display: none;
+  }
+
+  .leaderboard-row--header {
+    font-size: 10px;
+  }
+
+  .bracket-link {
+    font-size: 13px;
+    padding: 10px 12px;
+    min-height: 44px;
+  }
+}
+
+/* ── Tab scrolling on mobile ──────────────────── */
+@media (max-width: 767px) {
+  .bracket-leaderboard .bracket-tabs {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .bracket-leaderboard .bracket-tabs::-webkit-scrollbar { display: none; }
+
+  .bracket-leaderboard .bracket-tab {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .bracket-leaderboard .bracket-sub-tabs {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    box-sizing: border-box;
+  }
+  .bracket-leaderboard .bracket-sub-tabs::-webkit-scrollbar { display: none; }
+}

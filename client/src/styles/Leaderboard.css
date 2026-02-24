@@ -949,3 +949,86 @@
     opacity: 1;
   }
 }
+
+/* ── Additional mobile polish ─────────────────── */
+@media (max-width: 480px) {
+  .leaderboard-page {
+    padding: 0.75rem 0.5rem 0.5rem;
+  }
+
+  .sort-controls {
+    gap: 0.5rem;
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .sort-controls::-webkit-scrollbar { display: none; }
+
+  .sort-btn {
+    flex-shrink: 0;
+    padding: 0.55rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .segment-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.78rem;
+  }
+
+  .overview-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .stat-card {
+    padding: 0.7rem 0.6rem;
+  }
+
+  .stat-card-value {
+    font-size: 1.2rem;
+  }
+
+  .stat-card-label {
+    font-size: 0.65rem;
+  }
+
+  .summary-bar {
+    gap: 0.5rem;
+    padding: 0.5rem 0.65rem;
+    flex-wrap: wrap;
+  }
+
+  .summary-divider {
+    display: none;
+  }
+
+  .pagination-btn {
+    min-width: 90px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .pagination {
+    gap: 0.5rem;
+  }
+
+  .leaderboard-list-row {
+    padding: 0.5rem 0.55rem;
+    gap: 0.5rem;
+  }
+
+  .list-stat {
+    min-width: 72px;
+  }
+
+  .list-stat-value {
+    font-size: 0.88rem;
+  }
+
+  .user-name {
+    font-size: 0.9rem;
+  }
+}

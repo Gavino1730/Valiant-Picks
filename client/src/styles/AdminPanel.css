@@ -1799,3 +1799,227 @@
     text-align: center;
   }
 }
+
+/* =============================================
+   ADMIN COMPREHENSIVE MOBILE OPTIMIZATIONS
+   ============================================= */
+
+@media (max-width: 767px) {
+  /* Games toolbar stacks vertically */
+  .admin-games-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .admin-segmented {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .admin-segment-btn {
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  .admin-toolbar {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .admin-toolbar-btn {
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+    min-height: 40px;
+  }
+
+  /* Game card actions wrap */
+  .admin-game-card__actions {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .admin-game-card__actions .admin-button {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  /* Completed row simpler layout */
+  .admin-completed-row {
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+  }
+
+  /* Sticky section header – account for mobile navbar */
+  .admin-section-header--sticky {
+    top: 56px;
+  }
+
+  /* Bulk bar stacks */
+  .admin-bulk-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .admin-bulk-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .admin-bulk-actions .admin-button,
+  .admin-bulk-actions button {
+    flex: 1;
+    min-height: 40px;
+  }
+
+  /* Prop bet card info label width */
+  .info-label {
+    min-width: 90px;
+    font-size: 0.78rem;
+  }
+
+  .info-row {
+    gap: 8px;
+  }
+
+  .info-value {
+    font-size: 0.88rem;
+  }
+
+  /* Prop action buttons 2-col grid */
+  .prop-action-buttons-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .prop-action-btn-new {
+    padding: 12px 10px;
+    font-size: 0.82rem;
+    min-height: 46px;
+  }
+
+  .prop-action-btn-new.delete {
+    grid-column: 1 / -1;
+  }
+
+  /* Modal overlay keyboard-friendly */
+  .modal-overlay {
+    padding: 0.5rem;
+    align-items: flex-start;
+    padding-top: env(safe-area-inset-top, 1rem);
+  }
+
+  .modal-content {
+    max-height: calc(100dvh - 2rem);
+    margin: auto 0;
+  }
+
+  /* Prop card header stacks on narrow */
+  .prop-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .prop-card-header h4 {
+    font-size: 1.1rem;
+  }
+
+  /* Form inputs – prevent iOS auto-zoom */
+  .form-group input,
+  .form-group select,
+  .form-group textarea,
+  .mobile-input {
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-panel {
+    padding: 0.5rem 0.4rem;
+  }
+
+  .mobile-admin-pill {
+    padding: 7px 9px;
+    min-width: 110px;
+    font-size: 0.8rem;
+  }
+
+  .pill-label {
+    font-size: 0.8rem;
+  }
+
+  .pill-icon {
+    font-size: 0.95rem;
+  }
+
+  /* Game grid single column */
+  .admin-game-grid {
+    gap: 8px;
+  }
+
+  .admin-game-card {
+    padding: 10px;
+  }
+
+  .admin-game-card__teams {
+    font-size: 0.82rem;
+  }
+
+  /* Prop action buttons 1-col on very small screens */
+  .prop-action-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prop-action-btn-new {
+    grid-column: 1 !important;
+  }
+
+  /* Info rows full-width label */
+  .info-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .info-label {
+    min-width: unset;
+    font-size: 0.72rem;
+  }
+
+  .info-value {
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  /* Bets mobile list tighter */
+  .bet-card {
+    padding: 7px;
+    border-radius: 10px;
+  }
+
+  /* User cards smaller gap */
+  .user-card {
+    padding: 14px;
+  }
+
+  .user-card-body {
+    gap: 8px;
+  }
+
+  .user-card-stat {
+    padding: 8px 10px;
+  }
+
+  .user-card-stat-value {
+    font-size: 0.95rem;
+  }
+
+  .user-card-stat-value.balance {
+    font-size: 1.05rem;
+  }
+}

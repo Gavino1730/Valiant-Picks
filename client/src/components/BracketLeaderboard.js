@@ -9,12 +9,18 @@ function BracketLeaderboard({ gender = 'boys' }) {
   const [bracket, setBracket] = useState(null);
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
   const [lastRefresh, setLastRefresh] = useState(null);
 
-  const loadLeaderboard = async () => {
+  const loadLeaderboard = async (isRefresh = false) => {
     try {
-      setLoading(true);
+      if (isRefresh) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
+      setError('');
       const response = await apiClient.get(`/brackets/active?gender=${gender}`);
       if (!response.data?.bracket) {
         setBracket(null);
@@ -30,14 +36,15 @@ function BracketLeaderboard({ gender = 'boys' }) {
       setError(err.response?.data?.error || 'Failed to load bracket leaderboard');
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
   useEffect(() => {
-    loadLeaderboard();
+    loadLeaderboard(false);
     
-    // Auto-refresh leaderboard every 10 seconds
-    const interval = setInterval(loadLeaderboard, 10000);
+    // Auto-refresh leaderboard every 10 seconds (silent refresh, no loading flash)
+    const interval = setInterval(() => loadLeaderboard(true), 10000);
     
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,10 +119,10 @@ function BracketLeaderboard({ gender = 'boys' }) {
           <button
             type="button"
             className="bracket-link"
-            onClick={loadLeaderboard}
-            disabled={loading}
+            onClick={() => loadLeaderboard(true)}
+            disabled={refreshing}
           >
-            {loading ? 'Refreshing...' : 'Refresh'}
+            {refreshing ? 'Refreshing...' : 'Refresh'}
           </button>
           <button
             type="button"

@@ -2482,3 +2482,170 @@ svg.bracket-svg path.selected-path {
     min-width: 0;
   }
 }
+
+/* =============================================
+   COMPREHENSIVE MOBILE OPTIMIZATIONS
+   (supercedes/extends rules above)
+   ============================================= */
+
+/* ── Tab scrolling ─────────────────────────────── */
+@media (max-width: 767px) {
+  .bracket-tabs {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .bracket-tabs::-webkit-scrollbar { display: none; }
+
+  .bracket-tab {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .bracket-page .bracket-sub-tabs,
+  .bracket-leaderboard .bracket-sub-tabs {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    box-sizing: border-box;
+  }
+  .bracket-page .bracket-sub-tabs::-webkit-scrollbar { display: none; }
+
+  /* Header actions stacked full-width */
+  .bracket-header-actions {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .bracket-header-actions .bracket-link {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .bracket-entry-summary {
+    width: 100%;
+  }
+
+  /* CTA banner mobile */
+  .bracket-cta-banner {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+
+  .bracket-cta-banner__headline {
+    font-size: 15px;
+    gap: 8px;
+  }
+
+  .bracket-cta-banner__icon {
+    font-size: 20px;
+  }
+
+  .bracket-cta-banner__divider {
+    display: none;
+  }
+
+  .bracket-cta-banner__details {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .bracket-cta-banner__stat-value {
+    font-size: 13px;
+  }
+
+  .bracket-cta-banner__stat-label {
+    font-size: 10px;
+  }
+
+  .bracket-cta-banner__sub {
+    font-size: 12px;
+  }
+
+  /* Success box actions full-width */
+  .bracket-success__actions {
+    flex-direction: column;
+  }
+
+  .bracket-success__actions .bracket-link {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Snapshot 2 columns */
+  .bracket-snapshot {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  /* Sticky promo always fits screen */
+  .bracket-sticky-promo {
+    padding: 10px 12px;
+    gap: 10px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+
+  .bracket-sticky-promo__text {
+    font-size: 13px;
+  }
+
+  .bracket-sticky-promo__btn {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  /* Actual bracket page padding */
+  .actual-bracket-page {
+    padding: 20px 12px 40px;
+  }
+
+  /* Page padding safe area */
+  .bracket-page {
+    padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  }
+
+  .bracket-page--has-promo {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 480px) {
+  .bracket-tabs {
+    gap: 3px;
+    padding: 3px;
+  }
+
+  .bracket-tab {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .bracket-cta-banner {
+    padding: 12px 14px;
+    border-radius: 10px;
+  }
+
+  .bracket-cta-banner__headline {
+    font-size: 14px;
+  }
+
+  /* Snapshot 1 column on tiny screens */
+  .bracket-snapshot {
+    grid-template-columns: 1fr;
+  }
+
+  .bracket-sticky-promo__text {
+    font-size: 12px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .actual-bracket-page {
+    padding: 16px 10px 32px;
+  }
+}

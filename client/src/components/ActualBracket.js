@@ -181,7 +181,7 @@ function ActualBracket({ gender = 'boys' }) {
             className={`bracket-picks-toggle${showMyPicks ? ' bracket-picks-toggle--active' : ''}`}
             onClick={() => setShowMyPicks(v => !v)}
           >
-            {showMyPicks ? '👁 Hiding My Picks' : '👁 Show My Picks'}
+            {showMyPicks ? '👁 Hide My Picks' : '👁 Show My Picks'}
           </button>
         )}
       </div>
