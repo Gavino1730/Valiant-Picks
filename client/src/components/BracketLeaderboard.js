@@ -40,6 +40,7 @@ function BracketLeaderboard({ gender = 'boys' }) {
     const interval = setInterval(loadLeaderboard, 10000);
     
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const rankedEntries = useMemo(() => {

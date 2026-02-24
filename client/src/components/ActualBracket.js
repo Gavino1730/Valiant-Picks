@@ -81,6 +81,7 @@ function ActualBracket({ gender = 'boys' }) {
 
   useEffect(() => {
     loadBracket();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getTeamName = (teamId) => {

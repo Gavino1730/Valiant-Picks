@@ -104,7 +104,7 @@ function Bracket({ updateUser, gender = 'boys' }) {
     };
 
     loadBracket();
-  }, []);
+  }, [gender]);
 
   const getTeamName = (teamId) => {
     const team = teamById[teamId];
