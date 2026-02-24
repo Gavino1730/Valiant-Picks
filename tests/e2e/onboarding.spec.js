@@ -236,7 +236,18 @@ test.describe('Onboarding Modal', () => {
     const hasModal = await modal.isVisible({ timeout: 8000 }).catch(() => false);
 
     if (hasModal) {
-      await modal.locator('[data-testid="onboarding-start"]').click();
+      // Dismiss spin-wheel overlay if it's covering the button
+      const spinOverlay = page.locator('.spin-wheel-overlay');
+      if (await spinOverlay.isVisible({ timeout: 500 }).catch(() => false)) {
+        const spinClose = page.locator('.spin-wheel-close');
+        if (await spinClose.isVisible({ timeout: 300 }).catch(() => false)) {
+          await spinClose.click({ force: true });
+        } else {
+          await spinOverlay.click({ position: { x: 5, y: 5 }, force: true });
+        }
+        await page.waitForTimeout(400);
+      }
+      await modal.locator('[data-testid="onboarding-start"]').click({ force: true });
       await page.waitForTimeout(500);
 
       const stillVisible = await modal.isVisible({ timeout: 2000 }).catch(() => false);
@@ -286,7 +297,18 @@ test.describe('Onboarding Modal', () => {
 
     if (hasModal) {
       // "Don't show again" is checked by default
-      await modal.locator('[data-testid="onboarding-start"]').click();
+      // Dismiss spin-wheel overlay if it's covering the button
+      const spinOverlay = page.locator('.spin-wheel-overlay');
+      if (await spinOverlay.isVisible({ timeout: 500 }).catch(() => false)) {
+        const spinClose = page.locator('.spin-wheel-close');
+        if (await spinClose.isVisible({ timeout: 300 }).catch(() => false)) {
+          await spinClose.click({ force: true });
+        } else {
+          await spinOverlay.click({ position: { x: 5, y: 5 }, force: true });
+        }
+        await page.waitForTimeout(400);
+      }
+      await modal.locator('[data-testid="onboarding-start"]').click({ force: true });
       await page.waitForTimeout(500);
 
       const hasSeenOnboarding = await page.evaluate(() => localStorage.getItem('hasSeenOnboarding'));

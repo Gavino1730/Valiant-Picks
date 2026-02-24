@@ -200,7 +200,7 @@ test.describe('Mobile Menu', () => {
 
     const menuItems = [
       'Dashboard', 'Place Picks', 'Teams', 'My Picks',
-      'Bracket', 'Results', 'Leaderboard', 'How to Use',
+      'Bracket', 'Leaderboard', 'How to Use',
       'About', 'Terms', 'Notifications',
     ];
 
@@ -300,7 +300,7 @@ test.describe('Mobile Menu', () => {
     await hamburger.click({ force: true });
     await page.locator('.mobile-menu.open').waitFor({ state: 'visible', timeout: 3000 });
 
-    const teamsBtn = page.getByRole('button', { name: 'Teams' });
+    const teamsBtn = page.locator('.mobile-menu-nav button:has-text("Teams")');
     await teamsBtn.dispatchEvent('click');
     await page.waitForURL(/\/teams/, { timeout: 10000 }).catch(() => {});
     await page.waitForLoadState('domcontentloaded');

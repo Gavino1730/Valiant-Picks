@@ -6,33 +6,6 @@
   padding: 0;
 }
 
-.page-header {
-  text-align: left;
-  margin: 0 auto var(--space-4);
-  padding: var(--space-4) 0 var(--space-3);
-  position: relative;
-  max-width: 720px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-2);
-}
-
-.page-header h2 {
-  color: var(--color-text-primary);
-  font-size: var(--font-title);
-  margin-bottom: var(--space-1);
-  font-weight: 700;
-  letter-spacing: -0.4px;
-}
-
-.page-subtitle {
-  color: var(--color-text-secondary);
-  font-size: var(--font-body);
-  line-height: 1.5;
-  max-width: 560px;
-  margin: 0;
-}
 
 /* ===== PLACE PICKS LAYOUT ===== */
 .place-picks-layout {
@@ -688,22 +661,10 @@
     padding: 1.25rem;
   }
 
-  .page-header h2 {
-    font-size: 2rem;
-  }
 }
 
 /* Mobile landscape */
 @media (max-height: 600px) and (orientation: landscape) {
-  .page-header {
-    padding: 1rem 0;
-    margin-bottom: 1.5rem;
-  }
-
-  .page-header h2 {
-    font-size: 1.8rem;
-  }
-
   .games-grid {
     gap: 1rem;
   }
@@ -842,19 +803,6 @@
 @media (max-width: 768px) {
   .games-page {
     padding: 0 1rem;
-  }
-
-  .page-header {
-    margin-bottom: 1rem;
-    padding: 0.75rem 0 0.5rem;
-  }
-
-  .page-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .page-subtitle {
-    display: none;
   }
 
   .help-banner {
@@ -1055,15 +1003,6 @@
 }
 
 @media (max-width: 480px) {
-  .page-header h2 {
-    font-size: 1.35rem;
-    margin-bottom: 0.2rem;
-  }
-
-  .page-subtitle {
-    font-size: 0.95rem;
-  }
-
   .games-page .balance-display {
     font-size: 1rem;
     margin-top: 0.5rem;
@@ -1304,10 +1243,6 @@
 }
 
 @media (max-width: 360px) {
-  .page-header h2 {
-    font-size: 1.3rem;
-  }
-
   .game-card-display {
     padding: 0.8rem;
   }
@@ -1833,9 +1768,6 @@
     grid-template-columns: 1fr;
   }
 
-  .page-header h2 {
-    font-size: 2rem;
-  }
 }
 
 /* ===== EXPANDABLE CARD-BASED BETTING UI ===== */
@@ -2498,19 +2430,6 @@
 
   .info-accordions {
     order: 4;
-  }
-
-  .games-page .page-header {
-    padding: 0.35rem 0 0.25rem;
-    margin-bottom: 0;
-  }
-
-  .games-page .page-header h2 {
-    font-size: 1.6rem;
-  }
-
-  .games-page .page-subtitle {
-    font-size: 0.95rem;
   }
 
   .place-picks-layout {

@@ -33,6 +33,11 @@ class DailyLogin {
         .eq('login_date', today)
         .single();
 
+      // PGRST116 = no rows found — that's expected. Any other error is a real failure.
+      if (checkError && checkError.code !== 'PGRST116') {
+        throw checkError;
+      }
+
       if (existing) {
         return { 
           alreadyLoggedIn: true, 
@@ -42,9 +47,11 @@ class DailyLogin {
         };
       }
 
-      // Calculate streak using database function
+      // Calculate streak using database function.
+      // Pass today's Pacific-timezone date so the function doesn't rely on
+      // CURRENT_DATE (UTC), which can differ from the client's local date.
       const { data: streakData, error: streakError } = await supabase
-        .rpc('calculate_login_streak', { p_user_id: userId });
+        .rpc('calculate_login_streak', { p_user_id: userId, p_login_date: today });
 
       if (streakError) {
         console.error('Error calculating streak:', streakError);
@@ -71,7 +78,26 @@ class DailyLogin {
         .select()
         .single();
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        // 23505 = unique_violation — a parallel request already inserted today's record.
+        // Treat this as a normal "already logged in" response instead of a 500.
+        if (insertError.code === '23505') {
+          const { data: existing2, error: fetchError } = await supabase
+            .from('daily_logins')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('login_date', today)
+            .single();
+          if (fetchError) throw fetchError;
+          return {
+            alreadyLoggedIn: true,
+            streak: existing2.streak_count,
+            rewardClaimed: existing2.reward_claimed,
+            rewardAmount: existing2.reward_amount
+          };
+        }
+        throw insertError;
+      }
 
       return {
         alreadyLoggedIn: false,
@@ -185,8 +211,9 @@ class DailyLogin {
   // Get current streak
   static async getCurrentStreak(userId) {
     try {
+      const today = getTodayPacific();
       const { data, error } = await supabase
-        .rpc('calculate_login_streak', { p_user_id: userId });
+        .rpc('calculate_login_streak', { p_user_id: userId, p_login_date: today });
 
       if (error) throw error;
       return data || 0;

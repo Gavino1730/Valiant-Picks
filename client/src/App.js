@@ -698,6 +698,13 @@ function AppContent() {
             Bracket
           </button>
           <button 
+            onClick={() => handlePageChange('actual-bracket')} 
+            className={['actual-bracket','girls-actual-bracket'].includes(page) ? 'active' : ''}
+          >
+            <span className="menu-icon">📋</span>
+            Results
+          </button>
+          <button 
             onClick={() => handlePageChange('leaderboard')} 
             className={page === 'leaderboard' ? 'active' : ''}
           >

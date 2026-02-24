@@ -444,12 +444,14 @@ CREATE POLICY "allow all bracket_entries" ON bracket_entries FOR ALL USING (true
 -- 8. DATABASE FUNCTIONS
 -- ============================================================
 
--- Calculate consecutive login streak for a user
-CREATE OR REPLACE FUNCTION calculate_login_streak(p_user_id UUID)
+-- Calculate consecutive login streak for a user.
+-- p_login_date defaults to CURRENT_DATE (UTC) for backward compatibility, but
+-- callers should pass the user's local date to avoid UTC vs. local-timezone drift.
+CREATE OR REPLACE FUNCTION calculate_login_streak(p_user_id UUID, p_login_date DATE DEFAULT CURRENT_DATE)
 RETURNS INTEGER AS $$
 DECLARE
     v_streak INTEGER := 1;
-    v_current_date DATE := CURRENT_DATE;
+    v_current_date DATE := p_login_date;
     v_prev_date DATE;
 BEGIN
     SELECT login_date INTO v_prev_date
@@ -644,7 +646,7 @@ GRANT EXECUTE ON FUNCTION calculate_game_bonus(UUID, TEXT)     TO authenticated;
 GRANT EXECUTE ON FUNCTION check_all_girls_games_bet(UUID)      TO authenticated;
 GRANT EXECUTE ON FUNCTION award_weekly_bonuses()               TO authenticated;
 GRANT EXECUTE ON FUNCTION check_all_games_bet(UUID)            TO authenticated;
-GRANT EXECUTE ON FUNCTION calculate_login_streak(UUID)         TO authenticated;
+GRANT EXECUTE ON FUNCTION calculate_login_streak(UUID, DATE)   TO authenticated;
 
 GRANT EXECUTE ON FUNCTION calculate_game_bonus(UUID, TEXT)     TO anon;
 GRANT EXECUTE ON FUNCTION check_all_girls_games_bet(UUID)      TO anon;
