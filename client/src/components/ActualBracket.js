@@ -34,6 +34,8 @@ function ActualBracket({ gender = 'boys' }) {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [userPicks, setUserPicks] = useState(null);
+  const [showMyPicks, setShowMyPicks] = useState(true);
 
   const teamById = useMemo(() => {
     return teams.reduce((acc, team) => {
@@ -72,6 +74,14 @@ function ActualBracket({ gender = 'boys' }) {
       setBracket(payload.bracket);
       setTeams(payload.teams || []);
       setGames(payload.games || []);
+
+      // Try to load user's picks (only if logged in)
+      try {
+        const entryRes = await apiClient.get(`/brackets/${payload.bracket.id}/entries/me`);
+        setUserPicks(entryRes.data?.picks || null);
+      } catch {
+        setUserPicks(null);
+      }
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to load bracket');
     } finally {
@@ -82,7 +92,7 @@ function ActualBracket({ gender = 'boys' }) {
   useEffect(() => {
     loadBracket();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [gender]);
 
   const getTeamName = (teamId) => {
     const team = teamById[teamId];
@@ -166,6 +176,14 @@ function ActualBracket({ gender = 'boys' }) {
         <div>
           <h1>Live {gender === 'girls' ? 'Girls' : 'Boys'} Bracket</h1>
         </div>
+        {userPicks && (
+          <button
+            className={`bracket-picks-toggle${showMyPicks ? ' bracket-picks-toggle--active' : ''}`}
+            onClick={() => setShowMyPicks(v => !v)}
+          >
+            {showMyPicks ? '👁 Hiding My Picks' : '👁 Show My Picks'}
+          </button>
+        )}
       </div>
 
       <div className="actual-bracket-info">
@@ -188,6 +206,22 @@ function ActualBracket({ gender = 'boys' }) {
             <div className="legend-box pending"></div>
             <span>Game result pending</span>
           </div>
+          {userPicks && showMyPicks && (
+            <>
+              <div className="legend-item">
+                <span style={{fontSize:'14px'}}>📌</span>
+                <span>Your pick (pending)</span>
+              </div>
+              <div className="legend-item">
+                <span style={{fontSize:'14px'}}>✅</span>
+                <span>Your pick was correct</span>
+              </div>
+              <div className="legend-item">
+                <span style={{fontSize:'14px'}}>❌</span>
+                <span>Your pick was wrong</span>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -217,17 +251,25 @@ function ActualBracket({ gender = 'boys' }) {
                       {!hasTeams && <div className="bracket-placeholder">{getRoundPlaceholder(round, totalRounds)}</div>}
                       {hasTeams && (
                         <>
-                          {[game.team1_id, game.team2_id].filter(Boolean).map((teamId) => (
-                            <div
-                              key={teamId}
-                              className={`team-display ${winner === teamId ? 'winner' : ''} ${winner && winner !== teamId ? 'loser' : ''} ${winner === teamId && isChampionshipRound ? 'champion' : ''}`}
-                            >
-                              <span className="team-seed">#{getTeamSeed(teamId)}</span>
-                              <span className="team-name">{getTeamName(teamId)}</span>
-                              {winner === teamId && <span className="winner-badge">✓</span>}
-                              {winner === teamId && isChampionshipRound && <span className="champion-label">CHAMPION</span>}
-                            </div>
-                          ))}
+                          {[game.team1_id, game.team2_id].filter(Boolean).map((teamId) => {
+                            const myPick = showMyPicks && userPicks?.[`round${round}`]?.[`game${game.game_number}`] === teamId;
+                            const correct = myPick && winner === teamId;
+                            const wrong = myPick && winner && winner !== teamId;
+                            return (
+                              <div
+                                key={teamId}
+                                className={`team-display ${winner === teamId ? 'winner' : ''} ${winner && winner !== teamId ? 'loser' : ''} ${winner === teamId && isChampionshipRound ? 'champion' : ''} ${myPick ? 'my-pick' : ''} ${correct ? 'my-pick--correct' : ''} ${wrong ? 'my-pick--wrong' : ''}`}
+                              >
+                                <span className="team-seed">#{getTeamSeed(teamId)}</span>
+                                <span className="team-name">{getTeamName(teamId)}</span>
+                                {myPick && !winner && <span className="my-pick-badge">📌</span>}
+                                {correct && <span className="my-pick-badge">✅</span>}
+                                {wrong && <span className="my-pick-badge">❌</span>}
+                                {winner === teamId && !myPick && <span className="winner-badge">✓</span>}
+                                {winner === teamId && isChampionshipRound && <span className="champion-label">CHAMPION</span>}
+                              </div>
+                            );
+                          })}
                         </>
                       )}
                     </div>

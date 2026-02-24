@@ -466,19 +466,36 @@ router.get('/:id', optionalAuth, async (req, res) => {
 
 router.get('/:id/leaderboard', optionalAuth, async (req, res) => {
   try {
-    const { data: entries, error: entriesError } = await supabase
-      .from('bracket_entries')
-      .select('id, points, payout, created_at, user_id')
-      .eq('bracket_id', req.params.id)
-      .order('points', { ascending: false });
+    const [entriesResult, gamesResult] = await Promise.all([
+      supabase
+        .from('bracket_entries')
+        .select('id, points, payout, picks, created_at, user_id')
+        .eq('bracket_id', req.params.id)
+        .order('points', { ascending: false }),
+      supabase
+        .from('bracket_games')
+        .select('round, game_number, winner_team_id')
+        .eq('bracket_id', req.params.id)
+    ]);
 
-    if (entriesError) throw entriesError;
+    if (entriesResult.error) throw entriesResult.error;
+    if (gamesResult.error) throw gamesResult.error;
 
-    if (!entries || entries.length === 0) {
-      return res.json([]);
-    }
+    const entries = entriesResult.data || [];
+    const games = gamesResult.data || [];
 
-    // Get user info for each entry
+    if (entries.length === 0) return res.json([]);
+
+    // Build completed games map: { round: { gameKey: winnerId } }
+    const completedGames = games.filter(g => g.winner_team_id);
+    const winnersByRound = completedGames.reduce((acc, g) => {
+      if (!acc[g.round]) acc[g.round] = {};
+      acc[g.round][normalizePickKey(g.game_number)] = g.winner_team_id;
+      return acc;
+    }, {});
+    const totalCompleted = completedGames.length;
+
+    // Get user info
     const userIds = [...new Set(entries.map(e => e.user_id))];
     const { data: users, error: usersError } = await supabase
       .from('users')
@@ -487,14 +504,31 @@ router.get('/:id/leaderboard', optionalAuth, async (req, res) => {
 
     if (usersError) throw usersError;
 
-    // Merge user data into entries
     const userMap = {};
     (users || []).forEach(u => { userMap[u.id] = u; });
 
-    const enrichedEntries = entries.map(entry => ({
-      ...entry,
-      users: userMap[entry.user_id] || null
-    }));
+    const enrichedEntries = entries.map(entry => {
+      const safePicks = coercePicks(entry.picks);
+      let correctPicks = 0;
+      [1, 2, 3, 4].forEach((round) => {
+        const roundWinners = winnersByRound[round] || {};
+        Object.entries(roundWinners).forEach(([gameKey, winnerId]) => {
+          if (!winnerId) return;
+          if (safePicks[`round${round}`]?.[gameKey] === winnerId) correctPicks++;
+        });
+      });
+
+      return {
+        id: entry.id,
+        points: entry.points,
+        payout: entry.payout,
+        created_at: entry.created_at,
+        user_id: entry.user_id,
+        correct_picks: correctPicks,
+        total_completed: totalCompleted,
+        users: userMap[entry.user_id] || null
+      };
+    });
 
     const filtered = enrichedEntries.filter((entry) => !entry.users?.is_admin);
     res.json(filtered);

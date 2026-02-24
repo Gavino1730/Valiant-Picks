@@ -16,16 +16,6 @@
   background: #db2777;
 }
 
-.bracket-page--girls .bracket-quick-link {
-  border-color: #be185d;
-  color: #be185d;
-}
-
-.bracket-page--girls .bracket-quick-link:hover {
-  background: #be185d;
-  color: #fff;
-}
-
 /* Tab switcher */
 .bracket-tabs {
   display: flex;
@@ -1991,6 +1981,53 @@
   letter-spacing: 0.5px;
   text-transform: uppercase;
   box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+}
+
+/* My Picks toggle button */
+.bracket-picks-toggle {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.bracket-picks-toggle:hover {
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+}
+
+.bracket-picks-toggle--active {
+  background: rgba(11, 94, 215, 0.12);
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+}
+
+/* My picks overlay on team rows */
+.team-display.my-pick {
+  border-color: rgba(99, 179, 237, 0.6);
+  background: rgba(99, 179, 237, 0.08);
+}
+
+.team-display.my-pick--correct {
+  border-color: rgba(72, 199, 142, 0.7) !important;
+  background: rgba(72, 199, 142, 0.12) !important;
+}
+
+.team-display.my-pick--wrong {
+  border-color: rgba(255, 99, 99, 0.5) !important;
+  opacity: 0.75;
+}
+
+.my-pick-badge {
+  font-size: 13px;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 /* Legend */

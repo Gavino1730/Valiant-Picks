@@ -41,7 +41,7 @@ function BracketLeaderboard({ gender = 'boys' }) {
     
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [gender]);
 
   const rankedEntries = useMemo(() => {
     return [...entries].sort((a, b) => {
@@ -63,7 +63,7 @@ function BracketLeaderboard({ gender = 'boys' }) {
           <button className={`bracket-sub-tab${gender !== 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/bracket-leaderboard')}>🏀 Boys</button>
           <button className={`bracket-sub-tab${gender === 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/girls-bracket-leaderboard')}>🎀 Girls</button>
         </div>
-        <h1>Bracket Leaderboard</h1>
+        <h1>{gender === 'girls' ? 'Girls' : 'Boys'} Bracket Leaderboard</h1>
         <p>Loading bracket standings...</p>
       </div>
     );
@@ -82,7 +82,7 @@ function BracketLeaderboard({ gender = 'boys' }) {
           <button className={`bracket-sub-tab${gender !== 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/bracket-leaderboard')}>🏀 Boys</button>
           <button className={`bracket-sub-tab${gender === 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/girls-bracket-leaderboard')}>🎀 Girls</button>
         </div>
-        <h1>Bracket Leaderboard</h1>
+        <h1>{gender === 'girls' ? 'Girls' : 'Boys'} Bracket Leaderboard</h1>
         <p>No active bracket yet.</p>
       </div>
     );
@@ -103,7 +103,7 @@ function BracketLeaderboard({ gender = 'boys' }) {
 
       <div className="leaderboard-header">
         <div>
-          <h1>{bracket.name} Leaderboard</h1>
+          <h1>{gender === 'girls' ? 'Girls' : 'Boys'} Bracket Leaderboard</h1>
           <p className="subtitle">Points and payouts for submitted brackets</p>
           <p className="subtitle subtitle--deadline">⏰ Picks must be submitted by February 28 at 5pm Pacific</p>
           {lastRefresh && <p className="subtitle subtitle--small">Last updated: {lastRefresh}</p>}
@@ -134,6 +134,7 @@ function BracketLeaderboard({ gender = 'boys' }) {
           <span>Rank</span>
           <span>Player</span>
           <span className="align-right">Points</span>
+          <span className="align-right">Accuracy</span>
           <span className="align-right">Payout</span>
         </div>
         {rankedEntries.length === 0 && (
@@ -144,6 +145,11 @@ function BracketLeaderboard({ gender = 'boys' }) {
             <span>{index + 1}</span>
             <span>{entry.users?.username || 'Player'}</span>
             <span className="align-right">{entry.points}</span>
+            <span className="align-right">
+              {entry.total_completed > 0
+                ? `${Math.round((entry.correct_picks / entry.total_completed) * 100)}%`
+                : '—'}
+            </span>
             <span className="align-right">{formatCurrency(Number(entry.payout || 0))}</span>
           </div>
         ))}

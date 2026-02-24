@@ -2931,6 +2931,7 @@ html {
     margin-bottom: 0;
     border-left: none;
     border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
   }
 }
 
@@ -3067,104 +3068,51 @@ html {
   font-weight: 600;
 }
 
-/* Playoff Celebration Banner */
+/* Playoff Banner */
 .playoff-banner {
-  background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
-  border: 3px solid #66bb6a;
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 8px 32px rgba(102, 187, 106, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  animation: slideDown 0.4s ease;
-}
-
-.playoff-banner-content {
-  text-align: center;
-}
-
-.playoff-header {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  margin-bottom: 0.5rem;
-}
-
-.playoff-header h2 {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: #66bb6a;
-  margin: 0;
-  text-shadow: 0 2px 8px rgba(102, 187, 106, 0.3);
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+  border: 2px solid #66bb6a;
+  border-radius: 8px;
+  padding: 0.45rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
 }
 
 .playoff-icon {
-  font-size: 1.6rem;
-  animation: bounce 1.5s ease-in-out infinite;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-.playoff-intro {
-  font-size: 0.9rem;
-  color: #c8e6c9;
-  margin: 0 0 0.6rem 0;
-  font-weight: 500;
-}
-
-.playoff-slogan {
   font-size: 1rem;
+}
+
+.playoff-title {
+  font-weight: 800;
   color: #66bb6a;
-  font-weight: 700;
-  margin: 0 0 0.75rem 0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  animation: fadeInScale 0.6s ease-out;
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.playoff-games {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-.playoff-teams {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+.playoff-game {
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.playoff-team {
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(102, 187, 106, 0.3);
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+.playoff-game.boys { color: #90caf9; }
+.playoff-game.girls { color: #f48fb1; }
 
-.playoff-team:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(102, 187, 106, 0.2);
-  border-color: rgba(102, 187, 106, 0.6);
-}
-
-.playoff-team h3 {
-  font-size: 1rem;
-  color: #81c784;
-  margin: 0 0 0.25rem 0;
-  font-weight: 700;
+.playoff-sep {
+  color: #66bb6a;
+  opacity: 0.5;
 }
 
 .playoff-champ {
@@ -3204,117 +3152,10 @@ html {
   color: #66bb6a;
 }
 
-/* Mobile responsive */
-@media (max-width: 768px) {
-  .playoff-banner {
-    padding: 1.5rem 1rem;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-  }
-
-  .playoff-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .playoff-icon {
-    font-size: 2rem;
-  }
-
-  .playoff-intro {
-    font-size: 0.95rem;
-  }
-
-  .playoff-slogan {
-    font-size: 1.1rem;
-  }
-
-  .playoff-teams {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .playoff-team {
-    padding: 1rem;
-    border-radius: 8px;
-  }
-
-  .playoff-team h3 {
-    font-size: 1.1rem;
-  }
-
-  .team-stats {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
-  }
-
-  .team-stats .stat-label {
-    font-size: 0.75rem;
-  }
-
-  .team-stats .stat-value {
-    font-size: 1.3rem;
-  }
-}
-
 @media (max-width: 480px) {
   .playoff-banner {
-    padding: 1rem 0.75rem;
-    margin-bottom: 0.75rem;
-    border-radius: 8px;
-  }
-
-  .playoff-header {
-    gap: 0.5rem;
-  }
-
-  .playoff-header h2 {
-    font-size: 1.25rem;
-  }
-
-  .playoff-icon {
-    font-size: 1.5rem;
-  }
-
-  .playoff-intro {
-    font-size: 0.9rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .playoff-slogan {
-    font-size: 1rem;
-    letter-spacing: 0.5px;
-    margin-bottom: 1rem;
-  }
-
-  .playoff-teams {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
-  .playoff-team {
-    padding: 0.75rem;
-  }
-
-  .playoff-team h3 {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .playoff-champ {
-    font-size: 0.85rem;
-  }
-
-  .team-stats {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.3rem;
-  }
-
-  .team-stats .stat-label {
-    font-size: 0.7rem;
-  }
-
-  .team-stats .stat-value {
-    font-size: 1.1rem;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.75rem;
   }
 }
 
@@ -3470,89 +3311,222 @@ html {
 }
 
 /* Bracket Advertisement Section */
+/* Bracket Ad — March Madness Style */
 .bracket-ad-section {
-  background: linear-gradient(135deg, #0a1628 0%, #0d2247 50%, #0a1628 100%);
-  border: 2px solid #004f9e;
-  border-radius: 12px;
-  padding: 1.75rem 2rem;
+  position: relative;
+  background: linear-gradient(135deg, #050d1a 0%, #0a1f3d 40%, #0d2a52 100%);
+  border: 2px solid #ffd700;
+  border-radius: 14px;
+  padding: 1.5rem 1.75rem 1.5rem 1.75rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 6px 24px rgba(0, 79, 158, 0.3);
+  box-shadow: 0 8px 32px rgba(255, 215, 0, 0.12), 0 2px 8px rgba(0,0,0,0.4);
+  overflow: hidden;
   animation: slideDown 0.4s ease;
 }
 
-.bracket-ad-content {
+.bracket-ad-section::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(255,215,0,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.bracket-ad-free-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #ffd700, #ffb300);
+  color: #000;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.bracket-ad-inner {
   display: flex;
+  gap: 2rem;
   align-items: center;
-  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
-.bracket-ad-icon {
-  font-size: 2.8rem;
+.bracket-ad-left {
+  flex: 1;
+  min-width: 220px;
+}
+
+.bracket-ad-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #90caf9;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.bracket-ad-headline {
+  font-size: 1.55rem;
+  font-weight: 900;
+  color: #fff;
+  margin: 0 0 0.6rem 0;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.bracket-ad-highlight {
+  color: #ffd700;
+}
+
+.bracket-ad-sub {
+  font-size: 0.88rem;
+  color: #90aac8;
+  margin: 0 0 0.9rem 0;
+  line-height: 1.55;
+}
+
+.bracket-ad-perks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.bracket-perk {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.78rem;
+  color: #d0e8ff;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bracket-ad-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   flex-shrink: 0;
 }
 
-.bracket-ad-text {
-  flex: 1;
-  min-width: 200px;
+/* Mini bracket visual */
+.bracket-ad-bracket-visual {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 160px;
 }
 
-.bracket-ad-text h3 {
-  font-size: 1.3rem;
+.bv-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding: 0.2rem 0;
+}
+
+.bv-team {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #8badd4;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+}
+
+.bv-team.gold {
+  color: #ffd700;
+  background: rgba(255,215,0,0.12);
+  border: 1px solid rgba(255,215,0,0.25);
+}
+
+.bv-win {
+  font-size: 0.7rem;
+  color: #66bb6a;
+  font-weight: 800;
+}
+
+.bv-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 0.2rem 0;
+}
+
+.bv-champ {
+  font-size: 0.78rem;
   font-weight: 800;
   color: #ffd700;
-  margin: 0 0 0.4rem 0;
+  text-align: center;
+  margin-top: 0.3rem;
   letter-spacing: 0.5px;
-}
-
-.bracket-ad-text p {
-  font-size: 0.95rem;
-  color: #b0c8e8;
-  margin: 0;
-  line-height: 1.5;
 }
 
 .bracket-ad-buttons {
   display: flex;
-  gap: 0.75rem;
-  flex-shrink: 0;
+  gap: 0.65rem;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .bracket-ad-btn {
-  padding: 0.65rem 1.4rem;
+  padding: 0.6rem 1.25rem;
   border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.88rem;
+  font-weight: 800;
   border: none;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .bracket-ad-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
 }
 
 .boys-btn {
   background: linear-gradient(135deg, #1565c0, #1976d2);
   color: #fff;
+  box-shadow: 0 3px 12px rgba(25, 118, 210, 0.4);
 }
 
 .girls-btn {
   background: linear-gradient(135deg, #ad1457, #d81b60);
   color: #fff;
+  box-shadow: 0 3px 12px rgba(216, 27, 96, 0.4);
 }
 
 @media (max-width: 768px) {
-  .bracket-ad-content {
+  .bracket-ad-inner {
     flex-direction: column;
-    text-align: center;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .bracket-ad-right {
+    width: 100%;
+  }
+  .bracket-ad-bracket-visual {
+    width: 100%;
   }
   .bracket-ad-buttons {
-    justify-content: center;
     width: 100%;
+  }
+  .bracket-ad-btn {
+    flex: 1;
+    text-align: center;
+  }
+  .bracket-ad-headline {
+    font-size: 1.3rem;
   }
 }
 
@@ -4273,4 +4247,197 @@ html {
 
 .dashboard .balance-display-large .balance-label {
   color: #e8f1ff;
+}
+
+/* ===== MOBILE OPTIMIZATION PASS ===== */
+
+/* Notification banner: stack vertically on small screens */
+@media (max-width: 540px) {
+  .notification-banner {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+  .notification-banner-icon {
+    font-size: 2rem;
+    align-self: center;
+  }
+  .notification-banner-btn {
+    width: 100%;
+    padding: 0.8rem;
+  }
+  .notification-banner-close {
+    top: 0.4rem;
+    right: 0.4rem;
+  }
+}
+
+/* Win/Loss notifications: horizontal compact layout on mobile */
+@media (max-width: 540px) {
+  .win-notification,
+  .loss-notification {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    text-align: left;
+  }
+  .win-notification-emoji,
+  .loss-notification-emoji {
+    font-size: 2rem;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+  .win-notification-title,
+  .loss-notification-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.15rem;
+    font-weight: 700;
+  }
+  .win-notification-amount,
+  .loss-notification-amount {
+    font-size: 1.4rem;
+    margin-bottom: 0.1rem;
+    line-height: 1;
+  }
+  .win-notification-team,
+  .loss-notification-team {
+    font-size: 0.82rem;
+    opacity: 0.85;
+  }
+}
+
+/* Playoff banner: hide separator, stack games on very small */
+@media (max-width: 420px) {
+  .playoff-sep {
+    display: none;
+  }
+  .playoff-games {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+  .playoff-banner {
+    align-items: flex-start;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* Bracket ad: compact on small screens */
+@media (max-width: 540px) {
+  .bracket-ad-section {
+    padding: 1rem;
+  }
+  .bracket-ad-bracket-visual {
+    display: none; /* too cramped to be useful */
+  }
+  .bracket-ad-headline {
+    font-size: 1.2rem;
+    line-height: 1.25;
+  }
+  .bracket-ad-sub {
+    font-size: 0.82rem;
+  }
+  .bracket-perk {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.5rem;
+  }
+  .bracket-ad-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.65rem 0.75rem;
+    font-size: 0.82rem;
+  }
+}
+
+/* Upcoming game cards: single column and tighter on mobile */
+@media (max-width: 540px) {
+  .upcoming-games-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .upcoming-game-card {
+    padding: 0.75rem;
+    border-radius: 6px;
+  }
+  .game-matchup-display {
+    font-size: 0.9rem;
+  }
+  .game-date-display {
+    font-size: 0.8rem;
+  }
+}
+
+/* Activity cards: compact on mobile */
+@media (max-width: 540px) {
+  .activity-card {
+    padding: 0.75rem;
+  }
+  .activity-team {
+    font-size: 0.88rem;
+  }
+  .activity-bet-amount {
+    font-size: 0.95rem;
+  }
+  .activity-status,
+  .activity-profit,
+  .activity-potential {
+    font-size: 0.8rem;
+  }
+}
+
+/* Welcome card: tighter balance display on small screens */
+@media (max-width: 420px) {
+  .welcome-card-primary {
+    padding: 0.9rem 0.85rem;
+  }
+  .balance-display-large {
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 0.85rem;
+  }
+  .balance-display-large .balance-amount {
+    font-size: 1.55rem;
+  }
+  .btn-cta-large {
+    font-size: 0.95rem;
+    padding: 0.85rem 1rem;
+  }
+}
+
+/* Quick links: horizontal scrollable row on mobile */
+@media (max-width: 540px) {
+  .quick-links-list {
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.5rem;
+    padding-bottom: 0.25rem;
+    scrollbar-width: none;
+  }
+  .quick-links-list::-webkit-scrollbar {
+    display: none;
+  }
+  .quick-link-item {
+    flex-shrink: 0;
+    width: auto;
+    padding: 0.6rem 1rem;
+    font-size: 0.88rem;
+  }
+}
+
+/* Spin wheel card: compact on mobile */
+@media (max-width: 540px) {
+  .spin-wheel-card p {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* Global: prevent horizontal scroll bleed */
+.dashboard-main-column,
+.dashboard-sidebar {
+  min-width: 0;
+  overflow-x: hidden;
 }
