@@ -12,7 +12,13 @@ function isHtmlError(error) {
   if (!error) return false;
   
   const message = error.message || '';
-  return typeof message === 'string' && message.includes('<!DOCTYPE html>');
+  return typeof message === 'string' && (
+    message.includes('<!DOCTYPE html>') ||
+    message.includes('<html>') ||
+    message.includes('<html\r\n') ||
+    message.includes('<html\n') ||
+    /<html[\s>]/i.test(message)
+  );
 }
 
 /**
@@ -55,6 +61,11 @@ async function wrapSupabaseQuery(queryFn, operation) {
     
     // Re-throw if already a user-friendly error
     if (err.message.includes('Database temporarily unavailable')) {
+      throw err;
+    }
+
+    // Re-throw if already wrapped by handleSupabaseError to avoid double-nesting
+    if (err.message.startsWith('Error ')) {
       throw err;
     }
     

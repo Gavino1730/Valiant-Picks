@@ -1,5 +1,5 @@
 const { supabase } = require('../supabase');
-const { handleSupabaseError } = require('../utils/supabaseErrorHandler');
+const { handleSupabaseError, isHtmlError } = require('../utils/supabaseErrorHandler');
 
 const Game = {
   create: async (gameData) => {
@@ -66,7 +66,10 @@ const Game = {
       if (err.message.includes('Database temporarily unavailable')) {
         throw err;
       }
-      handleSupabaseError(err, 'fetching games');
+      if (isHtmlError(err)) {
+        throw new Error('Database temporarily unavailable. Please try again in a few moments.');
+      }
+      throw err;
     }
   },
 
