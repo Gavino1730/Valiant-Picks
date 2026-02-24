@@ -436,7 +436,9 @@ function Teams() {
 
   return (
     <div className="teams-page ds-page">
-      <h1>Valiant Basketball</h1>
+      <div className="page-header">
+        <h1>Valiant Basketball</h1>
+      </div>
       
       <div className="tabs">
         <button 

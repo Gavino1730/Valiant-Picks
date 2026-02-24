@@ -4,7 +4,7 @@
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 1.2rem 1.25rem 1.25rem;
+  padding: 0 1.25rem 1.25rem;
   animation: fadeIn 0.4s ease;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -14,10 +14,6 @@
 @media (max-width: 1024px) and (min-width: 768px) {
   .bet-list-container {
     padding: 1.5rem;
-  }
-
-  .header-title h1 {
-    font-size: 2.2rem;
   }
 
   .bet-stats-grid {
@@ -38,14 +34,6 @@
 @media (max-width: 767px) {
   .bet-list-container {
     padding: 1rem;
-  }
-
-  .header-title h1 {
-    font-size: 1.8rem;
-  }
-
-  .subtitle {
-    font-size: 1rem;
   }
 
   .bet-stats-grid {
@@ -102,21 +90,6 @@
 /* Header Section */
 .bet-list-header {
   margin-bottom: 0.85rem;
-}
-
-.header-title h1 {
-  font-size: 2.1rem;
-  color: var(--color-text-primary);
-  margin: 0 0 0.25rem 0;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-}
-
-.subtitle {
-  color: var(--color-text-secondary);
-  font-size: 0.98rem;
-  margin: 0;
-  line-height: 1.4;
 }
 
 /* Stats Grid */
@@ -622,16 +595,6 @@
     padding: calc(var(--navbar-height) + env(safe-area-inset-top) + 0.35rem) 0.85rem 1rem;
   }
 
-  .header-title h1 {
-    font-size: 1.6rem;
-    margin-bottom: 0.2rem;
-  }
-
-  .subtitle {
-    font-size: 0.9rem;
-    margin-bottom: 0;
-  }
-
   .bet-list-header {
     margin-bottom: 0.6rem;
   }
@@ -759,10 +722,6 @@
   .bet-stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
-  }
-
-  .header-title h1 {
-    font-size: 1.4rem;
   }
 
   .stat-value {

@@ -23,9 +23,8 @@ function HowToUse({ onNavigate }) {
 
   return (
     <div className="how-to-use">
-      <div className="page-header compact">
+      <div className="page-header">
         <h1>📚 How to Use Valiant Picks</h1>
-        <p className="page-subtitle">Learn how to make predictions and climb the leaderboard</p>
       </div>
 
       {/* What is Valiant Picks */}

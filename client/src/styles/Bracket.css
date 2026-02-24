@@ -157,9 +157,9 @@
 .bracket-header h1 {
   margin: 0;
   color: var(--color-text-primary);
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.4px;
 }
 
 .bracket-subtitle {
@@ -1633,10 +1633,6 @@
     gap: 12px;
   }
 
-  .bracket-header h1 {
-    font-size: 26px;
-  }
-
   .bracket-subtitle {
     font-size: 14px;
   }
@@ -1821,11 +1817,6 @@
   .bracket-header {
     gap: 10px;
     margin-bottom: 16px;
-  }
-
-  .bracket-header h1 {
-    font-size: 22px;
-    letter-spacing: -0.3px;
   }
 
   .bracket-subtitle {

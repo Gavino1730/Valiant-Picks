@@ -6,7 +6,6 @@ function Terms() {
     <div className="terms-page">
       <div className="terms-header">
         <h1>⚖️ Terms & Guidelines</h1>
-        <p>Last Updated: January 4, 2026</p>
       </div>
 
       <div className="terms-container">

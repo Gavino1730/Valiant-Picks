@@ -165,10 +165,7 @@ function BetList() {
       
       {/* Header Section */}
       <div className="bet-list-header page-header">
-        <div className="header-title">
-          <h1>My Picks</h1>
-          <p className="subtitle">Track your picking history and performance</p>
-        </div>
+        <h1>My Picks</h1>
       </div>
 
       {/* Stats Overview */}

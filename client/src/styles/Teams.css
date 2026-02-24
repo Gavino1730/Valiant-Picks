@@ -30,9 +30,6 @@
   .teams-page {
     padding: 12px;
   }
-
-  .teams-page h1 {
-    font-size: 1.8rem;
     margin-bottom: 20px;
   }
 
@@ -65,12 +62,11 @@
 }
 
 .teams-page h1 {
-  color: #f2f4f8;
-  margin: 8px 0 20px;
-  text-align: center;
-  font-size: 2rem;
+  color: var(--color-text-primary);
+  margin: 0;
+  font-size: 1.75rem;
   font-weight: 700;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.4px;
 }
 
 .tabs {
@@ -659,11 +655,6 @@
     padding: 1rem;
   }
 
-  .teams-page h1 {
-    font-size: 1.6rem;
-    margin-bottom: 1.5rem;
-  }
-
   .team-section {
     padding: 1rem;
     margin-bottom: 1.5rem;
@@ -854,11 +845,6 @@
 @media (max-width: 480px) {
   .teams-page {
     padding: 0.75rem;
-  }
-
-  .teams-page h1 {
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
   }
 
   .tabs {

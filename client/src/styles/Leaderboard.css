@@ -15,10 +15,6 @@
     padding: 1.5rem;
   }
 
-  .leaderboard-header h1 {
-    font-size: 2.4rem;
-  }
-
   .overview-stats {
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 0.85rem;
@@ -37,10 +33,6 @@
 @media (max-width: 767px) {
   .leaderboard-page {
     padding: 1rem;
-  }
-
-  .leaderboard-header h1 {
-    font-size: 2rem;
   }
 
   .leaderboard-header .subtitle {
@@ -72,15 +64,13 @@
 }
 
 .leaderboard-header {
-  text-align: center;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
 }
 
 .leaderboard-header h1 {
-  color: #ffffff;
-  font-size: var(--font-title);
+  color: var(--color-text-primary);
+  font-size: 1.75rem;
   font-weight: 700;
-  margin-bottom: var(--space-2);
   letter-spacing: -0.4px;
 }
 
@@ -733,10 +723,6 @@
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 1200px) {
-  .leaderboard-header h1 {
-    font-size: 2rem;
-  }
-
   .leaderboard-table td {
     font-size: 0.92rem;
   }
@@ -782,10 +768,6 @@
     min-width: 860px;
   }
 
-  .leaderboard-header h1 {
-    font-size: 1.8rem;
-  }
-
   .leaderboard-table td,
   .leaderboard-table thead th {
     padding: 0.55rem 0.7rem;
@@ -811,10 +793,6 @@
 @media (max-width: 600px) {
   .leaderboard-page {
     padding: 1rem 0.75rem 0.6rem;
-  }
-
-  .leaderboard-header h1 {
-    font-size: 1.5rem;
   }
 
   .leaderboard-header .subtitle {

@@ -736,8 +736,7 @@ function Games({ user, updateUser }) {
   return (
     <div className="games-page ds-page">
       <div className="page-header">
-        <h2>Place Your Picks</h2>
-        <p className="page-subtitle">Select a game and make your predictions</p>
+        <h1>Place Your Picks</h1>
       </div>
 
       {message && (

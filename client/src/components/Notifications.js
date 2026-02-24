@@ -149,7 +149,7 @@ function Notifications({ onUnreadChange }) {
   return (
     <div className="notifications-page ds-page">
       <div className="notifications-header page-header">
-        <h2>🔔 Notifications</h2>
+        <h1>🔔 Notifications</h1>
         {unreadCount > 0 && (
           <button className="btn btn-secondary btn-sm" onClick={markAllAsRead}>
             Mark All Read ({unreadCount})

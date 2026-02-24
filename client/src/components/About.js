@@ -76,7 +76,6 @@ function About() {
     <div className="about-page">
       <div className="about-header">
         <h1>ℹ️ About Valiant Picks</h1>
-        <p>Project Overview & Development Details</p>
       </div>
 
       <div className="about-container">

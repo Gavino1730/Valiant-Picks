@@ -12,10 +12,6 @@
     padding: 1.5rem;
   }
 
-  .about-header h1 {
-    font-size: 2.4rem;
-  }
-
   .about-header p {
     font-size: 1rem;
   }
@@ -38,14 +34,6 @@
 
   .about-header {
     margin-bottom: 2rem;
-  }
-
-  .about-header h1 {
-    font-size: 2rem;
-  }
-
-  .about-header p {
-    font-size: 0.95rem;
   }
 
   .about-container {
@@ -71,22 +59,15 @@
 }
 
 .about-header {
-  text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: var(--space-4);
 }
 
 .about-header h1 {
-  color: #ffffff;
-  font-size: 2.8rem;
-  font-weight: 900;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 2px 8px rgba(31, 78, 153, 0.3);
-}
-
-.about-header p {
-  color: #b8c5d6;
-  font-size: 1.1rem;
-  letter-spacing: 0.3px;
+  color: var(--color-text-primary);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  margin: 0;
 }
 
 .about-container {
@@ -784,10 +765,6 @@
     padding: 1.5rem;
   }
 
-  .about-header h1 {
-    font-size: 2.2rem;
-  }
-
   .about-section {
     padding: 1.5rem;
   }
@@ -796,14 +773,6 @@
 @media (max-width: 768px) {
   .about-page {
     padding: 1rem;
-  }
-
-  .about-header h1 {
-    font-size: 1.8rem;
-  }
-
-  .about-header p {
-    font-size: 0.95rem;
   }
 
   .about-grid {
@@ -843,14 +812,6 @@
 @media (max-width: 480px) {
   .about-page {
     padding: 0.75rem;
-  }
-
-  .about-header h1 {
-    font-size: 1.4rem;
-  }
-
-  .about-header p {
-    font-size: 0.85rem;
   }
 
   .about-container {

@@ -5,14 +5,12 @@
 
 .notifications-header {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-}
-
-.notifications-header h2 {
-  margin: 0;
-  color: #e0e0e0;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .notifications-list {
@@ -94,10 +92,6 @@
     margin-bottom: 1.5rem;
   }
 
-  .notifications-header h2 {
-    font-size: 1.5rem;
-  }
-
   .notification-card {
     padding: 1.25rem;
     gap: 1rem;
@@ -130,10 +124,6 @@
 
   .notifications-header {
     margin-bottom: 1rem;
-  }
-
-  .notifications-header h2 {
-    font-size: 1.3rem;
   }
 
   .notification-card {

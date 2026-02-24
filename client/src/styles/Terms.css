@@ -7,22 +7,15 @@
 }
 
 .terms-header {
-  text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: var(--space-4);
 }
 
 .terms-header h1 {
-  color: #ffffff;
-  font-size: 2.8rem;
-  font-weight: 900;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 2px 8px rgba(31, 78, 153, 0.3);
-}
-
-.terms-header p {
-  color: #b8c5d6;
-  font-size: 0.95rem;
-  letter-spacing: 0.3px;
+  color: var(--color-text-primary);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  margin: 0;
 }
 
 .terms-container {
@@ -97,10 +90,6 @@
     padding: 1.5rem;
   }
 
-  .terms-header h1 {
-    font-size: 2.2rem;
-  }
-
   .terms-section {
     padding: 1.5rem;
   }
@@ -109,10 +98,6 @@
 @media (max-width: 768px) {
   .terms-page {
     padding: 1rem;
-  }
-
-  .terms-header h1 {
-    font-size: 1.8rem;
   }
 
   .terms-header p {
@@ -145,10 +130,6 @@
 @media (max-width: 480px) {
   .terms-page {
     padding: 0.75rem;
-  }
-
-  .terms-header h1 {
-    font-size: 1.4rem;
   }
 
   .terms-header p {

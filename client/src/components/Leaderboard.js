@@ -152,7 +152,6 @@ function Leaderboard() {
       <div className="leaderboard-page ds-page">
         <div className="leaderboard-header page-header">
           <h1>Leaderboard</h1>
-          <p>Ranked by Valiant Bucks balance</p>
         </div>
         <div className="leaderboard-table-wrapper ds-table-wrapper">
           <table className="leaderboard-table ds-table">
@@ -205,7 +204,6 @@ function Leaderboard() {
     <div className="leaderboard-page ds-page">
       <div className="leaderboard-header page-header">
         <h1>Leaderboard</h1>
-        <p className="subtitle">Track performance across all players</p>
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}

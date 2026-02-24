@@ -230,14 +230,6 @@
   }
 
   /* Games page mobile */
-  .page-header {
-    margin-bottom: 1.5rem;
-    padding: 1rem 0;
-  }
-
-  .page-header h2 {
-    font-size: 1.8rem;
-  }
 
   .games-grid {
     grid-template-columns: 1fr;
@@ -559,16 +551,6 @@
 
   .btn-group button {
     width: 100%;
-  }
-
-  /* Improve spacing in small containers */
-  .page-header {
-    padding: 0.75rem 0;
-    margin-bottom: 1rem;
-  }
-
-  .page-header h2 {
-    font-size: 1.5rem;
   }
 
   .bet-item {
