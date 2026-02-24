@@ -24,32 +24,6 @@ html {
   }
 }
 
-/* Broadway Theater Spotlight Effect - Reduced intensity */
-.dashboard::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: none;
-  pointer-events: none;
-  z-index: 0;
-  animation: none;
-  opacity: 0;
-}
-
-@keyframes spotlightShift {
-  0%, 100% { 
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% { 
-    opacity: 0.5;
-    transform: scale(1.05);
-  }
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -141,35 +115,6 @@ html {
   position: relative;
   overflow: visible;
   animation: none;
-}
-
-/* Broadway marquee lights on stat cards */
-.stat-compact::before {
-  content: none;
-}
-
-@keyframes marqueeScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(30px); }
-}
-
-@keyframes subtleGlow {
-  0%, 100% { 
-    box-shadow: 
-      0 4px 12px rgba(0, 0, 0, 0.25), 
-      0 0 20px rgba(33, 150, 243, 0.1),
-      inset 0 0 20px rgba(255, 140, 0, 0.05);
-  }
-  50% { 
-    box-shadow: 
-      0 4px 12px rgba(0, 0, 0, 0.25), 
-      0 0 25px rgba(33, 150, 243, 0.2),
-      inset 0 0 25px rgba(255, 140, 0, 0.08);
-  }
-}
-
-.stat-compact::before {
-  content: none;
 }
 
 /* Tablet responsive styles */
@@ -509,61 +454,6 @@ html {
   color: #66bb6a;
 }
 
-/* Stats Grid - prevent layout shift */
-.dashboard-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-  margin-top: 0;
-}
-
-.dashboard-stat-item {
-  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
-  padding: 1.5rem 1.2rem;
-  border-radius: 12px;
-  border: 2px solid;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  min-height: 130px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.dashboard-stat-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
-
-.dashboard-stat-item.total-picks {
-  border-color: #2196f3;
-}
-
-.dashboard-stat-item.pending {
-  border-color: #ff9800;
-}
-
-.dashboard-stat-item.won {
-  border-color: #66bb6a;
-}
-
-.dashboard-stat-item.lost {
-  border-color: #ef5350;
-}
-
-.dashboard-stat-item.wagered {
-  border-color: #9c27b0;
-}
-
-.dashboard-stat-item.profit {
-  border-color: #673ab7;
-}
-
 .stat-emoji {
   font-size: 1.8rem;
   line-height: 1;
@@ -681,29 +571,6 @@ html {
 }
 
 /* Dashboard Intro */
-.dashboard-intro {
-  margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, #0f1a2e 0%, #122347 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
-  padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-}
-
-.intro-title {
-  margin: 0 0 0.5rem 0;
-  color: #1f4e99;
-  font-size: 1.4rem;
-  font-weight: 800;
-}
-
-.intro-body {
-  margin: 0;
-  color: #c8d4e6;
-  line-height: 1.6;
-  font-size: 1rem;
-}
-
 .bet-form {
   display: flex;
   flex-direction: column;
@@ -1085,31 +952,6 @@ html {
   border-color: #ce93d8;
   box-shadow: 0 8px 24px rgba(156, 39, 176, 0.5);
   transform: translateY(-2px);
-}
-
-/* Legacy selectors for backwards compatibility - remove old home/away specific styles */
-.team-selection .team-btn:first-child {
-  /* Styles now handled by .valiant or .opponent classes */
-}
-
-.team-selection .team-btn:first-child:hover {
-  /* Styles now handled by .valiant or .opponent classes */
-}
-
-.team-selection .team-btn:first-child.active {
-  /* Styles now handled by .valiant or .opponent classes */
-}
-
-.team-selection .team-btn:last-child {
-  /* Styles now handled by .valiant or .opponent classes */
-}
-
-.team-selection .team-btn:last-child:hover {
-  /* Styles now handled by .valiant or .opponent classes */
-}
-
-.team-selection .team-btn:last-child.active {
-  /* Styles now handled by .valiant or .opponent classes */
 }
 
 .team-name {
@@ -1864,18 +1706,6 @@ html {
     font-weight: 800;
   }
 
-  .dashboard-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .dashboard-stat-item {
-    min-height: 110px;
-    padding: 1.1rem;
-    border-radius: 10px;
-  }
-
   .stat-emoji {
     font-size: 1.6rem;
   }
@@ -1943,12 +1773,6 @@ html {
 }
 
 @media (max-width: 600px) {
-  .dashboard-intro {
-    margin-bottom: 1.5rem;
-    padding: 1.3rem;
-    border-radius: 12px;
-  }
-
   .confidence-selection {
     grid-template-columns: 1fr;
     gap: 0.8rem;
@@ -2006,56 +1830,6 @@ html {
   /* Recent Winners - faster animation on tablet */
   .winners-scroll {
     animation: scroll 20s linear infinite;
-  }
-
-  .grade-bar-item {
-    padding: 0.9rem;
-  }
-
-  .grade-bar-icon {
-    font-size: 1.8rem;
-  }
-
-  .grade-bar-name {
-    font-size: 1rem;
-  }
-
-  .grade-bar-theme {
-    font-size: 0.8rem;
-  }
-
-  .grade-bar-colors {
-    font-size: 0.75rem;
-  }
-
-  .grade-bar-points {
-    font-size: 1.1rem;
-  }
-
-  .dress-up-day {
-    padding: 1rem;
-  }
-
-  .timeline-day {
-    font-size: 0.8rem;
-    min-width: 100px;
-  }
-
-  .dress-up-theme {
-    font-size: 1rem;
-  }
-
-  .points-option {
-    padding: 0.65rem 0.85rem;
-  }
-
-  .points-badge {
-    font-size: 0.65rem;
-    padding: 0.3rem 0.55rem;
-  }
-
-  .points-desc {
-    font-size: 0.85rem;
   }
 }
 
@@ -2177,18 +1951,6 @@ html {
     font-size: 1.2rem;
   }
 
-  .dashboard-stats-grid {
-    grid-template-columns: 1fr;
-    gap: 0.9rem;
-    margin-bottom: 1.2rem;
-  }
-
-  .dashboard-stat-item {
-    min-height: 95px;
-    padding: 1rem;
-    border-radius: 10px;
-  }
-
   .stat-emoji {
     font-size: 1.6rem;
   }
@@ -2229,12 +1991,6 @@ html {
 
   .stat-subtitle {
     font-size: 0.85rem;
-  }
-
-  .dashboard-intro {
-    margin-bottom: 1.2rem;
-    padding: 1.1rem;
-    border-radius: 10px;
   }
 
   .bet-card {
@@ -2336,87 +2092,6 @@ html {
   /* Recent Winners - even faster animation on mobile */
   .winners-scroll {
     animation: scroll 15s linear infinite;
-  }
-
-  .leader-icon {
-    font-size: 2.2rem !important;
-  }
-
-  .leader-label {
-    font-size: 0.7rem;
-  }
-
-  .leader-grade {
-    font-size: 1.2rem;
-  }
-
-  .leader-subtheme {
-    font-size: 0.85rem;
-  }
-
-  .leader-points {
-    font-size: 1.5rem;
-  }
-
-  .grade-bar-item {
-    padding: 0.85rem;
-    margin-bottom: 0.85rem;
-  }
-
-  .grade-bar-icon {
-    font-size: 1.6rem;
-  }
-
-  .grade-bar-name {
-    font-size: 0.95rem;
-  }
-
-  .grade-bar-theme {
-    font-size: 0.75rem;
-  }
-
-  .grade-bar-colors {
-    font-size: 0.7rem;
-  }
-
-  .grade-bar-points {
-    font-size: 1rem;
-  }
-
-  .grade-bar-container {
-    height: 28px;
-  }
-
-  .dress-up-day {
-    padding: 0.9rem;
-  }
-
-  .timeline-day {
-    font-size: 0.75rem;
-    min-width: 90px;
-    letter-spacing: 0.5px;
-  }
-
-  .dress-up-theme {
-    font-size: 0.95rem;
-  }
-
-  .dress-up-points {
-    gap: 0.5rem;
-  }
-
-  .points-option {
-    padding: 0.6rem 0.75rem;
-  }
-
-  .points-badge {
-    font-size: 0.6rem;
-    padding: 0.25rem 0.45rem;
-  }
-
-  .points-desc {
-    font-size: 0.8rem;
-    line-height: 1.4;
   }
 
   .timeline-item {
@@ -4227,8 +3902,6 @@ html {
 .dashboard .notification-banner-icon,
 .dashboard .recent-winners-icon,
 .dashboard .alert-icon,
-.dashboard .leader-icon,
-.dashboard .grade-bar-icon,
 .dashboard .event-icon,
 .dashboard .win-notification-emoji,
 .dashboard .loss-notification-emoji {

@@ -153,11 +153,6 @@ body {
   animation: none;
 }
 
-@keyframes logoFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-3px); }
-}
-
 .nav-center {
   display: flex;
   gap: 0.5rem;
@@ -844,10 +839,6 @@ body {
   position: relative;
   overflow: hidden;
   contain: layout;
-}
-
-.card::before {
-  content: none;
 }
 
 .card:hover {

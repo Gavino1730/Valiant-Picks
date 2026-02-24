@@ -325,7 +325,7 @@ router.post('/', authenticateToken, adminOnly, async (req, res) => {
         name,
         season: season || null,
         entry_fee: entryFee ?? 0,
-        payout_per_point: payoutPerPoint ?? 1000,
+        payout_per_point: payoutPerPoint ?? 25000,
         status: status || 'open',
         gender: gender || 'boys'
       }])
