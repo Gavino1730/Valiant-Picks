@@ -335,6 +335,21 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       
       {/* Achievements Popup */}
       <Achievements onAchievementClaimed={handleAchievementClaimed} user={user} />
+
+      {/* Bracket Advertisement */}
+      <div className="bracket-ad-section">
+        <div className="bracket-ad-content">
+          <div className="bracket-ad-icon">📊</div>
+          <div className="bracket-ad-text">
+            <h3>Bet the 3A Playoffs Bracket!</h3>
+            <p>Pick your winners and earn Valiant Bucks. Both Boys &amp; Girls brackets are live — place your bets before the games tip off!</p>
+          </div>
+          <div className="bracket-ad-buttons">
+            <button className="bracket-ad-btn boys-btn" onClick={() => onNavigate && onNavigate('bracket')}>Boys Bracket →</button>
+            <button className="bracket-ad-btn girls-btn" onClick={() => onNavigate && onNavigate('girls-bracket')}>Girls Bracket →</button>
+          </div>
+        </div>
+      </div>
       
       {/* Notification Permission Banner */}
       {!notificationsEnabled && !isMobile && !notificationService.isBannerDismissed() && (
@@ -374,7 +389,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         )}
       </div>
 
-      {/* Playoff Celebration Banner */}
+      {/* Playoff Combined Banner */}
       <div className="playoff-banner">
         <div className="playoff-banner-content">
           <div className="playoff-header">
@@ -382,113 +397,62 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             <h2>It's Playoff Time!</h2>
             <span className="playoff-icon">🏆</span>
           </div>
-          
+
           <p className="playoff-intro">Congratulations to our championship teams on incredible regular seasons!</p>
-          
           <p className="playoff-slogan">It's a good day to be a Valiant! 💙</p>
-          
+
           <div className="playoff-teams">
             <div className="playoff-team boys-team">
               <h3>Boys Basketball</h3>
               <p className="playoff-champ">League Champions!</p>
-              <div className="team-stats">
-                <div className="stat">
-                  <span className="stat-label">Overall Record</span>
-                  <span className="stat-value">23-2</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-label">League Record</span>
-                  <span className="stat-value">13-1</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-label">Overall Ranking</span>
-                  <span className="stat-value">#2</span>
-                </div>
-              </div>
             </div>
 
             <div className="playoff-team girls-team">
               <h3>Girls Basketball</h3>
               <p className="playoff-champ">League Champions!</p>
-              <div className="team-stats">
-                <div className="stat">
-                  <span className="stat-label">Overall Record</span>
-                  <span className="stat-value">19-5</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-label">League Record</span>
-                  <span className="stat-value">11-1</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-label">Overall Ranking</span>
-                  <span className="stat-value">#6</span>
-                </div>
-              </div>
+              <p className="playoff-champ">District Champions!</p>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Playoff Announcement */}
-      <div className="playoff-alert-section">
-        <div className="playoff-alert-header">
-          <span className="playoff-fire">🏆</span>
-          <h2>IT'S PLAYOFF TIME!</h2>
-          <span className="playoff-fire">🏆</span>
-        </div>
-        <p className="playoff-intro">Come out and cheer on your Valiant teams this week!</p>
-        <div className="playoff-games-grid">
-          <div className="playoff-game-card boys-game">
-            <div className="playoff-game-day">FRIDAY</div>
-            <div className="playoff-game-sport">Boys Basketball</div>
-            <div className="playoff-matchup">
-              <div className="playoff-team our-team">
-                <span className="seed-badge">#3</span>
-                <span className="team-name">Valiant</span>
+          <p className="playoff-intro" style={{marginTop: '1.5rem'}}>Come out and cheer on your Valiant teams this week!</p>
+          <div className="playoff-games-grid">
+            <div className="playoff-game-card boys-game">
+              <div className="playoff-game-day">FRIDAY</div>
+              <div className="playoff-game-sport">Boys Basketball</div>
+              <div className="playoff-matchup">
+                <div className="playoff-team our-team">
+                  <span className="seed-badge">#3</span>
+                  <span className="team-name">Valiant</span>
+                </div>
+                <span className="vs-divider">VS</span>
+                <div className="playoff-team opp-team">
+                  <span className="seed-badge">#14</span>
+                  <span className="team-name">OES</span>
+                </div>
               </div>
-              <span className="vs-divider">VS</span>
-              <div className="playoff-team opp-team">
-                <span className="seed-badge">#14</span>
-                <span className="team-name">OES</span>
+              <div className="playoff-game-info">
+                <span className="game-time">⏰ 6:00 PM</span>
+                <span className="game-location">🏠 Home</span>
               </div>
             </div>
-            <div className="playoff-game-info">
-              <span className="game-time">⏰ 6:00 PM</span>
-              <span className="game-location">🏠 Home</span>
-            </div>
-          </div>
-          <div className="playoff-game-card girls-game">
-            <div className="playoff-game-day">SATURDAY</div>
-            <div className="playoff-game-sport">Girls Basketball</div>
-            <div className="playoff-matchup">
-              <div className="playoff-team our-team">
-                <span className="seed-badge">#6</span>
-                <span className="team-name">Valiant</span>
+            <div className="playoff-game-card girls-game">
+              <div className="playoff-game-day">SATURDAY</div>
+              <div className="playoff-game-sport">Girls Basketball</div>
+              <div className="playoff-matchup">
+                <div className="playoff-team our-team">
+                  <span className="seed-badge">#6</span>
+                  <span className="team-name">Valiant</span>
+                </div>
+                <span className="vs-divider">VS</span>
+                <div className="playoff-team opp-team">
+                  <span className="seed-badge">#11</span>
+                  <span className="team-name">Taft</span>
+                </div>
               </div>
-              <span className="vs-divider">VS</span>
-              <div className="playoff-team opp-team">
-                <span className="seed-badge">#11</span>
-                <span className="team-name">Taft</span>
+              <div className="playoff-game-info">
+                <span className="game-time">⏰ 5:00 PM</span>
               </div>
             </div>
-            <div className="playoff-game-info">
-              <span className="game-time">⏰ 5:00 PM</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Bracket Advertisement */}
-      <div className="bracket-ad-section">
-        <div className="bracket-ad-content">
-          <div className="bracket-ad-icon">📊</div>
-          <div className="bracket-ad-text">
-            <h3>Bet the 3A Playoffs Bracket!</h3>
-            <p>Pick your winners and earn Valiant Bucks. Both Boys &amp; Girls brackets are live — place your bets before the games tip off!</p>
-          </div>
-          <div className="bracket-ad-buttons">
-            <button className="bracket-ad-btn boys-btn" onClick={() => onNavigate && onNavigate('bracket')}>Boys Bracket →</button>
-            <button className="bracket-ad-btn girls-btn" onClick={() => onNavigate && onNavigate('girls-bracket')}>Girls Bracket →</button>
           </div>
         </div>
       </div>

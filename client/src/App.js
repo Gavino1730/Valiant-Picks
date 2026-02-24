@@ -56,6 +56,7 @@ const Leaderboard = lazyWithRetry(() => import('./components/Leaderboard'));
 const Teams = lazyWithRetry(() => import('./components/Teams'));
 const Games = lazyWithRetry(() => import('./components/Games'));
 const Bracket = lazyWithRetry(() => import('./components/Bracket'));
+const BracketHub = lazyWithRetry(() => import('./components/BracketHub'));
 const ActualBracket = lazyWithRetry(() => import('./components/ActualBracket'));
 const BracketLeaderboard = lazyWithRetry(() => import('./components/BracketLeaderboard'));
 const Notifications = lazyWithRetry(() => import('./components/Notifications'));
@@ -70,8 +71,8 @@ const LoadingSpinner = () => (
   </div>
 );
 
-const NavLink = ({ label, pageKey, currentPage, onNavigate, className }) => {
-  const isActive = currentPage === pageKey;
+const NavLink = ({ label, pageKey, currentPage, onNavigate, className, activeFor }) => {
+  const isActive = currentPage === pageKey || (activeFor && activeFor.includes(currentPage));
   return (
     <button
       type="button"
@@ -530,9 +531,7 @@ function AppContent() {
             <NavLink label="Place Picks" pageKey="games" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="Teams" pageKey="teams" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="My Picks" pageKey="bets" currentPage={page} onNavigate={handlePageChange} />
-            <NavLink label="Bracket" pageKey="bracket" currentPage={page} onNavigate={handlePageChange} />
-            <NavLink label="Girls Bracket" pageKey="girls-bracket" currentPage={page} onNavigate={handlePageChange} />
-            <NavLink label="Results" pageKey="actual-bracket" currentPage={page} onNavigate={handlePageChange} />
+            <NavLink label="Bracket" pageKey="bracket" currentPage={page} onNavigate={handlePageChange} activeFor={['boys-bracket', 'girls-bracket', 'bracket-leaderboard', 'actual-bracket', 'girls-actual-bracket', 'girls-bracket-leaderboard']} />
             <NavLink label="Leaderboard" pageKey="leaderboard" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="How to Use" pageKey="howto" currentPage={page} onNavigate={handlePageChange} />
           </div>
@@ -685,24 +684,10 @@ function AppContent() {
           </button>
           <button 
             onClick={() => handlePageChange('bracket')} 
-            className={page === 'bracket' ? 'active' : ''}
+            className={['bracket','boys-bracket','girls-bracket','bracket-leaderboard','actual-bracket','girls-actual-bracket','girls-bracket-leaderboard'].includes(page) ? 'active' : ''}
           >
             <span className="menu-icon">🎯</span>
             Bracket
-          </button>
-          <button 
-            onClick={() => handlePageChange('girls-bracket')} 
-            className={page === 'girls-bracket' ? 'active' : ''}
-          >
-            <span className="menu-icon">🎀</span>
-            Girls Bracket
-          </button>
-          <button 
-            onClick={() => handlePageChange('actual-bracket')} 
-            className={page === 'actual-bracket' ? 'active' : ''}
-          >
-            <span className="menu-icon">🏁</span>
-            Results
           </button>
           <button 
             onClick={() => handlePageChange('leaderboard')} 
@@ -773,7 +758,8 @@ function AppContent() {
             <Route path="/games" element={<Games user={currentUser} updateUser={updateUser} />} />
             <Route path="/teams" element={<Teams />} />
             <Route path="/bets" element={<BetList />} />
-            <Route path="/bracket" element={<Bracket updateUser={updateUser} />} />
+            <Route path="/bracket" element={<BracketHub />} />
+            <Route path="/boys-bracket" element={<Bracket updateUser={updateUser} />} />
             <Route path="/girls-bracket" element={<Bracket gender="girls" updateUser={updateUser} />} />
             <Route path="/actual-bracket" element={<ActualBracket />} />
             <Route path="/girls-actual-bracket" element={<ActualBracket gender="girls" />} />

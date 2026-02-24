@@ -1,0 +1,120 @@
+/* =============================================
+   Bracket Hub Styles
+   ============================================= */
+
+.bracket-hub {
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 0 16px 40px;
+}
+
+.bracket-hub__header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.bracket-hub__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #004f9e;
+  margin: 0 0 8px;
+}
+
+.bracket-hub__subtitle {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+}
+
+.bracket-hub__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bracket-hub__card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 20px 24px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.bracket-hub__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.bracket-hub__card:active {
+  transform: translateY(0);
+}
+
+.bracket-hub__card-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.bracket-hub__card-label {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.bracket-hub__card-arrow {
+  font-size: 18px;
+  color: #94a3b8;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.bracket-hub__card:hover .bracket-hub__card-arrow {
+  transform: translateX(4px);
+  color: #004f9e;
+}
+
+/* Card accent colors */
+.bracket-hub__card--boys {
+  border-left: 5px solid #004f9e;
+}
+
+.bracket-hub__card--boys:hover {
+  border-color: #004f9e;
+}
+
+.bracket-hub__card--girls {
+  border-left: 5px solid #db2777;
+}
+
+.bracket-hub__card--girls:hover {
+  border-color: #db2777;
+}
+
+.bracket-hub__card--leaderboard {
+  border-left: 5px solid #d97706;
+}
+
+.bracket-hub__card--leaderboard:hover {
+  border-color: #d97706;
+}
+
+/* Responsive */
+@media (min-width: 600px) {
+  .bracket-hub {
+    margin-top: 60px;
+  }
+
+  .bracket-hub__title {
+    font-size: 32px;
+  }
+
+  .bracket-hub__card {
+    padding: 22px 28px;
+  }
+}
