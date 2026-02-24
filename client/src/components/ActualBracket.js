@@ -3,6 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import apiClient from '../utils/axios';
 import '../styles/Bracket.css';
 
+const CACHE_TTL_MS = 30_000;
+
+function getCached(key) {
+  try {
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL_MS) { sessionStorage.removeItem(key); return null; }
+    return data;
+  } catch { return null; }
+}
+
+function setCache(key, data) {
+  try { sessionStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); } catch {}
+}
+
 const getRoundLabel = (round, totalRounds) => {
   if (totalRounds === 3) {
     if (round === 1) return 'Quarterfinals';
@@ -59,29 +75,44 @@ function ActualBracket({ gender = 'boys' }) {
   const totalRounds = sortedRounds.length;
 
   const loadBracket = async () => {
-    try {
+    const cacheKey = `bracket_actual_${gender}`;
+    const cached = getCached(cacheKey);
+    if (cached) {
+      setBracket(cached.bracket);
+      setTeams(cached.teams);
+      setGames(cached.games);
+      setUserPicks(cached.userPicks);
+      setLoading(false);
+      // Still refresh in background (no loading flash)
+    } else {
       setLoading(true);
-      const response = await apiClient.get(`/brackets/active?gender=${gender}`);
+    }
+
+    try {
+      // Single combined request: bracket + teams + games + user's entry
+      const response = await apiClient.get(`/brackets/active?gender=${gender}&include=entry`);
       const payload = response.data;
 
       if (!payload?.bracket) {
         setBracket(null);
         setTeams([]);
         setGames([]);
+        setUserPicks(null);
         return;
       }
 
       setBracket(payload.bracket);
       setTeams(payload.teams || []);
       setGames(payload.games || []);
+      const picks = payload.entry?.picks || null;
+      setUserPicks(picks);
 
-      // Try to load user's picks (only if logged in)
-      try {
-        const entryRes = await apiClient.get(`/brackets/${payload.bracket.id}/entries/me`);
-        setUserPicks(entryRes.data?.picks || null);
-      } catch {
-        setUserPicks(null);
-      }
+      setCache(cacheKey, {
+        bracket: payload.bracket,
+        teams: payload.teams || [],
+        games: payload.games || [],
+        userPicks: picks
+      });
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to load bracket');
     } finally {
@@ -132,7 +163,21 @@ function ActualBracket({ gender = 'boys' }) {
         </div>
         <div className="bracket-header">
           <h1>Live {gender === 'girls' ? 'Girls' : 'Boys'} Bracket</h1>
-          <p>Loading bracket...</p>
+        </div>
+        <div className="bracket-grid bracket-grid--skeleton">
+          {[1, 2, 3].map((round) => (
+            <div key={round} className={`bracket-round bracket-round--r${round}`}>
+              <h2 className="skel skel-heading" />
+              <div className="bracket-games">
+                {[...Array(round === 1 ? 4 : round === 2 ? 2 : 1)].map((_, i) => (
+                  <div key={i} className="bracket-game">
+                    <div className="team-display skel-team"><span className="skel skel-full" /></div>
+                    <div className="team-display skel-team"><span className="skel skel-full" /></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );

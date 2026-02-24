@@ -4,6 +4,22 @@ import apiClient from '../utils/axios';
 import { formatCurrency } from '../utils/currency';
 import '../styles/BracketLeaderboard.css';
 
+const CACHE_TTL_MS = 30_000;
+
+function getCached(key) {
+  try {
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL_MS) { sessionStorage.removeItem(key); return null; }
+    return data;
+  } catch { return null; }
+}
+
+function setCache(key, data) {
+  try { sessionStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); } catch {}
+}
+
 function BracketLeaderboard({ gender = 'boys' }) {
   const navigate = useNavigate();
   const [bracket, setBracket] = useState(null);
@@ -14,24 +30,36 @@ function BracketLeaderboard({ gender = 'boys' }) {
   const [lastRefresh, setLastRefresh] = useState(null);
 
   const loadLeaderboard = async (isRefresh = false) => {
+    const cacheKey = `bracket_lb_${gender}`;
     try {
       if (isRefresh) {
         setRefreshing(true);
       } else {
-        setLoading(true);
+        // Show cached data instantly while fetching fresh data
+        const cached = getCached(cacheKey);
+        if (cached) {
+          setBracket(cached.bracket);
+          setEntries(cached.entries);
+          setLoading(false);
+        } else {
+          setLoading(true);
+        }
       }
       setError('');
-      const response = await apiClient.get(`/brackets/active?gender=${gender}`);
+      // Single request — combined bracket + leaderboard
+      const response = await apiClient.get(`/brackets/active?gender=${gender}&include=leaderboard`);
       if (!response.data?.bracket) {
         setBracket(null);
         setEntries([]);
+        setCache(cacheKey, { bracket: null, entries: [] });
         return;
       }
 
+      const freshEntries = response.data.leaderboard || [];
       setBracket(response.data.bracket);
-      const leaderboardRes = await apiClient.get(`/brackets/${response.data.bracket.id}/leaderboard`);
-      setEntries(leaderboardRes.data || []);
+      setEntries(freshEntries);
       setLastRefresh(new Date().toLocaleTimeString());
+      setCache(cacheKey, { bracket: response.data.bracket, entries: freshEntries });
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to load bracket leaderboard');
     } finally {
@@ -43,8 +71,8 @@ function BracketLeaderboard({ gender = 'boys' }) {
   useEffect(() => {
     loadLeaderboard(false);
     
-    // Auto-refresh leaderboard every 10 seconds (silent refresh, no loading flash)
-    const interval = setInterval(() => loadLeaderboard(true), 10000);
+    // Auto-refresh leaderboard every 15 seconds (silent refresh, no loading flash)
+    const interval = setInterval(() => loadLeaderboard(true), 15000);
     
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,7 +99,20 @@ function BracketLeaderboard({ gender = 'boys' }) {
           <button className={`bracket-sub-tab${gender === 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/girls-bracket-leaderboard')}>Girls</button>
         </div>
         <h1>{gender === 'girls' ? 'Girls' : 'Boys'} Bracket Leaderboard</h1>
-        <p>Loading bracket standings...</p>
+        <div className="leaderboard-table">
+          <div className="leaderboard-row leaderboard-row--header">
+            <span>Rank</span><span>Player</span><span className="align-right">Points</span><span className="align-right">Accuracy</span><span className="align-right">Payout</span>
+          </div>
+          {[...Array(8)].map((_, i) => (
+            <div className="leaderboard-row leaderboard-row--skeleton" key={i}>
+              <span className="skel skel-sm" />
+              <span className="skel skel-md" />
+              <span className="skel skel-sm" />
+              <span className="skel skel-sm" />
+              <span className="skel skel-sm" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

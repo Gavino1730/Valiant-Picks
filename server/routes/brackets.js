@@ -187,6 +187,8 @@ const recomputeBracketGames = async (bracketId) => {
 router.get('/active', optionalAuth, async (req, res) => {
   try {
     const gender = req.query.gender || 'boys';
+    const includes = new Set((req.query.include || '').split(',').map(s => s.trim()).filter(Boolean));
+
     let query = supabase
       .from('brackets')
       .select('*')
@@ -205,12 +207,91 @@ router.get('/active', optionalAuth, async (req, res) => {
       return res.json({ bracket: null, teams: [], games: [] });
     }
 
-    const [{ data: teams }, { data: games }] = await Promise.all([
+    // Build parallel queries: always teams + games, optionally entry + leaderboard entries
+    const parallelQueries = [
       supabase.from('bracket_teams').select('*').eq('bracket_id', bracket.id).order('seed', { ascending: true }),
-      supabase.from('bracket_games').select('*').eq('bracket_id', bracket.id).order('round', { ascending: true }).order('game_number', { ascending: true })
-    ]);
+      supabase.from('bracket_games').select('*').eq('bracket_id', bracket.id).order('round', { ascending: true }).order('game_number', { ascending: true }),
+    ];
 
-    res.json({ bracket, teams: teams || [], games: games || [] });
+    const includeEntry = includes.has('entry') && req.user;
+    const includeLeaderboard = includes.has('leaderboard');
+
+    if (includeEntry) {
+      parallelQueries.push(
+        supabase.from('bracket_entries').select('*').eq('bracket_id', bracket.id).eq('user_id', req.user.id).maybeSingle()
+      );
+    }
+
+    if (includeLeaderboard) {
+      parallelQueries.push(
+        supabase.from('bracket_entries')
+          .select('id, points, payout, picks, created_at, user_id')
+          .eq('bracket_id', bracket.id)
+          .order('points', { ascending: false })
+      );
+    }
+
+    const results = await Promise.all(parallelQueries);
+    const [teamsResult, gamesResult, ...extras] = results;
+    const teams = teamsResult.data || [];
+    const games = gamesResult.data || [];
+
+    const response = { bracket, teams, games };
+
+    let extraIdx = 0;
+
+    if (includeEntry) {
+      response.entry = extras[extraIdx]?.data || null;
+      extraIdx++;
+    }
+
+    if (includeLeaderboard) {
+      const lbEntries = extras[extraIdx]?.data || [];
+      if (lbEntries.length === 0) {
+        response.leaderboard = [];
+      } else {
+        // Build winners map from already-fetched games
+        const completedGames = games.filter(g => g.winner_team_id);
+        const winnersByRound = completedGames.reduce((acc, g) => {
+          if (!acc[g.round]) acc[g.round] = {};
+          acc[g.round][normalizePickKey(g.game_number)] = g.winner_team_id;
+          return acc;
+        }, {});
+        const totalCompleted = completedGames.length;
+
+        // Fetch user info (fast single DB query, same datacenter)
+        const userIds = [...new Set(lbEntries.map(e => e.user_id))];
+        const { data: users } = await supabase.from('users').select('id, username, is_admin').in('id', userIds);
+        const userMap = {};
+        (users || []).forEach(u => { userMap[u.id] = u; });
+
+        const enriched = lbEntries.map(entry => {
+          const safePicks = coercePicks(entry.picks);
+          let correctPicks = 0;
+          [1, 2, 3, 4].forEach((round) => {
+            const roundWinners = winnersByRound[round] || {};
+            Object.entries(roundWinners).forEach(([gameKey, winnerId]) => {
+              if (!winnerId) return;
+              if (safePicks[`round${round}`]?.[gameKey] === winnerId) correctPicks++;
+            });
+          });
+          return {
+            id: entry.id,
+            points: entry.points,
+            payout: entry.payout,
+            created_at: entry.created_at,
+            user_id: entry.user_id,
+            correct_picks: correctPicks,
+            total_completed: totalCompleted,
+            users: userMap[entry.user_id] || null
+          };
+        });
+
+        response.leaderboard = enriched.filter(e => !e.users?.is_admin);
+      }
+    }
+
+    res.json(response);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch bracket: ' + err.message });
   }

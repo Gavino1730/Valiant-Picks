@@ -4,6 +4,22 @@ import apiClient from '../utils/axios';
 import { formatCurrency } from '../utils/currency';
 import '../styles/Bracket.css';
 
+const CACHE_TTL_MS = 30_000;
+
+function getCached(key) {
+  try {
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL_MS) { sessionStorage.removeItem(key); return null; }
+    return data;
+  } catch { return null; }
+}
+
+function setCache(key, data) {
+  try { sessionStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); } catch {}
+}
+
 const makeGameKey = (gameNumber) => `game${gameNumber}`;
 
 const getRoundLabel = (round, totalRounds) => {
@@ -66,9 +82,25 @@ function Bracket({ updateUser, gender = 'boys' }) {
 
   useEffect(() => {
     const loadBracket = async () => {
-      try {
+      const cacheKey = `bracket_picks_${gender}`;
+      const cached = getCached(cacheKey);
+      if (cached) {
+        setBracket(cached.bracket);
+        setTeams(cached.teams);
+        setGames(cached.games);
+        if (cached.entry) {
+          setEntry(cached.entry);
+          setPicks(normalizePicks(cached.entry.picks));
+        }
+        setLoading(false);
+        // Still fetch fresh data in background
+      } else {
         setLoading(true);
-        const response = await apiClient.get(`/brackets/active?gender=${gender}`);
+      }
+
+      try {
+        // Single combined request: bracket + teams + games + user's entry
+        const response = await apiClient.get(`/brackets/active?gender=${gender}&include=entry`);
         const payload = response.data;
 
         if (!payload?.bracket) {
@@ -82,20 +114,21 @@ function Bracket({ updateUser, gender = 'boys' }) {
         setTeams(payload.teams || []);
         setGames(payload.games || []);
 
-        if (payload.bracket?.id) {
-          try {
-            const entryRes = await apiClient.get(`/brackets/${payload.bracket.id}/entries/me`);
-            if (entryRes.data) {
-              const normalized = normalizePicks(entryRes.data.picks);
-              setEntry(entryRes.data);
-              setPicks(normalized);
-            } else {
-              setEntry(null);
-            }
-          } catch (err) {
-            setEntry(null);
-          }
+        const entryData = payload.entry || null;
+        if (entryData) {
+          const normalized = normalizePicks(entryData.picks);
+          setEntry(entryData);
+          setPicks(normalized);
+        } else {
+          setEntry(null);
         }
+
+        setCache(cacheKey, {
+          bracket: payload.bracket,
+          teams: payload.teams || [],
+          games: payload.games || [],
+          entry: entryData
+        });
       } catch (err) {
         setError(err.response?.data?.error || 'Failed to load bracket');
       } finally {
@@ -235,7 +268,21 @@ function Bracket({ updateUser, gender = 'boys' }) {
         <div className="bracket-header">
           <h1>{gender === 'girls' ? 'Girls Bracket' : 'Boys Bracket'}</h1>
         </div>
-        <p>Loading bracket...</p>
+        <div className="bracket-grid bracket-grid--skeleton">
+          {[1, 2, 3].map((round) => (
+            <div key={round} className={`bracket-round bracket-round--r${round}`}>
+              <h2 className="skel skel-heading" />
+              <div className="bracket-games">
+                {[...Array(round === 1 ? 4 : round === 2 ? 2 : 1)].map((_, i) => (
+                  <div key={i} className="bracket-game">
+                    <div className="team-display skel-team"><span className="skel skel-full" /></div>
+                    <div className="team-display skel-team"><span className="skel skel-full" /></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

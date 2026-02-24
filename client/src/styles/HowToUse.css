@@ -44,7 +44,7 @@
 .tutorial-section h2 {
   color: #1f4e99;
   font-size: 1.65rem;
-  font-weight: 700;
+  font-weight: 600;
   margin: 0;
   text-align: left;
 }
@@ -93,7 +93,7 @@
 .info-text h4 {
   color: #e9f1ff;
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 600;
   margin: 0 0 0.35rem 0;
 }
 
@@ -472,7 +472,7 @@
   cursor: pointer;
   color: #e9f1ff;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   list-style: none;
   display: flex;
   align-items: center;
