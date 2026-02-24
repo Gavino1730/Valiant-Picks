@@ -992,7 +992,19 @@
 
 /* ===== DESIGN SYSTEM OVERRIDES ===== */
 .teams-page {
-  padding: 0;
+  padding: 0 18px;
+}
+
+@media (max-width: 768px) {
+  .teams-page {
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .teams-page {
+    padding: 0 0.75rem;
+  }
 }
 
 .tabs {

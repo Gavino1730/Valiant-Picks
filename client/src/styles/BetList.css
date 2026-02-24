@@ -189,10 +189,11 @@
   flex-wrap: nowrap;
   background: rgba(255, 255, 255, 0.04);
   padding: 0.3rem;
-  border-radius: 999px;
+  border-radius: 999px !important;
   box-shadow: none;
   border: 1px solid var(--color-border);
   width: 100%;
+  overflow: hidden;
 }
 
 .bet-filters .tab-button {
@@ -200,7 +201,7 @@
   min-width: 0;
   height: 30px;
   padding: 0.2rem 0.5rem;
-  border-radius: 999px;
+  border-radius: 999px !important;
   font-weight: 600;
   letter-spacing: 0.2px;
 }
@@ -618,7 +619,7 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .bet-list-container {
-    padding: calc(var(--navbar-height) + env(safe-area-inset-top) + 0.75rem) 0.85rem 1rem;
+    padding: calc(var(--navbar-height) + env(safe-area-inset-top) + 0.35rem) 0.85rem 1rem;
   }
 
   .header-title h1 {
@@ -752,7 +753,7 @@
 }
 @media (max-width: 480px) {
   .bet-list-container {
-    padding: calc(var(--navbar-height) + env(safe-area-inset-top) + 0.5rem) 0.75rem 0.75rem;
+    padding: calc(var(--navbar-height) + env(safe-area-inset-top) + 0.3rem) 0.75rem 0.75rem;
   }
 
   .bet-stats-grid {
