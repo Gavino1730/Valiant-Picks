@@ -3788,6 +3788,15 @@ html {
   color: #ffffff;
   font-size: 1.1rem;
   font-weight: 700;
+  flex: 1;
+}
+
+.game-matchup-display .team-name:first-child {
+  text-align: right;
+}
+
+.game-matchup-display .team-name:last-child {
+  text-align: left;
 }
 
 .game-matchup-display .vs-divider {

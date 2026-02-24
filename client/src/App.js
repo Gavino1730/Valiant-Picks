@@ -56,7 +56,6 @@ const Leaderboard = lazyWithRetry(() => import('./components/Leaderboard'));
 const Teams = lazyWithRetry(() => import('./components/Teams'));
 const Games = lazyWithRetry(() => import('./components/Games'));
 const Bracket = lazyWithRetry(() => import('./components/Bracket'));
-const BracketHub = lazyWithRetry(() => import('./components/BracketHub'));
 const ActualBracket = lazyWithRetry(() => import('./components/ActualBracket'));
 const BracketLeaderboard = lazyWithRetry(() => import('./components/BracketLeaderboard'));
 const Notifications = lazyWithRetry(() => import('./components/Notifications'));
@@ -758,8 +757,7 @@ function AppContent() {
             <Route path="/games" element={<Games user={currentUser} updateUser={updateUser} />} />
             <Route path="/teams" element={<Teams />} />
             <Route path="/bets" element={<BetList />} />
-            <Route path="/bracket" element={<BracketHub />} />
-            <Route path="/boys-bracket" element={<Bracket updateUser={updateUser} />} />
+            <Route path="/bracket" element={<Bracket updateUser={updateUser} />} />
             <Route path="/girls-bracket" element={<Bracket gender="girls" updateUser={updateUser} />} />
             <Route path="/actual-bracket" element={<ActualBracket />} />
             <Route path="/girls-actual-bracket" element={<ActualBracket gender="girls" />} />
