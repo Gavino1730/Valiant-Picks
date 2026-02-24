@@ -227,8 +227,8 @@ function Bracket({ updateUser, gender = 'boys' }) {
     return (
       <div className={`bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
         <div className="bracket-tabs">
-          <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>🏀 Boys</button>
-          <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>🎀 Girls</button>
+          <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>🏀 Boys Bracket</button>
+          <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>🎀 Girls Bracket</button>
           <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
           <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>📺 Live</button>
         </div>
@@ -244,8 +244,8 @@ function Bracket({ updateUser, gender = 'boys' }) {
     return (
       <div className={`bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
         <div className="bracket-tabs">
-          <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>🏀 Boys</button>
-          <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>🎀 Girls</button>
+          <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>🏀 Boys Bracket</button>
+          <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>🎀 Girls Bracket</button>
           <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
           <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>📺 Live</button>
         </div>
@@ -261,8 +261,8 @@ function Bracket({ updateUser, gender = 'boys' }) {
   return (
     <div className={`bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
       <div className="bracket-tabs">
-        <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>🏀 Boys</button>
-        <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>🎀 Girls</button>
+        <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>🏀 Boys Bracket</button>
+        <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>🎀 Girls Bracket</button>
         <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
         <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>📺 Live</button>
       </div>
@@ -281,6 +281,11 @@ function Bracket({ updateUser, gender = 'boys' }) {
             <span className="value">{formatCurrency(Number(bracket.payout_per_point || 0))} per point</span>
           </div>
         </div>
+      </div>
+
+      <div className="bracket-quick-links">
+        <button className="bracket-quick-link" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 View Leaderboard</button>
+        <button className="bracket-quick-link" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>📺 View Live Bracket</button>
       </div>
 
       <div className="bracket-device-notice">
@@ -329,18 +334,21 @@ function Bracket({ updateUser, gender = 'boys' }) {
       {/* Progress Indicator */}
       {!entry && (
         <div className="bracket-progress bracket-progress--top-right">
-          {sortedRounds.map((round) => {
+          {sortedRounds.map((round, idx) => {
             const roundKey = `round${round}`;
             const currentCount = Object.keys(picks[roundKey] || {}).length;
             const requiredCount = requiredPickCounts[round] || 0;
 
             return (
-              <div key={round} className="progress-item">
-                <span className="progress-label">{getRoundLabel(round, totalRounds)}</span>
-                <span className={`progress-count ${currentCount === requiredCount ? 'complete' : ''}`}>
-                  {currentCount}/{requiredCount}
-                </span>
-              </div>
+              <React.Fragment key={round}>
+                {idx > 0 && <span className="progress-arrow">→</span>}
+                <div className="progress-item">
+                  <span className="progress-label">{getRoundLabel(round, totalRounds)}</span>
+                  <span className={`progress-count ${currentCount === requiredCount ? 'complete' : ''}`}>
+                    {currentCount}/{requiredCount}
+                  </span>
+                </div>
+              </React.Fragment>
             );
           })}
         </div>

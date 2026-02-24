@@ -16,6 +16,16 @@
   background: #db2777;
 }
 
+.bracket-page--girls .bracket-quick-link {
+  border-color: #be185d;
+  color: #be185d;
+}
+
+.bracket-page--girls .bracket-quick-link:hover {
+  background: #be185d;
+  color: #fff;
+}
+
 /* Tab switcher */
 .bracket-tabs {
   display: flex;
@@ -52,6 +62,46 @@
 }
 
 .bracket-tab--active:hover {
+  background: var(--color-brand-strong);
+  color: #fff;
+}
+
+/* Sub-tab gender switcher (Leaderboard and Live pages) */
+.bracket-sub-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  width: fit-content;
+}
+
+.bracket-sub-tab {
+  padding: 5px 16px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.bracket-sub-tab:hover {
+  background: var(--color-surface-raised);
+  color: var(--color-text-primary);
+}
+
+.bracket-sub-tab--active {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+.bracket-sub-tab--active:hover {
   background: var(--color-brand-strong);
   color: #fff;
 }
@@ -115,6 +165,31 @@
   color: var(--color-text-secondary);
   font-size: 15px;
   font-weight: 500;
+}
+
+.bracket-quick-links {
+  display: flex;
+  gap: 10px;
+  margin: 12px 0 4px;
+  flex-wrap: wrap;
+}
+
+.bracket-quick-link {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1.5px solid var(--color-brand);
+  background: transparent;
+  color: var(--color-brand);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.bracket-quick-link:hover {
+  background: var(--color-brand);
+  color: #fff;
 }
 
 .bracket-device-notice {
@@ -1218,9 +1293,9 @@
 
 /* Progress Indicator */
 .bracket-progress {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
   background: var(--color-surface-raised);
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -1231,9 +1306,37 @@
 }
 
 .bracket-progress--top-right {
-  margin-left: auto;
-  width: fit-content;
-  min-width: min(100%, 520px);
+  margin: 0 auto 20px;
+  width: 100%;
+  max-width: 640px;
+}
+
+.progress-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  font-size: 18px;
+  color: var(--color-border);
+  font-weight: 700;
+  z-index: 1;
+}
+
+.progress-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  background: rgba(11, 94, 215, 0.05);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 2;
 }
 .progress-bar {
   width: 100%;
@@ -1249,41 +1352,13 @@
   transition: width 0.3s ease;
 }
 
-/* Progress flow connectors */
+/* Progress flow connectors handled inline */
 .bracket-progress::before,
 .bracket-progress::after {
-  content: '→';
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-  color: var(--color-border);
-  font-weight: 700;
-  z-index: 1;
+  display: none;
 }
 
-.bracket-progress::before {
-  left: 27%;
-}
 
-.bracket-progress::after {
-  left: 77%;
-}
-
-.progress-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 12px;
-  background: rgba(11, 94, 215, 0.05);
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-md);
-  transition: all 0.2s ease;
-  position: relative;
-  z-index: 2;
-}
 .round-complete {
   grid-column: 1 / -1;
   text-align: center;
@@ -1410,8 +1485,13 @@
   }
 
   .bracket-progress {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .progress-arrow {
+    display: none;
   }
 }
 
@@ -1487,9 +1567,10 @@
   }
 
   .bracket-progress {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
     padding: 14px;
+    justify-content: center;
   }
 
   .bracket-progress::before,

@@ -111,10 +111,14 @@ function ActualBracket({ gender = 'boys' }) {
     return (
       <div className={`bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
         <div className="bracket-tabs">
-          <button className="bracket-tab" onClick={() => navigate('/actual-bracket')}>🏀 Boys</button>
-          <button className="bracket-tab" onClick={() => navigate('/girls-actual-bracket')}>🎀 Girls</button>
+          <button className="bracket-tab" onClick={() => navigate('/bracket')}>🏀 Boys Bracket</button>
+          <button className="bracket-tab" onClick={() => navigate('/girls-bracket')}>🎀 Girls Bracket</button>
           <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
           <button className="bracket-tab bracket-tab--active">📺 Live</button>
+        </div>
+        <div className="bracket-sub-tabs">
+          <button className={`bracket-sub-tab${gender !== 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/actual-bracket')}>🏀 Boys</button>
+          <button className={`bracket-sub-tab${gender === 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/girls-actual-bracket')}>🎀 Girls</button>
         </div>
         <div className="bracket-header">
           <h1>Live {gender === 'girls' ? 'Girls' : 'Boys'} Bracket</h1>
@@ -128,10 +132,14 @@ function ActualBracket({ gender = 'boys' }) {
     return (
       <div className={`bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
         <div className="bracket-tabs">
-          <button className="bracket-tab" onClick={() => navigate('/actual-bracket')}>🏀 Boys</button>
-          <button className="bracket-tab" onClick={() => navigate('/girls-actual-bracket')}>🎀 Girls</button>
+          <button className="bracket-tab" onClick={() => navigate('/bracket')}>🏀 Boys Bracket</button>
+          <button className="bracket-tab" onClick={() => navigate('/girls-bracket')}>🎀 Girls Bracket</button>
           <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
           <button className="bracket-tab bracket-tab--active">📺 Live</button>
+        </div>
+        <div className="bracket-sub-tabs">
+          <button className={`bracket-sub-tab${gender !== 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/actual-bracket')}>🏀 Boys</button>
+          <button className={`bracket-sub-tab${gender === 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/girls-actual-bracket')}>🎀 Girls</button>
         </div>
         <div className="bracket-header">
           <h1>Live {gender === 'girls' ? 'Girls' : 'Boys'} Bracket</h1>
@@ -144,10 +152,14 @@ function ActualBracket({ gender = 'boys' }) {
   return (
     <div className={`bracket-page actual-bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
       <div className="bracket-tabs">
-        <button className="bracket-tab" onClick={() => navigate('/actual-bracket')}>🏀 Boys</button>
-        <button className="bracket-tab" onClick={() => navigate('/girls-actual-bracket')}>🎀 Girls</button>
+        <button className="bracket-tab" onClick={() => navigate('/bracket')}>🏀 Boys Bracket</button>
+        <button className="bracket-tab" onClick={() => navigate('/girls-bracket')}>🎀 Girls Bracket</button>
         <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
         <button className="bracket-tab bracket-tab--active">📺 Live</button>
+      </div>
+      <div className="bracket-sub-tabs">
+        <button className={`bracket-sub-tab${gender !== 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/actual-bracket')}>🏀 Boys</button>
+        <button className={`bracket-sub-tab${gender === 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/girls-actual-bracket')}>🎀 Girls</button>
       </div>
 
       <div className="bracket-header">

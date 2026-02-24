@@ -12,7 +12,6 @@ function Leaderboard() {
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState({ key: 'balance', direction: 'desc' });
-  const [activeOnly, setActiveOnly] = useState(false);
 
   const PAGE_SIZE = 25;
   let currentUser = null;
@@ -35,7 +34,7 @@ function Leaderboard() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [users.length, bets.length, activeOnly, sortConfig.key, sortConfig.direction]);
+  }, [users.length, bets.length, sortConfig.key, sortConfig.direction]);
 
   const fetchData = async () => {
     try {
@@ -127,11 +126,8 @@ function Leaderboard() {
 
   const getSortedUsers = () => {
     const usersWithStats = getUsersWithStats();
-    const filteredUsers = activeOnly
-      ? usersWithStats.filter(user => user.stats.totalBets > 0)
-      : usersWithStats;
     const direction = sortConfig.direction === 'asc' ? 1 : -1;
-    return filteredUsers.sort((a, b) => {
+    return usersWithStats.sort((a, b) => {
       const aValue = getSortValue(a);
       const bValue = getSortValue(b);
       if (aValue === bValue && sortConfig.key === 'record') {
@@ -233,28 +229,6 @@ function Leaderboard() {
         ) : (
           <>
             <div className="leaderboard-toolbar">
-              <div className="leaderboard-filters">
-                <div className="segment-control" role="tablist" aria-label="Leaderboard filters">
-                  <button
-                    type="button"
-                    className={`segment-btn ${!activeOnly ? 'active' : ''}`}
-                    onClick={() => setActiveOnly(false)}
-                    role="tab"
-                    aria-selected={!activeOnly}
-                  >
-                    All Players
-                  </button>
-                  <button
-                    type="button"
-                    className={`segment-btn ${activeOnly ? 'active' : ''}`}
-                    onClick={() => setActiveOnly(true)}
-                    role="tab"
-                    aria-selected={activeOnly}
-                  >
-                    Active Only
-                  </button>
-                </div>
-              </div>
               {showJumpToRank && (
                 <button
                   type="button"
