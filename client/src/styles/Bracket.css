@@ -56,46 +56,6 @@
   color: #fff;
 }
 
-/* Sub-tab gender switcher (Leaderboard and Live pages) */
-.bracket-sub-tabs {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 16px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 3px;
-  width: fit-content;
-}
-
-.bracket-sub-tab {
-  padding: 5px 16px;
-  border-radius: 7px;
-  border: none;
-  background: transparent;
-  color: var(--color-text-secondary);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-  white-space: nowrap;
-}
-
-.bracket-sub-tab:hover {
-  background: var(--color-surface-raised);
-  color: var(--color-text-primary);
-}
-
-.bracket-sub-tab--active {
-  background: var(--color-brand);
-  color: #fff;
-}
-
-.bracket-sub-tab--active:hover {
-  background: var(--color-brand-strong);
-  color: #fff;
-}
-
 .bracket-header {
   display: flex;
   align-items: flex-end;
@@ -157,41 +117,36 @@
   font-weight: 500;
 }
 
-.bracket-quick-links {
-  display: flex;
-  gap: 10px;
-  margin: 12px 0 4px;
-  flex-wrap: wrap;
-}
-
-.bracket-quick-link {
-  padding: 8px 18px;
-  border-radius: 8px;
-  border: 1.5px solid var(--color-brand);
-  background: transparent;
-  color: var(--color-brand);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-  white-space: nowrap;
-}
-
-.bracket-quick-link:hover {
-  background: var(--color-brand);
-  color: #fff;
-}
-
 .bracket-device-notice {
-  background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
-  border: 1px solid #f5c842;
-  border-left: 4px solid #f5c842;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .bracket-device-notice {
+    display: block;
+    background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+    border: 1px solid #f5c842;
+    border-left: 4px solid #f5c842;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 12px 0 4px;
+    font-size: 14px;
+    color: #7a5700;
+    line-height: 1.5;
+  }
+}
+
+.bracket-betting-notice {
+  background: linear-gradient(135deg, #e8f0fb 0%, #d6e4f7 100%);
+  border: 1px solid #90b8e8;
+  border-left: 4px solid #004f9e;
   border-radius: 10px;
   padding: 12px 16px;
-  margin: 12px 0 4px;
+  margin: 10px 0 4px;
   font-size: 14px;
-  color: #7a5700;
+  color: #003d7a;
   line-height: 1.5;
+  text-align: center;
 }
 
 .bracket-deadline {
@@ -1981,53 +1936,6 @@
   letter-spacing: 0.5px;
   text-transform: uppercase;
   box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
-}
-
-/* My Picks toggle button */
-.bracket-picks-toggle {
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: 1.5px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text-secondary);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}
-
-.bracket-picks-toggle:hover {
-  border-color: var(--color-brand);
-  color: var(--color-brand);
-}
-
-.bracket-picks-toggle--active {
-  background: rgba(11, 94, 215, 0.12);
-  border-color: var(--color-brand);
-  color: var(--color-brand);
-}
-
-/* My picks overlay on team rows */
-.team-display.my-pick {
-  border-color: rgba(99, 179, 237, 0.6);
-  background: rgba(99, 179, 237, 0.08);
-}
-
-.team-display.my-pick--correct {
-  border-color: rgba(72, 199, 142, 0.7) !important;
-  background: rgba(72, 199, 142, 0.12) !important;
-}
-
-.team-display.my-pick--wrong {
-  border-color: rgba(255, 99, 99, 0.5) !important;
-  opacity: 0.75;
-}
-
-.my-pick-badge {
-  font-size: 13px;
-  margin-left: auto;
-  flex-shrink: 0;
 }
 
 /* Legend */

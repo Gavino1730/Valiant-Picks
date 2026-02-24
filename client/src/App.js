@@ -526,6 +526,15 @@ function AppContent() {
       />
 
       <nav className="navbar" ref={navbarRef}>
+        <div className="playoff-header-banner">
+          <span className="phb-trophy">🏆</span>
+          <span className="phb-title">It's Playoff Time!</span>
+          <span className="phb-games">
+            <span>Boys · Fri 6PM vs OES (#14) 🏠</span>
+            <span className="phb-divider">|</span>
+            <span>Girls · Sat 5PM vs Taft (#11) 🏠</span>
+          </span>
+        </div>
         <div className="nav-inner">
           <div className="nav-brand" onClick={() => handlePageChange('dashboard')} style={{ cursor: 'pointer' }}>
             <img 
