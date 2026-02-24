@@ -226,18 +226,14 @@ function Bracket({ updateUser, gender = 'boys' }) {
   if (loading) {
     return (
       <div className="bracket-page">
+        <div className="bracket-tabs">
+          <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>🏀 Boys</button>
+          <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>🎀 Girls</button>
+          <button className="bracket-tab" onClick={() => navigate('/bracket-leaderboard')}>📊 Leaderboard</button>
+        </div>
         <div className="bracket-header">
           <h1>Championship Bracket</h1>
           <p>Loading bracket...</p>
-        </div>
-        <div className="bracket-actions">
-          <button
-            type="button"
-            className="bracket-link"
-            onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}
-          >
-            View Leaderboard
-          </button>
         </div>
       </div>
     );
@@ -246,18 +242,14 @@ function Bracket({ updateUser, gender = 'boys' }) {
   if (!bracket) {
     return (
       <div className="bracket-page">
+        <div className="bracket-tabs">
+          <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>🏀 Boys</button>
+          <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>🎀 Girls</button>
+          <button className="bracket-tab" onClick={() => navigate('/bracket-leaderboard')}>📊 Leaderboard</button>
+        </div>
         <div className="bracket-header">
           <h1>Championship Bracket</h1>
           <p className="bracket-subtitle">Bracket coming soon.</p>
-        </div>
-        <div className="bracket-actions">
-          <button
-            type="button"
-            className="bracket-link"
-            onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}
-          >
-            View Leaderboard
-          </button>
         </div>
       </div>
     );
@@ -267,6 +259,12 @@ function Bracket({ updateUser, gender = 'boys' }) {
 
   return (
     <div className="bracket-page">
+      <div className="bracket-tabs">
+        <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>🏀 Boys</button>
+        <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>🎀 Girls</button>
+        <button className="bracket-tab" onClick={() => navigate('/bracket-leaderboard')}>📊 Leaderboard</button>
+      </div>
+
       <div className="bracket-header">
         <div>
           <h1>Championship Bracket</h1>
@@ -288,21 +286,12 @@ function Bracket({ updateUser, gender = 'boys' }) {
         💻 <strong>Best experienced on a laptop or desktop!</strong> The bracket can be tricky to navigate on a phone — for the smoothest experience, open <strong>valiantpicks.com</strong> on your computer.
       </div>
 
-      <div className="bracket-actions">
-        <button
-          type="button"
-          className="bracket-link"
-          onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}
-        >
-          View Leaderboard
-        </button>
-        {entry && (
-          <div className="bracket-entry-summary">
-            <span>Your points: {entry.points}</span>
-            <span>Payout: {formatCurrency(Number(entry.payout || 0))}</span>
-          </div>
-        )}
-      </div>
+      {entry && (
+        <div className="bracket-entry-summary">
+          <span>Your points: {entry.points}</span>
+          <span>Payout: {formatCurrency(Number(entry.payout || 0))}</span>
+        </div>
+      )}
 
       {error && <div className="bracket-alert bracket-alert--error">{error}</div>}
       {message && <div className="bracket-alert bracket-alert--success">{message}</div>}
@@ -314,45 +303,12 @@ function Bracket({ updateUser, gender = 'boys' }) {
       {/* Instructions Section */}
       {!entry && !bracketLocked && (
         <div className="bracket-instructions">
-          <div className="instructions-header">
-            <h3>How to Use This Bracket</h3>
-            <p className="instructions-intro">Make your tournament predictions by selecting teams to advance through each round.</p>
-          </div>
-          
-          <div className="instructions-grid">
-            <div className="instruction-card">
-              <div className="instruction-number">1</div>
-              <h4>Select Winners in Round 1</h4>
-              <p>Choose a team in each game to advance. Your picks become the available options in the next round.</p>
-            </div>
-            
-            <div className="instruction-card">
-              <div className="instruction-number">2</div>
-              <h4>Progress Through Each Round</h4>
-              <p>Continue selecting winners until the championship is complete. Later rounds only allow teams you already advanced.</p>
-            </div>
-            
-            <div className="instruction-card">
-              <div className="instruction-number">3</div>
-              <h4>Complete All Rounds</h4>
-              <p>Use the progress tracker at the bottom to verify every required pick is filled before submitting.</p>
-            </div>
-            
-            <div className="instruction-card">
-              <div className="instruction-number">4</div>
-              <h4>Submit Your Bracket</h4>
-              <p>Once all picks are complete, click "Submit Bracket" at the bottom. Your picks are locked and cannot be changed.</p>
-            </div>
-          </div>
-
-          <div className="bracket-tips">
-            <h4>💡 Tips</h4>
-            <ul>
-              <li><strong>Team Seeds:</strong> Lower seed numbers are typically favorites, while higher numbers are usually underdogs</li>
-              <li><strong>Balance Your Picks:</strong> Mix upsets with safer choices to maximize points</li>
-              <li><strong>Check the Leaderboard:</strong> See other players' scores and learn from top performers</li>
-              <li><strong>Blue Highlights:</strong> Selected teams show in blue so you can easily track your picks</li>
-            </ul>
+          <div className="instructions-steps">
+            <div className="instructions-step"><span className="instructions-step__num">1</span><span>Pick a winner for each game</span></div>
+            <div className="instructions-step__divider">→</div>
+            <div className="instructions-step"><span className="instructions-step__num">2</span><span>Your picks carry into later rounds</span></div>
+            <div className="instructions-step__divider">→</div>
+            <div className="instructions-step"><span className="instructions-step__num">3</span><span>Fill all rounds, then submit</span></div>
           </div>
         </div>
       )}

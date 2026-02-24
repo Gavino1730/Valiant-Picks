@@ -529,9 +529,9 @@ function AppContent() {
           <div className="nav-center">
             <NavLink label="Dashboard" pageKey="dashboard" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="Place Picks" pageKey="games" currentPage={page} onNavigate={handlePageChange} />
+            <NavLink label="Bracket" pageKey="bracket" currentPage={page} onNavigate={handlePageChange} activeFor={['boys-bracket', 'girls-bracket', 'bracket-leaderboard', 'actual-bracket', 'girls-actual-bracket', 'girls-bracket-leaderboard']} />
             <NavLink label="Teams" pageKey="teams" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="My Picks" pageKey="bets" currentPage={page} onNavigate={handlePageChange} />
-            <NavLink label="Bracket" pageKey="bracket" currentPage={page} onNavigate={handlePageChange} activeFor={['boys-bracket', 'girls-bracket', 'bracket-leaderboard', 'actual-bracket', 'girls-actual-bracket', 'girls-bracket-leaderboard']} />
             <NavLink label="Leaderboard" pageKey="leaderboard" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="How to Use" pageKey="howto" currentPage={page} onNavigate={handlePageChange} />
           </div>

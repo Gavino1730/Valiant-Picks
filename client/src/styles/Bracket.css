@@ -3,6 +3,46 @@
   background: var(--color-bg);
 }
 
+/* Tab switcher */
+.bracket-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  width: fit-content;
+}
+
+.bracket-tab {
+  padding: 8px 22px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.bracket-tab:hover {
+  background: var(--color-surface-raised);
+  color: var(--color-text-primary);
+}
+
+.bracket-tab--active {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+.bracket-tab--active:hover {
+  background: var(--color-brand-strong);
+  color: #fff;
+}
+
 .bracket-header {
   display: flex;
   align-items: flex-end;
@@ -309,11 +349,47 @@
   line-height: 1.5;
 }
 
-.instructions-header {
-  text-align: center;
-  margin-bottom: 28px;
-  padding-bottom: 16px;
-  border-bottom: 1.5px solid var(--color-border);
+/* compact steps strip */
+.instructions-steps {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+
+.instructions-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.instructions-step__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: var(--color-brand);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.instructions-step__divider {
+  color: var(--color-brand-strong);
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.6;
 }
 .bracket-leaderboard-tease {
   margin: 18px 0 20px;
@@ -337,130 +413,7 @@
   margin-bottom: 0;
 }
 
-.instructions-header h3 {
-  margin: 0 0 8px;
-  color: var(--color-brand-strong);
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
 
-.instructions-intro {
-  margin: 0;
-  color: var(--color-text-secondary);
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.instructions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.instruction-card {
-  background: linear-gradient(135deg, rgba(11, 94, 215, 0.08) 0%, rgba(11, 94, 215, 0.03) 100%);
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 20px;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.instruction-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--color-brand);
-}
-
-.instruction-card:hover {
-  border-color: var(--color-brand);
-  box-shadow: var(--card-shadow-hover);
-  transform: translateY(-2px);
-}
-
-.instruction-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: var(--color-brand);
-  color: white;
-  border-radius: 50%;
-  font-weight: 700;
-  font-size: 14px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow-sm);
-}
-
-.instruction-card h4 {
-  margin: 0 0 10px;
-  color: var(--color-text-primary);
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
-}
-
-.instruction-card p {
-  margin: 0;
-  color: var(--color-text-secondary);
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.bracket-tips {
-  background: rgba(247, 201, 91, 0.1);
-  border: 1.5px solid var(--color-warning);
-  border-radius: var(--radius-md);
-  padding: 16px 20px;
-}
-
-.bracket-tips h4 {
-  margin: 0 0 12px;
-  color: var(--color-warning);
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
-}
-
-.bracket-tips ul {
-  margin: 0;
-  padding-left: 18px;
-  list-style: none;
-}
-
-.bracket-tips li {
-  margin-bottom: 8px;
-  color: var(--color-text-secondary);
-  font-size: 14px;
-  line-height: 1.5;
-  position: relative;
-  padding-left: 12px;
-}
-
-.bracket-tips li::before {
-  content: '→';
-  position: absolute;
-  left: 0;
-  color: var(--color-warning);
-  font-weight: bold;
-}
-
-.bracket-tips li:last-child {
-  margin-bottom: 0;
-}
-
-.bracket-tips strong {
-  color: var(--color-text-primary);
-  font-weight: 600;
-}
 
 /* Bracket Grid Layout - Tournament style */
 .bracket-grid {
@@ -1137,10 +1090,6 @@
   .game-label {
     font-size: 11px;
   }
-
-  .instructions-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (max-width: 1024px) {
@@ -1180,36 +1129,6 @@
   .bracket-progress {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-  }
-
-  .progress-item {
-    padding: 10px;
-  }
-
-  .progress-label {
-    font-size: 10px;
-  }
-
-  .progress-count {
-    font-size: 16px;
-  }
-
-  .instruction-card {
-    padding: 16px;
-  }
-
-  .instruction-number {
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
-  }
-
-  .instruction-card h4 {
-    font-size: 14px;
-  }
-
-  .instruction-card p {
-    font-size: 12px;
   }
 }
 
@@ -1335,60 +1254,21 @@
   }
 
   .bracket-instructions {
-    padding: 18px 14px;
-    margin-bottom: 20px;
-  }
-
-  .instructions-header {
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-  }
-
-  .instructions-header h3 {
-    font-size: 22px;
-  }
-
-  .instructions-intro {
-    font-size: 14px;
-  }
-
-  .instructions-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
     margin-bottom: 16px;
   }
 
-  .instruction-card {
-    padding: 16px;
-  }
-
-  .instruction-number {
-    width: 32px;
-    height: 32px;
+  .instructions-steps {
+    gap: 8px;
+    padding: 12px 14px;
     font-size: 13px;
   }
 
-  .instruction-card h4 {
-    font-size: 15px;
-    margin-bottom: 8px;
+  .instructions-step__divider {
+    display: none;
   }
 
-  .instruction-card p {
+  .instructions-step {
     font-size: 13px;
-  }
-
-  .bracket-tips {
-    padding: 14px 16px;
-  }
-
-  .bracket-tips h4 {
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-
-  .bracket-tips li {
-    font-size: 13px;
-    margin-bottom: 8px;
   }
 
   .beta-warning {
@@ -1504,63 +1384,7 @@
   }
 
   .bracket-instructions {
-    padding: 14px;
-    margin-bottom: 16px;
-  }
-
-  .instructions-header {
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-  }
-
-  .instructions-header h3 {
-    font-size: 19px;
-    margin-bottom: 6px;
-  }
-
-  .instructions-intro {
-    font-size: 13px;
-  }
-
-  .instructions-grid {
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  .instruction-card {
-    padding: 14px;
-  }
-
-  .instruction-number {
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
-    margin-bottom: 8px;
-  }
-
-  .instruction-card h4 {
-    font-size: 14px;
-    margin-bottom: 6px;
-  }
-
-  .instruction-card p {
-    font-size: 12px;
-    line-height: 1.4;
-  }
-
-  .bracket-tips {
-    padding: 12px 14px;
-  }
-
-  .bracket-tips h4 {
-    font-size: 13px;
-    margin-bottom: 8px;
-  }
-
-  .bracket-tips li {
-    font-size: 12px;
-    margin-bottom: 6px;
-    padding-left: 12px;
+    margin-bottom: 14px;
   }
 
   .progress-item {

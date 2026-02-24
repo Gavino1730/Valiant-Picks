@@ -414,7 +414,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             </div>
           </div>
 
-          <p className="playoff-intro" style={{marginTop: '1.5rem'}}>Come out and cheer on your Valiant teams this week!</p>
+          <p className="playoff-intro" style={{marginTop: '0.5rem'}}>Come out and cheer on your Valiant teams this week!</p>
           <div className="playoff-games-grid">
             <div className="playoff-game-card boys-game">
               <div className="playoff-game-day">FRIDAY</div>
