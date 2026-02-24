@@ -5,8 +5,8 @@
   --color-border: rgba(255, 255, 255, 0.16);
   --color-text-primary: #eef2f7;
   --color-text-secondary: #b6c2d2;
-  --color-brand: #0b5ed7;
-  --color-brand-strong: #1d7cff;
+  --color-brand: #004f9e;
+  --color-brand-strong: #0b5ed7;
   --color-success: #4caf50;
   --color-danger: #ef5350;
   --color-warning: #f7c95b;
@@ -84,7 +84,12 @@
 .page-header p,
 .page-header .subtitle,
 .page-subtitle {
-  display: none;
+  display: block;
+  color: var(--color-text-secondary);
+  font-size: var(--font-small);
+  font-weight: 400;
+  margin: 4px 0 0;
+  line-height: 1.5;
 }
 
 .card,
@@ -99,9 +104,9 @@
 
 .card:hover,
 .ds-card:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow: var(--card-shadow-hover);
-  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.26);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(11, 94, 215, 0.18);
+  transform: translateY(-3px);
 }
 
 .stat-card,

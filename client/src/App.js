@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy, useRef } from 'react';
+import Skeleton from './components/Skeleton';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import './styles/design-system.css';
@@ -63,10 +64,13 @@ const HowToUse = lazyWithRetry(() => import('./components/HowToUse'));
 const About = lazyWithRetry(() => import('./components/About'));
 const Terms = lazyWithRetry(() => import('./components/Terms'));
 
-// Simple loading fallback
+// Loading fallback using skeleton
 const LoadingSpinner = () => (
-  <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
-    Loading...
+  <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+    <Skeleton variant="text" width="40%" height="28px" style={{ marginBottom: '1rem' }} />
+    <Skeleton variant="card" height="140px" style={{ marginBottom: '0.75rem' }} />
+    <Skeleton variant="card" height="140px" style={{ marginBottom: '0.75rem' }} />
+    <Skeleton variant="card" height="140px" />
   </div>
 );
 
