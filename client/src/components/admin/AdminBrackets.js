@@ -242,6 +242,8 @@ function AdminBrackets() {
               );
             })}
           </div>
+        </>
+      )}
     </div>
   );
 }
