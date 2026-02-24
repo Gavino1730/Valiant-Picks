@@ -227,10 +227,10 @@ function Bracket({ updateUser, gender = 'boys' }) {
     return (
       <div className={`bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
         <div className="bracket-tabs">
-          <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>Boys</button>
-          <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>Girls</button>
-          <button className="bracket-tab" onClick={() => navigate('/bracket-leaderboard')}>📊 Leaderboard</button>
-          <button className="bracket-tab" onClick={() => navigate('/actual-bracket')}>📺 Live</button>
+          <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>Boys Bracket</button>
+          <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>Girls Bracket</button>
+          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
+          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>📺 Live</button>
         </div>
         <div className="bracket-header">
           <h1>{gender === 'girls' ? 'Girls Bracket' : 'Boys Bracket'}</h1>
@@ -244,10 +244,10 @@ function Bracket({ updateUser, gender = 'boys' }) {
     return (
       <div className={`bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
         <div className="bracket-tabs">
-          <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>Boys</button>
-          <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>Girls</button>
-          <button className="bracket-tab" onClick={() => navigate('/bracket-leaderboard')}>📊 Leaderboard</button>
-          <button className="bracket-tab" onClick={() => navigate('/actual-bracket')}>📺 Live</button>
+          <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>Boys Bracket</button>
+          <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>Girls Bracket</button>
+          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
+          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>📺 Live</button>
         </div>
         <div className="bracket-header">
           <h1>{gender === 'girls' ? 'Girls Bracket' : 'Boys Bracket'}</h1>
@@ -259,12 +259,12 @@ function Bracket({ updateUser, gender = 'boys' }) {
   const bracketLocked = bracket.status !== 'open';
 
   return (
-    <div className={`bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
+    <div className={`bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}${!entry && !bracketLocked ? ' bracket-page--has-promo' : ''}`}>
       <div className="bracket-tabs">
-        <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>Boys</button>
-        <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>Girls</button>
-        <button className="bracket-tab" onClick={() => navigate('/bracket-leaderboard')}>📊 Leaderboard</button>
-        <button className="bracket-tab" onClick={() => navigate('/actual-bracket')}>📺 Live</button>
+        <button className={`bracket-tab${gender !== 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/bracket')}>Boys Bracket</button>
+        <button className={`bracket-tab${gender === 'girls' ? ' bracket-tab--active' : ''}`} onClick={() => navigate('/girls-bracket')}>Girls Bracket</button>
+        <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
+        <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>📺 Live</button>
       </div>
 
       <div className="bracket-header">
@@ -300,12 +300,24 @@ function Bracket({ updateUser, gender = 'boys' }) {
 
       {!entry && !bracketLocked && (
         <div className="bracket-cta-banner">
-          <div className="bracket-cta-banner__text">
-            <span className="bracket-cta-banner__icon">🏆</span>
-            <div>
-              <strong>You haven't entered yet!</strong>
-              <span> Make your picks below and click <em>Create Bracket</em> to lock them in.</span>
+          <div className="bracket-cta-banner__badge">FREE TO ENTER</div>
+          <div className="bracket-cta-banner__body">
+            <div className="bracket-cta-banner__headline">
+              <span className="bracket-cta-banner__icon">🏆</span>
+              <span>Enter the Bracket Challenge &amp; Win Valiant Bucks!</span>
             </div>
+            <div className="bracket-cta-banner__details">
+              <div className="bracket-cta-banner__stat">
+                <span className="bracket-cta-banner__stat-label">Entry Fee</span>
+                <span className="bracket-cta-banner__stat-value">{formatCurrency(Number(bracket?.entry_fee || 0))}</span>
+              </div>
+              <div className="bracket-cta-banner__divider" />
+              <div className="bracket-cta-banner__stat">
+                <span className="bracket-cta-banner__stat-label">Reward</span>
+                <span className="bracket-cta-banner__stat-value">{formatCurrency(Number(bracket?.payout_per_point || 0))} per correct pick</span>
+              </div>
+            </div>
+            <p className="bracket-cta-banner__sub">Pick your winners below, fill every round, then hit <strong>Create Bracket</strong> to lock in your entry!</p>
           </div>
         </div>
       )}
@@ -415,6 +427,19 @@ function Bracket({ updateUser, gender = 'boys' }) {
           {!canSubmit && (
             <p className="submit-hint">Complete all picks to submit your bracket</p>
           )}
+        </div>
+      )}
+
+      {/* Sticky promo bar for users who haven't entered */}
+      {!entry && !bracketLocked && (
+        <div className="bracket-sticky-promo">
+          <span className="bracket-sticky-promo__text">🏆 You haven't entered yet — pick your winners &amp; win Valiant Bucks!</span>
+          <button
+            className="bracket-sticky-promo__btn"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            Start Picking ↑
+          </button>
         </div>
       )}
     </div>

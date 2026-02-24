@@ -54,10 +54,10 @@ function BracketLeaderboard({ gender = 'boys' }) {
     return (
       <div className={`bracket-leaderboard${gender === 'girls' ? ' bracket-leaderboard--girls' : ''}`}>
         <div className="bracket-tabs">
-          <button className="bracket-tab" onClick={() => navigate('/bracket')}>Boys Bracket</button>
+          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket' : '/bracket')}>Boys Bracket</button>
           <button className="bracket-tab" onClick={() => navigate('/girls-bracket')}>Girls Bracket</button>
-          <button className="bracket-tab bracket-tab--active">Leaderboard</button>
-          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>Live</button>
+          <button className="bracket-tab bracket-tab--active">📊 Leaderboard</button>
+          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>📺 Live</button>
         </div>
         <div className="bracket-sub-tabs">
           <button className={`bracket-sub-tab${gender !== 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/bracket-leaderboard')}>Boys</button>
@@ -73,10 +73,10 @@ function BracketLeaderboard({ gender = 'boys' }) {
     return (
       <div className={`bracket-leaderboard${gender === 'girls' ? ' bracket-leaderboard--girls' : ''}`}>
         <div className="bracket-tabs">
-          <button className="bracket-tab" onClick={() => navigate('/bracket')}>Boys Bracket</button>
+          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket' : '/bracket')}>Boys Bracket</button>
           <button className="bracket-tab" onClick={() => navigate('/girls-bracket')}>Girls Bracket</button>
-          <button className="bracket-tab bracket-tab--active">Leaderboard</button>
-          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>Live</button>
+          <button className="bracket-tab bracket-tab--active">📊 Leaderboard</button>
+          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>📺 Live</button>
         </div>
         <div className="bracket-sub-tabs">
           <button className={`bracket-sub-tab${gender !== 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/bracket-leaderboard')}>Boys</button>
@@ -91,10 +91,10 @@ function BracketLeaderboard({ gender = 'boys' }) {
   return (
     <div className={`bracket-leaderboard${gender === 'girls' ? ' bracket-leaderboard--girls' : ''}`}>
       <div className="bracket-tabs">
-        <button className="bracket-tab" onClick={() => navigate('/bracket')}>Boys Bracket</button>
+        <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket' : '/bracket')}>Boys Bracket</button>
         <button className="bracket-tab" onClick={() => navigate('/girls-bracket')}>Girls Bracket</button>
-        <button className="bracket-tab bracket-tab--active">Leaderboard</button>
-        <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>Live</button>
+        <button className="bracket-tab bracket-tab--active">📊 Leaderboard</button>
+        <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}>📺 Live</button>
       </div>
       <div className="bracket-sub-tabs">
         <button className={`bracket-sub-tab${gender !== 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/bracket-leaderboard')}>Boys</button>

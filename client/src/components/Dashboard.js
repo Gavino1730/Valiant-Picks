@@ -405,16 +405,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         )}
       </div>
 
-      {/* Playoff Combined Banner */}
-      <div className="playoff-banner">
-        <span className="playoff-icon">🏆</span>
-        <span className="playoff-title">It's Playoff Time!</span>
-        <div className="playoff-games">
-          <span className="playoff-game boys">Boys · Fri 6PM vs OES (#14) 🏠</span>
-          <span className="playoff-sep">|</span>
-          <span className="playoff-game girls">Girls · Sat 5PM vs Taft (#11)</span>
-        </div>
-      </div>
 
       {/* Recent Winners Section - TEMPORARILY HIDDEN
       {recentWinners.length > 0 && (

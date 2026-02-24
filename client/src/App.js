@@ -508,7 +508,7 @@ function AppContent() {
   return (
     <ToastProvider>
     <div className="app">
-      {!mobileBannerDismissed && (
+      {!mobileBannerDismissed && ['bracket', 'boys-bracket', 'girls-bracket', 'bracket-leaderboard', 'actual-bracket', 'girls-actual-bracket', 'girls-bracket-leaderboard'].includes(page) && (
         <div className="mobile-only-banner">
           <span>💻 Best experienced on a laptop or desktop! The bracket can be tricky to navigate on a phone — for the smoothest experience, open valiantpicks.com on your computer.</span>
           <button

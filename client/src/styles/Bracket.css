@@ -3,6 +3,10 @@
   background: var(--color-bg);
 }
 
+.bracket-page--has-promo {
+  padding-bottom: 80px;
+}
+
 .bracket-page--girls {
   background: radial-gradient(ellipse at top, rgba(232, 121, 160, 0.07) 0%, transparent 60%),
     var(--color-bg);
@@ -54,6 +58,54 @@
 .bracket-tab--active:hover {
   background: var(--color-brand-strong);
   color: #fff;
+}
+
+/* Sub-tab switcher (Boys / Girls within a section) */
+.bracket-page .bracket-sub-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  width: fit-content;
+}
+
+.bracket-page .bracket-sub-tab {
+  padding: 5px 16px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.bracket-page .bracket-sub-tab:hover {
+  background: var(--color-surface-raised);
+  color: var(--color-text-primary);
+}
+
+.bracket-page .bracket-sub-tab--active {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+.bracket-page .bracket-sub-tab--active:hover {
+  background: var(--color-brand-strong);
+  color: #fff;
+}
+
+.bracket-page--girls .bracket-sub-tab--active {
+  background: #be185d;
+}
+
+.bracket-page--girls .bracket-sub-tab--active:hover {
+  background: #db2777;
 }
 
 .bracket-header {
@@ -294,34 +346,164 @@
 }
 
 .bracket-cta-banner {
+  position: relative;
+  overflow: hidden;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 14px 18px;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 22px;
   border-radius: var(--radius-md);
-  background: rgba(29, 124, 255, 0.12);
-  border: 1.5px solid rgba(29, 124, 255, 0.35);
-  margin-bottom: 4px;
+  background: linear-gradient(135deg, rgba(11, 94, 215, 0.18) 0%, rgba(29, 124, 255, 0.10) 100%);
+  border: 2px solid rgba(29, 124, 255, 0.5);
+  margin-bottom: 8px;
+  box-shadow: 0 4px 20px rgba(29, 124, 255, 0.15);
+  animation: cta-pulse 3s ease-in-out infinite;
 }
 
-.bracket-cta-banner__text {
+@keyframes cta-pulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(29, 124, 255, 0.15); }
+  50%       { box-shadow: 0 6px 28px rgba(29, 124, 255, 0.35); }
+}
+
+.bracket-cta-banner__badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #1d7cff;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bracket-cta-banner__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bracket-cta-banner__headline {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
   color: var(--color-text-primary);
-  font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.3;
 }
 
 .bracket-cta-banner__icon {
-  font-size: 22px;
+  font-size: 26px;
   flex-shrink: 0;
 }
 
+.bracket-cta-banner__details {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bracket-cta-banner__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bracket-cta-banner__stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary, #888);
+}
+
+.bracket-cta-banner__stat-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1d7cff;
+}
+
+.bracket-cta-banner__divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(29, 124, 255, 0.3);
+}
+
+.bracket-cta-banner__sub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-secondary, #888);
+  line-height: 1.5;
+}
+
+/* Girls theme overrides */
 .bracket-page--girls .bracket-cta-banner {
-  background: rgba(232, 121, 160, 0.12);
-  border-color: rgba(232, 121, 160, 0.35);
+  background: linear-gradient(135deg, rgba(232, 121, 160, 0.18) 0%, rgba(236, 72, 153, 0.10) 100%);
+  border-color: rgba(232, 121, 160, 0.5);
+  box-shadow: 0 4px 20px rgba(232, 121, 160, 0.15);
+  animation: cta-pulse-girls 3s ease-in-out infinite;
+}
+
+@keyframes cta-pulse-girls {
+  0%, 100% { box-shadow: 0 4px 20px rgba(232, 121, 160, 0.15); }
+  50%       { box-shadow: 0 6px 28px rgba(232, 121, 160, 0.35); }
+}
+
+.bracket-page--girls .bracket-cta-banner__badge {
+  background: #e879a0;
+}
+
+.bracket-page--girls .bracket-cta-banner__stat-value {
+  color: #e879a0;
+}
+
+.bracket-page--girls .bracket-cta-banner__divider {
+  background: rgba(232, 121, 160, 0.3);
+}
+
+/* ── Sticky promo bar ─────────────────────────────────────────── */
+.bracket-sticky-promo {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: linear-gradient(90deg, #003d7a 0%, #004f9e 60%, #1d7cff 100%);
+  box-shadow: 0 -3px 16px rgba(0, 0, 0, 0.35);
+  flex-wrap: wrap;
+}
+
+.bracket-sticky-promo__text {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.bracket-sticky-promo__btn {
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: none;
+  background: #fff;
+  color: #004f9e;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.bracket-sticky-promo__btn:hover {
+  background: #e8f0ff;
+  transform: translateY(-1px);
 }
 
 /* ── Girls Bracket Pink Theme ─────────────────────────────────── */
