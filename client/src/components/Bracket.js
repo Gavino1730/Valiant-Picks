@@ -326,6 +326,26 @@ function Bracket({ updateUser, gender = 'boys' }) {
         </div>
       )}
 
+      {/* Progress Indicator */}
+      {!entry && (
+        <div className="bracket-progress bracket-progress--top-right">
+          {sortedRounds.map((round) => {
+            const roundKey = `round${round}`;
+            const currentCount = Object.keys(picks[roundKey] || {}).length;
+            const requiredCount = requiredPickCounts[round] || 0;
+
+            return (
+              <div key={round} className="progress-item">
+                <span className="progress-label">{getRoundLabel(round, totalRounds)}</span>
+                <span className={`progress-count ${currentCount === requiredCount ? 'complete' : ''}`}>
+                  {currentCount}/{requiredCount}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <div className="bracket-grid">
         {sortedRounds.map((round) => {
           const roundGames = (gamesByRound[round] || []).sort((a, b) => a.game_number - b.game_number);
@@ -373,25 +393,7 @@ function Bracket({ updateUser, gender = 'boys' }) {
         })}
       </div>
 
-      {/* Progress Indicator */}
-      {!entry && (
-        <div className="bracket-progress">
-          {sortedRounds.map((round) => {
-            const roundKey = `round${round}`;
-            const currentCount = Object.keys(picks[roundKey] || {}).length;
-            const requiredCount = requiredPickCounts[round] || 0;
 
-            return (
-              <div key={round} className="progress-item">
-                <span className="progress-label">{getRoundLabel(round, totalRounds)}</span>
-                <span className={`progress-count ${currentCount === requiredCount ? 'complete' : ''}`}>
-                  {currentCount}/{requiredCount}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      )}
 
       {!entry && (
         <div className="bracket-submit">

@@ -304,6 +304,217 @@
   border-color: rgba(232, 121, 160, 0.35);
 }
 
+/* ── Girls Bracket Pink Theme ─────────────────────────────────── */
+
+/* Bracket grid border */
+.bracket-page--girls .bracket-grid {
+  border-color: rgba(236, 72, 153, 0.3);
+  box-shadow: 0 8px 32px rgba(190, 24, 93, 0.2);
+}
+
+/* Grid top line */
+.bracket-page--girls .bracket-grid::before {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(236, 72, 153, 0.15) 12.5%,
+    rgba(236, 72, 153, 0.1) 25%,
+    rgba(236, 72, 153, 0.08) 37.5%,
+    rgba(236, 72, 153, 0.1) 50%,
+    rgba(236, 72, 153, 0.1) 62.5%,
+    rgba(236, 72, 153, 0.08) 75%,
+    rgba(236, 72, 153, 0.1) 87.5%,
+    transparent 100%
+  );
+}
+
+/* Round columns */
+.bracket-page--girls .bracket-round {
+  background: linear-gradient(180deg, rgba(190, 24, 93, 0.1) 0%, rgba(190, 24, 93, 0.05) 100%);
+  border-color: rgba(236, 72, 153, 0.25);
+}
+
+.bracket-page--girls .bracket-round::before {
+  background: linear-gradient(90deg, rgba(236, 72, 153, 0.3) 0%, rgba(236, 72, 153, 0) 100%);
+}
+
+/* Round headings */
+.bracket-page--girls .bracket-round h2 {
+  color: #f472b6;
+  border-bottom-color: rgba(236, 72, 153, 0.35);
+}
+
+/* Round point tag */
+.bracket-page--girls .round-point-tag {
+  background: rgba(236, 72, 153, 0.15);
+  color: #f9a8d4;
+  border-color: rgba(236, 72, 153, 0.35);
+}
+
+/* Game cards */
+.bracket-page--girls .bracket-game {
+  border-color: rgba(190, 24, 93, 0.25);
+}
+
+.bracket-page--girls .bracket-game::after {
+  background: linear-gradient(90deg, rgba(236, 72, 153, 0.2) 0%, rgba(236, 72, 153, 0) 100%);
+}
+
+.bracket-page--girls .bracket-game:hover {
+  border-color: rgba(190, 24, 93, 0.55);
+  box-shadow: 0 4px 16px rgba(190, 24, 93, 0.25);
+}
+
+/* Championship game */
+.bracket-page--girls .bracket-game.championship-game {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.18) 0%, rgba(236, 72, 153, 0.07) 100%);
+  border-color: rgba(236, 72, 153, 0.55);
+  box-shadow: 0 8px 24px rgba(190, 24, 93, 0.22);
+}
+
+.bracket-page--girls .bracket-game.championship-game:hover {
+  border-color: rgba(236, 72, 153, 0.85);
+  box-shadow: 0 12px 32px rgba(190, 24, 93, 0.32);
+}
+
+/* Game label */
+.bracket-page--girls .game-label {
+  color: #f472b6;
+  border-bottom-color: rgba(236, 72, 153, 0.2);
+}
+
+/* Team buttons – default */
+.bracket-page--girls .team-btn {
+  border-color: rgba(190, 24, 93, 0.25);
+  color: #f0c4d8;
+}
+
+.bracket-page--girls .team-btn:hover:not(:disabled) {
+  border-color: rgba(190, 24, 93, 0.45);
+  background: rgba(236, 72, 153, 0.1);
+  box-shadow: 0 2px 8px rgba(190, 24, 93, 0.2);
+  color: #f9a8d4;
+}
+
+/* Team seed label */
+.bracket-page--girls .team-seed {
+  color: #f472b6;
+}
+
+/* Team buttons – selected */
+.bracket-page--girls .team-btn.selected {
+  background: linear-gradient(135deg, #db2777 0%, #9d174d 100%);
+  border-color: #9d174d;
+  border-left: 4px solid #f9a8d4;
+  box-shadow: 0 4px 16px rgba(190, 24, 93, 0.4);
+}
+
+.bracket-page--girls .team-btn.selected::before {
+  color: #f9a8d4;
+}
+
+.bracket-page--girls .team-btn.selected:hover {
+  box-shadow: 0 6px 20px rgba(190, 24, 93, 0.5);
+  border-left-color: #fbcfe8;
+}
+
+/* Pulse animation for just-advanced */
+.bracket-page--girls .team-btn.just-advanced {
+  border-color: rgba(249, 168, 212, 0.9);
+  box-shadow: 0 6px 18px rgba(249, 168, 212, 0.4);
+}
+
+/* Actual winner display */
+.bracket-page--girls .actual-winner-display {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
+  border-color: rgba(236, 72, 153, 0.4);
+}
+
+.bracket-page--girls .actual-winner-label {
+  color: #f0c4d8;
+}
+
+.bracket-page--girls .actual-winner-name {
+  color: #f472b6;
+}
+
+/* Entry summary */
+.bracket-page--girls .bracket-entry-summary {
+  background: rgba(190, 24, 93, 0.1);
+  border-color: rgba(190, 24, 93, 0.28);
+}
+
+/* Quick picks bar */
+.bracket-page--girls .bracket-quick-picks {
+  border-color: rgba(249, 168, 212, 0.4);
+  background: rgba(190, 24, 93, 0.1);
+}
+
+.bracket-page--girls .quick-picks-label {
+  color: #f0c4d8;
+}
+
+.bracket-page--girls .quick-pick-btn {
+  border-color: rgba(249, 168, 212, 0.4);
+  background: rgba(190, 24, 93, 0.12);
+  color: #fce7f3;
+}
+
+.bracket-page--girls .quick-pick-btn:hover {
+  border-color: rgba(249, 168, 212, 0.8);
+  background: rgba(190, 24, 93, 0.22);
+}
+
+/* Instructions step numbers */
+.bracket-page--girls .instructions-step__num {
+  background: #be185d;
+}
+
+.bracket-page--girls .instructions-step__divider {
+  color: #f472b6;
+}
+
+/* Progress bar */
+.bracket-page--girls .progress-count.complete {
+  color: #f472b6;
+}
+
+/* Submit button */
+.bracket-page--girls .bracket-submit-btn {
+  background: #be185d;
+  box-shadow: 0 4px 16px rgba(190, 24, 93, 0.35);
+}
+
+.bracket-page--girls .bracket-submit-btn:hover:not(:disabled) {
+  background: #db2777;
+  box-shadow: 0 8px 24px rgba(190, 24, 93, 0.45);
+}
+
+/* Leaderboard tease */
+.bracket-page--girls .bracket-leaderboard-tease {
+  background: rgba(190, 24, 93, 0.1);
+  border-color: rgba(249, 168, 212, 0.3);
+}
+
+.bracket-page--girls .bracket-leaderboard-tease h4 {
+  color: #f9a8d4;
+}
+
+/* Snapshot items */
+.bracket-page--girls .snapshot-item {
+  background: rgba(190, 24, 93, 0.1);
+  border-color: rgba(190, 24, 93, 0.22);
+}
+
+.bracket-page--girls .snapshot-label {
+  color: #f0c4d8;
+}
+
+.bracket-page--girls .snapshot-value {
+  color: #fce7f3;
+}
+
+/* ── End Girls Pink Theme ──────────────────────────────────────── */
+
 .bracket-alert {
   margin: 12px 0;
   padding: 12px 16px;
@@ -1018,6 +1229,12 @@
   box-shadow: var(--shadow-sm);
   position: relative;
 }
+
+.bracket-progress--top-right {
+  margin-left: auto;
+  width: fit-content;
+  min-width: min(100%, 520px);
+}
 .progress-bar {
   width: 100%;
   height: 6px;
@@ -1661,14 +1878,14 @@
 }
 
 .team-display.loser {
-  opacity: 0.5;
-  background: rgba(31, 78, 153, 0.08);
-  border-color: rgba(31, 78, 153, 0.2);
+  opacity: 0.6;
+  background: rgba(211, 47, 47, 0.08);
+  border-color: rgba(211, 47, 47, 0.3);
 }
 
 .team-display.loser .team-name {
   text-decoration: line-through;
-  color: #7a8b9e;
+  color: #e57373;
 }
 
 .team-display.champion {
@@ -1697,7 +1914,8 @@
 
 /* Legend */
 .actual-bracket-legend {
-  margin-top: 40px;
+  margin-top: 0;
+  margin-bottom: 20px;
   padding: 24px;
   background: var(--color-surface);
   border-radius: 12px;
@@ -1740,9 +1958,8 @@
 }
 
 .legend-box.loser {
-  background: rgba(31, 78, 153, 0.08);
-  border-color: rgba(31, 78, 153, 0.2);
-  opacity: 0.5;
+  background: rgba(211, 47, 47, 0.15);
+  border-color: rgba(211, 47, 47, 0.5);
 }
 
 .legend-box.pending {

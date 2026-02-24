@@ -160,6 +160,25 @@ function ActualBracket({ gender = 'boys' }) {
         <p>This bracket shows the <strong>actual results</strong> of games as they are completed. Winners are marked with a green checkmark (✓).</p>
       </div>
 
+      {/* Legend */}
+      <div className="actual-bracket-legend">
+        <h3>Legend</h3>
+        <div className="legend-items">
+          <div className="legend-item">
+            <div className="legend-box winner"></div>
+            <span>Winner (confirmed result)</span>
+          </div>
+          <div className="legend-item">
+            <div className="legend-box loser"></div>
+            <span>Eliminated team</span>
+          </div>
+          <div className="legend-item">
+            <div className="legend-box pending"></div>
+            <span>Game result pending</span>
+          </div>
+        </div>
+      </div>
+
       {error && <div className="bracket-alert bracket-alert--error">{error}</div>}
 
       <div className="bracket-grid">
@@ -208,24 +227,6 @@ function ActualBracket({ gender = 'boys' }) {
         })}
       </div>
 
-      {/* Legend */}
-      <div className="actual-bracket-legend">
-        <h3>Legend</h3>
-        <div className="legend-items">
-          <div className="legend-item">
-            <div className="legend-box winner"></div>
-            <span>Winner (confirmed result)</span>
-          </div>
-          <div className="legend-item">
-            <div className="legend-box loser"></div>
-            <span>Eliminated team</span>
-          </div>
-          <div className="legend-item">
-            <div className="legend-box pending"></div>
-            <span>Game result pending</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
