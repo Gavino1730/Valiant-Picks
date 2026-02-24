@@ -271,7 +271,7 @@ function Bracket({ updateUser, gender = 'boys' }) {
         <div className="bracket-grid bracket-grid--skeleton">
           {[1, 2, 3].map((round) => (
             <div key={round} className={`bracket-round bracket-round--r${round}`}>
-              <h2 className="skel skel-heading" aria-hidden="true" />
+              <h2 className="skel skel-heading" />
               <div className="bracket-games">
                 {[...Array(round === 1 ? 4 : round === 2 ? 2 : 1)].map((_, i) => (
                   <div key={i} className="bracket-game">

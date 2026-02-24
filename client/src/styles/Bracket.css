@@ -2650,7 +2650,7 @@ svg.bracket-svg path.selected-path {
 .skel {
   display: inline-block;
   border-radius: 4px;
-  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background: linear-gradient(90deg, #1b1f26 25%, #242a34 50%, #1b1f26 75%);
   background-size: 800px 100%;
   animation: bracket-shimmer 1.4s infinite linear;
 }
@@ -2664,7 +2664,7 @@ svg.bracket-svg path.selected-path {
   height: 18px;
   margin-bottom: 12px;
   border-radius: 4px;
-  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background: linear-gradient(90deg, #1b1f26 25%, #242a34 50%, #1b1f26 75%);
   background-size: 800px 100%;
   animation: bracket-shimmer 1.4s infinite linear;
 }
@@ -2672,14 +2672,15 @@ svg.bracket-svg path.selected-path {
 .skel-team {
   pointer-events: none;
   cursor: default;
+  background: rgba(255,255,255,0.04);
 }
 
 .bracket-page--girls .skel {
-  background: linear-gradient(90deg, #e8d5ef 25%, #f5eafa 50%, #e8d5ef 75%);
+  background: linear-gradient(90deg, #1f1a24 25%, #2a2030 50%, #1f1a24 75%);
   background-size: 800px 100%;
 }
 
 .bracket-page--girls .skel-heading {
-  background: linear-gradient(90deg, #e8d5ef 25%, #f5eafa 50%, #e8d5ef 75%);
+  background: linear-gradient(90deg, #1f1a24 25%, #2a2030 50%, #1f1a24 75%);
   background-size: 800px 100%;
 }

@@ -435,7 +435,7 @@
 .skel {
   display: inline-block;
   border-radius: 4px;
-  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background: linear-gradient(90deg, #1b1f26 25%, #242a34 50%, #1b1f26 75%);
   background-size: 800px 100%;
   animation: lb-shimmer 1.4s infinite linear;
 }

@@ -16,12 +16,12 @@ test.describe('Games & Betting', () => {
 
   test('should navigate to Place Picks page', async ({ page }) => {
     await navigateTo(page, 'Place Picks');
-    await expect(page.locator('h2:has-text("Place Your Picks")')).toBeVisible();
+    await expect(page.locator('h1:has-text("Place Your Picks")')).toBeVisible();
   });
 
   test('should load games page via URL', async ({ page }) => {
     await navigateToUrl(page, '/games');
-    await expect(page.locator('h2:has-text("Place Your Picks")')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('h1:has-text("Place Your Picks")')).toBeVisible({ timeout: 10000 });
   });
 
   test('should show page subtitle', async ({ page }) => {
