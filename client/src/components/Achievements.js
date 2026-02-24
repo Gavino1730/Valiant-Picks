@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from '../utils/axios';
 import '../styles/Achievements.css';
 
-const Achievements = ({ onAchievementClaimed }) => {
+const Achievements = ({ onAchievementClaimed, user }) => {
   const [achievements, setAchievements] = useState([]);
   const [unclaimedCount, setUnclaimedCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [claiming, setClaiming] = useState(null);
 
   useEffect(() => {
+    // Only run for authenticated users
+    if (!user) return;
     loadAchievements();
-  }, []);
+  }, [user]);
 
   const loadAchievements = async () => {
     try {

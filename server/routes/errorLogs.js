@@ -1,16 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken, adminOnly } = require('../middleware/auth');
+const { authenticateToken, adminOnly, optionalAuth } = require('../middleware/auth');
 const ErrorLog = require('../models/ErrorLog');
 
 // Log error from frontend
-router.post('/', async (req, res) => {
+router.post('/', optionalAuth, async (req, res) => {
   try {
-    const { errorMessage, errorStack, pageUrl, severity } = req.body;
+    const {
+      errorMessage, errorStack, pageUrl, severity,
+      type, endpoint, method, requestBody,
+      statusCode, componentStack, responseData,
+      clientUserId, clientUsername
+    } = req.body;
     
-    // Get user info if authenticated
-    const userId = req.user?.id || null;
-    const username = req.user?.username || 'anonymous';
+    // Prefer JWT-verified identity; fall back to client-reported identity
+    const userId = req.user?.id || clientUserId || null;
+    const username = req.user?.username || clientUsername || null;
     
     // Get IP address
     const ipAddress = req.headers['x-forwarded-for']?.split(',')[0] || 
@@ -20,13 +25,19 @@ router.post('/', async (req, res) => {
     await ErrorLog.create({
       userId,
       username,
-      errorType: 'frontend',
+      errorType: type || 'frontend',
       errorMessage: errorMessage || 'Unknown frontend error',
       errorStack,
+      endpoint: endpoint || null,
+      method: method || null,
+      requestBody: requestBody || null,
       pageUrl,
       userAgent: req.headers['user-agent'],
       ipAddress,
-      severity: severity || 'error'
+      severity: severity || 'error',
+      statusCode: statusCode || null,
+      componentStack: componentStack || null,
+      responseData: responseData || null
     });
 
     res.json({ success: true, message: 'Error logged' });

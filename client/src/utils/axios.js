@@ -122,9 +122,12 @@ apiClient.interceptors.response.use(
         severity: 'error',
         type: 'apiError',
         endpoint: error.config?.url,
-        method: error.config?.method,
+        method: error.config?.method?.toUpperCase(),
         statusCode: error.response?.status,
-        responseData: error.response?.data
+        responseData: error.response?.data,
+        requestBody: (() => {
+          try { return error.config?.data ? JSON.parse(error.config.data) : null; } catch { return null; }
+        })()
       });
     }
     

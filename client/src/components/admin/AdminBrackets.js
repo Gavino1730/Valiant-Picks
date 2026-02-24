@@ -55,6 +55,14 @@ function AdminBrackets() {
     bracketSize: 16
   });
 
+  const gamesByRound = useMemo(() => {
+    return games.reduce((acc, game) => {
+      if (!acc[game.round]) acc[game.round] = [];
+      acc[game.round].push(game);
+      return acc;
+    }, {});
+  }, [games]);
+
   const sortedRounds = useMemo(() => {
     return Object.keys(gamesByRound).map(Number).sort((a, b) => a - b);
   }, [gamesByRound]);
@@ -68,14 +76,6 @@ function AdminBrackets() {
       });
     });
   }, []);
-
-  const gamesByRound = useMemo(() => {
-    return games.reduce((acc, game) => {
-      if (!acc[game.round]) acc[game.round] = [];
-      acc[game.round].push(game);
-      return acc;
-    }, {});
-  }, [games]);
 
   const fetchBracketDetails = useCallback(async (id) => {
     if (!id) return;

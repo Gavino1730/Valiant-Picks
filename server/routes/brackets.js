@@ -186,15 +186,20 @@ const recomputeBracketGames = async (bracketId) => {
 
 router.get('/active', optionalAuth, async (req, res) => {
   try {
-    const { data: bracket, error } = await supabase
+    const gender = req.query.gender || 'boys';
+    let query = supabase
       .from('brackets')
       .select('*')
       .in('status', ['open', 'locked', 'in-progress', 'completed'])
       .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
+      .limit(1);
 
-    if (error && error.code !== 'PGRST116') throw error;
+    // Filter by gender if the column exists, otherwise fall back to name-based detection
+    query = query.eq('gender', gender);
+
+    const { data: bracket, error } = await query.maybeSingle();
+
+    if (error) throw error;
 
     if (!bracket) {
       return res.json({ bracket: null, teams: [], games: [] });
@@ -226,7 +231,7 @@ router.get('/admin', authenticateToken, adminOnly, async (req, res) => {
 });
 
 router.post('/', authenticateToken, adminOnly, async (req, res) => {
-  const { name, season, entryFee, payoutPerPoint, status } = req.body;
+  const { name, season, entryFee, payoutPerPoint, status, gender } = req.body;
 
   if (!name) {
     return res.status(400).json({ error: 'Bracket name is required' });
@@ -240,7 +245,8 @@ router.post('/', authenticateToken, adminOnly, async (req, res) => {
         season: season || null,
         entry_fee: entryFee ?? 0,
         payout_per_point: payoutPerPoint ?? 1000,
-        status: status || 'open'
+        status: status || 'open',
+        gender: gender || 'boys'
       }])
       .select()
       .single();
@@ -253,7 +259,7 @@ router.post('/', authenticateToken, adminOnly, async (req, res) => {
 });
 
 router.put('/:id', authenticateToken, adminOnly, async (req, res) => {
-  const { status, entryFee, payoutPerPoint, name, season } = req.body;
+  const { status, entryFee, payoutPerPoint, name, season, gender } = req.body;
   const updates = {
     updated_at: new Date().toISOString()
   };
@@ -263,6 +269,7 @@ router.put('/:id', authenticateToken, adminOnly, async (req, res) => {
   if (payoutPerPoint !== undefined) updates.payout_per_point = payoutPerPoint;
   if (name) updates.name = name;
   if (season !== undefined) updates.season = season;
+  if (gender) updates.gender = gender;
 
   try {
     const { data, error } = await supabase

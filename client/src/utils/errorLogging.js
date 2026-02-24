@@ -14,12 +14,31 @@ const errorLogClient = axios.create({
   }
 });
 
+// Attach auth token so error logs can be associated with the logged-in user
+errorLogClient.interceptors.request.use((config) => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // Rate limiting for error logging - prevent spam
 const errorLogRateLimit = {
   lastLogTime: 0,
   errorCount: 0,
   maxErrorsPerMinute: 5,
   recentErrors: new Set() // Track unique errors to avoid duplicates
+};
+
+// Get current user info from localStorage
+const getCurrentUser = () => {
+  try {
+    const raw = localStorage.getItem('user');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
 };
 
 // Log error to backend
@@ -49,12 +68,21 @@ export const logError = async (error, context = {}) => {
     errorLogRateLimit.lastLogTime = now;
     errorLogRateLimit.errorCount++;
     errorLogRateLimit.recentErrors.add(errorFingerprint);
+
+    // Pull user identity from localStorage so it's included even before the
+    // auth token is decoded server-side (belt-and-suspenders for the username field)
+    const currentUser = getCurrentUser();
     
     const errorData = {
       errorMessage: error.message || String(error),
       errorStack: error.stack || null,
       pageUrl: window.location.href,
       severity: context.severity || 'error',
+      // Include user identity fields from localStorage
+      clientUserId: currentUser?.id || null,
+      clientUsername: currentUser?.username || null,
+      // Spread all context fields (endpoint, method, type, statusCode,
+      // componentStack, responseData, requestBody, etc.)
       ...context
     };
 

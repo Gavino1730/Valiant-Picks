@@ -27,7 +27,7 @@ const getRoundPlaceholder = (round, totalRounds) => {
   return `Awaiting ${priorLabel}`;
 };
 
-function ActualBracket() {
+function ActualBracket({ gender = 'boys' }) {
   const navigate = useNavigate();
   const [bracket, setBracket] = useState(null);
   const [teams, setTeams] = useState([]);
@@ -59,7 +59,7 @@ function ActualBracket() {
   const loadBracket = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get('/brackets/active');
+      const response = await apiClient.get(`/brackets/active?gender=${gender}`);
       const payload = response.data;
 
       if (!payload?.bracket) {
@@ -133,7 +133,7 @@ function ActualBracket() {
       <div className="bracket-header">
         <div>
           <h1>Actual Bracket Results</h1>
-          <p className="bracket-subtitle">3A Mens Basketball Tournament - True Outcomes</p>
+          <p className="bracket-subtitle">{gender === 'girls' ? '3A Womens Basketball Tournament - True Outcomes' : '3A Mens Basketball Tournament - True Outcomes'}</p>
         </div>
       </div>
 
@@ -145,14 +145,14 @@ function ActualBracket() {
         <button
           type="button"
           className="bracket-link"
-          onClick={() => navigate('/bracket')}
+          onClick={() => navigate(gender === 'girls' ? '/girls-bracket' : '/bracket')}
         >
           View My Bracket
         </button>
         <button
           type="button"
           className="bracket-link"
-          onClick={() => navigate('/bracket-leaderboard')}
+          onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}
         >
           View Leaderboard
         </button>

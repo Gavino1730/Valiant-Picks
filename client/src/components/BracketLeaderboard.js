@@ -4,7 +4,7 @@ import apiClient from '../utils/axios';
 import { formatCurrency } from '../utils/currency';
 import '../styles/BracketLeaderboard.css';
 
-function BracketLeaderboard() {
+function BracketLeaderboard({ gender = 'boys' }) {
   const navigate = useNavigate();
   const [bracket, setBracket] = useState(null);
   const [entries, setEntries] = useState([]);
@@ -15,7 +15,7 @@ function BracketLeaderboard() {
   const loadLeaderboard = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get('/brackets/active');
+      const response = await apiClient.get(`/brackets/active?gender=${gender}`);
       if (!response.data?.bracket) {
         setBracket(null);
         setEntries([]);
@@ -73,7 +73,7 @@ function BracketLeaderboard() {
         <div>
           <h1>{bracket.name} Leaderboard</h1>
           <p className="subtitle">Points and payouts for submitted brackets</p>
-          <p className="subtitle subtitle--deadline">⏰ Picks must be submitted by February 26 at midnight</p>
+          <p className="subtitle subtitle--deadline">⏰ Picks must be submitted by February 28 at 5pm Pacific</p>
           {lastRefresh && <p className="subtitle subtitle--small">Last updated: {lastRefresh}</p>}
         </div>
         <div className="leaderboard-actions">
@@ -88,14 +88,14 @@ function BracketLeaderboard() {
           <button
             type="button"
             className="bracket-link"
-            onClick={() => navigate('/actual-bracket')}
+            onClick={() => navigate(gender === 'girls' ? '/girls-actual-bracket' : '/actual-bracket')}
           >
             View Results
           </button>
           <button
             type="button"
             className="bracket-link"
-            onClick={() => navigate('/bracket')}
+            onClick={() => navigate(gender === 'girls' ? '/girls-bracket' : '/bracket')}
           >
             Back to bracket
           </button>

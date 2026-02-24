@@ -37,7 +37,7 @@ const normalizePicks = (picks) => ({
   round4: picks?.round4 || {}
 });
 
-function Bracket({ updateUser }) {
+function Bracket({ updateUser, gender = 'boys' }) {
   const navigate = useNavigate();
   const [bracket, setBracket] = useState(null);
   const [teams, setTeams] = useState([]);
@@ -68,7 +68,7 @@ function Bracket({ updateUser }) {
     const loadBracket = async () => {
       try {
         setLoading(true);
-        const response = await apiClient.get('/brackets/active');
+        const response = await apiClient.get(`/brackets/active?gender=${gender}`);
         const payload = response.data;
 
         if (!payload?.bracket) {
@@ -234,7 +234,7 @@ function Bracket({ updateUser }) {
           <button
             type="button"
             className="bracket-link"
-            onClick={() => navigate('/bracket-leaderboard')}
+            onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}
           >
             View Leaderboard
           </button>
@@ -254,7 +254,7 @@ function Bracket({ updateUser }) {
           <button
             type="button"
             className="bracket-link"
-            onClick={() => navigate('/bracket-leaderboard')}
+            onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}
           >
             View Leaderboard
           </button>
@@ -270,7 +270,7 @@ function Bracket({ updateUser }) {
       <div className="bracket-header">
         <div>
           <h1>Championship Bracket</h1>
-          <p className="bracket-subtitle">3A Mens Basketball Tournament</p>
+          <p className="bracket-subtitle">{gender === 'girls' ? '3A Womens Basketball Tournament' : '3A Mens Basketball Tournament'}</p>
         </div>
         <div className="bracket-meta">
           <div className="bracket-meta__item">
@@ -284,11 +284,15 @@ function Bracket({ updateUser }) {
         </div>
       </div>
 
+      <div className="bracket-device-notice">
+        💻 <strong>Best experienced on a laptop or desktop!</strong> The bracket can be tricky to navigate on a phone — for the smoothest experience, open <strong>valiantpicks.com</strong> on your computer.
+      </div>
+
       <div className="bracket-actions">
         <button
           type="button"
           className="bracket-link"
-          onClick={() => navigate('/bracket-leaderboard')}
+          onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}
         >
           View Leaderboard
         </button>

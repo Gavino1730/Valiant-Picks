@@ -13,12 +13,12 @@ class ErrorLog {
     userAgent = null,
     ipAddress = null,
     pageUrl = null,
-    severity = 'error'
+    severity = 'error',
+    statusCode = null,
+    componentStack = null,
+    responseData = null
   }) {
     try {
-      // Remove sensitive data from request body
-      const sanitizedBody = requestBody ? this.sanitizeRequestBody(requestBody) : null;
-
       const { data, error } = await supabase
         .from('error_logs')
         .insert([{
@@ -29,11 +29,14 @@ class ErrorLog {
           error_stack: errorStack,
           endpoint,
           method,
-          request_body: sanitizedBody,
+          request_body: requestBody ? JSON.stringify(requestBody) : null,
           user_agent: userAgent,
           ip_address: ipAddress,
           page_url: pageUrl,
-          severity
+          severity,
+          status_code: statusCode,
+          component_stack: componentStack,
+          response_data: responseData ? JSON.stringify(responseData) : null
         }])
         .select()
         .single();
@@ -45,22 +48,6 @@ class ErrorLog {
       console.error('Failed to log error:', err.message);
       return null;
     }
-  }
-
-  static sanitizeRequestBody(body) {
-    if (!body) return null;
-    
-    const sanitized = { ...body };
-    
-    // Remove sensitive fields
-    const sensitiveFields = ['password', 'token', 'secret', 'apiKey', 'creditCard'];
-    sensitiveFields.forEach(field => {
-      if (sanitized[field]) {
-        sanitized[field] = '[REDACTED]';
-      }
-    });
-    
-    return sanitized;
   }
 
   static async getAll(limit = 100, offset = 0) {

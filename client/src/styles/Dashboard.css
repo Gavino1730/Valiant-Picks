@@ -3318,6 +3318,244 @@ html {
   }
 }
 
+/* Playoff Alert Section */
+.playoff-alert-section {
+  background: linear-gradient(135deg, #004f9e 0%, #003d7a 50%, #004f9e 100%);
+  border: 3px solid #ffd700;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 32px rgba(255, 215, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-align: center;
+  animation: slideDown 0.4s ease;
+}
+
+.playoff-alert-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.playoff-alert-header h2 {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #ffd700;
+  margin: 0;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 12px rgba(255, 215, 0, 0.4);
+}
+
+.playoff-fire {
+  font-size: 1.8rem;
+}
+
+.playoff-intro {
+  color: #b0c8e8;
+  font-size: 1.05rem;
+  margin: 0 0 1.5rem 0;
+  font-weight: 500;
+}
+
+.playoff-games-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.playoff-game-card {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.playoff-game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.2);
+}
+
+.boys-game {
+  border: 2px solid #1976d2;
+  border-left: 5px solid #1976d2;
+}
+
+.girls-game {
+  border: 2px solid #d81b60;
+  border-left: 5px solid #d81b60;
+}
+
+.playoff-game-day {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffd700;
+  margin-bottom: 0.25rem;
+}
+
+.playoff-game-sport {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.playoff-matchup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.playoff-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.seed-badge {
+  background: rgba(255, 255, 255, 0.15);
+  color: #90caf9;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+}
+
+.our-team .seed-badge {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+}
+
+.team-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.vs-divider {
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: #b0bec5;
+  padding: 0 0.25rem;
+}
+
+.playoff-game-info {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.game-time, .game-location {
+  font-size: 0.9rem;
+  color: #b0c8e8;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .playoff-alert-section {
+    padding: 1.25rem 1rem;
+  }
+  .playoff-alert-header h2 {
+    font-size: 1.4rem;
+  }
+  .playoff-games-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Bracket Advertisement Section */
+.bracket-ad-section {
+  background: linear-gradient(135deg, #0a1628 0%, #0d2247 50%, #0a1628 100%);
+  border: 2px solid #004f9e;
+  border-radius: 12px;
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 6px 24px rgba(0, 79, 158, 0.3);
+  animation: slideDown 0.4s ease;
+}
+
+.bracket-ad-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.bracket-ad-icon {
+  font-size: 2.8rem;
+  flex-shrink: 0;
+}
+
+.bracket-ad-text {
+  flex: 1;
+  min-width: 200px;
+}
+
+.bracket-ad-text h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ffd700;
+  margin: 0 0 0.4rem 0;
+  letter-spacing: 0.5px;
+}
+
+.bracket-ad-text p {
+  font-size: 0.95rem;
+  color: #b0c8e8;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.bracket-ad-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.bracket-ad-btn {
+  padding: 0.65rem 1.4rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  letter-spacing: 0.5px;
+}
+
+.bracket-ad-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.boys-btn {
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  color: #fff;
+}
+
+.girls-btn {
+  background: linear-gradient(135deg, #ad1457, #d81b60);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .bracket-ad-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  .bracket-ad-buttons {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
 /* Coming Soon Section */
 .coming-soon-section {
   background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #1a237e 100%);

@@ -3,7 +3,7 @@ import axios from '../utils/axios';
 import '../styles/DailyReward.css';
 import popupQueue from '../utils/popupQueue';
 
-const DailyReward = ({ onRewardClaimed }) => {
+const DailyReward = ({ onRewardClaimed, user }) => {
   const [showModal, setShowModal] = useState(false);
   const [rewardData, setRewardData] = useState(null);
   const [claimed, setClaimed] = useState(false);
@@ -12,11 +12,13 @@ const DailyReward = ({ onRewardClaimed }) => {
   const hasDismissed = React.useRef(false);
 
   useEffect(() => {
+    // Only run for authenticated users
+    if (!user) return;
     // Prevent duplicate checks in React Strict Mode
     if (hasChecked.current) return;
     hasChecked.current = true;
     checkDailyLogin();
-  }, []);
+  }, [user]);
 
   const checkDailyLogin = async () => {
     try {

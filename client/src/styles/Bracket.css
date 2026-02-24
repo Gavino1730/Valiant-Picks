@@ -64,6 +64,18 @@
   font-weight: 500;
 }
 
+.bracket-device-notice {
+  background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+  border: 1px solid #f5c842;
+  border-left: 4px solid #f5c842;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 12px 0 4px;
+  font-size: 14px;
+  color: #7a5700;
+  line-height: 1.5;
+}
+
 .bracket-deadline {
   margin: 8px 0 0;
   color: #ff6b35;

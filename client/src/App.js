@@ -531,6 +531,7 @@ function AppContent() {
             <NavLink label="Teams" pageKey="teams" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="My Picks" pageKey="bets" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="Bracket" pageKey="bracket" currentPage={page} onNavigate={handlePageChange} />
+            <NavLink label="Girls Bracket" pageKey="girls-bracket" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="Results" pageKey="actual-bracket" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="Leaderboard" pageKey="leaderboard" currentPage={page} onNavigate={handlePageChange} />
             <NavLink label="How to Use" pageKey="howto" currentPage={page} onNavigate={handlePageChange} />
@@ -690,6 +691,13 @@ function AppContent() {
             Bracket
           </button>
           <button 
+            onClick={() => handlePageChange('girls-bracket')} 
+            className={page === 'girls-bracket' ? 'active' : ''}
+          >
+            <span className="menu-icon">🎀</span>
+            Girls Bracket
+          </button>
+          <button 
             onClick={() => handlePageChange('actual-bracket')} 
             className={page === 'actual-bracket' ? 'active' : ''}
           >
@@ -766,8 +774,11 @@ function AppContent() {
             <Route path="/teams" element={<Teams />} />
             <Route path="/bets" element={<BetList />} />
             <Route path="/bracket" element={<Bracket updateUser={updateUser} />} />
+            <Route path="/girls-bracket" element={<Bracket gender="girls" updateUser={updateUser} />} />
             <Route path="/actual-bracket" element={<ActualBracket />} />
+            <Route path="/girls-actual-bracket" element={<ActualBracket gender="girls" />} />
             <Route path="/bracket-leaderboard" element={<BracketLeaderboard />} />
+            <Route path="/girls-bracket-leaderboard" element={<BracketLeaderboard gender="girls" />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/howto" element={<HowToUse onNavigate={handlePageChange} />} />

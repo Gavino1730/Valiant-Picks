@@ -189,6 +189,11 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     // Check if user should see spin wheel automatically
     const checkAutoOpenSpinWheel = async () => {
       if (hasCheckedSpinWheel) return;
+      // Only check for authenticated users
+      if (!user) {
+        setHasCheckedSpinWheel(true);
+        return;
+      }
       
       try {
         const response = await apiClient.get('/wheel/can-spin');
@@ -267,7 +272,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       clearInterval(gamesInterval);
       // clearInterval(winnersInterval); // TEMPORARILY DISABLED
     };
-  }, [fetchGames, fetchBets, hasCheckedSpinWheel]); // fetchRecentWinners TEMPORARILY DISABLED
+  }, [fetchGames, fetchBets, hasCheckedSpinWheel, user]); // fetchRecentWinners TEMPORARILY DISABLED
 
   const upcomingGames = React.useMemo(() => games.slice(0, 5), [games]);
   const recentActivity = React.useMemo(
@@ -326,10 +331,10 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
       
       {/* Daily Reward Modal */}
-      <DailyReward onRewardClaimed={handleDailyRewardClaimed} />
+      <DailyReward onRewardClaimed={handleDailyRewardClaimed} user={user} />
       
       {/* Achievements Popup */}
-      <Achievements onAchievementClaimed={handleAchievementClaimed} />
+      <Achievements onAchievementClaimed={handleAchievementClaimed} user={user} />
       
       {/* Notification Permission Banner */}
       {!notificationsEnabled && !isMobile && !notificationService.isBannerDismissed() && (
@@ -424,23 +429,66 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         </div>
       </div>
 
-      {/* Coming Soon - 3A Brackets */}
-      <div className="coming-soon-section">
-        <div className="coming-soon-content">
-          <div className="coming-soon-header">
-            <h2>Coming Soon</h2>
-            <span className="coming-soon-badge">UPCOMING</span>
+      {/* Playoff Announcement */}
+      <div className="playoff-alert-section">
+        <div className="playoff-alert-header">
+          <span className="playoff-fire">🏆</span>
+          <h2>IT'S PLAYOFF TIME!</h2>
+          <span className="playoff-fire">🏆</span>
+        </div>
+        <p className="playoff-intro">Come out and cheer on your Valiant teams this week!</p>
+        <div className="playoff-games-grid">
+          <div className="playoff-game-card boys-game">
+            <div className="playoff-game-day">FRIDAY</div>
+            <div className="playoff-game-sport">Boys Basketball</div>
+            <div className="playoff-matchup">
+              <div className="playoff-team our-team">
+                <span className="seed-badge">#3</span>
+                <span className="team-name">Valiant</span>
+              </div>
+              <span className="vs-divider">VS</span>
+              <div className="playoff-team opp-team">
+                <span className="seed-badge">#14</span>
+                <span className="team-name">OES</span>
+              </div>
+            </div>
+            <div className="playoff-game-info">
+              <span className="game-time">⏰ 6:00 PM</span>
+              <span className="game-location">🏠 Home</span>
+            </div>
           </div>
-          <p className="coming-soon-description">Get ready for the 3A Basketball Playoffs!</p>
-          <div className="coming-soon-brackets">
-            <div className="bracket-preview boys-bracket">
-              <h3>3A Boys Basketball Bracket</h3>
-              <p className="bracket-status">Tournament bracket & betting coming soon</p>
+          <div className="playoff-game-card girls-game">
+            <div className="playoff-game-day">SATURDAY</div>
+            <div className="playoff-game-sport">Girls Basketball</div>
+            <div className="playoff-matchup">
+              <div className="playoff-team our-team">
+                <span className="seed-badge">#6</span>
+                <span className="team-name">Valiant</span>
+              </div>
+              <span className="vs-divider">VS</span>
+              <div className="playoff-team opp-team">
+                <span className="seed-badge">#11</span>
+                <span className="team-name">Taft</span>
+              </div>
             </div>
-            <div className="bracket-preview girls-bracket">
-              <h3>3A Girls Basketball Bracket</h3>
-              <p className="bracket-status">Tournament bracket & betting coming soon</p>
+            <div className="playoff-game-info">
+              <span className="game-time">⏰ 5:00 PM</span>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bracket Advertisement */}
+      <div className="bracket-ad-section">
+        <div className="bracket-ad-content">
+          <div className="bracket-ad-icon">📊</div>
+          <div className="bracket-ad-text">
+            <h3>Bet the 3A Playoffs Bracket!</h3>
+            <p>Pick your winners and earn Valiant Bucks. Both Boys &amp; Girls brackets are live — place your bets before the games tip off!</p>
+          </div>
+          <div className="bracket-ad-buttons">
+            <button className="bracket-ad-btn boys-btn" onClick={() => onNavigate && onNavigate('bracket')}>Boys Bracket →</button>
+            <button className="bracket-ad-btn girls-btn" onClick={() => onNavigate && onNavigate('girls-bracket')}>Girls Bracket →</button>
           </div>
         </div>
       </div>
