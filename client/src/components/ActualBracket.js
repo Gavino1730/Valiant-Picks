@@ -109,9 +109,15 @@ function ActualBracket({ gender = 'boys' }) {
 
   if (loading) {
     return (
-      <div className="bracket-page">
+      <div className={`bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
+        <div className="bracket-tabs">
+          <button className="bracket-tab" onClick={() => navigate('/actual-bracket')}>🏀 Boys</button>
+          <button className="bracket-tab" onClick={() => navigate('/girls-actual-bracket')}>🎀 Girls</button>
+          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
+          <button className="bracket-tab bracket-tab--active">📺 Live</button>
+        </div>
         <div className="bracket-header">
-          <h1>Actual Bracket Results</h1>
+          <h1>Live {gender === 'girls' ? 'Girls' : 'Boys'} Bracket</h1>
           <p>Loading bracket...</p>
         </div>
       </div>
@@ -120,9 +126,15 @@ function ActualBracket({ gender = 'boys' }) {
 
   if (!bracket) {
     return (
-      <div className="bracket-page">
+      <div className={`bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
+        <div className="bracket-tabs">
+          <button className="bracket-tab" onClick={() => navigate('/actual-bracket')}>🏀 Boys</button>
+          <button className="bracket-tab" onClick={() => navigate('/girls-actual-bracket')}>🎀 Girls</button>
+          <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
+          <button className="bracket-tab bracket-tab--active">📺 Live</button>
+        </div>
         <div className="bracket-header">
-          <h1>Actual Bracket Results</h1>
+          <h1>Live {gender === 'girls' ? 'Girls' : 'Boys'} Bracket</h1>
           <p className="bracket-subtitle">No active bracket available.</p>
         </div>
       </div>
@@ -130,33 +142,22 @@ function ActualBracket({ gender = 'boys' }) {
   }
 
   return (
-    <div className="bracket-page actual-bracket-page">
+    <div className={`bracket-page actual-bracket-page${gender === 'girls' ? ' bracket-page--girls' : ''}`}>
+      <div className="bracket-tabs">
+        <button className="bracket-tab" onClick={() => navigate('/actual-bracket')}>🏀 Boys</button>
+        <button className="bracket-tab" onClick={() => navigate('/girls-actual-bracket')}>🎀 Girls</button>
+        <button className="bracket-tab" onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}>📊 Leaderboard</button>
+        <button className="bracket-tab bracket-tab--active">📺 Live</button>
+      </div>
+
       <div className="bracket-header">
         <div>
-          <h1>Actual Bracket Results</h1>
-          <p className="bracket-subtitle">{gender === 'girls' ? '3A Womens Basketball Tournament - True Outcomes' : '3A Mens Basketball Tournament - True Outcomes'}</p>
+          <h1>Live {gender === 'girls' ? 'Girls' : 'Boys'} Bracket</h1>
         </div>
       </div>
 
       <div className="actual-bracket-info">
         <p>This bracket shows the <strong>actual results</strong> of games as they are completed. Winners are marked with a green checkmark (✓).</p>
-      </div>
-
-      <div className="bracket-actions">
-        <button
-          type="button"
-          className="bracket-link"
-          onClick={() => navigate(gender === 'girls' ? '/girls-bracket' : '/bracket')}
-        >
-          View My Bracket
-        </button>
-        <button
-          type="button"
-          className="bracket-link"
-          onClick={() => navigate(gender === 'girls' ? '/girls-bracket-leaderboard' : '/bracket-leaderboard')}
-        >
-          View Leaderboard
-        </button>
       </div>
 
       {error && <div className="bracket-alert bracket-alert--error">{error}</div>}
