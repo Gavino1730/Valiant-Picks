@@ -416,7 +416,8 @@ function Bracket({ updateUser, gender = 'boys' }) {
                 {roundGames.map((game, idx) => {
                   const winner = game.winner_team_id;
                   const selected = picks[roundKey]?.[makeGameKey(game.game_number)];
-                  const options = getOptionsForRoundGame(round, game.game_number);
+                  const options = getOptionsForRoundGame(round, game.game_number)
+                    .sort((a, b) => (teamById[a]?.seed ?? 999) - (teamById[b]?.seed ?? 999));
 
                   return (
                     <div
