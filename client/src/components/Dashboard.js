@@ -342,8 +342,8 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         <div className="bracket-ad-inner">
           <div className="bracket-ad-left">
             <div className="bracket-ad-eyebrow">🏀 3A STATE PLAYOFFS</div>
-            <h2 className="bracket-ad-headline">Your Bracket.<br/>Your Predictions.<br/><span className="bracket-ad-highlight">Your Valiant Bucks.</span></h2>
-            <p className="bracket-ad-sub">Just like March Madness — pick every game, climb the leaderboard, and cash in. Both Boys &amp; Girls brackets are live now.</p>
+            <h2 className="bracket-ad-headline">🆕 Men's Bracket<br/>Is Now Open!<br/><span className="bracket-ad-highlight">Make Your Picks!</span></h2>
+            <p className="bracket-ad-sub">The Boys 3A State Bracket is live — fill out your picks now before the next round starts! Girls bracket opens 2/25.</p>
             <div className="bracket-ad-perks">
               <span className="bracket-perk">🎯 Pick every round</span>
               <span className="bracket-perk">💰 Win Valiant Bucks</span>
@@ -360,7 +360,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               <div className="bv-champ">🏆 Champion?</div>
             </div>
             <div className="bracket-ad-buttons">
-              <button className="bracket-ad-btn boys-btn" onClick={() => onNavigate && onNavigate('bracket')}>Boys Bracket →</button>
+              <button className="bracket-ad-btn boys-btn" onClick={() => onNavigate && onNavigate('bracket')}>🏀 Boys Bracket — Enter Now →</button>
               <button className="bracket-ad-btn girls-btn" onClick={() => onNavigate && onNavigate('girls-bracket')}>Girls Bracket →</button>
             </div>
           </div>

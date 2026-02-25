@@ -667,24 +667,24 @@ SELECT b.id, t.seed, t.name
 FROM bracket_data b,
 (VALUES
   (1,  'Westside Christian'),
-  (2,  'Valley Catholic'),
-  (3,  'Pleasant Hill'),
+  (2,  'Cascade Christian'),
+  (3,  'Valley Catholic'),
   (4,  'Riverside'),
-  (5,  'Cascade Christian'),
-  (6,  'Salem Acad.'),
-  (7,  'St. Mary''s, Medford'),
-  (8,  'Burns'),
-  (9,  'Team 9'),
-  (10, 'Team 10'),
-  (11, 'Team 11'),
-  (12, 'Team 12'),
-  (13, 'Team 13'),
-  (14, 'Team 14'),
-  (15, 'Team 15'),
-  (16, 'Team 16')
+  (5,  'Pleasant Hill'),
+  (6,  'Blanchet Catholic'),
+  (7,  'Creswell'),
+  (8,  'Douglas'),
+  (9,  'St. Mary''s, Medford'),
+  (10, 'Salem Academy'),
+  (11, 'Burns'),
+  (12, 'Neah-Kah-Nie'),
+  (13, 'Elmira'),
+  (14, 'Oregon Episcopal'),
+  (15, 'Santiam Christian'),
+  (17, 'Banks')
 ) AS t(seed, name);
 
--- Round 1 — standard NCAA seeding: 1v16, 8v9, 5v12, 4v13, 6v11, 3v14, 7v10, 2v15
+-- Round 1 — 1v17(Banks), 8v9, 5v12, 4v13, 6v11, 3v14, 7v10, 2v15
 WITH bracket_data AS (
   SELECT id FROM brackets WHERE name = '3A State Bracket' AND season = '2026' AND gender = 'boys'
 ),
@@ -694,7 +694,7 @@ team_lookup AS (
   JOIN bracket_teams bt ON bt.bracket_id = b.id
 ),
 round1_games AS (
-  SELECT 1 AS round, 1 AS game_number, 1  AS seed1, 16 AS seed2 UNION ALL
+  SELECT 1 AS round, 1 AS game_number, 1  AS seed1, 17 AS seed2 UNION ALL
   SELECT 1, 2, 8,  9  UNION ALL
   SELECT 1, 3, 5,  12 UNION ALL
   SELECT 1, 4, 4,  13 UNION ALL
