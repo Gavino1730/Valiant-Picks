@@ -169,6 +169,40 @@
   font-weight: 500;
 }
 
+.bracket-picks-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--color-border);
+  background: #ffffff;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.bracket-picks-toggle:hover {
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+  background: rgba(11, 94, 215, 0.06);
+}
+
+.bracket-picks-toggle--active {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+  color: #ffffff;
+}
+
+.bracket-picks-toggle--active:hover {
+  background: var(--color-brand-strong);
+  border-color: var(--color-brand-strong);
+  color: #ffffff;
+}
+
 .bracket-device-notice {
   display: none;
 }
@@ -894,8 +928,14 @@
 
 
 
+@keyframes bracket-fadein {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* Bracket Grid Layout - Tournament style */
 .bracket-grid {
+  animation: bracket-fadein 0.2s ease both;
   display: grid;
   grid-template-columns: minmax(180px, auto) minmax(160px, auto) minmax(140px, auto) minmax(180px, auto);
   gap: 20px;

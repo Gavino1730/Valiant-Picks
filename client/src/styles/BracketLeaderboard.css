@@ -176,7 +176,13 @@
   flex-wrap: wrap;
 }
 
+@keyframes lb-fadein {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .leaderboard-table {
+  animation: lb-fadein 0.2s ease both;
   background: var(--color-surface-raised);
   border-radius: 16px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);

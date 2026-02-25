@@ -51,6 +51,7 @@ function ActualBracket({ gender = 'boys' }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [userPicks, setUserPicks] = useState(null);
+  const [hasEntry, setHasEntry] = useState(false);
   const [showMyPicks, setShowMyPicks] = useState(true);
 
   const teamById = useMemo(() => {
@@ -82,6 +83,7 @@ function ActualBracket({ gender = 'boys' }) {
       setTeams(cached.teams);
       setGames(cached.games);
       setUserPicks(cached.userPicks);
+      setHasEntry(cached.hasEntry || false);
       setLoading(false);
       // Still refresh in background (no loading flash)
     } else {
@@ -98,6 +100,7 @@ function ActualBracket({ gender = 'boys' }) {
         setTeams([]);
         setGames([]);
         setUserPicks(null);
+        setHasEntry(false);
         return;
       }
 
@@ -105,13 +108,16 @@ function ActualBracket({ gender = 'boys' }) {
       setTeams(payload.teams || []);
       setGames(payload.games || []);
       const picks = payload.entry?.picks || null;
+      const entryExists = !!payload.entry;
       setUserPicks(picks);
+      setHasEntry(entryExists);
 
       setCache(cacheKey, {
         bracket: payload.bracket,
         teams: payload.teams || [],
         games: payload.games || [],
-        userPicks: picks
+        userPicks: picks,
+        hasEntry: entryExists
       });
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to load bracket');
@@ -164,21 +170,6 @@ function ActualBracket({ gender = 'boys' }) {
         <div className="bracket-header">
           <h1>Live {gender === 'girls' ? 'Girls' : 'Boys'} Bracket</h1>
         </div>
-        <div className="bracket-grid bracket-grid--skeleton">
-          {[1, 2, 3].map((round) => (
-            <div key={round} className={`bracket-round bracket-round--r${round}`}>
-              <div className="skel skel-heading" />
-              <div className="bracket-games">
-                {[...Array(round === 1 ? 4 : round === 2 ? 2 : 1)].map((_, i) => (
-                  <div key={i} className="bracket-game">
-                    <div className="team-display skel-team"><span className="skel skel-full" /></div>
-                    <div className="team-display skel-team"><span className="skel skel-full" /></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     );
   }
@@ -221,7 +212,7 @@ function ActualBracket({ gender = 'boys' }) {
         <div>
           <h1>Live {gender === 'girls' ? 'Girls' : 'Boys'} Bracket</h1>
         </div>
-        {userPicks && (
+        {hasEntry && (
           <button
             className={`bracket-picks-toggle${showMyPicks ? ' bracket-picks-toggle--active' : ''}`}
             onClick={() => setShowMyPicks(v => !v)}

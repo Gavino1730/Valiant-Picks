@@ -91,6 +91,9 @@ function Bracket({ updateUser, gender = 'boys' }) {
         if (cached.entry) {
           setEntry(cached.entry);
           setPicks(normalizePicks(cached.entry.picks));
+        } else {
+          setEntry(null);
+          setPicks({ round1: {}, round2: {}, round3: {}, round4: {} });
         }
         setLoading(false);
         // Still fetch fresh data in background
@@ -121,6 +124,7 @@ function Bracket({ updateUser, gender = 'boys' }) {
           setPicks(normalized);
         } else {
           setEntry(null);
+          setPicks({ round1: {}, round2: {}, round3: {}, round4: {} });
         }
 
         setCache(cacheKey, {
@@ -267,21 +271,6 @@ function Bracket({ updateUser, gender = 'boys' }) {
         </div>
         <div className="bracket-header">
           <h1>{gender === 'girls' ? 'Girls Bracket' : 'Boys Bracket'}</h1>
-        </div>
-        <div className="bracket-grid bracket-grid--skeleton">
-          {[1, 2, 3].map((round) => (
-            <div key={round} className={`bracket-round bracket-round--r${round}`}>
-              <div className="skel skel-heading" />
-              <div className="bracket-games">
-                {[...Array(round === 1 ? 4 : round === 2 ? 2 : 1)].map((_, i) => (
-                  <div key={i} className="bracket-game">
-                    <div className="team-display skel-team"><span className="skel skel-full" /></div>
-                    <div className="team-display skel-team"><span className="skel skel-full" /></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     );

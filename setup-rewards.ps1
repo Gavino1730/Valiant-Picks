@@ -10,9 +10,9 @@ Write-Host "This script will guide you through setting up the rewards system."
 Write-Host ""
 
 # Check if Supabase credentials are set
-if (-not $env:SUPABASE_URL -or -not $env:SUPABASE_KEY) {
+if (-not $env:SUPABASE_URL -or -not $env:SUPABASE_ANON_KEY) {
     Write-Host "⚠️  WARNING: Supabase environment variables not detected." -ForegroundColor Yellow
-    Write-Host "Make sure SUPABASE_URL and SUPABASE_KEY are set in server/.env"
+    Write-Host "Make sure SUPABASE_URL and SUPABASE_ANON_KEY are set in server/.env"
     Write-Host ""
 }
 

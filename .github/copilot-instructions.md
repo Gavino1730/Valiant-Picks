@@ -46,7 +46,7 @@ Create `server/.env`:
 PORT=5000
 JWT_SECRET=your-secret-key-change-in-production
 SUPABASE_URL=your-supabase-url
-SUPABASE_KEY=your-supabase-anon-key
+SUPABASE_ANON_KEY=your-supabase-anon-key
 NODE_ENV=development
 ```
 
@@ -122,7 +122,7 @@ Client: http://localhost:3000
 - `PORT` - Server port (default: 5000)
 - `JWT_SECRET` - Secret key for JWT tokens
 - `SUPABASE_URL` - Supabase project URL
-- `SUPABASE_KEY` - Supabase anonymous key
+- `SUPABASE_ANON_KEY` - Supabase anonymous key
 - `NODE_ENV` - Environment (development/production)
 
 ## Database Schema

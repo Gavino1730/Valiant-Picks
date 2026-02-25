@@ -99,20 +99,6 @@ function BracketLeaderboard({ gender = 'boys' }) {
           <button className={`bracket-sub-tab${gender === 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/girls-bracket-leaderboard')}>Girls</button>
         </div>
         <h1>{gender === 'girls' ? 'Girls' : 'Boys'} Bracket Leaderboard</h1>
-        <div className="leaderboard-table">
-          <div className="leaderboard-row leaderboard-row--header">
-            <span>Rank</span><span>Player</span><span className="align-right">Points</span><span className="align-right">Accuracy</span><span className="align-right">Payout</span>
-          </div>
-          {[...Array(8)].map((_, i) => (
-            <div className="leaderboard-row leaderboard-row--skeleton" key={i}>
-              <span className="skel skel-sm" />
-              <span className="skel skel-md" />
-              <span className="skel skel-sm" />
-              <span className="skel skel-sm" />
-              <span className="skel skel-sm" />
-            </div>
-          ))}
-        </div>
       </div>
     );
   }

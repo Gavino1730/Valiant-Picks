@@ -9,9 +9,9 @@ echo "This script will guide you through setting up the rewards system."
 echo ""
 
 # Check if Supabase credentials are set
-if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
     echo "⚠️  WARNING: Supabase environment variables not detected."
-    echo "Make sure SUPABASE_URL and SUPABASE_KEY are set in server/.env"
+    echo "Make sure SUPABASE_URL and SUPABASE_ANON_KEY are set in server/.env"
     echo ""
 fi
 
