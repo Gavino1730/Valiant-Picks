@@ -378,8 +378,9 @@ router.put('/:id/teams', authenticateToken, adminOnly, async (req, res) => {
   const teamCount = teams.length;
   const seeds = teams.map((team) => Number(team.seed));
   const uniqueSeeds = new Set(seeds);
-  if (uniqueSeeds.size !== teamCount || seeds.some((seed) => !Number.isInteger(seed) || seed < 1 || seed > teamCount)) {
-    return res.status(400).json({ error: `Seeds must be unique numbers from 1 to ${teamCount}` });
+  // Allow seeds to be any unique positive integers up to 32 (state playoffs may use seeds > 16)
+  if (uniqueSeeds.size !== teamCount || seeds.some((seed) => !Number.isInteger(seed) || seed < 1 || seed > 32)) {
+    return res.status(400).json({ error: `Seeds must be unique positive integers (max 32). Got: ${seeds.join(', ')}` });
   }
 
   try {
@@ -430,8 +431,12 @@ router.post('/:id/seed', authenticateToken, adminOnly, async (req, res) => {
     }
 
     const teamCount = teams.length;
-    const teamBySeed = teams.reduce((acc, team) => {
-      acc[team.seed] = team.id;
+    // Sort by seed ascending, then map by position (1 = best seed, N = worst seed).
+    // This correctly handles non-standard seedings (e.g. OSAA brackets with seeds like 18 or 19
+    // instead of the expected 14/15/16) by pairing teams in standard bracket order by rank.
+    const sortedTeams = [...teams].sort((a, b) => a.seed - b.seed);
+    const teamByPos = sortedTeams.reduce((acc, team, idx) => {
+      acc[idx + 1] = team.id;
       return acc;
     }, {});
 
@@ -439,15 +444,15 @@ router.post('/:id/seed', authenticateToken, adminOnly, async (req, res) => {
     if (teamCount === 16) {
       // 16-seed bracket: 8 R1, 4 R2, 2 R3, 1 R4
       games = [
-        // Round 1 (8 games) - standard NCAA seeding
-        { round: 1, game_number: 1, team1_id: teamBySeed[1],  team2_id: teamBySeed[16] },
-        { round: 1, game_number: 2, team1_id: teamBySeed[8],  team2_id: teamBySeed[9] },
-        { round: 1, game_number: 3, team1_id: teamBySeed[5],  team2_id: teamBySeed[12] },
-        { round: 1, game_number: 4, team1_id: teamBySeed[4],  team2_id: teamBySeed[13] },
-        { round: 1, game_number: 5, team1_id: teamBySeed[6],  team2_id: teamBySeed[11] },
-        { round: 1, game_number: 6, team1_id: teamBySeed[3],  team2_id: teamBySeed[14] },
-        { round: 1, game_number: 7, team1_id: teamBySeed[7],  team2_id: teamBySeed[10] },
-        { round: 1, game_number: 8, team1_id: teamBySeed[2],  team2_id: teamBySeed[15] },
+        // Round 1 (8 games) - standard bracket seeding (1v16, 8v9, 5v12, 4v13, 6v11, 3v14, 7v10, 2v15)
+        { round: 1, game_number: 1, team1_id: teamByPos[1],  team2_id: teamByPos[16] },
+        { round: 1, game_number: 2, team1_id: teamByPos[8],  team2_id: teamByPos[9] },
+        { round: 1, game_number: 3, team1_id: teamByPos[5],  team2_id: teamByPos[12] },
+        { round: 1, game_number: 4, team1_id: teamByPos[4],  team2_id: teamByPos[13] },
+        { round: 1, game_number: 5, team1_id: teamByPos[6],  team2_id: teamByPos[11] },
+        { round: 1, game_number: 6, team1_id: teamByPos[3],  team2_id: teamByPos[14] },
+        { round: 1, game_number: 7, team1_id: teamByPos[7],  team2_id: teamByPos[10] },
+        { round: 1, game_number: 8, team1_id: teamByPos[2],  team2_id: teamByPos[15] },
         // Round 2 (4 games) - quarterfinals
         { round: 2, game_number: 1, team1_id: null, team2_id: null },
         { round: 2, game_number: 2, team1_id: null, team2_id: null },
@@ -462,10 +467,10 @@ router.post('/:id/seed', authenticateToken, adminOnly, async (req, res) => {
     } else {
       // 8-seed bracket: 4 R1, 2 R2, 1 R3
       games = [
-        { round: 1, game_number: 1, team1_id: teamBySeed[1], team2_id: teamBySeed[8] },
-        { round: 1, game_number: 2, team1_id: teamBySeed[4], team2_id: teamBySeed[5] },
-        { round: 1, game_number: 3, team1_id: teamBySeed[2], team2_id: teamBySeed[7] },
-        { round: 1, game_number: 4, team1_id: teamBySeed[3], team2_id: teamBySeed[6] },
+        { round: 1, game_number: 1, team1_id: teamByPos[1], team2_id: teamByPos[8] },
+        { round: 1, game_number: 2, team1_id: teamByPos[4], team2_id: teamByPos[5] },
+        { round: 1, game_number: 3, team1_id: teamByPos[2], team2_id: teamByPos[7] },
+        { round: 1, game_number: 4, team1_id: teamByPos[3], team2_id: teamByPos[6] },
         { round: 2, game_number: 1, team1_id: null, team2_id: null },
         { round: 2, game_number: 2, team1_id: null, team2_id: null },
         { round: 3, game_number: 1, team1_id: null, team2_id: null }
