@@ -323,12 +323,6 @@ function Bracket({ updateUser, gender = 'boys' }) {
         💻 <strong>Best experienced on a laptop or desktop!</strong> The bracket can be tricky to navigate on a phone — for the smoothest experience, open <strong>valiantpicks.com</strong> on your computer.
       </div>
 
-      {gender === 'girls' && (
-        <div className="bracket-betting-notice">
-          🕐 <strong>Betting opens once 1st round games are completed (2/25)</strong>
-        </div>
-      )}
-
       {entry && (
         <div className="bracket-entry-summary">
           <span>Your points: {entry.points}</span>

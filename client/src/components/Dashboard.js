@@ -342,8 +342,8 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         <div className="bracket-ad-inner">
           <div className="bracket-ad-left">
             <div className="bracket-ad-eyebrow">🏀 3A STATE PLAYOFFS</div>
-            <h2 className="bracket-ad-headline">🆕 Men's Bracket<br/>Is Now Open!<br/><span className="bracket-ad-highlight">Make Your Picks!</span></h2>
-            <p className="bracket-ad-sub">The Boys 3A State Bracket is live — fill out your picks now before the next round starts! Girls bracket opens 2/25.</p>
+            <h2 className="bracket-ad-headline">🆕 Both Brackets<br/>Are Now Open!<br/><span className="bracket-ad-highlight">Make Your Picks!</span></h2>
+            <p className="bracket-ad-sub">The Boys & Girls 3A State Brackets are live — fill out your picks now before the next round starts!</p>
             <div className="bracket-ad-perks">
               <span className="bracket-perk">🎯 Pick every round</span>
               <span className="bracket-perk">💰 Win Valiant Bucks</span>
