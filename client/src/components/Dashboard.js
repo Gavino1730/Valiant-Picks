@@ -360,7 +360,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               <div className="bv-champ">🏆 Champion?</div>
             </div>
             <div className="bracket-ad-buttons">
-              <button className="bracket-ad-btn boys-btn" onClick={() => onNavigate && onNavigate('bracket')}>🏀 Boys Bracket — Enter Now →</button>
               <button className="bracket-ad-btn girls-btn" onClick={() => onNavigate && onNavigate('girls-bracket')}>Girls Bracket →</button>
             </div>
           </div>
