@@ -307,6 +307,7 @@
   width: 100%;
   max-height: 520px;
   overflow: auto;
+  overflow-x: auto;
   border: 1px solid rgba(148, 163, 184, 0.25);
   border-radius: var(--radius-md);
   background: var(--color-surface);
@@ -315,6 +316,7 @@
 
 .leaderboard-table {
   width: 100%;
+  min-width: 860px;
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -432,6 +434,7 @@
 }
 
 /* ===== MOBILE LIST ===== */
+/* Explicitly hidden on desktop — overridden by max-width: 767px */
 .leaderboard-list {
   display: none;
   flex-direction: column;
@@ -916,6 +919,17 @@
 
   .pagination-btn {
     min-width: 120px;
+  }
+}
+
+/* Explicit desktop guard — prevents flash if CSS loads late */
+@media (min-width: 768px) {
+  .leaderboard-list {
+    display: none !important;
+  }
+
+  .leaderboard-table-wrapper {
+    display: block !important;
   }
 }
 
