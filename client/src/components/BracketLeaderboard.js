@@ -25,16 +25,12 @@ function BracketLeaderboard({ gender = 'boys' }) {
   const [bracket, setBracket] = useState(null);
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
-  const [lastRefresh, setLastRefresh] = useState(null);
 
   const loadLeaderboard = async (isRefresh = false) => {
     const cacheKey = `bracket_lb_${gender}`;
     try {
-      if (isRefresh) {
-        setRefreshing(true);
-      } else {
+      if (!isRefresh) {
         // Show cached data instantly while fetching fresh data
         const cached = getCached(cacheKey);
         if (cached) {
@@ -58,6 +54,7 @@ function BracketLeaderboard({ gender = 'boys' }) {
       const freshEntries = response.data.leaderboard || [];
       setBracket(response.data.bracket);
       setEntries(freshEntries);
+      setLastRefresh(new Date().toLocaleTimeString());
       setLastRefresh(new Date().toLocaleTimeString());
       setCache(cacheKey, { bracket: response.data.bracket, entries: freshEntries });
     } catch (err) {
