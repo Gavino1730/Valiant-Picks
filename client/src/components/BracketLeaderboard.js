@@ -54,14 +54,11 @@ function BracketLeaderboard({ gender = 'boys' }) {
       const freshEntries = response.data.leaderboard || [];
       setBracket(response.data.bracket);
       setEntries(freshEntries);
-      setLastRefresh(new Date().toLocaleTimeString());
-      setLastRefresh(new Date().toLocaleTimeString());
       setCache(cacheKey, { bracket: response.data.bracket, entries: freshEntries });
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to load bracket leaderboard');
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   };
 
