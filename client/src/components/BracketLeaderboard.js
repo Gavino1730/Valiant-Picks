@@ -133,7 +133,6 @@ function BracketLeaderboard({ gender = 'boys' }) {
         <div>
           <h1>{gender === 'girls' ? 'Girls' : 'Boys'} Bracket Leaderboard</h1>
           <p className="subtitle">Points and payouts for submitted brackets</p>
-          {gender === 'girls' && <p className="subtitle subtitle--deadline">⏰ Picks must be submitted by February 28 at 5pm Pacific</p>}
 
         </div>
         <div className="leaderboard-actions">

@@ -336,36 +336,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       {/* Achievements Popup */}
       <Achievements onAchievementClaimed={handleAchievementClaimed} user={user} />
 
-      {/* Bracket Advertisement */}
-      <div className="bracket-ad-section">
-        <div className="bracket-ad-free-badge">FREE TO PLAY</div>
-        <div className="bracket-ad-inner">
-          <div className="bracket-ad-left">
-            <div className="bracket-ad-eyebrow">🏀 3A STATE PLAYOFFS</div>
-            <h2 className="bracket-ad-headline">🆕 Both Brackets<br/>Are Now Open!<br/><span className="bracket-ad-highlight">Make Your Picks!</span></h2>
-            <p className="bracket-ad-sub">The Boys & Girls 3A State Brackets are live — fill out your picks now before the next round starts!</p>
-            <div className="bracket-ad-perks">
-              <span className="bracket-perk">🎯 Pick every round</span>
-              <span className="bracket-perk">💰 Win Valiant Bucks</span>
-              <span className="bracket-perk">🏆 Top the leaderboard</span>
-            </div>
-          </div>
-          <div className="bracket-ad-right">
-            <div className="bracket-ad-bracket-visual">
-              <div className="bv-line"><span className="bv-team gold">Valiant</span><span className="bv-win">→</span></div>
-              <div className="bv-line"><span className="bv-team">OES</span></div>
-              <div className="bv-divider"/>
-              <div className="bv-line"><span className="bv-team">?</span><span className="bv-win">→</span></div>
-              <div className="bv-line"><span className="bv-team">?</span></div>
-              <div className="bv-champ">🏆 Champion?</div>
-            </div>
-            <div className="bracket-ad-buttons">
-              <button className="bracket-ad-btn girls-btn" onClick={() => onNavigate && onNavigate('girls-bracket')}>Girls Bracket →</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      
       {/* Notification Permission Banner */}
       {!notificationsEnabled && !isMobile && !notificationService.isBannerDismissed() && (
         <div className="notification-banner">
@@ -483,6 +453,21 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         </div>
       </div>
       */}
+
+      {/* Back to the Bay - State Tournament Banner */}
+      <div className="back-to-bay-banner">
+        <div className="bay-banner-glow"></div>
+        <div className="bay-banner-content">
+          <div className="bay-banner-trophy">🏆</div>
+          <div className="bay-banner-text">
+            <div className="bay-banner-headline">BACK TO THE BAY!</div>
+            <div className="bay-banner-sub">Both Boys &amp; Girls are heading to Coos Bay for the State Tournament</div>
+            <div className="bay-banner-year">Last time together: 2018 &mdash; Let&rsquo;s make history again!</div>
+          </div>
+          <div className="bay-banner-trophy">🏆</div>
+        </div>
+        <div className="bay-banner-wave">🌊 Coos Bay 2026 🌊</div>
+      </div>
 
       {/* Main Grid Layout */}
       <div className="dashboard-grid school-grid">
