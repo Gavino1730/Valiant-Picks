@@ -634,104 +634,14 @@ GRANT EXECUTE ON FUNCTION check_all_girls_games_bet(UUID)      TO anon;
 
 
 -- ============================================================
--- 10. BRACKET DATA — 3A Boys State Bracket (2026)
+-- 10. BRACKET DATA — Boys State Bracket (2026)
 -- ============================================================
 
 INSERT INTO brackets (name, season, gender, status, entry_fee, payout_per_point)
-VALUES ('3A State Bracket', '2026', 'boys', 'open', 0, 1000);
+VALUES ('Boys State Bracket', '2026', 'boys', 'open', 0, 1000);
 
 WITH bracket_data AS (
-  SELECT id FROM brackets WHERE name = '3A State Bracket' AND season = '2026' AND gender = 'boys'
-)
-INSERT INTO bracket_teams (bracket_id, seed, name)
-SELECT b.id, t.seed, t.name
-FROM bracket_data b,
-(VALUES
-  (1,  'Westside Christian'),
-  (2,  'Cascade Christian'),
-  (3,  'Valley Catholic'),
-  (4,  'Riverside'),
-  (5,  'Pleasant Hill'),
-  (6,  'Blanchet Catholic'),
-  (7,  'Creswell'),
-  (8,  'Douglas'),
-  (9,  'St. Mary''s, Medford'),
-  (10, 'Salem Academy'),
-  (11, 'Burns'),
-  (12, 'Neah-Kah-Nie'),
-  (13, 'Elmira'),
-  (14, 'Oregon Episcopal'),
-  (15, 'Santiam Christian'),
-  (17, 'Banks')
-) AS t(seed, name);
-
--- Round 1 — 1v17(Banks), 8v9, 5v12, 4v13, 6v11, 3v14, 7v10, 2v15
-WITH bracket_data AS (
-  SELECT id FROM brackets WHERE name = '3A State Bracket' AND season = '2026' AND gender = 'boys'
-),
-team_lookup AS (
-  SELECT b.id AS bracket_id, bt.id AS team_id, bt.seed
-  FROM bracket_data b
-  JOIN bracket_teams bt ON bt.bracket_id = b.id
-),
-round1_games AS (
-  SELECT 1 AS round, 1 AS game_number, 1  AS seed1, 17 AS seed2 UNION ALL
-  SELECT 1, 2, 8,  9  UNION ALL
-  SELECT 1, 3, 5,  12 UNION ALL
-  SELECT 1, 4, 4,  13 UNION ALL
-  SELECT 1, 5, 6,  11 UNION ALL
-  SELECT 1, 6, 3,  14 UNION ALL
-  SELECT 1, 7, 7,  10 UNION ALL
-  SELECT 1, 8, 2,  15
-)
-INSERT INTO bracket_games (bracket_id, round, game_number, team1_id, team2_id, status)
-SELECT
-  b.id,
-  rg.round,
-  rg.game_number,
-  (SELECT team_id FROM team_lookup WHERE bracket_id = b.id AND seed = rg.seed1),
-  (SELECT team_id FROM team_lookup WHERE bracket_id = b.id AND seed = rg.seed2),
-  'scheduled'
-FROM bracket_data b, round1_games rg;
-
--- Round 2 — quarterfinals (empty; populated when round 1 completes)
-WITH bracket_data AS (
-  SELECT id FROM brackets WHERE name = '3A State Bracket' AND season = '2026' AND gender = 'boys'
-)
-INSERT INTO bracket_games (bracket_id, round, game_number, status)
-SELECT b.id, 2, n, 'scheduled'
-FROM bracket_data b
-CROSS JOIN generate_series(1, 4) n;
-
--- Round 3 — semifinals
-WITH bracket_data AS (
-  SELECT id FROM brackets WHERE name = '3A State Bracket' AND season = '2026' AND gender = 'boys'
-)
-INSERT INTO bracket_games (bracket_id, round, game_number, status)
-SELECT b.id, 3, n, 'scheduled'
-FROM bracket_data b
-CROSS JOIN generate_series(1, 2) n;
-
--- Round 4 — championship
-WITH bracket_data AS (
-  SELECT id FROM brackets WHERE name = '3A State Bracket' AND season = '2026' AND gender = 'boys'
-)
-INSERT INTO bracket_games (bracket_id, round, game_number, status)
-SELECT b.id, 4, 1, 'scheduled'
-FROM bracket_data b;
-
-
--- ============================================================
--- 11. BRACKET DATA — 3A Girls State Bracket (2026)
--- ============================================================
--- Replace 'Team 1' through 'Team 16' with actual school names
--- before running this section.
-
-INSERT INTO brackets (name, season, gender, status, entry_fee, payout_per_point)
-VALUES ('3A Girls State Bracket', '2026', 'girls', 'open', 0, 1000);
-
-WITH bracket_data AS (
-  SELECT id FROM brackets WHERE name = '3A Girls State Bracket' AND season = '2026' AND gender = 'girls'
+  SELECT id FROM brackets WHERE name = 'Boys State Bracket' AND season = '2026' AND gender = 'boys'
 )
 INSERT INTO bracket_teams (bracket_id, seed, name)
 SELECT b.id, t.seed, t.name
@@ -757,7 +667,97 @@ FROM bracket_data b,
 
 -- Round 1 — standard NCAA seeding: 1v16, 8v9, 5v12, 4v13, 6v11, 3v14, 7v10, 2v15
 WITH bracket_data AS (
-  SELECT id FROM brackets WHERE name = '3A Girls State Bracket' AND season = '2026' AND gender = 'girls'
+  SELECT id FROM brackets WHERE name = 'Boys State Bracket' AND season = '2026' AND gender = 'boys'
+),
+team_lookup AS (
+  SELECT b.id AS bracket_id, bt.id AS team_id, bt.seed
+  FROM bracket_data b
+  JOIN bracket_teams bt ON bt.bracket_id = b.id
+),
+round1_games AS (
+  SELECT 1 AS round, 1 AS game_number, 1  AS seed1, 16 AS seed2 UNION ALL
+  SELECT 1, 2, 8,  9  UNION ALL
+  SELECT 1, 3, 5,  12 UNION ALL
+  SELECT 1, 4, 4,  13 UNION ALL
+  SELECT 1, 5, 6,  11 UNION ALL
+  SELECT 1, 6, 3,  14 UNION ALL
+  SELECT 1, 7, 7,  10 UNION ALL
+  SELECT 1, 8, 2,  15
+)
+INSERT INTO bracket_games (bracket_id, round, game_number, team1_id, team2_id, status)
+SELECT
+  b.id,
+  rg.round,
+  rg.game_number,
+  (SELECT team_id FROM team_lookup WHERE bracket_id = b.id AND seed = rg.seed1),
+  (SELECT team_id FROM team_lookup WHERE bracket_id = b.id AND seed = rg.seed2),
+  'scheduled'
+FROM bracket_data b, round1_games rg;
+
+-- Round 2 — quarterfinals (empty; populated when round 1 completes)
+WITH bracket_data AS (
+  SELECT id FROM brackets WHERE name = 'Boys State Bracket' AND season = '2026' AND gender = 'boys'
+)
+INSERT INTO bracket_games (bracket_id, round, game_number, status)
+SELECT b.id, 2, n, 'scheduled'
+FROM bracket_data b
+CROSS JOIN generate_series(1, 4) n;
+
+-- Round 3 — semifinals
+WITH bracket_data AS (
+  SELECT id FROM brackets WHERE name = 'Boys State Bracket' AND season = '2026' AND gender = 'boys'
+)
+INSERT INTO bracket_games (bracket_id, round, game_number, status)
+SELECT b.id, 3, n, 'scheduled'
+FROM bracket_data b
+CROSS JOIN generate_series(1, 2) n;
+
+-- Round 4 — championship
+WITH bracket_data AS (
+  SELECT id FROM brackets WHERE name = 'Boys State Bracket' AND season = '2026' AND gender = 'boys'
+)
+INSERT INTO bracket_games (bracket_id, round, game_number, status)
+SELECT b.id, 4, 1, 'scheduled'
+FROM bracket_data b;
+
+
+-- ============================================================
+-- 11. BRACKET DATA — Girls State Bracket (2026)
+-- ============================================================
+-- Replace 'Team 1' through 'Team 16' with actual school names
+-- before running this section.
+
+INSERT INTO brackets (name, season, gender, status, entry_fee, payout_per_point)
+VALUES ('Girls State Bracket', '2026', 'girls', 'open', 0, 1000);
+
+WITH bracket_data AS (
+  SELECT id FROM brackets WHERE name = 'Girls State Bracket' AND season = '2026' AND gender = 'girls'
+)
+INSERT INTO bracket_teams (bracket_id, seed, name)
+SELECT b.id, t.seed, t.name
+FROM bracket_data b,
+(VALUES
+  (1,  'Team 1'),
+  (2,  'Team 2'),
+  (3,  'Team 3'),
+  (4,  'Team 4'),
+  (5,  'Team 5'),
+  (6,  'Team 6'),
+  (7,  'Team 7'),
+  (8,  'Team 8'),
+  (9,  'Team 9'),
+  (10, 'Team 10'),
+  (11, 'Team 11'),
+  (12, 'Team 12'),
+  (13, 'Team 13'),
+  (14, 'Team 14'),
+  (15, 'Team 15'),
+  (16, 'Team 16')
+) AS t(seed, name);
+
+-- Round 1 — standard NCAA seeding: 1v16, 8v9, 5v12, 4v13, 6v11, 3v14, 7v10, 2v15
+WITH bracket_data AS (
+  SELECT id FROM brackets WHERE name = 'Girls State Bracket' AND season = '2026' AND gender = 'girls'
 ),
 team_lookup AS (
   SELECT b.id AS bracket_id, bt.id AS team_id, bt.seed
@@ -786,7 +786,7 @@ FROM bracket_data b, round1_games rg;
 
 -- Round 2 — quarterfinals
 WITH bracket_data AS (
-  SELECT id FROM brackets WHERE name = '3A Girls State Bracket' AND season = '2026' AND gender = 'girls'
+  SELECT id FROM brackets WHERE name = 'Girls State Bracket' AND season = '2026' AND gender = 'girls'
 )
 INSERT INTO bracket_games (bracket_id, round, game_number, status)
 SELECT b.id, 2, n, 'scheduled'
@@ -795,7 +795,7 @@ CROSS JOIN generate_series(1, 4) n;
 
 -- Round 3 — semifinals
 WITH bracket_data AS (
-  SELECT id FROM brackets WHERE name = '3A Girls State Bracket' AND season = '2026' AND gender = 'girls'
+  SELECT id FROM brackets WHERE name = 'Girls State Bracket' AND season = '2026' AND gender = 'girls'
 )
 INSERT INTO bracket_games (bracket_id, round, game_number, status)
 SELECT b.id, 3, n, 'scheduled'
@@ -804,7 +804,7 @@ CROSS JOIN generate_series(1, 2) n;
 
 -- Round 4 — championship
 WITH bracket_data AS (
-  SELECT id FROM brackets WHERE name = '3A Girls State Bracket' AND season = '2026' AND gender = 'girls'
+  SELECT id FROM brackets WHERE name = 'Girls State Bracket' AND season = '2026' AND gender = 'girls'
 )
 INSERT INTO bracket_games (bracket_id, round, game_number, status)
 SELECT b.id, 4, 1, 'scheduled'
@@ -814,7 +814,7 @@ FROM bracket_data b;
 --   UPDATE bracket_teams
 --   SET name = 'Actual School Name'
 --   WHERE bracket_id = (
---     SELECT id FROM brackets WHERE name = '3A Girls State Bracket' AND gender = 'girls'
+--     SELECT id FROM brackets WHERE name = 'Girls State Bracket' AND gender = 'girls'
 --   ) AND seed = 1;
 
 
@@ -823,7 +823,7 @@ FROM bracket_data b;
 -- ============================================================
 
 COMMENT ON TABLE users          IS 'User accounts with authentication and balance';
-COMMENT ON TABLE teams          IS 'Valiant sports teams (Boys/Girls Basketball)';
+COMMENT ON TABLE teams          IS 'Sports teams (Boys/Girls Basketball)';
 COMMENT ON TABLE games          IS 'Scheduled games with betting odds';
 COMMENT ON TABLE bets           IS 'User bets on games and prop bets';
 COMMENT ON TABLE prop_bets      IS 'Custom proposition bets';
@@ -834,7 +834,7 @@ COMMENT ON TABLE wheel_spins    IS 'Records all spin wheel activity';
 COMMENT ON TABLE achievements   IS 'Stores user achievements and milestone rewards';
 COMMENT ON TABLE wheel_config   IS 'Configuration for spin wheel prizes and odds';
 COMMENT ON TABLE error_logs     IS 'Application error logging';
-COMMENT ON TABLE brackets       IS '3A State Basketball brackets (boys and girls)';
+COMMENT ON TABLE brackets       IS 'State basketball brackets (boys and girls)';
 COMMENT ON TABLE bracket_teams  IS 'Seeded teams within each bracket';
 COMMENT ON TABLE bracket_games  IS 'Individual games in each bracket round';
 COMMENT ON TABLE bracket_entries IS 'User bracket pick submissions';

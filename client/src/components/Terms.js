@@ -91,8 +91,8 @@ function Terms() {
         <section className="terms-section">
           <h2>8. No Affiliation</h2>
           <p>
-            Valiant Picks is an independent platform and is <strong>not affiliated with, endorsed by, or associated with 
-            Valley Catholic, SSMO, any school, organization, or any other institution</strong>. The platform is created for 
+            This platform is independent and is <strong>not affiliated with, endorsed by, or associated with 
+            any school, organization, or institution</strong>. The platform is created for 
             entertainment and community engagement purposes only and operates independently.
           </p>
         </section>

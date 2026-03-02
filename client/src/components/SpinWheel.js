@@ -95,7 +95,7 @@ const SpinWheel = ({ isOpen, onClose, onPrizeWon }) => {
       const targetAngle = -segmentCenterAngle;
 
       // Spin multiple times + adjust from current rotation so the final angle matches the target
-      const spins = 5 + Math.random() * 3; // 5-8 full rotations
+      const spins = 3 + Math.random() * 2; // 3-5 full rotations
       const normalizedCurrent = ((rotation % 360) + 360) % 360;
       const normalizedTarget = ((targetAngle % 360) + 360) % 360;
       const delta = (normalizedTarget - normalizedCurrent + 360) % 360;
@@ -114,7 +114,7 @@ const SpinWheel = ({ isOpen, onClose, onPrizeWon }) => {
         if (onPrizeWon) {
           onPrizeWon(prizeAmount, newBalance);
         }
-      }, 4000);
+      }, 2000);
 
     } catch (error) {
       setSpinning(false);

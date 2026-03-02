@@ -35,6 +35,17 @@ html {
   }
 }
 
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
 @keyframes spinPulse {
   0%, 100% {
     transform: scale(1);
@@ -2791,13 +2802,32 @@ html {
 }
 
 /* Win/Loss Notifications - Improved Contrast */
+/* Transparent full-screen overlay for dismissing win/loss notifications by clicking the side */
+.notification-dismiss-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.notification-dismiss-overlay .win-notification,
+.notification-dismiss-overlay .loss-notification {
+  cursor: default;
+  pointer-events: auto;
+  max-width: 340px;
+  width: 90%;
+}
+
 .win-notification {
   background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(102, 187, 106, 0.25));
   border: 3px solid #4caf50;
   border-radius: 8px;
   padding: 1.5rem;
   text-align: center;
-  animation: slideDown 0.4s ease;
+  animation: slideDown 0.4s ease, fadeOutUp 0.4s ease 1.0s forwards;
   box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4);
 }
 
@@ -2833,7 +2863,7 @@ html {
   border-radius: 8px;
   padding: 1.5rem;
   text-align: center;
-  animation: slideDown 0.4s ease;
+  animation: slideDown 0.4s ease, fadeOutUp 0.4s ease 1.0s forwards;
   box-shadow: 0 4px 20px rgba(239, 83, 80, 0.4);
 }
 
@@ -3546,9 +3576,9 @@ html {
 }
 
 .game-matchup-display {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
 }
@@ -3557,14 +3587,6 @@ html {
   color: #ffffff;
   font-size: 1.1rem;
   font-weight: 700;
-}
-
-.game-matchup-display .team-name:first-child {
-  text-align: right;
-}
-
-.game-matchup-display .team-name:last-child {
-  text-align: left;
 }
 
 .game-matchup-display .vs-divider {

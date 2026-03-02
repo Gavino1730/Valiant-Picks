@@ -67,7 +67,7 @@ const DailyReward = ({ onRewardClaimed, user }) => {
           hasDismissed.current = true;
           popupQueue.dismiss('dailyReward');
         }
-      }, 2000);
+      }, 800);
 
     } catch (error) {
       console.error('Error claiming reward:', error);

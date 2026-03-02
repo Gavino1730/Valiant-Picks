@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/Dashboard.css';
 import '../styles/Skeleton.css';
@@ -39,6 +39,8 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const [showConfetti, setShowConfetti] = useState(false);
   const [winNotification, setWinNotification] = useState(null);
   const [lossNotification, setLossNotification] = useState(null);
+  const winTimeoutRef = useRef(null);
+  const lossTimeoutRef = useRef(null);
   const [previousBets, setPreviousBets] = useState([]);
   // const [recentWinners, setRecentWinners] = useState([]); // TEMPORARILY DISABLED
   const [notificationsEnabled, setNotificationsEnabled] = useState(notificationService.isEnabled());
@@ -113,12 +115,11 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                 potentialWin: newBet.potential_win
               });
               
-              const winTimeout = setTimeout(() => {
+              if (winTimeoutRef.current) clearTimeout(winTimeoutRef.current);
+              winTimeoutRef.current = setTimeout(() => {
                 setWinNotification(null);
                 setShowConfetti(false);
-              }, 3000);
-              // Store timeout for cleanup
-              return () => clearTimeout(winTimeout);
+              }, 1500);
             } else if (newBet.outcome === 'lost') {
               setLossNotification({ team: newBet.selected_team, amount: newBet.amount });
               
@@ -130,11 +131,10 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                 potentialWin: 0
               });
               
-              const lossTimeout = setTimeout(() => {
+              if (lossTimeoutRef.current) clearTimeout(lossTimeoutRef.current);
+              lossTimeoutRef.current = setTimeout(() => {
                 setLossNotification(null);
-              }, 2500);
-              // Store timeout for cleanup
-              return () => clearTimeout(lossTimeout);
+              }, 1500);
             }
           }
         });
@@ -354,25 +354,27 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       )}
       
       {/* Win/Loss Notifications */}
-      <div style={{minHeight: winNotification || lossNotification ? 'auto' : '0px', marginBottom: winNotification || lossNotification ? '1rem' : '0'}}>
-        {winNotification && (
-          <div className="win-notification">
+      {winNotification && (
+        <div className="notification-dismiss-overlay" onClick={() => { clearTimeout(winTimeoutRef.current); setWinNotification(null); setShowConfetti(false); }}>
+          <div className="win-notification" onClick={(e) => e.stopPropagation()}>
             <span className="win-notification-emoji">🎉</span>
             <div className="win-notification-title">You Won!</div>
             <div className="win-notification-amount status--won u-num">+{formatCurrency(winNotification.amount)}</div>
             <div className="win-notification-team">{winNotification.team}</div>
           </div>
-        )}
-        
-        {lossNotification && (
-          <div className="loss-notification">
+        </div>
+      )}
+
+      {lossNotification && (
+        <div className="notification-dismiss-overlay" onClick={() => { clearTimeout(lossTimeoutRef.current); setLossNotification(null); }}>
+          <div className="loss-notification" onClick={(e) => e.stopPropagation()}>
             <span className="loss-notification-emoji">😢</span>
             <div className="loss-notification-title">Loss</div>
             <div className="loss-notification-amount status--lost u-num">-{formatCurrency(lossNotification.amount)}</div>
             <div className="loss-notification-team">{lossNotification.team}</div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
 
       {/* Recent Winners Section - TEMPORARILY HIDDEN
