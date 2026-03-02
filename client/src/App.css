@@ -326,10 +326,10 @@ body {
   .navbar {
     background: var(--header-bg);
     border-top: none;
-    border-bottom: 2px solid rgba(255, 215, 0, 0.6);
-    border-left: 2px solid rgba(255, 215, 0, 0.6);
-    border-right: 2px solid rgba(255, 215, 0, 0.6);
-    border-radius: 0 0 14px 14px;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
     height: auto;
     min-height: auto;
   }

@@ -456,19 +456,31 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       </div>
       */}
 
-      {/* Back to the Bay - State Tournament Banner */}
+      {/* Back to the Bay - State Playoffs Banner */}
       <div className="back-to-bay-banner">
         <div className="bay-banner-glow"></div>
+        <div className="bay-banner-top-badge">🏆 STATE PLAYOFFS — FINAL 8 🏆</div>
         <div className="bay-banner-content">
-          <div className="bay-banner-trophy">🏆</div>
+          <div className="bay-banner-trophy">🏀</div>
           <div className="bay-banner-text">
-            <div className="bay-banner-headline">BACK TO THE BAY!</div>
-            <div className="bay-banner-sub">Both Boys &amp; Girls are heading to Coos Bay for the State Tournament</div>
-            <div className="bay-banner-year">Last time together: 2018 &mdash; Let&rsquo;s make history again!</div>
+            <div className="bay-banner-headline">WE&rsquo;RE GOING TO COOS BAY!</div>
+            <div className="bay-banner-sub">Both programs in the Final 8 &mdash; biggest moment in years</div>
           </div>
-          <div className="bay-banner-trophy">🏆</div>
+          <div className="bay-banner-trophy">🏀</div>
         </div>
-        <div className="bay-banner-wave">🌊 Coos Bay 2026 🌊</div>
+        <div className="bay-banner-teams-row">
+          <div className="bay-team-card boys">
+            <span className="bay-team-label">🔥 BOYS</span>
+            <span className="bay-team-status">STATE TITLE CONTENDERS</span>
+            <span className="bay-team-note">Strong chance to bring it home</span>
+          </div>
+          <div className="bay-team-card girls">
+            <span className="bay-team-label">⭐ GIRLS</span>
+            <span className="bay-team-status">HISTORIC APPEARANCE</span>
+            <span className="bay-team-note">First time in years &mdash; making history</span>
+          </div>
+        </div>
+        <div className="bay-banner-wave">🚌 Booster Buses Heading to Coos Bay &mdash; Come Cheer &rsquo;Em On! 🌊</div>
       </div>
 
       {/* Main Grid Layout */}
