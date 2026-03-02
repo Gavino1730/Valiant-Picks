@@ -23,7 +23,7 @@
 }
 
 .highlight-section {
-  border-color: rgba(31, 78, 153, 0.45);
+  border-color: #2563EB;
   box-shadow: none;
   background: rgba(15, 23, 42, 0.75);
 }
@@ -42,7 +42,7 @@
 }
 
 .tutorial-section h2 {
-  color: #1f4e99;
+  color: #2563EB;
   font-size: 1.65rem;
   font-weight: 600;
   margin: 0;
@@ -91,7 +91,7 @@
 }
 
 .info-text h4 {
-  color: #e9f1ff;
+  color: #E5EDF8;
   font-size: 1.05rem;
   font-weight: 600;
   margin: 0 0 0.35rem 0;
@@ -129,7 +129,7 @@
   flex-shrink: 0;
   width: 42px;
   height: 42px;
-  background: #1f4e99;
+  background: #2563EB;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -140,14 +140,14 @@
 }
 
 .step-content h3 {
-  color: #e9f1ff;
+  color: #E5EDF8;
   font-size: 1.2rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
 }
 
 .step-content p {
-  color: #b8c5d6;
+  color: #94A3B8;
   line-height: 1.6;
   margin: 0;
 }
@@ -174,14 +174,14 @@
 }
 
 .tutorial-content h3 {
-  color: #e9f1ff;
+  color: #E5EDF8;
   font-size: 1.15rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
 }
 
 .tutorial-content p {
-  color: #b8c5d6;
+  color: #94A3B8;
   line-height: 1.7;
   margin: 0;
 }
@@ -223,13 +223,13 @@
 .confidence-name {
   font-weight: 600;
   font-size: 1rem;
-  color: #e9f1ff;
+  color: #E5EDF8;
 }
 
 .confidence-mult {
   font-weight: 700;
   font-size: 1.2rem;
-  color: #1f4e99;
+  color: #2563EB;
 }
 
 .confidence-option.low .confidence-mult {
@@ -254,14 +254,14 @@
 /* Prop Examples */
 .prop-examples {
   background: rgba(30, 41, 59, 0.3);
-  border-left: 3px solid #1f4e99;
+  border-left: 3px solid #2563EB;
   padding: 1rem 1rem 1rem 1.5rem;
   border-radius: 10px;
   margin: 1rem 0;
 }
 
 .prop-examples li {
-  color: #b8c5d6;
+  color: #94A3B8;
   font-size: 1.05rem;
   line-height: 2;
 }
@@ -308,11 +308,11 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: rgba(31, 78, 153, 0.2);
+  background: #2A4066;
 }
 
 .bonus-header h4 {
-  color: #1f4e99;
+  color: #2563EB;
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
@@ -325,7 +325,7 @@
 }
 
 .bonus-tier li {
-  color: #b8c5d6;
+  color: #94A3B8;
   font-size: 0.95rem;
   line-height: 1.8;
   padding-left: 1.5rem;
@@ -345,7 +345,7 @@
   font-weight: 600;
   margin-top: 0.5rem;
   padding-top: 0.5rem;
-  border-top: 1px solid rgba(31, 78, 153, 0.2);
+  border-top: 1px solid #2A4066;
 }
 
 .bonus-example {
@@ -364,7 +364,7 @@
 }
 
 .bonus-example p {
-  color: #b8c5d6;
+  color: #94A3B8;
   font-size: 0.98rem;
   margin: 0.5rem 0;
 }
@@ -401,7 +401,7 @@
 }
 
 .tips-list h4 {
-  color: #e9f1ff;
+  color: #E5EDF8;
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 0.35rem 0;
@@ -440,7 +440,7 @@
 }
 
 .nav-content h4 {
-  color: #e9f1ff;
+  color: #E5EDF8;
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 0.35rem 0;
@@ -470,7 +470,7 @@
 
 .faq-item summary {
   cursor: pointer;
-  color: #e9f1ff;
+  color: #E5EDF8;
   font-size: 1rem;
   font-weight: 600;
   list-style: none;
@@ -505,7 +505,7 @@
 .cta-section {
   text-align: center;
   background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(31, 78, 153, 0.35);
+  border: 1px solid #2A4066;
   padding: 2rem 1.5rem;
   border-radius: 12px;
 }
@@ -529,13 +529,13 @@
 }
 
 .btn-primary {
-  background: #1f4e99 !important;
+  background: #2563EB !important;
   color: white !important;
 }
 
 .btn-secondary {
   background: rgba(148, 163, 184, 0.18) !important;
-  color: #e9f1ff !important;
+  color: #E5EDF8 !important;
   border: 1px solid rgba(148, 163, 184, 0.35) !important;
 }
 

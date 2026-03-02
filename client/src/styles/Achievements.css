@@ -82,11 +82,11 @@
 
 .close-modal:hover {
   background: #f0f0f0;
-  color: #004f9e;
+  color: #2563EB;
 }
 
 .achievements-modal h2 {
-  color: #004f9e;
+  color: #2563EB;
   font-size: 2rem;
   margin-bottom: 10px;
   text-align: center;
@@ -112,14 +112,14 @@
   padding: 20px;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border-radius: 15px;
-  border: 2px solid #004f9e;
+  border: 2px solid #2563EB;
   transition: all 0.3s ease;
   animation: slideIn 0.5s ease;
 }
 
 .achievement-card:hover {
   transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(0, 79, 158, 0.2);
+  box-shadow: 0 4px 15px #2A4066;
 }
 
 .achievement-icon {
@@ -133,7 +133,7 @@
 }
 
 .achievement-info h3 {
-  color: #004f9e;
+  color: #2563EB;
   font-size: 1.2rem;
   margin-bottom: 8px;
 }

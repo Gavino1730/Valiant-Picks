@@ -1,8 +1,8 @@
-# Valiant Picks - Rewards System Setup
+# School Picks - Rewards System Setup
 # PowerShell version for Windows
 
 Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host "Valiant Picks - Rewards System Setup" -ForegroundColor Cyan
+Write-Host "School Picks - Rewards System Setup" -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host ""
 

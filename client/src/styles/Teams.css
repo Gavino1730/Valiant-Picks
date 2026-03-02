@@ -126,11 +126,11 @@
   left: 0;
   width: 100%;
   height: 3px;
-  background: rgba(31, 78, 153, 0.6);
+  background: #2563EB;
 }
 
 .team-header {
-  border-bottom: 2px solid rgba(31, 78, 153, 0.35);
+  border-bottom: 2px solid #2A4066;
   padding-bottom: 16px;
   margin-bottom: 0;
   grid-column: 1 / -1;
@@ -183,7 +183,7 @@
   padding: 16px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-left: 3px solid rgba(31, 78, 153, 0.6);
+  border-left: 3px solid #2563EB;
 }
 
 .coaching-staff h3 {
@@ -352,7 +352,7 @@
 }
 
 .schedule-row:hover {
-  background: rgba(31, 78, 153, 0.08);
+  background: #1C3356;
 }
 
 .schedule-row .result {
@@ -420,8 +420,8 @@
 
 .roster-control input:focus,
 .roster-control select:focus {
-  border-color: rgba(31, 78, 153, 0.7);
-  background: rgba(31, 78, 153, 0.08);
+  border-color: #2A4066;
+  background: #1C3356;
 }
 
 .roster-controls-actions {
@@ -512,11 +512,11 @@
 }
 
 .roster-row-main:hover {
-  background: rgba(31, 78, 153, 0.12);
+  background: #1E2F4D;
 }
 
 .player-number {
-  background: rgba(31, 78, 153, 0.85);
+  background: #2A4066;
   color: #ffffff;
   width: 48px;
   height: 26px;
@@ -924,17 +924,17 @@
   .content-tab-btn {
     padding: 8px 10px;
     font-size: 12px;
-    border: 1px solid rgba(31, 78, 153, 0.2);
+    border: 1px solid #2A4066;
     border-right: none;
   }
 
   .content-tab-btn:last-child {
-    border-right: 1px solid rgba(31, 78, 153, 0.2);
+    border-right: 1px solid #2A4066;
   }
 
   .content-tab-btn.active {
-    border-bottom: 2px solid #1f4e99;
-    background: rgba(31, 78, 153, 0.1);
+    border-bottom: 2px solid #2563EB;
+    background: #2A4066;
   }
 
   .schedule-row {

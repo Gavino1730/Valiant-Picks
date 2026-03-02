@@ -24,8 +24,8 @@
 }
 
 .onboarding-modal {
-  background: #151a2c;
-  border: 1px solid rgba(31, 78, 153, 0.18);
+  background: #0F1E33;
+  border: 1px solid #2A4066;
   border-radius: 14px;
   max-width: 720px;
   width: 90%;
@@ -52,7 +52,7 @@
 .onboarding-close {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #e9f1ff;
+  color: #E5EDF8;
   width: 44px;
   height: 44px;
   border-radius: 10px;
@@ -72,7 +72,7 @@
 
 /* ===== ONBOARDING HEADER ===== */
 .onboarding-header {
-  border-bottom: 1px solid rgba(31, 78, 153, 0.2);
+  border-bottom: 1px solid #2A4066;
   padding: 1.25rem 1.5rem;
   display: flex;
   align-items: flex-start;
@@ -82,7 +82,7 @@
 }
 
 .onboarding-title h1 {
-  color: #e9f1ff;
+  color: #E5EDF8;
   font-size: 1.5rem;
   margin: 0 0 0.35rem;
   font-weight: 800;
@@ -125,7 +125,7 @@
 }
 
 .onboarding-item h3 {
-  color: #e9f1ff;
+  color: #E5EDF8;
   font-size: 1rem;
   margin: 0 0 0.25rem;
   font-weight: 700;
@@ -175,7 +175,7 @@
 
 .confidence-label {
   font-weight: 600;
-  color: #e9f1ff;
+  color: #E5EDF8;
 }
 
 .confidence-multiplier {
@@ -189,12 +189,12 @@
 
 /* ===== PRO TIPS ===== */
 .onboarding-tips {
-  border-top: 1px solid rgba(31, 78, 153, 0.2);
+  border-top: 1px solid #2A4066;
   padding-top: 1rem;
 }
 
 .onboarding-tips h4 {
-  color: #e9f1ff;
+  color: #E5EDF8;
   margin: 0 0 0.6rem;
   font-size: 0.95rem;
   font-weight: 700;
@@ -228,7 +228,7 @@
 .onboarding-footer {
   padding: 1rem 1.5rem 1.25rem;
   background: #141a2b;
-  border-top: 1px solid rgba(31, 78, 153, 0.2);
+  border-top: 1px solid #2A4066;
   text-align: center;
   position: sticky;
   bottom: 0;
@@ -239,7 +239,7 @@
 
 .onboarding-btn-primary {
   display: inline-block;
-  background: #1f4e99;
+  background: #2563EB;
   color: white;
   padding: 0.85rem 1.2rem;
   border: none;
@@ -284,7 +284,7 @@
 }
 
 .onboarding-checkbox input {
-  accent-color: #1f4e99;
+  accent-color: #2563EB;
 }
 
 /* ===== MOBILE RESPONSIVE ===== */

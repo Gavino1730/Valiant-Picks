@@ -20,11 +20,10 @@
 }
 
 .notification-card {
-  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
+  background: #16263F;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #2A4066;
   display: flex;
   gap: 1rem;
   align-items: start;
@@ -35,12 +34,12 @@
 
 .notification-card:hover {
   transform: translateX(4px);
-  border-color: rgba(31, 78, 153, 0.3);
+  border-color: #2563EB;
 }
 
 .notification-card.unread {
-  border-left: 4px solid #1f4e99;
-  background: linear-gradient(135deg, rgba(31, 78, 153, 0.1) 0%, #161b2e 100%);
+  border-left: 4px solid #2563EB;
+  background: #16263F;
 }
 
 .notification-icon {
@@ -54,19 +53,19 @@
 
 .notification-content h4 {
   margin: 0 0 0.5rem 0;
-  color: #e0e0e0;
+  color: #E5EDF8;
   font-size: 1.1rem;
 }
 
 .notification-content p {
   margin: 0 0 0.5rem 0;
-  color: #b8c5d6;
+  color: #94A3B8;
   line-height: 1.5;
 }
 
 .notification-time {
   font-size: 0.85rem;
-  color: #7a8b9a;
+  color: #64748B;
 }
 
 .unread-dot {
@@ -75,9 +74,8 @@
   right: 1.5rem;
   width: 10px;
   height: 10px;
-  background: #1f4e99;
+  background: #2563EB;
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(31, 78, 153, 0.6);
 }
 
 @media (max-width: 768px) {

@@ -20,7 +20,7 @@
 
 /* Modal Container */
 .spin-wheel-modal {
-  background: linear-gradient(180deg, #0b1c2f 0%, #0f2338 100%);
+  background: linear-gradient(180deg, #0F1E33 0%, #16263F 100%);
   border-radius: 30px;
   max-width: 650px;
   width: 100%;
@@ -41,7 +41,7 @@
   background: transparent;
   border: none;
   font-size: 2rem;
-  color: #c7d2df;
+  color: #94A3B8;
   cursor: pointer;
   width: 40px;
   height: 40px;
@@ -55,7 +55,7 @@
 
 .spin-wheel-close:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #9cc6ff;
+  color: #60A5FA;
   transform: rotate(90deg);
 }
 
@@ -64,12 +64,12 @@
   margin: 0 auto;
   padding: 30px 20px;
   text-align: center;
-  color: #e6eef8;
+  color: #E5EDF8;
   -webkit-tap-highlight-color: transparent;
 }
 
 .wheel-header h2 {
-  background: linear-gradient(135deg, #004f9e, #0066cc, #004f9e);
+  background: linear-gradient(135deg, #2563EB, #2563EB, #2563EB);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -81,7 +81,7 @@
 }
 
 .spins-remaining {
-  color: #c7d2df;
+  color: #94A3B8;
   font-size: 1.1rem;
   margin-bottom: 30px;
   font-weight: 600;
@@ -92,7 +92,7 @@
   width: 400px;
   height: 400px;
   margin: 0 auto 40px;
-  filter: drop-shadow(0 15px 35px rgba(0, 79, 158, 0.4));
+  filter: drop-shadow(0 15px 35px #2A4066);
 }
 
 .wheel-pointer {
@@ -121,7 +121,7 @@
   background: linear-gradient(white, white) padding-box,
               linear-gradient(135deg, #ffd700, #ffed4e, #ffd700, #ffa500) border-box;
   box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 
-              0 0 60px rgba(0, 79, 158, 0.3),
+              0 0 60px #2A4066,
               inset 0 0 30px rgba(255, 255, 255, 0.2),
               inset 0 0 0 3px rgba(255, 215, 0, 0.3);
   transition: transform 2s cubic-bezier(0.17, 0.67, 0.12, 0.99);
@@ -134,7 +134,7 @@
 
 .spin-button {
   background: linear-gradient(135deg, #FFD700, #FFA500, #FFD700);
-  color: #004f9e;
+  color: #2563EB;
   border: none;
   padding: 18px 50px;
   font-size: 1.3rem;
@@ -207,7 +207,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(0, 79, 158, 0.95), rgba(255, 215, 0, 0.2));
+  background: linear-gradient(135deg, #2A4066, rgba(255, 215, 0, 0.2));
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -217,13 +217,13 @@
 }
 
 .result-content {
-  background: linear-gradient(180deg, #0b1c2f 0%, #122840 100%);
+  background: linear-gradient(180deg, #0F1E33 0%, #122840 100%);
   padding: 50px;
   border-radius: 30px;
   text-align: center;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
               0 0 0 3px rgba(255, 215, 0, 0.5) inset;
-  color: #e6eef8;
+  color: #E5EDF8;
   animation: slideUp 0.5s ease, resultPulse 0.5s ease;
   position: relative;
   overflow: hidden;
@@ -293,7 +293,7 @@
 }
 
 .result-content button {
-  background: linear-gradient(135deg, #004f9e, #0066cc);
+  background: linear-gradient(135deg, #2563EB, #2563EB);
   color: white;
   border: none;
   padding: 15px 40px;
@@ -304,13 +304,13 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
-  box-shadow: 0 6px 20px rgba(0, 79, 158, 0.3);
+  box-shadow: 0 6px 20px #2A4066;
 }
 
 .result-content button:hover {
-  background: linear-gradient(135deg, #0066cc, #004f9e);
+  background: linear-gradient(135deg, #2563EB, #2563EB);
   transform: scale(1.05) translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 79, 158, 0.5);
+  box-shadow: 0 8px 25px #2A4066;
 }
 
 @keyframes fadeIn {

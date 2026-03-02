@@ -1,7 +1,7 @@
 {
-  "name": "valiant-picks",
+  "name": "school-picks",
   "version": "1.0.0",
-  "description": "Full-stack virtual sports betting platform with confidence-based wagering for schools and communities",
+  "description": "Open-source virtual sports betting platform template for schools and organizations",
   "main": "server/server.js",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
@@ -16,27 +16,26 @@
   "keywords": [
     "betting",
     "sports",
-    "basketball",
-    "valiant",
     "virtual-currency",
     "wagering",
     "leaderboard",
     "school-sports",
+    "school-template",
     "react",
     "express",
     "postgresql",
     "supabase"
   ],
-  "author": "Gavin",
+  "author": "Your Name",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/valiant-picks.git"
+    "url": "https://github.com/yourusername/school-picks.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/valiant-picks/issues"
+    "url": "https://github.com/yourusername/school-picks/issues"
   },
-  "homepage": "https://github.com/yourusername/valiant-picks#readme",
+  "homepage": "https://github.com/yourusername/school-picks#readme",
   "devDependencies": {
     "concurrently": "^7.6.0",
     "dotenv": "^17.3.1"

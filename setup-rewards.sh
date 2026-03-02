@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "=========================================="
-echo "Valiant Picks - Rewards System Setup"
+echo "School Picks - Rewards System Setup"
 echo "=========================================="
 echo ""
 

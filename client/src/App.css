@@ -46,10 +46,8 @@ body {
 }
 
 .navbar {
-  background: rgba(20, 40, 100, 0.95);
-  -webkit-backdrop-filter: blur(18px) saturate(200%);
-  backdrop-filter: blur(18px) saturate(200%);
-  color: #ffffff;
+  background: #0F1E33;
+  color: #E5EDF8;
   padding: 0;
   position: -webkit-sticky;
   position: sticky;
@@ -57,8 +55,8 @@ body {
   left: 0;
   right: 0;
   z-index: 1100;
-  border-bottom: 1px solid rgba(80, 140, 255, 0.35);
-  box-shadow: 0 2px 24px rgba(37, 99, 235, 0.35);
+  border-bottom: 1px solid #2A4066;
+  box-shadow: none;
   width: 100%;
   min-height: auto;
   height: auto;
@@ -70,8 +68,8 @@ body {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: #003580;
-  border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+  background: #16263F;
+  border-bottom: 1px solid #2A4066;
   padding: 4px 20px;
   flex-wrap: nowrap;
   white-space: nowrap;

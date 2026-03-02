@@ -114,7 +114,7 @@
     border-radius: 10px;
     font-weight: 700;
     /* Better touch feedback */
-    -webkit-tap-highlight-color: rgba(31, 78, 153, 0.2);
+    -webkit-tap-highlight-color: #2A4066;
     touch-action: manipulation;
   }
   
@@ -125,7 +125,7 @@
   .yes-btn,
   .no-btn {
     min-height: 48px;
-    -webkit-tap-highlight-color: rgba(31, 78, 153, 0.2);
+    -webkit-tap-highlight-color: #2A4066;
     touch-action: manipulation;
   }
 

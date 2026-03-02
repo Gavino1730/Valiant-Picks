@@ -1,6 +1,6 @@
 /* ===== TERMS PAGE ===== */
 .terms-page {
-  background: linear-gradient(135deg, #0f172a 0%, #1a1f35 100%);
+  background: #0A1424;
   min-height: 100vh;
   padding: 2rem;
   animation: fadeIn 0.4s ease;
@@ -28,28 +28,26 @@
 
 /* ===== TERMS SECTIONS ===== */
 .terms-section {
-  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
-  border: 1px solid rgba(31, 78, 153, 0.2);
+  background: #16263F;
+  border: 1px solid #2A4066;
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease;
 }
 
 .terms-section:hover {
-  border-color: rgba(31, 78, 153, 0.4);
-  box-shadow: 0 8px 24px rgba(31, 78, 153, 0.15);
+  border-color: #60A5FA;
 }
 
 .terms-section h2 {
-  color: #1f4e99;
+  color: #60A5FA;
   font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 1rem;
 }
 
 .terms-section p {
-  color: #b8c5d6;
+  color: #94A3B8;
   line-height: 1.8;
   margin-bottom: 1rem;
   font-size: 0.95rem;
@@ -60,7 +58,7 @@
 }
 
 .terms-section ul {
-  color: #b8c5d6;
+  color: #94A3B8;
   line-height: 1.8;
   font-size: 0.95rem;
   margin: 0;
@@ -76,8 +74,8 @@
 }
 
 .final-section {
-  background: linear-gradient(135deg, rgba(102, 187, 106, 0.1), rgba(59, 130, 246, 0.1));
-  border: 1px solid rgba(31, 78, 153, 0.3);
+  background: #1C3356;
+  border: 1px solid #2563EB;
 }
 
 .final-section h2 {

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Quick Setup Script for Valiant Picks (Unix/Linux/macOS)
+# Quick Setup Script for School Picks (Unix/Linux/macOS)
 # This script helps new contributors get started quickly
 
 echo "================================================"
-echo "   Valiant Picks - Quick Setup Script"
+echo "   School Picks - Quick Setup Script"
 echo "================================================"
 echo ""
 
@@ -95,7 +95,7 @@ echo "================================================"
 echo ""
 echo -e "${YELLOW}Next steps:${NC}"
 echo "1. Edit server/.env and add your Supabase credentials"
-echo "2. Run database setup in Supabase (see database/database-setup.sql)"
+echo "2. Run database setup in Supabase (see database/MASTER_SETUP.sql)"
 echo "3. Start development servers:"
 echo -e "   ${CYAN}npm run dev${NC}        (starts both servers)"
 echo "   OR"

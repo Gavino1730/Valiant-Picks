@@ -52,12 +52,18 @@ const Game = {
     }
   },
 
-  getAll: async () => {
+  getAll: async ({ visibleOnly = false } = {}) => {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('games')
         .select('*')
         .order('game_date', { ascending: true });
+
+      if (visibleOnly) {
+        query = query.eq('is_visible', true);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         handleSupabaseError(error, 'fetching games');

@@ -63,10 +63,10 @@ const shouldRefreshToken = () => {
     const payload = JSON.parse(atob(token.split('.')[1]));
     const expiresAt = payload.exp * 1000; // Convert to milliseconds
     const now = Date.now();
-    const oneDayInMs = 24 * 60 * 60 * 1000;
+    const fiveMinutesInMs = 5 * 60 * 1000;
 
-    // Refresh if token expires in less than 1 day
-    return (expiresAt - now) < oneDayInMs;
+    // Refresh only if token expires in less than 5 minutes (avoid blocking normal requests)
+    return (expiresAt - now) < fiveMinutesInMs;
   } catch (error) {
     return false;
   }

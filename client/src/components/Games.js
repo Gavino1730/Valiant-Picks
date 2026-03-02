@@ -4,6 +4,9 @@ import '../styles/Games.css';
 import { formatCurrency } from '../utils/currency';
 import { formatTime } from '../utils/time';
 
+const GAMES_CACHE_KEY = 'games_cache';
+const GAMES_CACHE_TTL = 60 * 1000; // 1 minute
+
 function Games({ user, updateUser }) {
   const [games, setGames] = useState([]);
   const [propBets, setPropBets] = useState([]);
@@ -79,16 +82,26 @@ function Games({ user, updateUser }) {
 
   const fetchGames = useCallback(async () => {
     try {
-      const response = await apiClient.get('/games', { timeout: 5000 });
-      const sortedGames = (response.data || []).sort((a, b) => {
-        return new Date(a.game_date) - new Date(b.game_date);
-      });
+      // Show cached data instantly while fetching fresh data
+      try {
+        const cached = JSON.parse(localStorage.getItem(GAMES_CACHE_KEY) || 'null');
+        if (cached && Date.now() - cached.ts < GAMES_CACHE_TTL && cached.data?.length > 0) {
+          setGames(cached.data);
+          setLoading(false);
+        }
+      } catch (_) {}
+
+      const response = await apiClient.get('/games', { timeout: 8000 });
+      // Games are already sorted by the server; sort client-side as fallback only
+      const sortedGames = (response.data || []).sort((a, b) =>
+        new Date(a.game_date) - new Date(b.game_date)
+      );
       setGames(sortedGames);
+      try {
+        localStorage.setItem(GAMES_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: sortedGames }));
+      } catch (_) {}
     } catch (err) {
-      // Don't clear games on error - keep showing what we had before
-      setGames(prevGames => {
-        return prevGames.length === 0 ? [] : prevGames;
-      });
+      // Keep cached/existing data on error
     } finally {
       setLoading(false);
     }
@@ -119,12 +132,12 @@ function Games({ user, updateUser }) {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     
     // Initial fetch on mount
+    // Skip fetchBalance on first load — balance is already available from `user` prop
     const loadData = async () => {
       try {
         await Promise.all([
           fetchGames(),
           fetchPropBets(),
-          fetchBalance(),
           fetchUserBets()
         ]);
       } catch (err) {

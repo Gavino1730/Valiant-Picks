@@ -78,7 +78,7 @@
 }
 
 .modal-content {
-  background: linear-gradient(135deg, #1e2139 0%, #161b2e 100%);
+  background: linear-gradient(135deg, #16263F 0%, #0F1E33 100%);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -87,7 +87,7 @@
   max-height: 85vh;
   overflow-y: auto;
   animation: slideUp 0.3s ease;
-  border: 1px solid rgba(31, 78, 153, 0.3);
+  border: 1px solid #2A4066;
   position: relative;
 }
 
@@ -190,12 +190,12 @@
 
 .tab-btn:hover {
   color: #e0e0e0;
-  background: rgba(31, 78, 153, 0.1);
+  background: #2A4066;
 }
 
 .tab-btn.active {
-  color: #1f4e99;
-  border-bottom-color: #1f4e99;
+  color: #2563EB;
+  border-bottom-color: #2563EB;
   font-weight: 700;
 }
 
@@ -292,7 +292,7 @@
 }
 
 .admin-segment-btn.active {
-  background: rgba(31, 78, 153, 0.2);
+  background: #2A4066;
   color: #ffffff;
 }
 
@@ -335,8 +335,8 @@
 }
 
 .admin-toolbar-btn--primary {
-  background: rgba(31, 78, 153, 0.35);
-  border-color: rgba(31, 78, 153, 0.4);
+  background: #2A4066;
+  border-color: #2563EB;
   color: #ffffff;
 }
 
@@ -392,7 +392,7 @@
 }
 
 .admin-game-form-card--edit {
-  border-color: rgba(31, 78, 153, 0.35);
+  border-color: #2A4066;
 }
 
 .admin-form-title {
@@ -419,8 +419,8 @@
 }
 
 .admin-btn--primary {
-  background: rgba(31, 78, 153, 0.45) !important;
-  border-color: rgba(31, 78, 153, 0.5);
+  background: #2563EB !important;
+  border-color: #2563EB;
   color: #ffffff;
 }
 
@@ -994,7 +994,7 @@
 }
 
 .bet-value {
-  color: #e9f1ff;
+  color: #E5EDF8;
   font-weight: 700;
   font-size: 1rem;
 }
@@ -1061,9 +1061,9 @@
 }
 
 .mobile-admin-pill.active {
-  background: linear-gradient(135deg, #1f4e99, #3b82f6);
+  background: linear-gradient(135deg, #2563EB, #3b82f6);
   color: #ffffff;
-  border-color: rgba(31, 78, 153, 0.6);
+  border-color: #2563EB;
 }
 
 .pill-icon {
@@ -1185,7 +1185,7 @@
 }
 
 .prop-bet-card {
-  background: linear-gradient(135deg, #1e2139 0%, #252945 100%);
+  background: linear-gradient(135deg, #16263F 0%, #1C3356 100%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
   padding: 20px;
@@ -1194,8 +1194,8 @@
 }
 
 .prop-bet-card:hover {
-  border-color: rgba(31, 78, 153, 0.3);
-  box-shadow: 0 12px 32px rgba(31, 78, 153, 0.15);
+  border-color: #2A4066;
+  box-shadow: 0 12px 32px #1E2F4D;
   transform: translateY(-2px);
 }
 
@@ -1210,7 +1210,7 @@
 .prop-card-header h4 {
   flex: 1;
   margin: 0;
-  color: #1f4e99;
+  color: #2563EB;
   font-size: 1.25rem;
   font-weight: 800;
 }
@@ -1260,7 +1260,7 @@
 }
 
 .info-value {
-  color: #e9f1ff;
+  color: #E5EDF8;
   font-size: 0.95rem;
   font-weight: 600;
   text-align: right;
@@ -1282,9 +1282,9 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: rgba(31, 78, 153, 0.1);
+  background: #2A4066;
   border-radius: 10px;
-  border: 1px solid rgba(31, 78, 153, 0.2);
+  border: 1px solid #2A4066;
 }
 
 .toggle-label-improved {
@@ -1488,15 +1488,15 @@
 }
 
 .users-table thead {
-  background: rgba(31, 78, 153, 0.15);
-  border-bottom: 2px solid rgba(31, 78, 153, 0.3);
+  background: #1E2F4D;
+  border-bottom: 2px solid #2A4066;
 }
 
 .users-table th {
   text-align: left;
   padding: 16px;
   font-weight: 700;
-  color: #1f4e99;
+  color: #2563EB;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: 0.85rem;
@@ -1509,7 +1509,7 @@
 }
 
 .users-table tbody tr:hover {
-  background: rgba(31, 78, 153, 0.08);
+  background: #1C3356;
 }
 
 .users-table td {
@@ -1526,7 +1526,7 @@
 }
 
 .user-card {
-  background: linear-gradient(135deg, #1e2139 0%, #252945 100%);
+  background: linear-gradient(135deg, #16263F 0%, #1C3356 100%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
   padding: 18px;
@@ -1535,13 +1535,13 @@
 }
 
 .user-card:hover {
-  border-color: rgba(31, 78, 153, 0.3);
-  box-shadow: 0 12px 32px rgba(31, 78, 153, 0.15);
+  border-color: #2A4066;
+  box-shadow: 0 12px 32px #1E2F4D;
   transform: translateY(-2px);
 }
 
 .user-card.admin {
-  border-left: 4px solid #1f4e99;
+  border-left: 4px solid #2563EB;
 }
 
 .user-card-header {
@@ -1561,7 +1561,7 @@
 .user-card-username {
   font-weight: 700;
   font-size: 1.15rem;
-  color: #e9f1ff;
+  color: #E5EDF8;
   margin: 0 0 4px 0;
 }
 
@@ -1582,8 +1582,8 @@
 }
 
 .user-card-badge.admin {
-  background: rgba(31, 78, 153, 0.2);
-  color: #1f4e99;
+  background: #2A4066;
+  color: #2563EB;
 }
 
 .user-card-badge.user {
@@ -1614,7 +1614,7 @@
 }
 
 .user-card-stat-value {
-  color: #e9f1ff;
+  color: #E5EDF8;
   font-size: 1.05rem;
   font-weight: 700;
 }
@@ -1691,7 +1691,7 @@
   .mobile-input {
     width: 100%;
     padding: 14px;
-    background: #1e2139;
+    background: #16263F;
     border: 2px solid rgba(255,255,255,0.2);
     border-radius: 8px;
     color: #fff;
@@ -1701,7 +1701,7 @@
 
   .mobile-input:focus {
     outline: none;
-    border-color: #1f4e99;
+    border-color: #2563EB;
   }
 
   .mobile-checkbox-label {
@@ -1710,13 +1710,13 @@
     gap: 12px;
     cursor: pointer;
     padding: 12px;
-    background: rgba(31, 78, 153, 0.1);
+    background: #2A4066;
     border-radius: 8px;
     transition: background 0.2s ease;
   }
 
   .mobile-checkbox-label:active {
-    background: rgba(31, 78, 153, 0.2);
+    background: #2A4066;
   }
 
   .mobile-checkbox {
@@ -1794,7 +1794,7 @@
   .mobile-input {
     width: 100%;
     padding: 12px;
-    background: #1e2139;
+    background: #16263F;
     border: 2px solid rgba(255,255,255,0.2);
     border-radius: 6px;
     color: #fff;
@@ -1803,7 +1803,7 @@
 
   .mobile-input:focus {
     outline: none;
-    border-color: #1f4e99;
+    border-color: #2563EB;
   }
 
   .mobile-checkbox-label {

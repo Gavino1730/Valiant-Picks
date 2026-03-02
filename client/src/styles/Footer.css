@@ -1,7 +1,7 @@
 /* ===== FOOTER ===== */
 .footer {
-  background: linear-gradient(135deg, #0a0f1e 0%, #0f1428 100%);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0F1E33;
+  border-top: 1px solid #2A4066;
   padding: 1.25rem 1.5rem;
   margin-top: 1.5rem;
   position: relative;
@@ -37,7 +37,7 @@
 .footer-link {
   background: none;
   border: none;
-  color: #c2cde0;
+  color: #94A3B8;
   text-decoration: none;
   font-size: 0.88rem;
   font-weight: 500;
@@ -59,12 +59,12 @@
 }
 
 .footer-divider {
-  color: #6b7280;
+  color: #64748B;
   opacity: 0.7;
 }
 
 .footer-copy {
-  color: #aab6c8;
+  color: #94A3B8;
   font-size: 0.82rem;
   margin: 0;
 }
@@ -80,7 +80,7 @@
 
 .footer-disclaimer-text {
   font-size: 0.8rem;
-  color: #9fb0c6;
+  color: #64748B;
   margin: 0;
   line-height: 1.4;
 }

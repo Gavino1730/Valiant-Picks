@@ -87,10 +87,9 @@ router.post('/', authenticateToken, async (req, res) => {
 // Get all upcoming games (public - only visible games, even for admins when betting)
 router.get('/', optionalAuth, async (req, res) => {
   try {
-    const games = await Game.getAll();
-    // Always filter to only visible games (explicitly true)
-    const filteredGames = games.filter(g => g.is_visible === true);
-    res.json(filteredGames);
+    // Filter visible games at DB level for better performance
+    const games = await Game.getAll({ visibleOnly: true });
+    res.json(games);
   } catch (err) {
     res.status(500).json({ error: 'Error fetching games: ' + err.message });
   }

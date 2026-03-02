@@ -1,8 +1,8 @@
-# Quick Setup Script for Valiant Picks
+# Quick Setup Script for School Picks
 # This script helps new contributors get started quickly
 
 Write-Host "================================================" -ForegroundColor Cyan
-Write-Host "   Valiant Picks - Quick Setup Script" -ForegroundColor Cyan
+Write-Host "   School Picks - Quick Setup Script" -ForegroundColor Cyan
 Write-Host "================================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -86,7 +86,7 @@ Write-Host "================================================" -ForegroundColor C
 Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Yellow
 Write-Host "1. Edit server/.env and add your Supabase credentials" -ForegroundColor White
-Write-Host "2. Run database setup in Supabase (see database/database-setup.sql)" -ForegroundColor White
+Write-Host "2. Run database setup in Supabase (see database/MASTER_SETUP.sql)" -ForegroundColor White
 Write-Host "3. Start development servers:" -ForegroundColor White
 Write-Host "   npm run dev        (starts both servers)" -ForegroundColor Cyan
 Write-Host "   OR" -ForegroundColor White
