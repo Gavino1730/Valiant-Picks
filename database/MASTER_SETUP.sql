@@ -304,26 +304,7 @@ VALUES (
 ) ON CONFLICT DO NOTHING;
 
 -- Default teams
-INSERT INTO teams (name, type, description, record_wins, record_losses, league_record, ranking,
-                   coach_name, coach_email, coach_bio, schedule, players)
-VALUES
-(
-  'Valiant Boys Basketball', 'Boys',
-  'Competitive boys basketball team representing Valiant Academy',
-  0, 0, '0-0', 'Unranked',
-  'Coach Smith', 'coach.smith@valiantacademy.org',
-  'Experienced basketball coach with 10+ years of coaching at the high school level.',
-  '[]'::jsonb, '[]'::jsonb
-),
-(
-  'Valiant Girls Basketball', 'Girls',
-  'Competitive girls basketball team representing Valiant Academy',
-  0, 0, '0-0', 'Unranked',
-  'Coach Johnson', 'coach.johnson@valiantacademy.org',
-  'Dedicated coach focused on developing player skills and team chemistry.',
-  '[]'::jsonb, '[]'::jsonb
-)
-ON CONFLICT DO NOTHING;
+-- No default teams seeded. Create teams via the Admin > Manage Teams panel.
 
 
 -- ============================================================

@@ -156,20 +156,6 @@ function AdminPanel() {
     }
   };
 
-  const seedGamesFromSchedule = async () => {
-    if (!window.confirm('Seed games from the current team schedules? This may create duplicate games if run multiple times.')) {
-      return;
-    }
-    try {
-      setError('');
-      const response = await apiClient.post('/games/seed-from-schedule');
-      alert(response.data?.message || 'Games seeded successfully');
-      fetchGames();
-    } catch (err) {
-      alert(err.response?.data?.error || 'Failed to seed games from schedule');
-    }
-  };
-
   const toggleAllVisibility = async (isVisible) => {
     if (!window.confirm(`Are you sure you want to ${isVisible ? 'show' : 'hide'} all games?`)) {
       return;
@@ -936,9 +922,6 @@ function AdminPanel() {
             }
             right={
               <>
-                <button type="button" className="admin-button admin-button--secondary" onClick={seedGamesFromSchedule}>
-                  Seed from Schedule
-                </button>
                 <button type="button" className="admin-button admin-button--secondary" onClick={() => toggleAllVisibility(true)}>
                   Show All
                 </button>
@@ -1171,7 +1154,7 @@ function AdminPanel() {
           {activeGames.length === 0 ? (
             <div className="admin-empty-state">
               {gameFilter === 'all'
-                ? 'No active games. Use Create Game or Seed from Schedule to get started.'
+                ? 'No active games. Use Create Game to get started.'
                 : `No active ${gameFilter} games found.`}
             </div>
           ) : (
@@ -1197,6 +1180,7 @@ function AdminPanel() {
                         {game.game_date}
                         {game.game_time ? ` • ${formatTime(game.game_time)}` : ''}
                         {game.location ? ` • ${game.location}` : ' • TBD'}
+                        {game.team_type ? ` • ${game.team_type}` : ''}
                       </div>
                     </div>
                     <div className="admin-game-card__badges">
@@ -1204,19 +1188,6 @@ function AdminPanel() {
                       <AdminBadge variant={game.is_visible === false ? 'warning' : 'success'}>
                         {game.is_visible === false ? 'Hidden' : 'Visible'}
                       </AdminBadge>
-                    </div>
-                  </div>
-
-                  <div className="admin-game-card__body admin-game-card__body--split">
-                    <div className="admin-game-card__row admin-game-card__row--split">
-                      <div className="admin-game-card__field">
-                        <span className="label">Type</span>
-                        <span className="value">{game.team_type}</span>
-                      </div>
-                      <div className="admin-game-card__field">
-                        <span className="label">Status</span>
-                        <span className="value">{game.status || 'Scheduled'}</span>
-                      </div>
                     </div>
                   </div>
 
@@ -1229,16 +1200,18 @@ function AdminPanel() {
                       />
                       <span className="toggle-slider"></span>
                     </label>
-                    <button className="admin-button admin-button--primary" onClick={() => handleEditGame(game)}>
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      className="admin-button admin-button--secondary"
-                      onClick={() => handleOpenGameStatus(game)}
-                    >
-                      Set Outcome
-                    </button>
+                    <div className="admin-game-card__actions-right">
+                      <button className="admin-button admin-button--primary" onClick={() => handleEditGame(game)}>
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="admin-button admin-button--secondary"
+                        onClick={() => handleOpenGameStatus(game)}
+                      >
+                        Set Outcome
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

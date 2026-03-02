@@ -60,9 +60,9 @@ class DailyLogin {
 
       const streakCount = streakData || 1;
       
-      // Bonus for streaks: +30 VB per day in streak (capped at +300)
-      const baseReward = 150;
-      const streakBonus = Math.min((streakCount - 1) * 30, 300);
+      // Bonus for streaks: +2500 VB per day in streak (capped at +25000)
+      const baseReward = 2500;
+      const streakBonus = Math.min((streakCount - 1) * 2500, 25000);
       const totalReward = baseReward + streakBonus;
 
       // Insert new daily login record
