@@ -526,6 +526,11 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
                       <span className="game-date-display">
                         {parseLocalDateOnly(game.game_date)?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) || 'TBD'}
                       </span>
+                      {game.team_type && (
+                        <span className={`gender-badge ${game.team_type === 'Girls Basketball' ? 'gender-badge-girls' : 'gender-badge-boys'}`}>
+                          {game.team_type === 'Girls Basketball' ? '♀ Girls' : '♂ Boys'}
+                        </span>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -546,34 +551,63 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
             <h3>📊 Recent Picks</h3>
             {recentActivity.length > 0 ? (
               <div className="recent-activity-grid">
-                {recentActivity.map(activity => (
-                  <div key={activity.id} className="activity-card">
-                    <div className="activity-header">
-                      <span className="activity-team">{activity.selected_team}</span>
-                      <span className="activity-bet-amount">{formatCurrency(activity.amount)}</span>
+                {recentActivity.map(activity => {
+                  const game = activity.games || {};
+                  const outcomeKey = activity.status === 'pending' ? 'pending' : activity.outcome;
+                  const confidenceLabel = activity.bet_type === 'high' ? 'High' : activity.bet_type === 'medium' ? 'Med' : 'Low';
+                  const oddsLabel = `${activity.odds}x`;
+                  const isGirls = game.team_type === 'Girls Basketball';
+                  const gameDate = game.game_date
+                    ? parseLocalDateOnly(game.game_date)?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    : null;
+                  return (
+                    <div key={activity.id} className={`activity-card outcome-${outcomeKey}`}>
+                      {/* Top row: matchup + date + gender */}
+                      <div className="activity-matchup-row">
+                        <div className="activity-matchup-teams">
+                          {game.home_team && game.away_team ? (
+                            <span className="activity-matchup-text">{game.home_team} <span className="activity-vs">vs</span> {game.away_team}</span>
+                          ) : (
+                            <span className="activity-matchup-text">{activity.selected_team}</span>
+                          )}
+                        </div>
+                        <div className="activity-matchup-meta">
+                          {game.team_type && (
+                            <span className={`activity-gender-badge ${isGirls ? 'girls' : 'boys'}`}>
+                              {isGirls ? '♀ Girls' : '♂ Boys'}
+                            </span>
+                          )}
+                          {gameDate && <span className="activity-game-date">{gameDate}</span>}
+                        </div>
+                      </div>
+                      {/* Bottom row: picked team + confidence + amount + result */}
+                      <div className="activity-details-row">
+                        <div className="activity-pick-info">
+                          <span className="activity-pick-label">Pick:</span>
+                          <span className="activity-team">{activity.selected_team}</span>
+                          <span className={`activity-confidence confidence-${activity.bet_type}`}>{confidenceLabel} {oddsLabel}</span>
+                        </div>
+                        <div className="activity-result-info">
+                          <span className={`activity-status status-${outcomeKey}`}>
+                            {activity.status === 'pending' ? '⏳ Pending' : activity.outcome === 'won' ? '✅ Won' : '❌ Lost'}
+                          </span>
+                          <div className="activity-amounts">
+                            <span className="activity-bet-amount">{formatCurrency(activity.amount)}</span>
+                            {activity.outcome === 'won' && (
+                              <span className="activity-profit won">+{formatCurrency(activity.potential_win - activity.amount)}</span>
+                            )}
+                            {activity.outcome === 'lost' && (
+                              <span className="activity-profit lost">-{formatCurrency(activity.amount)}</span>
+                            )}
+                            {activity.status === 'pending' && (
+                              <span className="activity-potential">→ {formatCurrency(activity.potential_win)}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="activity-footer">
-                      <span className={`activity-status status-${activity.status === 'pending' ? 'pending' : activity.outcome}`}>
-                        {activity.status === 'pending'
-                          ? '⏳ Pending'
-                          : activity.outcome === 'won'
-                          ? '✅ Won'
-                          : '❌ Lost'}
-                      </span>
-                      {activity.outcome === 'won' && (
-                        <span className="activity-profit won">+{formatCurrency(activity.potential_win - activity.amount)}</span>
-                      )}
-                      {activity.outcome === 'lost' && (
-                        <span className="activity-profit lost">-{formatCurrency(activity.amount)}</span>
-                      )}
-                      {activity.status === 'pending' && (
-                        <span className="activity-potential">
-                          Potential: +{formatCurrency(activity.potential_win - activity.amount)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <p className="empty-text">No recent picks</p>

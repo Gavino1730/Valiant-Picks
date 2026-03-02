@@ -20,6 +20,7 @@ router.post('/', authenticateToken, async (req, res) => {
     gameDate,
     gameTime,
     location,
+    gameType,
     winningOdds,
     losingOdds,
     spread,
@@ -59,10 +60,11 @@ router.post('/', authenticateToken, async (req, res) => {
     const result = await Game.create({
       teamType,
       homeTeam,
-      awayTeam,
+      awayTeam: awayTeam || 'TBD',
       gameDate,
       gameTime,
       location,
+      gameType: gameType || null,
       winningOdds: parseFloat(winningOdds),
       losingOdds: parseFloat(losingOdds),
       spread: spread ? parseFloat(spread) : null,
@@ -106,6 +108,28 @@ router.get('/admin/all', authenticateToken, async (req, res) => {
     res.json(games);
   } catch (err) {
     res.status(500).json({ error: 'Error fetching games: ' + err.message });
+  }
+});
+
+// Public: Get all games for schedule display (ordered by date, regardless of visibility)
+router.get('/schedule', async (req, res) => {
+  try {
+    const { teamType } = req.query;
+    const { supabase } = require('../supabase');
+    let query = supabase
+      .from('games')
+      .select('*')
+      .order('game_date', { ascending: true });
+
+    if (teamType) {
+      query = query.eq('team_type', teamType);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    res.json(data || []);
+  } catch (err) {
+    res.status(500).json({ error: 'Error fetching schedule: ' + err.message });
   }
 });
 
@@ -328,6 +352,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
     gameDate,
     gameTime,
     location,
+    gameType,
     winningOdds,
     losingOdds,
     spread,
@@ -346,10 +371,11 @@ router.put('/:id', authenticateToken, async (req, res) => {
     await Game.update(req.params.id, {
       teamType,
       homeTeam,
-      awayTeam,
+      awayTeam: awayTeam || 'TBD',
       gameDate,
       gameTime,
       location,
+      gameType: gameType || null,
       winningOdds: winningOdds ? parseFloat(winningOdds) : null,
       losingOdds: losingOdds ? parseFloat(losingOdds) : null,
       spread: spread ? parseFloat(spread) : null,

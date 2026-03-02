@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS games (
   result TEXT,           -- 'win', 'loss', or NULL
   home_score INTEGER,
   away_score INTEGER,
-  type TEXT DEFAULT 'game',
+  type TEXT DEFAULT 'Non League', -- 'Non League', 'League', 'Tournament'
   winning_odds DECIMAL(4, 2) DEFAULT 1.00,
   losing_odds DECIMAL(4, 2) DEFAULT 1.00,
   spread DECIMAL(4, 1),
@@ -1029,3 +1029,14 @@ DROP TABLE payout_tracking;
 COMMIT;
 -- or: ROLLBACK;
 */
+
+-- ============================================================
+-- MIGRATIONS  (run these in Supabase SQL Editor on existing DBs)
+-- ============================================================
+
+-- 2026-03: Update games.type default from 'game' to 'Non League'
+--          and populate any existing games that still have the old default.
+ALTER TABLE games ALTER COLUMN type SET DEFAULT 'Non League';
+
+-- Rename leftover 'game' values to 'Non League' (old default)
+UPDATE games SET type = 'Non League' WHERE type = 'game' OR type IS NULL;

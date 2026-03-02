@@ -48,7 +48,8 @@ function AdminPanel() {
     awayTeam: '',
     gameDate: '',
     gameTime: '',
-    location: '',
+    location: 'Home',
+    gameType: 'Non League',
     winningOdds: '',
     losingOdds: '',
     spread: '',
@@ -198,6 +199,8 @@ function AdminPanel() {
       awayTeam: game.away_team || '',
       gameDate: game.game_date,
       gameTime: game.game_time || '',
+      location: game.location || 'Home',
+      gameType: game.type || 'Non League',
       winningOdds: game.winning_odds || '',
       losingOdds: game.losing_odds || '',
       spreadOdds: game.spread_odds || '',
@@ -218,6 +221,7 @@ function AdminPanel() {
         gameDate: editingGame.gameDate,
         gameTime: editingGame.gameTime,
         location: editingGame.location,
+        gameType: editingGame.gameType,
         winningOdds: editingGame.winningOdds,
         losingOdds: editingGame.losingOdds,
         spread: editingGame.spread,
@@ -1026,15 +1030,29 @@ function AdminPanel() {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="location">Location</label>
-                    <input 
-                      id="location" 
-                      type="text" 
-                      name="location" 
-                      value={gameForm.location} 
+                    <label htmlFor="location">Home / Away</label>
+                    <select
+                      id="location"
+                      name="location"
+                      value={gameForm.location}
                       onChange={handleGameFormChange}
-                      placeholder="Home or Away"
-                    />
+                    >
+                      <option value="Home">Home</option>
+                      <option value="Away">Away</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="gameType">Game Type</label>
+                    <select
+                      id="gameType"
+                      name="gameType"
+                      value={gameForm.gameType}
+                      onChange={handleGameFormChange}
+                    >
+                      <option value="Non League">Non League</option>
+                      <option value="League">League</option>
+                      <option value="Tournament">Tournament</option>
+                    </select>
                   </div>
                 </div>
 
@@ -1115,8 +1133,19 @@ function AdminPanel() {
                     <input type="text" name="gameTime" value={editingGame.gameTime} onChange={handleEditingGameChange} />
                   </div>
                   <div className="form-group">
-                    <label>Location</label>
-                    <input type="text" name="location" value={editingGame.location} onChange={handleEditingGameChange} />
+                    <label>Home / Away</label>
+                    <select name="location" value={editingGame.location || 'Home'} onChange={handleEditingGameChange}>
+                      <option value="Home">Home</option>
+                      <option value="Away">Away</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Game Type</label>
+                    <select name="gameType" value={editingGame.gameType || 'Non League'} onChange={handleEditingGameChange}>
+                      <option value="Non League">Non League</option>
+                      <option value="League">League</option>
+                      <option value="Tournament">Tournament</option>
+                    </select>
                   </div>
                 </div>
                 <div className="form-row">
@@ -1180,6 +1209,7 @@ function AdminPanel() {
                         {game.game_date}
                         {game.game_time ? ` • ${formatTime(game.game_time)}` : ''}
                         {game.location ? ` • ${game.location}` : ' • TBD'}
+                        {game.type ? ` • ${game.type}` : ''}
                         {game.team_type ? ` • ${game.team_type}` : ''}
                       </div>
                     </div>

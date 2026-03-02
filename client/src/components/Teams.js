@@ -7,6 +7,7 @@ function Teams() {
   const [contentTab, setContentTab] = useState('roster'); // 'schedule' or 'roster'
   const [teams, setTeams] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [scheduleGames, setScheduleGames] = useState([]);
 
   const getHardcodedTeams = useCallback(() => {
     return [
@@ -21,33 +22,7 @@ function Teams() {
         coach_name: 'Bryan Fraser',
         coach_bio: 'Head Coach Bryan Fraser brings 11 seasons of experience with a disciplined, defense-first approach.',
         description: 'A balanced roster that values spacing, tempo, and connected team defense. The focus is on efficient possessions and consistent execution.',
-        schedule: [
-          { result: 'W', score: '83-58', type: 'Non League', date: '12/3/25', time: '7:30 pm', opponent: 'Knappa', location: 'Away' },
-          { result: 'W', score: '88-41', type: 'Non League', date: '12/5/25', time: '7:30 pm', opponent: 'Gladstone', location: 'Home' },
-          { result: 'L', score: '69-90', type: 'Non League', date: '12/9/25', time: '7:00 pm', opponent: 'Scappoose', location: 'Away' },
-          { result: 'W', score: '73-45', type: 'Non League', date: '12/12/25', time: '6:00 pm', opponent: 'Pleasant Hill', location: 'Home' },
-          { result: 'W', score: '87-65', type: 'Non League', date: '12/15/25', time: '7:30 pm', opponent: 'Banks', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Non League', date: '12/22/25', time: '2:30 pm', opponent: 'Tillamook', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Tournament', date: '12/28/25', time: '12:30 pm', opponent: 'Jefferson', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Tournament', date: '12/29/25', time: '11:45 am', opponent: 'Mid Pacific, HI', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Tournament', date: '12/30/25', time: '6:45 pm', opponent: 'Regis', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Non League', date: '1/3/26', time: '3:00 pm', opponent: 'Western Christian', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/6/26', time: '7:30 pm', opponent: 'Horizon Christian, Tualatin', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/8/26', time: '7:30 pm', opponent: 'Westside Christian', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/10/26', time: '6:30 pm', opponent: 'De La Salle North Catholic', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/13/26', time: '7:30 pm', opponent: 'Oregon Episcopal', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/16/26', time: '7:30 pm', opponent: 'Catlin Gabel', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/20/26', time: '7:30 pm', opponent: 'Riverside, WLWV', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/22/26', time: '7:30 pm', opponent: 'Portland Adventist Academy', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/24/26', time: '6:30 pm', opponent: 'Horizon Christian, Tualatin', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/27/26', time: '7:30 pm', opponent: 'Westside Christian', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/30/26', time: '7:30 pm', opponent: 'De La Salle North Catholic', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '2/3/26', time: '7:30 pm', opponent: 'Oregon Episcopal', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '2/6/26', time: '7:30 pm', opponent: 'Catlin Gabel', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '2/10/26', time: '6:00 pm', opponent: 'Riverside, WLWV', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '2/12/26', time: '7:30 pm', opponent: 'Portland Adventist Academy', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Non League', date: '2/14/26', time: 'Noon', opponent: 'Neah Kah Nie', location: 'Home' }
-        ],
+        schedule: [],
         players: [
           { number: 1, name: 'Cooper Bonnett', position: 'G', grade: '12', height: '5\'10"', bio: 'Senior guard and primary ball-handler who sets the pace and creates looks for teammates.' },
           { number: 2, name: 'Alex Post', position: 'G', grade: '11', height: '6\'1"', bio: 'Scoring guard with range and touch, reliable in late-clock situations.' },
@@ -75,33 +50,7 @@ function Teams() {
         coach_name: 'Patrick Thomas',
         coach_bio: 'Head Coach Patrick Thomas emphasizes conditioning, communication, and disciplined execution.',
         description: 'An up-tempo team that values pressure defense, ball movement, and depth. The approach is consistent energy with smart rotations.',
-        schedule: [
-          { result: 'W', score: '44-31', type: 'Non League', date: '12/3/25', time: '6:00 pm', opponent: 'Knappa', location: 'Away' },
-          { result: 'W', score: '56-7', type: 'Non League', date: '12/5/25', time: '6:00 pm', opponent: 'Gladstone', location: 'Home' },
-          { result: 'W', score: '44-16', type: 'Non League', date: '12/9/25', time: '5:30 pm', opponent: 'Scappoose', location: 'Away' },
-          { result: 'W', score: '57-28', type: 'Non League', date: '12/12/25', time: '7:30 pm', opponent: 'Pleasant Hill', location: 'Home' },
-          { result: 'L', score: '25-46', type: 'Non League', date: '12/15/25', time: '6:00 pm', opponent: 'Banks', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Non League', date: '12/22/25', time: '5:00 pm', opponent: 'Santiam Christian', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'Tournament', date: '12/28/25', time: '7:30 pm', opponent: 'Regis', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Tournament', date: '12/29/25', time: '3:15 pm', opponent: 'Jefferson', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Tournament', date: '12/30/25', time: '3:15 pm', opponent: 'Sutherlin', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Non League', date: '1/2/26', time: '5:30 pm', opponent: 'Seaside', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/6/26', time: '6:00 pm', opponent: 'Horizon Christian, Tualatin', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/8/26', time: '6:00 pm', opponent: 'Westside Christian', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/10/26', time: '5:00 pm', opponent: 'De La Salle North Catholic', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/13/26', time: '6:00 pm', opponent: 'Oregon Episcopal', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/16/26', time: '6:00 pm', opponent: 'Catlin Gabel', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Non League', date: '1/19/26', time: '6:00 pm', opponent: 'Country Christian', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/22/26', time: '6:00 pm', opponent: 'Portland Adventist Academy', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/24/26', time: '5:00 pm', opponent: 'Horizon Christian, Tualatin', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/27/26', time: '6:00 pm', opponent: 'Westside Christian', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '1/30/26', time: '6:00 pm', opponent: 'De La Salle North Catholic', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '2/3/26', time: '6:00 pm', opponent: 'Oregon Episcopal', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '2/6/26', time: '6:00 pm', opponent: 'Catlin Gabel', location: 'Away' },
-          { result: 'Scheduled', score: '-', type: 'Non League', date: '2/9/26', time: '7:00 pm', opponent: 'Prairie, WA', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'League', date: '2/12/26', time: '6:00 pm', opponent: 'Portland Adventist Academy', location: 'Home' },
-          { result: 'Scheduled', score: '-', type: 'Non League', date: '2/14/26', time: '10:30 am', opponent: 'Neah Kah Nie', location: 'Home' }
-        ],
+        schedule: [],
         players: [
           { number: 2, name: 'Brooke Wilson', position: 'G', grade: '12', height: '5\'6"', bio: 'Senior guard and spot-up shooter with consistent range.' },
           { number: 4, name: 'Rachel Pippin', position: 'G', grade: '9', height: '5\'3"', bio: 'Young guard with strong handle and on-ball defense.' },
@@ -155,6 +104,12 @@ function Teams() {
   useEffect(() => {
     fetchTeams();
   }, [fetchTeams]);
+
+  useEffect(() => {
+    apiClient.get('/games/schedule')
+      .then(res => setScheduleGames(Array.isArray(res.data) ? res.data : []))
+      .catch(() => setScheduleGames([]));
+  }, []);
 
   const TeamSection = ({ team }) => {
     const rosterStorageKey = `teamsRosterExpanded:${team.id}`;
@@ -398,28 +353,82 @@ function Teams() {
                 <div>Opponent</div>
                 <div>Location</div>
               </div>
-              {(team.schedule || []).map((game, idx) => {
+              {(() => {
+                // Fuzzy match: handles 'Boys Basketball' === 'Boys Basketball',
+                // or mismatches like 'Boys' vs 'Boys Basketball'
+                const tt = (team.type || '').toLowerCase();
+                const teamGames = scheduleGames.filter(g => {
+                  const gt = (g.team_type || '').toLowerCase();
+                  return gt === tt || gt.includes(tt) || tt.includes(gt);
+                });
+
                 const formatDate = (dateStr) => {
                   if (!dateStr) return '';
-                  const parts = dateStr.split('/');
+                  const parts = dateStr.split('-');
                   if (parts.length !== 3) return dateStr;
-                  const [m, d, y] = parts;
-                  return `${(m || '').padStart(2, '0')}/${(d || '').padStart(2, '0')}/${y}`;
+                  const [y, m, d] = parts;
+                  return `${parseInt(m, 10)}/${parseInt(d, 10)}/${y.slice(2)}`;
                 };
-                return (
-                <div key={idx} className={`schedule-row ${game.result === 'W' ? 'win' : game.result === 'L' ? 'loss' : 'scheduled'}`}>
-                  <div className="result">{game.result}</div>
-                  <div className="mobile-content">
-                    <div className="opponent-main">vs. {game.opponent}</div>
-                    <div className="game-date">{formatDate(game.date)}</div>
-                  </div>
-                  <div className="location-badge">{game.location}</div>
-                  <div className="desktop-only">{game.score}</div>
-                  <div className="desktop-only">{game.type}</div>
-                  <div className="desktop-only">{game.time}</div>
-                </div>
-              );
-              })}
+
+                const formatTime = (timeStr) => {
+                  if (!timeStr) return '';
+                  const [h, m] = timeStr.split(':');
+                  const hour = parseInt(h, 10);
+                  const min = m || '00';
+                  const ampm = hour >= 12 ? 'pm' : 'am';
+                  const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+                  return `${displayHour}:${min} ${ampm}`;
+                };
+
+                if (teamGames.length === 0) {
+                  return (
+                    <div className="schedule-row scheduled" style={{ padding: '1rem', textAlign: 'center', gridColumn: '1 / -1' }}>
+                      No games scheduled yet.
+                    </div>
+                  );
+                }
+
+                return teamGames.map((game) => {
+                  const isValiantsHome = game.home_team && game.home_team.toLowerCase().includes('valiant');
+                  const isValiantsAway = game.away_team && game.away_team.toLowerCase().includes('valiant');
+                  const opponent = isValiantsHome
+                    ? (game.away_team || 'TBD')
+                    : isValiantsAway
+                      ? (game.home_team || 'TBD')
+                      : (game.away_team || 'TBD');
+
+                  const valiantsScore = isValiantsHome ? game.home_score : game.away_score;
+                  const opponentScore = isValiantsHome ? game.away_score : game.home_score;
+
+                  let result = 'Scheduled';
+                  let score = '-';
+
+                  if (game.status === 'completed' && game.result) {
+                    const valiWon = game.result.toLowerCase().includes('valiant');
+                    result = valiWon ? 'W' : 'L';
+                  } else if (game.status === 'in-progress') {
+                    result = 'Live';
+                  }
+
+                  if (valiantsScore != null && opponentScore != null && game.status === 'completed') {
+                    score = `${valiantsScore}-${opponentScore}`;
+                  }
+
+                  return (
+                    <div key={game.id} className={`schedule-row ${result === 'W' ? 'win' : result === 'L' ? 'loss' : 'scheduled'}`}>
+                      <div className="result">{result}</div>
+                      <div className="mobile-content">
+                        <div className="opponent-main">vs. {opponent}</div>
+                        <div className="game-date">{formatDate(game.game_date)}</div>
+                      </div>
+                      <div className="location-badge">{game.location || ''}</div>
+                      <div className="desktop-only">{score}</div>
+                      <div className="desktop-only">{game.type || ''}</div>
+                      <div className="desktop-only">{formatTime(game.game_time)}</div>
+                    </div>
+                  );
+                });
+              })()}
             </div>
           </div>
         )}

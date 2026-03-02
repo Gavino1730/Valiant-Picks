@@ -225,31 +225,33 @@ html {
 @media (max-width: 768px) {
   .back-to-bay-banner {
     border-radius: 10px;
-    padding: 0.5rem 0.85rem 0.75rem;
+    padding: 0.6rem 1rem 0.8rem;
     margin-bottom: 1rem;
   }
 
   .bay-banner-top-badge {
-    font-size: 0.64rem;
-    padding: 0.18rem 0.75rem;
+    font-size: 0.66rem;
+    padding: 0.2rem 0.85rem;
+    letter-spacing: 0.07em;
   }
 
   .bay-banner-content {
-    gap: 0.6rem;
-    margin-bottom: 0.6rem;
+    gap: 0.5rem;
+    margin-bottom: 0.65rem;
   }
 
   .bay-banner-trophy {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
   .bay-banner-headline {
-    font-size: 1.2rem;
-    letter-spacing: 0.04em;
+    font-size: 1.25rem;
+    letter-spacing: 0.03em;
+    word-break: break-word;
   }
 
   .bay-banner-sub {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
   }
 
   .bay-banner-teams-row {
@@ -257,11 +259,68 @@ html {
   }
 
   .bay-team-card {
-    padding: 0.45rem 0.35rem;
+    padding: 0.5rem 0.4rem;
+  }
+
+  .bay-team-label {
+    font-size: 0.8rem;
+  }
+
+  .bay-team-status {
+    font-size: 0.72rem;
+  }
+
+  .bay-team-note {
+    font-size: 0.64rem;
+  }
+
+  .bay-banner-wave {
+    font-size: 0.74rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-to-bay-banner {
+    padding: 0.55rem 0.75rem 0.7rem;
+  }
+
+  .bay-banner-top-badge {
+    font-size: 0.6rem;
+    padding: 0.18rem 0.7rem;
+    letter-spacing: 0.06em;
+  }
+
+  /* Hide side trophies on very small screens to give headline room */
+  .bay-banner-content .bay-banner-trophy {
+    display: none;
+  }
+
+  .bay-banner-headline {
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+  }
+
+  .bay-banner-sub {
+    font-size: 0.78rem;
+  }
+
+  /* Stack team cards vertically on small phones */
+  .bay-banner-teams-row {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .bay-team-card {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.6rem;
   }
 
   .bay-team-label {
     font-size: 0.78rem;
+    flex-shrink: 0;
   }
 
   .bay-team-status {
@@ -270,10 +329,12 @@ html {
 
   .bay-team-note {
     font-size: 0.62rem;
+    display: none;
   }
 
   .bay-banner-wave {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
+    line-height: 1.4;
   }
 }
 
@@ -1790,36 +1851,29 @@ html {
 
   .upcoming-games-grid,
   .recent-activity-grid {
-    gap: 0.75rem;
+    gap: 0.6rem;
   }
 
   .upcoming-game-card,
   .activity-card {
-    padding: 1rem;
+    padding: 0.7rem 0.85rem;
     border-radius: 8px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
-  .activity-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+  .activity-matchup-text {
+    font-size: 0.82rem;
   }
 
-  .activity-team {
-    font-size: 0.95rem;
-  }
-
-  .activity-bet-amount {
-    font-size: 1.1rem;
-    font-weight: 600;
+  .activity-details-row {
+    flex-wrap: wrap;
+    gap: 0.4rem;
   }
 
   .activity-footer {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 0.5rem;
     align-items: center;
   }
 
@@ -3706,6 +3760,26 @@ html {
   font-weight: 600;
 }
 
+.gender-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+.gender-badge-boys {
+  background: rgba(74, 144, 226, 0.2);
+  color: #7ab8f5;
+  border: 1px solid rgba(74, 144, 226, 0.4);
+}
+
+.gender-badge-girls {
+  background: rgba(220, 100, 180, 0.2);
+  color: #f09fd4;
+  border: 1px solid rgba(220, 100, 180, 0.4);
+}
+
 /* Recent Activity Section */
 .recent-activity-section h3 {
   color: #4a90e2;
@@ -3722,34 +3796,171 @@ html {
 
 .activity-card {
   background: rgba(31, 78, 153, 0.08);
-  border: 2px solid rgba(74, 144, 226, 0.3);
+  border: 1px solid rgba(74, 144, 226, 0.25);
+  border-left: 4px solid rgba(74, 144, 226, 0.5);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.activity-card.outcome-won {
+  border-left-color: #4caf50;
+  background: rgba(76, 175, 80, 0.06);
+}
+
+.activity-card.outcome-lost {
+  border-left-color: #ef5350;
+  background: rgba(239, 83, 80, 0.06);
+}
+
+.activity-card.outcome-pending {
+  border-left-color: #ffc107;
+  background: rgba(255, 193, 7, 0.05);
 }
 
 .activity-card:hover {
-  background: rgba(31, 78, 153, 0.12);
-  border-color: rgba(74, 144, 226, 0.5);
-  transform: translateX(4px);
+  background: rgba(31, 78, 153, 0.13);
+  transform: translateX(3px);
 }
 
-.activity-header {
+.activity-card.outcome-won:hover { background: rgba(76, 175, 80, 0.1); }
+.activity-card.outcome-lost:hover { background: rgba(239, 83, 80, 0.1); }
+.activity-card.outcome-pending:hover { background: rgba(255, 193, 7, 0.08); }
+
+/* Matchup top row */
+.activity-matchup-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.activity-matchup-teams {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-matchup-text {
+  color: #e9f1ff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity-vs {
+  color: #4a90e2;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 0 0.25rem;
+}
+
+.activity-matchup-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.activity-gender-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 20px;
+}
+
+.activity-gender-badge.boys {
+  background: rgba(74, 144, 226, 0.2);
+  color: #7ab8f5;
+  border: 1px solid rgba(74, 144, 226, 0.35);
+}
+
+.activity-gender-badge.girls {
+  background: rgba(220, 100, 180, 0.2);
+  color: #f09fd4;
+  border: 1px solid rgba(220, 100, 180, 0.35);
+}
+
+.activity-game-date {
+  color: #8a9bb5;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* Bottom details row */
+.activity-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.activity-pick-info {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.activity-pick-label {
+  color: #6b7c93;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .activity-team {
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 
+.activity-confidence {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.activity-confidence.confidence-high {
+  background: rgba(239, 83, 80, 0.2);
+  color: #ff7b79;
+  border: 1px solid rgba(239, 83, 80, 0.4);
+}
+
+.activity-confidence.confidence-medium {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffd54f;
+  border: 1px solid rgba(255, 193, 7, 0.4);
+}
+
+.activity-confidence.confidence-low {
+  background: rgba(74, 144, 226, 0.2);
+  color: #7ab8f5;
+  border: 1px solid rgba(74, 144, 226, 0.4);
+}
+
+.activity-result-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.activity-amounts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+}
+
 .activity-bet-amount {
-  color: #b8c5d6;
-  font-size: 0.95rem;
+  color: #8a9bb5;
+  font-size: 0.78rem;
   font-weight: 600;
 }
 
@@ -3761,32 +3972,33 @@ html {
 }
 
 .activity-status {
-  padding: 0.4rem 0.75rem;
+  padding: 0.3rem 0.6rem;
   border-radius: 6px;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .activity-status.status-pending {
   background: rgba(255, 193, 7, 0.25);
   color: #ffc107;
-  border: 2px solid rgba(255, 193, 7, 0.5);
+  border: 1px solid rgba(255, 193, 7, 0.5);
 }
 
 .activity-status.status-won {
   background: rgba(76, 175, 80, 0.25);
   color: #4caf50;
-  border: 2px solid rgba(76, 175, 80, 0.5);
+  border: 1px solid rgba(76, 175, 80, 0.5);
 }
 
 .activity-status.status-lost {
   background: rgba(239, 83, 80, 0.25);
   color: #ef5350;
-  border: 2px solid rgba(239, 83, 80, 0.5);
+  border: 1px solid rgba(239, 83, 80, 0.5);
 }
 
 .activity-profit {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 800;
 }
 
@@ -3800,8 +4012,8 @@ html {
 
 .activity-potential {
   color: #64b5f6;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 /* Sidebar Cards */
