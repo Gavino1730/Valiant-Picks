@@ -19,7 +19,7 @@
 }
 
 .admin-layout {
-  background: var(--admin-bg);
+  background: transparent;
   min-height: 100vh;
   color: var(--admin-text);
   scroll-behavior: smooth;

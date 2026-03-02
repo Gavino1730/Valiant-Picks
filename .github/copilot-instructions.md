@@ -1,10 +1,18 @@
-# Valiant Picks - Copilot Instructions
+# School Picks - Copilot Instructions
 
 ## Project Overview
-Full-stack sports betting website for Valiant sports. Users bet with virtual Valiant Bucks on games and prop bets. Admins manage games, teams, players, and resolve bets.
+Open-source, full-stack virtual sports betting platform template for schools and organizations. Users bet with virtual currency (default: "Campus Bucks") on games and prop bets. Admins manage games, teams, players, and resolve bets. Designed to be forked and rebranded by any school.
 
-## Live Deployment
-- **Domain**: https://valiantpicks.com
+## Customization Placeholders
+When deploying for a specific school, replace these across the codebase:
+- App name: `School Picks` → e.g. `Eagle Picks`, `Titan Picks`
+- Currency: `Campus Bucks` → e.g. `Eagle Bucks`, `Titan Coins`
+- Primary color: `#0066cc` → your school's brand color
+- Domain: `your-domain.com` → your actual domain
+- Logo: `client/public/assets/logo.png` → your school logo
+
+## Live Deployment (Your Instance)
+- **Domain**: https://your-domain.com
 - **Backend**: Railway (Express.js API)
 - **Frontend**: Cloudflare Pages (React)
 - **Database**: Supabase PostgreSQL
@@ -14,7 +22,7 @@ Full-stack sports betting website for Valiant sports. Users bet with virtual Val
 - **Frontend**: React 18.2.0 with Axios on Cloudflare Pages
 - **Authentication**: JWT tokens (not Supabase Auth) with bcryptjs
 - **Database**: Supabase PostgreSQL with RLS policies
-- **Branding**: Valiant Picks - #004f9e blue, white, transparent logo
+- **Branding**: Customizable — swap logo, primary color, currency name
 
 ## Key Features
 1. **Betting System**: Confidence-based (Low 1.2x, Medium 1.5x, High 2.0x)
@@ -52,17 +60,13 @@ NODE_ENV=development
 
 ### Setup Database
 1. Create Supabase project
-2. Run **START_FRESH.sql** in Supabase SQL Editor (for new database)
-   - OR run **FINAL_DEPLOYMENT.sql** (for fixing existing database)
+2. Run **database/MASTER_SETUP.sql** in Supabase SQL Editor
 3. Tables and RLS policies will be created automatically
 
 ### Run Locally
 ```bash
-# Terminal 1 - Backend
+# Both servers
 npm run dev
-
-# Terminal 2 - Frontend  
-npm run client
 ```
 
 Server: http://localhost:5000  
@@ -128,7 +132,7 @@ Client: http://localhost:3000
 ## Database Schema
 
 ### Users Table
-- `id` (UUID PK), `username`, `email`, `password`, `balance` (default: 1000 Valiant Bucks), `is_admin`, `created_at`, `updated_at`
+- `id` (UUID PK), `username`, `email`, `password`, `balance` (default: 1000), `is_admin`, `created_at`, `updated_at`
 
 ### Games Table
 - `id` (PK), `team_id` (FK), `team_type`, `home_team`, `away_team`, `game_date`, `game_time`, `location`, `status`, `result`, `home_score`, `away_score`, `type`, `winning_odds`, `losing_odds`, `spread`, `spread_odds`, `over_under`, `over_odds`, `under_odds`, `notes`, `is_visible` (BOOLEAN), `created_at`, `updated_at`
@@ -147,33 +151,33 @@ Client: http://localhost:3000
 
 ## Design
 
-### Color Scheme
-- Primary Blue: #004f9e
-- Secondary: #003d7a (darker blue for hover states)
-- Background: #f5f5f5
-- White: #ffffff
+### Default Color Scheme (Customize for your school)
+- Primary: `#0066cc`
+- Secondary: `#004f99` (darker shade for hover states)
+- Background: `#f5f5f5`
+- White: `#ffffff`
 
 ### Logo
-- Located at: `/client/public/assets/logo.png`
-- Displays in navbar with "Valiant Picks" text
+- Located at: `client/public/assets/logo.png`
+- Replace with your school logo (transparent PNG recommended)
 
 ## Deployment
-- **Backend**: Railway (https://valiantpicks.com backend)
-- **Frontend**: Cloudflare Pages (https://valiantpicks.com frontend)
+- **Backend**: Railway
+- **Frontend**: Cloudflare Pages
 - **Database**: Supabase PostgreSQL
-- **Domain**: valiantpicks.com (custom domain)
+- **Domain**: Custom domain (configure in Railway + Cloudflare)
 
 ## Database Setup
-- **START_FRESH.sql**: Complete database setup from scratch (run when Supabase is blank)
-- **FINAL_DEPLOYMENT.sql**: Fix RLS policies and add missing columns (run on existing database)
+- **database/MASTER_SETUP.sql**: Complete database setup (run once on a fresh Supabase project)
 
 ## Important Notes
 - Always change `JWT_SECRET` in production
-- Use HTTPS in production (valiantpicks.com has SSL)
-- RLS policies use "allow all" approach - backend validates with JWT
+- Use HTTPS in production
+- RLS policies use "allow all" approach — backend validates with JWT
 - Game visibility toggle controls which games users can bet on
 - Bet resolution automatically calculates winnings and credits user balance
 - All user inputs validated server-side
 - Admin account must be created through registration then promoted via SQL
 - Leaderboard is public and filters out admin account
 - Balance validation prevents betting more than available balance
+

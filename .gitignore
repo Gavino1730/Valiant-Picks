@@ -133,7 +133,6 @@ coverage/
 
 # Test outputs
 test-results/
-playwright-report/
 cypress/videos/
 cypress/screenshots/
 

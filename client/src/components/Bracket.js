@@ -81,6 +81,8 @@ function Bracket({ updateUser, gender = 'boys' }) {
   }, [games]);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const loadBracket = async () => {
       const cacheKey = `bracket_picks_${gender}`;
       const cached = getCached(cacheKey);
@@ -103,29 +105,28 @@ function Bracket({ updateUser, gender = 'boys' }) {
 
       try {
         // Single combined request: bracket + teams + games + user's entry
-        const response = await apiClient.get(`/brackets/active?gender=${gender}&include=entry`);
+        const response = await apiClient.get(`/brackets/active?gender=${gender}&include=entry`, {
+          signal: controller.signal
+        });
         const payload = response.data;
 
         if (!payload?.bracket) {
           setBracket(null);
           setTeams([]);
           setGames([]);
+          setLoading(false);
           return;
         }
 
+        const entryData = payload.entry || null;
+        const normalizedPicks = entryData ? normalizePicks(entryData.picks) : { round1: {}, round2: {}, round3: {}, round4: {} };
+
+        // Batch all updates together to avoid intermediate renders
         setBracket(payload.bracket);
         setTeams(payload.teams || []);
         setGames(payload.games || []);
-
-        const entryData = payload.entry || null;
-        if (entryData) {
-          const normalized = normalizePicks(entryData.picks);
-          setEntry(entryData);
-          setPicks(normalized);
-        } else {
-          setEntry(null);
-          setPicks({ round1: {}, round2: {}, round3: {}, round4: {} });
-        }
+        setEntry(entryData);
+        setPicks(normalizedPicks);
 
         setCache(cacheKey, {
           bracket: payload.bracket,
@@ -134,13 +135,15 @@ function Bracket({ updateUser, gender = 'boys' }) {
           entry: entryData
         });
       } catch (err) {
+        if (err.name === 'CanceledError' || err.name === 'AbortError') return;
         setError(err.response?.data?.error || 'Failed to load bracket');
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     };
 
     loadBracket();
+    return () => controller.abort();
   }, [gender]);
 
   const getTeamName = (teamId) => {

@@ -75,60 +75,68 @@ function ActualBracket({ gender = 'boys' }) {
 
   const totalRounds = sortedRounds.length;
 
-  const loadBracket = async () => {
-    const cacheKey = `bracket_actual_${gender}`;
-    const cached = getCached(cacheKey);
-    if (cached) {
-      setBracket(cached.bracket);
-      setTeams(cached.teams);
-      setGames(cached.games);
-      setUserPicks(cached.userPicks);
-      setHasEntry(cached.hasEntry || false);
-      setLoading(false);
-      // Still refresh in background (no loading flash)
-    } else {
-      setLoading(true);
-    }
+  useEffect(() => {
+    const controller = new AbortController();
 
-    try {
-      // Single combined request: bracket + teams + games + user's entry
-      const response = await apiClient.get(`/brackets/active?gender=${gender}&include=entry`);
-      const payload = response.data;
-
-      if (!payload?.bracket) {
-        setBracket(null);
-        setTeams([]);
-        setGames([]);
-        setUserPicks(null);
-        setHasEntry(false);
-        return;
+    const loadBracket = async () => {
+      const cacheKey = `bracket_actual_${gender}`;
+      const cached = getCached(cacheKey);
+      if (cached) {
+        setBracket(cached.bracket);
+        setTeams(cached.teams);
+        setGames(cached.games);
+        setUserPicks(cached.userPicks);
+        setHasEntry(cached.hasEntry || false);
+        setLoading(false);
+        // Still refresh in background (no loading flash)
+      } else {
+        setLoading(true);
       }
 
-      setBracket(payload.bracket);
-      setTeams(payload.teams || []);
-      setGames(payload.games || []);
-      const picks = payload.entry?.picks || null;
-      const entryExists = !!payload.entry;
-      setUserPicks(picks);
-      setHasEntry(entryExists);
+      try {
+        // Single combined request: bracket + teams + games + user's entry
+        const response = await apiClient.get(`/brackets/active?gender=${gender}&include=entry`, {
+          signal: controller.signal
+        });
+        const payload = response.data;
 
-      setCache(cacheKey, {
-        bracket: payload.bracket,
-        teams: payload.teams || [],
-        games: payload.games || [],
-        userPicks: picks,
-        hasEntry: entryExists
-      });
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to load bracket');
-    } finally {
-      setLoading(false);
-    }
-  };
+        if (!payload?.bracket) {
+          setBracket(null);
+          setTeams([]);
+          setGames([]);
+          setUserPicks(null);
+          setHasEntry(false);
+          setLoading(false);
+          return;
+        }
 
-  useEffect(() => {
+        const picks = payload.entry?.picks || null;
+        const entryExists = !!payload.entry;
+
+        // Batch all updates together to avoid intermediate renders
+        setBracket(payload.bracket);
+        setTeams(payload.teams || []);
+        setGames(payload.games || []);
+        setUserPicks(picks);
+        setHasEntry(entryExists);
+
+        setCache(cacheKey, {
+          bracket: payload.bracket,
+          teams: payload.teams || [],
+          games: payload.games || [],
+          userPicks: picks,
+          hasEntry: entryExists
+        });
+      } catch (err) {
+        if (err.name === 'CanceledError' || err.name === 'AbortError') return;
+        setError(err.response?.data?.error || 'Failed to load bracket');
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    };
+
     loadBracket();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => controller.abort();
   }, [gender]);
 
   const getTeamName = (teamId) => {

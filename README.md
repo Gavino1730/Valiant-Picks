@@ -1,16 +1,14 @@
 <div align="center">
-  <img src="client/public/assets/logo.png" alt="Valiant Picks Logo" width="200"/>
+  <img src="client/public/assets/logo.png" alt="School Picks Logo" width="200"/>
   
-  # Valiant Picks
+  # School Picks
   
-  ### 🏀 A Full-Stack Virtual Sports Betting Platform
+  ### 🏀 A Full-Stack Virtual Sports Betting Platform for Schools & Organizations
   
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
   [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
   [![React](https://img.shields.io/badge/React-18.2.0-61dafb.svg)](https://reactjs.org/)
   [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-336791.svg)](https://supabase.com/)
-  
-  **Live Demo**: [valiantpicks.com](https://valiantpicks.com)
   
   [Features](#features) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Contributing](#contributing)
   
@@ -20,9 +18,9 @@
 
 ## 📖 About
 
-**Valiant Picks** is a comprehensive sports betting platform designed for schools, clubs, or organizations to run virtual betting games with their community. Users receive virtual currency ("Valiant Bucks") to place confidence-based bets on games, compete on leaderboards, and track their betting history.
+**School Picks** is an open-source, fully customizable virtual sports betting platform designed for schools, clubs, or any organization to run fun, consequence-free betting games with their community. Users receive virtual currency ("Campus Bucks" — rename to anything you like) to place confidence-based bets on games, compete on leaderboards, and track their history.
 
-Originally built for Valiant Academy, this platform is **fully customizable** and ready to rebrand for your organization.
+This platform is **a blank template** — swap in your school name, logo, colors, and sports in minutes.
 
 ### 🎯 Key Highlights
 
@@ -40,7 +38,7 @@ Originally built for Valiant Academy, this platform is **fully customizable** an
 
 ### For Users
 - 🎮 **Create Account & Login** - Secure JWT authentication
-- 💰 **Virtual Currency** - Start with 1,000 Valiant Bucks
+- 💰 **Virtual Currency** - Start with 1,000 Campus Bucks (rename to anything)
 - 🎲 **Confidence Betting** - Choose Low/Medium/High risk levels
 - 📊 **Live Leaderboard** - See top performers in real-time
 - 📜 **Betting History** - Track all your bets and transactions
@@ -71,8 +69,8 @@ Originally built for Valiant Academy, this platform is **fully customizable** an
 
 1️⃣ **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/valiant-picks.git
-cd valiant-picks
+git clone https://github.com/yourusername/school-picks.git
+cd school-picks
 ```
 
 2️⃣ **Set up Supabase Database**
@@ -140,7 +138,7 @@ UPDATE users SET is_admin = true WHERE email = 'your-email@example.com';
 ### Project Structure
 
 ```
-valiant-picks/
+school-picks/
 ├── 📁 client/               # React frontend application
 │   ├── public/             # Static assets
 │   ├── src/
@@ -165,22 +163,27 @@ valiant-picks/
 │   └── copilot-instructions.md
 │
 ├── 📄 README.md           # You are here
-├── 📄 CONTRIBUTING.md     # Contribution guidelines
 ├── 📄 LICENSE             # MIT License
-├── 📄 CHANGELOG.md        # Version history
-├── 📄 API.md              # API documentation
-├── 📄 DEPLOYMENT.md       # Deployment guide
-└── 📄 SECURITY.md         # Security policy
+├── 📄 package.json        # Root dependencies
+│
+└── 📁 docs/               # All documentation
+    ├── README.md          # Docs index
+    ├── QUICK_START.md     # Getting started guide
+    ├── API.md             # API reference
+    ├── DEPLOYMENT.md      # Deployment guide
+    ├── CONTRIBUTING.md    # Contribution guidelines
+    ├── CHANGELOG.md       # Version history
+    ├── SECURITY.md        # Security policy
+    └── CODE_OF_CONDUCT.md # Community guidelines
 ```
 
 ### Additional Documentation
 
-- **[API Documentation](API.md)** - Complete API reference
-- **[Deployment Guide](DEPLOYMENT.md)** - How to deploy to production
-- **[SEO Implementation](SEO_IMPLEMENTATION.md)** - SEO optimization details
-- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute
-- **[Security Policy](SECURITY.md)** - Security guidelines
-- **[Changelog](CHANGELOG.md)** - Version history
+- **[API Documentation](docs/API.md)** - Complete API reference
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - How to deploy to production
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - How to contribute
+- **[Security Policy](docs/SECURITY.md)** - Security guidelines
+- **[Changelog](docs/CHANGELOG.md)** - Version history
 
 ---
 
@@ -218,26 +221,25 @@ valiant-picks/
 This project is designed to be easily customizable for your organization:
 
 ### 1. **Brand Name & Logo**
-- Replace logo in `client/public/assets/logo.png`
-- Update "Valiant Picks" references in:
-  - `client/src/App.js`
-  - `client/public/index.html`
-  - `package.json`
+- Replace logo in `client/public/assets/logo.png` with your school logo
+- Search & replace `School Picks` across the codebase with your app name
+- Update `client/public/index.html` title and meta tags
+- Update `package.json` name field
 
 ### 2. **Color Scheme**
-Edit `client/src/App.css`:
+Edit `client/src/App.css` (or `client/src/styles/design-system.css`):
 ```css
 :root {
-  --primary-color: #004f9e;      /* Change to your brand color */
-  --secondary-color: #003d7a;    /* Darker shade */
+  --primary-color: #0066cc;      /* Change to your school/brand color */
+  --secondary-color: #004f99;    /* Darker shade for hover states */
   --background: #f5f5f5;
 }
 ```
 
 ### 3. **Virtual Currency Name**
-- Default: "Valiant Bucks"
+- Default template value: "Campus Bucks"
 - Change in: `client/src/utils/currency.js`
-- Update references throughout components
+- Update references throughout components to match your chosen name (e.g. "Eagle Bucks", "Titan Coins", etc.)
 
 ### 4. **Starting Balance**
 - Default: 1,000 virtual bucks
@@ -286,7 +288,7 @@ Modify in game creation logic and database schema.
 - ✅ Input validation on client and server
 - ✅ Rate limiting (recommended for production)
 
-See [SECURITY.md](SECURITY.md) for detailed security information.
+See [docs/SECURITY.md](docs/SECURITY.md) for detailed security information.
 
 ---
 
@@ -297,7 +299,7 @@ See [SECURITY.md](SECURITY.md) for detailed security information.
 - **Backend**: Railway ($5/month recommended)
 - **Database**: Supabase (Free tier available)
 
-For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
+For detailed deployment instructions, see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ### Quick Production Checklist
 - [ ] Change `JWT_SECRET` to a strong random string
@@ -314,7 +316,7 @@ For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on:
+We welcome contributions! Please see [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for details on:
 - Code of conduct
 - Development setup
 - Pull request process
@@ -331,7 +333,7 @@ See [BUG_REPORT.md](BUG_REPORT.md) for current known issues and their status.
 
 ## 📝 Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
+See [docs/CHANGELOG.md](docs/CHANGELOG.md) for version history and release notes.
 
 ---
 
@@ -350,18 +352,18 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 👏 Acknowledgments
 
-- Built with ❤️ for Valiant Academy
-- Inspired by the need for safe, fun sports betting in schools
+- Built as an open template for any school or organization
+- Inspired by the need for safe, fun virtual sports betting in schools
 - Thanks to all contributors and testers
 
 ---
 
 ## 📞 Support
 
-- 🐛 **Bug Reports**: [Open an issue](https://github.com/yourusername/valiant-picks/issues)
-- 💡 **Feature Requests**: [Open an issue](https://github.com/yourusername/valiant-picks/issues)
+- 🐛 **Bug Reports**: [Open an issue](https://github.com/yourusername/school-picks/issues)
+- 💡 **Feature Requests**: [Open an issue](https://github.com/yourusername/school-picks/issues)
 - 📧 **Email**: your-email@example.com
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/yourusername/valiant-picks/discussions)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/yourusername/school-picks/discussions)
 
 ---
 
@@ -384,6 +386,8 @@ See [FUTURE_IMPROVEMENTS.txt](FUTURE_IMPROVEMENTS.txt) for planned features and 
   
   **⭐ If you find this project useful, please consider giving it a star on GitHub! ⭐**
   
-  Made with ❤️ by [Your Name](https://github.com/yourusername)
+  Made with ❤️ for schools everywhere — fork it, brand it, run it.
+  
+  [Your Name](https://github.com/yourusername)
   
 </div>

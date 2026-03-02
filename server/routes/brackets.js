@@ -796,7 +796,6 @@ router.post('/:id/entries', authenticateToken, async (req, res) => {
   const { picks } = req.body;
 
   try {
-      console.log(`[BRACKET] User ${req.user.id} posting to ${req.params.id}`);
     const { data: bracket, error: bracketError } = await supabase
       .from('brackets')
       .select('*')

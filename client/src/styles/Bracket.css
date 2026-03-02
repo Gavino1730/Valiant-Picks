@@ -1,6 +1,6 @@
 .bracket-page {
   padding: 32px 24px 48px;
-  background: var(--color-bg);
+  background: transparent;
 }
 
 .bracket-page--has-promo {
@@ -8,8 +8,7 @@
 }
 
 .bracket-page--girls {
-  background: radial-gradient(ellipse at top, rgba(232, 121, 160, 0.07) 0%, transparent 60%),
-    var(--color-bg);
+  background: radial-gradient(ellipse at top, rgba(232, 121, 160, 0.07) 0%, transparent 60%);
 }
 
 .bracket-page--girls .bracket-tab--active {
@@ -370,13 +369,14 @@
 .bracket-entry-summary {
   display: inline-flex;
   align-items: center;
-  gap: 16px;
+  gap: 32px;
   padding: 10px 14px;
   border-radius: 12px;
   background: rgba(11, 94, 215, 0.08);
   border: 1px solid rgba(11, 94, 215, 0.25);
   color: var(--color-text-primary);
   font-weight: 600;
+  margin-bottom: 20px;
 }
 
 .bracket-cta-banner {
@@ -2314,7 +2314,7 @@
   overflow-y: visible;
   padding: 24px 0;
   margin-bottom: 32px;
-  background: var(--color-bg);
+  background: transparent;
 }
 
 /* Round title styling */

@@ -5,7 +5,6 @@ import './styles/design-system.css';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import OnboardingModal from './components/OnboardingModal';
-import RivalryWeekPopup from './components/RivalryWeekPopup';
 import Footer from './components/Footer';
 import { ToastProvider, useToast } from './components/ToastProvider';
 import './styles/Toast.css';
@@ -487,26 +486,10 @@ function AppContent() {
     }
   }
 
-  // Rivalry Week Configuration - Toggle enabled to true/false
-  const rivalryWeekConfig = {
-    enabled: false, // Set to false to disable
-    gameInfo: {
-      opponent: 'OES',
-      date: 'This Tuesday!',
-      time: '7:30 PM',
-      location: 'Valiants Gym'
-    }
-  };
-
   return (
     <ToastProvider>
     <div className="app">
       <GiftBalanceWatcher user={currentUser} updateUser={updateUser} />
-      {/* Rivalry Week Popup */}
-      <RivalryWeekPopup 
-        enabled={rivalryWeekConfig.enabled}
-        gameInfo={rivalryWeekConfig.gameInfo}
-      />
 
       <nav className="navbar" ref={navbarRef}>
         <div className="nav-inner">

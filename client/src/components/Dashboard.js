@@ -13,16 +13,6 @@ import Achievements from './Achievements';
 import popupQueue from '../utils/popupQueue';
 
 function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
-  // TEMPORARILY DISABLED - balance state (used in commented-out CTA section)
-  // const [balance, setBalance] = useState(user?.balance || 0);
-
-  // Sync balance immediately when user prop changes
-  // useEffect(() => {
-  //   if (user?.balance !== undefined) {
-  //     setBalance(user.balance);
-  //   }
-  // }, [user?.balance]);
-
   // Detect mobile device
   useEffect(() => {
     const checkMobile = () => {
@@ -42,27 +32,10 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const winTimeoutRef = useRef(null);
   const lossTimeoutRef = useRef(null);
   const [previousBets, setPreviousBets] = useState([]);
-  // const [recentWinners, setRecentWinners] = useState([]); // TEMPORARILY DISABLED
   const [notificationsEnabled, setNotificationsEnabled] = useState(notificationService.isEnabled());
   const [showSpinWheel, setShowSpinWheel] = useState(false);
   const [hasCheckedSpinWheel, setHasCheckedSpinWheel] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  // TEMPORARILY DISABLED - stats state (used in commented-out stats overview section)
-  // const [stats, setStats] = useState({
-  //   totalBets: 0,
-  //   activeBets: 0,
-  //   wonBets: 0,
-  //   lostBets: 0,
-  //   winRate: 0,
-  //   totalWinnings: 0
-  // });
-
-  // Flex Schedule - HIDDEN FOR NOW
-  /* const [flexSchedule] = useState({
-    currentWeek: "5, 6, 7",
-    note: "Flex schedule rotates weekly"
-  }); */
-
   const parseLocalDateOnly = (dateStr) => {
     const [year, month, day] = (dateStr || '').split('-').map(Number);
     if (Number.isInteger(year) && Number.isInteger(month) && Number.isInteger(day)) {
@@ -142,48 +115,16 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
 
       setPreviousBets(userBets);
       setBets(userBets);
-      
-      // TEMPORARILY DISABLED - Calculate stats (stats state is disabled)
-      // const totalBets = userBets.length;
-      // const activeBets = userBets.filter(b => b.status === 'pending').length;
-      // const wonBets = userBets.filter(b => b.outcome === 'won').length;
-      // const lostBets = userBets.filter(b => b.outcome === 'lost').length;
-      // const winRate = totalBets > 0 ? Math.round((wonBets / (wonBets + lostBets)) * 100) || 0 : 0;
-      // const totalWinnings = userBets
-      //   .filter(b => b.outcome === 'won')
-      //   .reduce((sum, b) => sum + (b.potential_win - b.amount), 0);
-      
-      // TEMPORARILY DISABLED - setStats (stats state is disabled)
-      // setStats({
-      //   totalBets,
-      //   activeBets,
-      //   wonBets,
-      //   lostBets,
-      //   winRate,
-      //   totalWinnings
-      // });
     } catch (err) {
       console.error('Error fetching bets:', err);
     }
   }, [previousBets]);
-
-  // TEMPORARILY DISABLED - Recent Winners Feature
-  // const fetchRecentWinners = useCallback(async () => {
-  //   try {
-  //     const response = await apiClient.get('/bets/recent-winners?limit=15');
-  //     setRecentWinners(response.data || []);
-  //   } catch (err) {
-  //     console.error('Error fetching recent winners:', err);
-  //     setRecentWinners([]);
-  //   }
-  // }, []);
 
   useEffect(() => {
     // Fetch all data in parallel for faster initial load
     Promise.all([
       fetchGames(),
       fetchBets()
-      // fetchRecentWinners() // TEMPORARILY DISABLED
     ]);
     
     // Check if user should see spin wheel automatically
@@ -254,25 +195,13 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       }
     }, 60000);
     
-    // Poll recent winners every 30 seconds - TEMPORARILY DISABLED
-    // const winnersInterval = setInterval(async () => {
-    //   if (isActive && isPageVisible) {
-    //     try {
-    //       await fetchRecentWinners();
-    //     } catch (err) {
-    //       // Polling error - will retry
-    //     }
-    //   }
-    // }, 30000);
-    
     return () => {
       isActive = false;
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearInterval(betsInterval);
       clearInterval(gamesInterval);
-      // clearInterval(winnersInterval); // TEMPORARILY DISABLED
     };
-  }, [fetchGames, fetchBets, hasCheckedSpinWheel, user]); // fetchRecentWinners TEMPORARILY DISABLED
+  }, [fetchGames, fetchBets, hasCheckedSpinWheel, user]);
 
   const upcomingGames = React.useMemo(() => games.slice(0, 5), [games]);
   const recentActivity = React.useMemo(
@@ -294,8 +223,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
 
   // Handle daily reward claimed
   const handleDailyRewardClaimed = async (amount, newBalance, streak) => {
-    // TEMPORARILY DISABLED - setBalance (balance state is disabled)
-    // setBalance(newBalance);
     if (fetchUserProfile) {
       await fetchUserProfile();
     }
@@ -310,8 +237,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
 
   // Handle spin wheel prize
   const handleSpinWheelPrize = async (amount, newBalance) => {
-    // TEMPORARILY DISABLED - setBalance (balance state is disabled)
-    // setBalance(newBalance);
     if (fetchUserProfile) {
       await fetchUserProfile();
     }
@@ -319,8 +244,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
 
   // Handle achievement claimed
   const handleAchievementClaimed = async (amount, newBalance) => {
-    // TEMPORARILY DISABLED - setBalance (balance state is disabled)
-    // setBalance(newBalance);
     if (fetchUserProfile) {
       await fetchUserProfile();
     }
@@ -376,85 +299,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         </div>
       )}
 
-
-      {/* Recent Winners Section - TEMPORARILY HIDDEN
-      {recentWinners.length > 0 && (
-        <div className="recent-winners-banner">
-          <div className="recent-winners-header">
-            <span className="recent-winners-icon">🏆</span>
-            <h3>Recent Winners</h3>
-            <span className="recent-winners-pulse">🔴 LIVE</span>
-          </div>
-          <div className="recent-winners-carousel">
-            <div className="winners-scroll">
-              {recentWinners.concat(recentWinners).map((winner, index) => {
-                const profit = winner.potential_win - winner.amount;
-                return (
-                  <div key={`${winner.id}-${index}`} className="winner-card">
-                    <div className="winner-avatar">{winner.users?.username?.charAt(0).toUpperCase() || '?'}</div>
-                    <div className="winner-info">
-                      <div className="winner-username">{winner.users?.username || 'Anonymous'}</div>
-                      <div className="winner-details">
-                        <span className="winner-team">{winner.selected_team}</span>
-                        <span className="winner-multiplier">{winner.odds}x</span>
-                      </div>
-                    </div>
-                    <div className="winner-amount">
-                      <span className="winner-won-label">WON</span>
-                      <span className="winner-won-value">+{formatCurrency(profit)}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-      */}
-
-      {/* School Alerts - TEMPORARILY HIDDEN
-      {schoolAlerts.length > 0 && (
-        <div className="school-alerts">
-          {schoolAlerts.map(alert => (
-            <div key={alert.id} className={`alert-banner alert-${alert.type}`}>
-              <span className="alert-icon">
-                {alert.type === 'warning' && '⚠️'}
-                {alert.type === 'info' && 'ℹ️'}
-                {alert.type === 'success' && '✅'}
-              </span>
-              <span className="alert-message">{alert.message}</span>
-            </div>
-          ))}
-        </div>
-      )}
-      */}
-
-      {/* Stats Overview - Compact - TEMPORARILY HIDDEN
-      <div className="dashboard-stats-compact">
-        <div className="stat-compact">
-          <span className="stat-compact-value">{stats.totalBets}</span>
-          <span className="stat-compact-label">Total Picks</span>
-        </div>
-        <div className="stat-compact pending">
-          <span className="stat-compact-value">{stats.activeBets}</span>
-          <span className="stat-compact-label">Pending</span>
-        </div>
-        <div className="stat-compact won">
-          <span className="stat-compact-value">{stats.wonBets}</span>
-          <span className="stat-compact-label">Won</span>
-        </div>
-        <div className="stat-compact lost">
-          <span className="stat-compact-value">{stats.lostBets}</span>
-          <span className="stat-compact-label">Lost</span>
-        </div>
-        <div className="stat-compact profit" style={{borderColor: stats.totalWinnings >= 0 ? '#66bb6a' : '#ef5350'}}>
-          <span className="stat-compact-value" style={{color: stats.totalWinnings >= 0 ? '#81c784' : '#ef5350'}}>
-            {stats.totalWinnings >= 0 ? '+' : ''}{formatCurrency(stats.totalWinnings)}
-          </span>
-          <span className="stat-compact-label">Profit</span>
-        </div>
-      </div>
-      */}
 
       {/* Back to the Bay - State Playoffs Banner */}
       <div className="back-to-bay-banner">
@@ -515,25 +359,29 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               </div>
             ) : upcomingGames.length > 0 ? (
               <div className="upcoming-games-grid">
-                {upcomingGames.map(game => (
-                  <div key={game.id} className="upcoming-game-card">
-                    <div className="game-matchup-display">
-                      <span className="team-name">{game.home_team}</span>
-                      <span className="vs-divider">vs</span>
-                      <span className="team-name">{game.away_team}</span>
-                    </div>
-                    <div className="game-details-row">
-                      <span className="game-date-display">
-                        {parseLocalDateOnly(game.game_date)?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) || 'TBD'}
-                      </span>
-                      {game.team_type && (
-                        <span className={`gender-badge ${game.team_type === 'Girls Basketball' ? 'gender-badge-girls' : 'gender-badge-boys'}`}>
-                          {game.team_type === 'Girls Basketball' ? '♀ Girls' : '♂ Boys'}
+                {upcomingGames.map(game => {
+                  const isGirls = game.team_type === 'Girls Basketball';
+                  const isBoys = game.team_type === 'Boys Basketball';
+                  return (
+                    <div key={game.id} className={`upcoming-game-card${isGirls ? ' girls-game' : isBoys ? ' boys-game' : ''}`}>
+                      <div className="game-matchup-display">
+                        <span className="team-name">{game.home_team}</span>
+                        <span className="vs-divider">vs</span>
+                        <span className="team-name">{game.away_team}</span>
+                      </div>
+                      <div className="game-details-row">
+                        <span className="game-date-display">
+                          {parseLocalDateOnly(game.game_date)?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) || 'TBD'}
                         </span>
-                      )}
+                        {game.team_type && (
+                          <span className={`gender-badge ${isGirls ? 'gender-badge-girls' : 'gender-badge-boys'}`}>
+                            {isGirls ? '♀ Girls' : '♂ Boys'}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <p className="empty-text">No upcoming games</p>

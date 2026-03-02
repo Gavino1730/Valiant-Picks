@@ -1,6 +1,6 @@
 /* ===== ABOUT PAGE ===== */
 .about-page {
-  background: linear-gradient(135deg, #0f172a 0%, #1a1f35 100%);
+  background: transparent;
   min-height: 100vh;
   padding: 2rem;
   animation: fadeIn 0.4s ease;

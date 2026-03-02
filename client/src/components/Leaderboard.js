@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../utils/axios';
 import '../styles/Leaderboard.css';
-import '../styles/Skeleton.css';
 import { formatCurrency, formatNumber, formatSignedCurrency, formatSignedPercentage, getValueClass } from '../utils/formatting';
-import { LeaderboardRowSkeleton } from './Skeleton';
 
 function Leaderboard() {
   const [users, setUsers] = useState([]);
@@ -148,40 +146,7 @@ function Leaderboard() {
   };
 
   if (loading) {
-    return (
-      <div className="leaderboard-page ds-page">
-        <div className="leaderboard-header page-header">
-          <h1>Leaderboard</h1>
-        </div>
-        <div className="leaderboard-table-wrapper ds-table-wrapper">
-          <table className="leaderboard-table ds-table">
-            <colgroup>
-              <col style={{ width: '64px' }} />
-              <col style={{ width: '280px' }} />
-              <col style={{ width: '140px' }} />
-              <col style={{ width: '140px' }} />
-              <col style={{ width: '120px' }} />
-              <col style={{ width: '110px' }} />
-            </colgroup>
-            <thead>
-              <tr>
-                <th className="th-rank">Rank</th>
-                <th>Player</th>
-                <th className="th-right u-align-right">Balance</th>
-                <th className="th-right u-align-right">Net Profit</th>
-                <th className="th-center u-align-center">Record</th>
-                <th className="th-right u-align-right">ROI</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({ length: 10 }).map((_, idx) => (
-                <LeaderboardRowSkeleton key={idx} />
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   const usersWithStats = getUsersWithStats();

@@ -1,16 +1,16 @@
 :root {
-  --color-bg: #111827;
-  --color-surface: #1b1f26;
-  --color-surface-raised: #242a34;
-  --color-border: rgba(255, 255, 255, 0.16);
-  --color-text-primary: #eef2f7;
-  --color-text-secondary: #b6c2d2;
-  --color-brand: #004f9e;
-  --color-brand-strong: #0b5ed7;
-  --color-success: #4caf50;
-  --color-danger: #ef5350;
-  --color-warning: #f7c95b;
-  --color-info: #56b1ff;
+  --color-bg: #0d1628;
+  --color-surface: #172038;
+  --color-surface-raised: #1e2c4a;
+  --color-border: rgba(100, 150, 255, 0.22);
+  --color-text-primary: #f0f5ff;
+  --color-text-secondary: #b8ccee;
+  --color-brand: #2563eb;
+  --color-brand-strong: #3b82f6;
+  --color-success: #22c55e;
+  --color-danger: #f43f5e;
+  --color-warning: #fbbf24;
+  --color-info: #38bdf8;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -22,7 +22,7 @@
   --radius-md: 10px;
   --radius-lg: 16px;
 
-  --shadow-sm: 0 6px 16px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 6px 20px rgba(0, 0, 0, 0.28);
 
   --font-title: 2rem;
   --font-section: 1.4rem;
@@ -34,16 +34,16 @@
 
   --card-radius: var(--radius-md);
   --card-shadow: var(--shadow-sm);
-  --card-shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.26);
+  --card-shadow-hover: 0 10px 28px rgba(0, 0, 0, 0.35);
   --card-border: var(--color-border);
-  --icon-color: rgba(255, 255, 255, 0.9);
+  --icon-color: rgba(255, 255, 255, 0.95);
 
-  --header-bg: #0f1722;
-  --header-border: rgba(255, 255, 255, 0.1);
-  --header-text: #eef2f7;
-  --header-muted: rgba(238, 242, 247, 0.7);
-  --header-hover: rgba(255, 255, 255, 0.06);
-  --header-active: rgba(255, 255, 255, 0.1);
+  --header-bg: #111e38;
+  --header-border: rgba(80, 130, 255, 0.2);
+  --header-text: #f0f5ff;
+  --header-muted: rgba(240, 245, 255, 0.75);
+  --header-hover: rgba(255, 255, 255, 0.09);
+  --header-active: rgba(255, 255, 255, 0.14);
 }
 
 .ds-container,
@@ -73,9 +73,12 @@
 
 .page-header h1,
 .page-header h2 {
-  color: var(--color-text-primary);
+  color: transparent;
+  background: linear-gradient(90deg, #60a5fa 0%, #a78bfa 55%, #f472b6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.4px;
   line-height: 1.2;
   margin: 0;
@@ -100,12 +103,14 @@
   box-shadow: var(--shadow-sm);
   padding: var(--space-5);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  /* subtle inner highlight so cards pop off the background */
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .card:hover,
 .ds-card:hover {
-  border-color: rgba(255, 255, 255, 0.26);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(11, 94, 215, 0.18);
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(59, 130, 246, 0.25), 0 0 40px rgba(26, 94, 245, 0.1);
   transform: translateY(-3px);
 }
 
@@ -116,7 +121,7 @@
   border-radius: var(--radius-md);
   padding: var(--space-4) var(--space-4);
   text-align: center;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
 .btn,
@@ -296,14 +301,14 @@
 .leaderboard-table thead th {
   position: sticky;
   top: 0;
-  background: rgba(10, 14, 20, 0.95);
-  color: var(--color-text-secondary);
+  background: #172038;
+  color: #b8ccee;
   font-size: var(--font-micro);
   font-weight: 700;
   letter-spacing: 0.6px;
   text-transform: uppercase;
   padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(100, 150, 255, 0.22);
   text-align: left;
 }
 

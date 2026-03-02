@@ -17,7 +17,6 @@ class NotificationService {
   // Request notification permission from user
   async requestPermission() {
     if (!('Notification' in window)) {
-      console.log('This browser does not support notifications');
       return false;
     }
 

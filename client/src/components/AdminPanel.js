@@ -1189,7 +1189,7 @@ function AdminPanel() {
           ) : (
             <div className="admin-game-grid">
               {activeGames.map(game => (
-                <div key={game.id} className="admin-game-card">
+                <div key={game.id} className={`admin-game-card ${game.team_type === 'Girls Basketball' ? 'admin-game-card--girls' : 'admin-game-card--boys'}`}>
                   <div className="admin-game-card__header">
                     <label className="admin-checkbox">
                       <input
@@ -1200,24 +1200,27 @@ function AdminPanel() {
                       <span></span>
                     </label>
                     <div className="admin-game-card__title">
+                      <div className="admin-game-card__top-row">
+                        <span className={`admin-gender-badge ${game.team_type === 'Girls Basketball' ? 'admin-gender-badge--girls' : 'admin-gender-badge--boys'}`}>
+                          {game.team_type === 'Girls Basketball' ? '♀ Girls' : '♂ Boys'}
+                        </span>
+                        <div className="admin-game-card__badges">
+                          <AdminBadge variant="neutral">{game.status || 'Scheduled'}</AdminBadge>
+                          <AdminBadge variant={game.is_visible === false ? 'warning' : 'success'}>
+                            {game.is_visible === false ? 'Hidden' : 'Visible'}
+                          </AdminBadge>
+                        </div>
+                      </div>
                       <div className="admin-game-card__teams">
                         <span className="team">{game.home_team}</span>
-                        {game.away_team && <span className="vs">vs</span>}
-                        {game.away_team && <span className="team">{game.away_team}</span>}
+                        {game.away_team && <><span className="vs">vs</span><span className="team">{game.away_team}</span></>}
                       </div>
                       <div className="admin-game-card__meta">
                         {game.game_date}
                         {game.game_time ? ` • ${formatTime(game.game_time)}` : ''}
-                        {game.location ? ` • ${game.location}` : ' • TBD'}
+                        {game.location ? ` • ${game.location}` : ''}
                         {game.type ? ` • ${game.type}` : ''}
-                        {game.team_type ? ` • ${game.team_type}` : ''}
                       </div>
-                    </div>
-                    <div className="admin-game-card__badges">
-                      <AdminBadge variant="neutral">{game.status || 'Scheduled'}</AdminBadge>
-                      <AdminBadge variant={game.is_visible === false ? 'warning' : 'success'}>
-                        {game.is_visible === false ? 'Hidden' : 'Visible'}
-                      </AdminBadge>
                     </div>
                   </div>
 
@@ -1274,7 +1277,7 @@ function AdminPanel() {
               {showCompletedGames && (
                 <div className="admin-completed-list">
                   {completedGames.map(game => (
-                    <div key={game.id} className="admin-completed-row">
+                    <div key={game.id} className={`admin-completed-row ${game.team_type === 'Girls Basketball' ? 'admin-completed-row--girls' : 'admin-completed-row--boys'}`}>
                       <label className="admin-checkbox">
                         <input
                           type="checkbox"
@@ -1284,15 +1287,17 @@ function AdminPanel() {
                         <span></span>
                       </label>
                       <div className="admin-completed-main">
+                        <span className={`admin-gender-badge admin-gender-badge--sm ${game.team_type === 'Girls Basketball' ? 'admin-gender-badge--girls' : 'admin-gender-badge--boys'}`}>
+                          {game.team_type === 'Girls Basketball' ? '♀ Girls' : '♂ Boys'}
+                        </span>
                         <div className="admin-game-card__teams">
                           <span className="team">{game.home_team}</span>
-                          {game.away_team && <span className="vs">vs</span>}
-                          {game.away_team && <span className="team">{game.away_team}</span>}
+                          {game.away_team && <><span className="vs">vs</span><span className="team">{game.away_team}</span></>}
                         </div>
                         <div className="admin-game-card__meta">
                           {game.game_date}
                           {game.game_time ? ` • ${formatTime(game.game_time)}` : ''}
-                          {game.location ? ` • ${game.location}` : ' • TBD'}
+                          {game.location ? ` • ${game.location}` : ''}
                         </div>
                       </div>
                       <div className="admin-completed-winner">
