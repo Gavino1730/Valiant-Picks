@@ -417,14 +417,12 @@ function Teams() {
                   return (
                     <div key={game.id} className={`schedule-row ${result === 'W' ? 'win' : result === 'L' ? 'loss' : 'scheduled'}`}>
                       <div className="result">{result}</div>
-                      <div className="mobile-content">
-                        <div className="opponent-main">vs. {opponent}</div>
-                        <div className="game-date">{formatDate(game.game_date)}</div>
-                      </div>
-                      <div className="location-badge">{game.location || ''}</div>
-                      <div className="desktop-only">{score}</div>
-                      <div className="desktop-only">{game.type || ''}</div>
-                      <div className="desktop-only">{formatTime(game.game_time)}</div>
+                      <div>{score}</div>
+                      <div>{game.type || ''}</div>
+                      <div>{formatDate(game.game_date)}</div>
+                      <div>{formatTime(game.game_time)}</div>
+                      <div>vs. {opponent}</div>
+                      <div>{game.location || ''}</div>
                     </div>
                   );
                 });
