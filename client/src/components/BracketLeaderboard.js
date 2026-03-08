@@ -129,10 +129,27 @@ function BracketLeaderboard({ gender = 'boys' }) {
         <button className={`bracket-sub-tab${gender === 'girls' ? ' bracket-sub-tab--active' : ''}`} onClick={() => navigate('/girls-bracket-leaderboard')}>Girls</button>
       </div>
 
+      {bracket.status === 'completed' && rankedEntries.length > 0 && (
+        <div className={`bracket-winner-banner${gender === 'girls' ? ' bracket-winner-banner--girls' : ''}`}>
+          <div className="bracket-winner-trophy">🏆</div>
+          <div className="bracket-winner-text">
+            <div className="bracket-winner-congrats">Congratulations!</div>
+            <div className="bracket-winner-name">
+              {rankedEntries[0].users?.username || 'Champion'}
+            </div>
+            <div className="bracket-winner-sub">
+              {gender === 'girls' ? 'Girls' : 'Boys'} Bracket Champion &mdash; {rankedEntries[0].points} pts
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="leaderboard-header">
         <div>
           <h1>{gender === 'girls' ? 'Girls' : 'Boys'} Bracket Leaderboard</h1>
-          <p className="subtitle">Points and payouts for submitted brackets</p>
+          <p className="subtitle">
+            {bracket.status === 'completed' ? 'Season complete — final standings' : 'Points and payouts for submitted brackets'}
+          </p>
 
         </div>
         <div className="leaderboard-actions">
@@ -160,7 +177,7 @@ function BracketLeaderboard({ gender = 'boys' }) {
           <div className="leaderboard-row leaderboard-row--empty">No brackets submitted yet.</div>
         )}
         {rankedEntries.map((entry, index) => (
-          <div className="leaderboard-row" key={entry.id}>
+          <div className={`leaderboard-row${index === 0 && bracket.status === 'completed' ? ' leaderboard-row--champion' : ''}`} key={entry.id}>
             <span>{index + 1}</span>
             <span>{entry.users?.username || 'Player'}</span>
             <span className="align-right">{entry.points}</span>

@@ -1027,3 +1027,136 @@
     font-size: 0.9rem;
   }
 }
+
+/* ===== FROZEN LEADERBOARD ===== */
+
+.frozen-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  background: linear-gradient(135deg, #0066cc, #004f99);
+  color: #fff;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  vertical-align: middle;
+  margin-left: 0.6rem;
+}
+
+.frozen-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: linear-gradient(135deg, #0a1f3c, #0d2b55);
+  border: 1px solid rgba(0, 102, 204, 0.4);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  color: #e2eaf6;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 16px rgba(0, 102, 204, 0.15);
+}
+
+.frozen-banner__icon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.frozen-banner__text strong {
+  color: #fff;
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 1rem;
+}
+
+/* ===== CONGRATULATIONS PODIUM ===== */
+
+.congrats-podium {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.congrats-card {
+  flex: 1;
+  min-width: 180px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1.5rem 1rem;
+  border-radius: 14px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.07);
+  animation: fadeIn 0.5s ease both;
+}
+
+.podium-gold {
+  background: linear-gradient(145deg, #2a1f00, #3d2e00);
+  border-color: rgba(255, 195, 0, 0.35);
+  box-shadow: 0 4px 20px rgba(255, 195, 0, 0.12);
+}
+
+.podium-silver {
+  background: linear-gradient(145deg, #1a1d22, #23272f);
+  border-color: rgba(180, 192, 210, 0.3);
+  box-shadow: 0 4px 16px rgba(180, 192, 210, 0.08);
+}
+
+.podium-bronze {
+  background: linear-gradient(145deg, #1f1308, #2c1c0e);
+  border-color: rgba(205, 127, 50, 0.3);
+  box-shadow: 0 4px 16px rgba(205, 127, 50, 0.08);
+}
+
+.congrats-medal {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.congrats-rank {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  margin-top: 0.1rem;
+}
+
+.congrats-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  word-break: break-word;
+}
+
+.congrats-balance {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #22c55e;
+}
+
+.congrats-message {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .congrats-podium {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .congrats-card {
+    max-width: 100%;
+    width: 100%;
+  }
+}

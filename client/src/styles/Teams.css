@@ -5,6 +5,220 @@
   background: transparent;
 }
 
+/* ── Season Result Banners ── */
+.season-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 18px 24px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.champion-banner {
+  background: linear-gradient(135deg, #1a0e00 0%, #3d2200 35%, #5a3300 65%, #3d2200 100%);
+  border: 2px solid #c8860a;
+  box-shadow: 0 0 22px rgba(200, 134, 10, 0.4);
+}
+
+.fourth-place-banner {
+  background: linear-gradient(135deg, #1a3a5c 0%, #1e5f99 50%, #1a3a5c 100%);
+  border: 2px solid #4a9edd;
+  box-shadow: 0 0 12px rgba(74, 158, 221, 0.3);
+}
+
+.season-banner-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.season-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.season-banner-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.champion-banner .season-banner-title {
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(255, 200, 50, 0.7), 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.season-banner-sub {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  color: #fff;
+}
+
+.champion-banner .season-banner-sub {
+  color: #f0c060;
+  opacity: 1;
+}
+
+.season-final-label {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+/* ── Season Summary Card ── */
+.season-summary-card {
+  background: var(--color-surface, #1a1a2e);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 28px 28px 22px;
+  margin-bottom: 24px;
+}
+
+.season-summary-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary, #aaa);
+  margin: 0 0 12px;
+}
+
+.season-summary-intro {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--color-text, #ddd);
+  margin: 0 0 22px;
+}
+
+.season-summary-intro strong {
+  color: #fff;
+}
+
+.season-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.season-summary-team {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.season-summary-team-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.boys-header {
+  color: #f5c842;
+}
+
+.girls-header {
+  color: #4a9edd;
+}
+
+.season-result-badge {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+
+.champion-badge {
+  background: rgba(200, 134, 10, 0.25);
+  color: #f5c842;
+  border: 1px solid #c8860a;
+}
+
+.fourth-badge {
+  background: rgba(74, 158, 221, 0.2);
+  color: #4a9edd;
+  border: 1px solid #4a9edd;
+}
+
+.season-summary-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.season-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.season-stat-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.season-stat-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.season-summary-coach {
+  font-size: 0.8rem;
+  color: #999;
+  margin: 0;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 12px;
+}
+
+.season-summary-coach strong {
+  color: #ccc;
+}
+
+@media (max-width: 640px) {
+  .season-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .season-summary-card {
+    padding: 20px 16px 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .season-banner {
+    gap: 10px;
+    padding: 14px 16px;
+  }
+  .season-banner-icon {
+    font-size: 1.5rem;
+  }
+  .season-banner-title {
+    font-size: 1.05rem;
+  }
+}
+
 /* Tablet responsive */
 @media (max-width: 1024px) and (min-width: 768px) {
   .teams-page {

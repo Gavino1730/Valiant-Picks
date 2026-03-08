@@ -1,0 +1,248 @@
+/* ===== THANK YOU MODAL ===== */
+.ty-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2100;
+  backdrop-filter: blur(4px);
+  animation: ty-fadeIn 0.35s ease;
+}
+
+@keyframes ty-fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.ty-modal {
+  position: relative;
+  background: linear-gradient(160deg, #0d1f38 0%, #0f2847 60%, #0a1a2e 100%);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  border-radius: 18px;
+  max-width: 520px;
+  width: 92%;
+  padding: 2.5rem 2.2rem 2rem;
+  text-align: center;
+  box-shadow:
+    0 0 0 1px rgba(255, 215, 0, 0.08),
+    0 12px 40px rgba(0, 0, 0, 0.55),
+    0 0 80px rgba(0, 102, 204, 0.12);
+  overflow: hidden;
+  animation: ty-slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes ty-slideUp {
+  from { opacity: 0; transform: translateY(32px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+/* ---- Decorative drifting stars ---- */
+.ty-star {
+  position: absolute;
+  color: rgba(255, 215, 0, 0.2);
+  font-size: 1.1rem;
+  pointer-events: none;
+  animation: ty-drift 8s ease-in-out infinite;
+}
+.ty-star-1 { top: 10%;  left: 8%;   animation-delay: 0s;    font-size: 0.9rem; }
+.ty-star-2 { top: 18%;  right: 10%; animation-delay: 1.5s;  font-size: 1.3rem; }
+.ty-star-3 { bottom: 22%; left: 12%;  animation-delay: 3s;    font-size: 0.75rem; color: rgba(100,180,255,0.2); }
+.ty-star-4 { bottom: 14%; right: 8%;  animation-delay: 4.5s;  font-size: 1rem;  color: rgba(100,180,255,0.2); }
+.ty-star-5 { top: 50%;  right: 5%;  animation-delay: 2.2s;  font-size: 0.8rem; }
+
+@keyframes ty-drift {
+  0%, 100% { transform: translateY(0)   rotate(0deg);   opacity: 0.4; }
+  50%       { transform: translateY(-8px) rotate(15deg); opacity: 0.9; }
+}
+
+/* ---- Close button ---- */
+.ty-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #a0b4cc;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  transition: background 0.2s, color 0.2s;
+  z-index: 1;
+}
+.ty-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+/* ---- Trophy badge ---- */
+.ty-badge {
+  font-size: 3.2rem;
+  margin-bottom: 0.6rem;
+  display: block;
+  filter: drop-shadow(0 0 14px rgba(255, 215, 0, 0.45));
+  animation: ty-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes ty-pulse {
+  0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 14px rgba(255,215,0,0.45)); }
+  50%       { transform: scale(1.08); filter: drop-shadow(0 0 22px rgba(255,215,0,0.7));  }
+}
+
+/* ---- Title ---- */
+.ty-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #ffffff 30%, #ffd700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ty-subtitle {
+  font-size: 0.9rem;
+  color: #6b8aaa;
+  margin: 0 0 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ---- Body copy ---- */
+.ty-body {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.ty-body p {
+  font-size: 0.97rem;
+  line-height: 1.65;
+  color: #b8cfe0;
+  margin: 0;
+}
+
+.ty-body strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.ty-body em {
+  font-style: italic;
+  color: #d4ecff;
+}
+
+.ty-highlight {
+  background: rgba(255, 215, 0, 0.07);
+  border-left: 3px solid rgba(255, 215, 0, 0.5);
+  padding: 0.65rem 0.9rem;
+  border-radius: 0 8px 8px 0;
+  color: #e8d87a !important;
+  font-weight: 500;
+}
+
+/* ---- Footer button ---- */
+.ty-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.ty-btn {
+  background: linear-gradient(135deg, #0066cc 0%, #004f99 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.85rem 2.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 102, 204, 0.4);
+  letter-spacing: 0.01em;
+}
+
+.ty-btn:hover {
+  background: linear-gradient(135deg, #0077e6 0%, #0060b8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 102, 204, 0.55);
+}
+
+.ty-btn:active {
+  transform: translateY(0);
+}
+
+/* ---- Thin gold separator line inside modal ---- */
+.ty-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,215,0,0.45), transparent);
+  border-radius: 0 0 2px 2px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  .ty-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .ty-modal {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 18px 18px 0 0;
+    padding: 1.6rem 1.2rem 1.4rem;
+    max-height: 88svh;
+    max-height: 88vh;
+    overflow-y: auto;
+    animation: ty-slideUpMobile 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes ty-slideUpMobile {
+    from { opacity: 0; transform: translateY(100%); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
+
+  .ty-title {
+    font-size: 1.5rem;
+  }
+
+  .ty-badge {
+    font-size: 2.4rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .ty-subtitle {
+    font-size: 0.78rem;
+    margin-bottom: 1rem;
+  }
+
+  .ty-body p {
+    font-size: 0.92rem;
+  }
+
+  .ty-btn {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    min-height: 48px;
+    font-size: 1rem;
+  }
+
+  /* hide decorative stars to keep mobile clean */
+  .ty-star {
+    display: none;
+  }
+}

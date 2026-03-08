@@ -6,23 +6,9 @@ import '../styles/Confetti.css';
 import { formatCurrency } from '../utils/currency';
 import Confetti from './Confetti';
 import { UpcomingGameSkeleton } from './Skeleton';
-import notificationService from '../utils/notifications';
-import DailyReward from './DailyReward';
-import SpinWheel from './SpinWheel';
 import Achievements from './Achievements';
-import popupQueue from '../utils/popupQueue';
 
 function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
-  // Detect mobile device
-  useEffect(() => {
-    const checkMobile = () => {
-      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-      setIsMobile(isMobileDevice);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
   const [games, setGames] = useState([]);
   const [bets, setBets] = useState([]);
   const [gamesLoading, setGamesLoading] = useState(true);
@@ -32,10 +18,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
   const winTimeoutRef = useRef(null);
   const lossTimeoutRef = useRef(null);
   const [previousBets, setPreviousBets] = useState([]);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(notificationService.isEnabled());
-  const [showSpinWheel, setShowSpinWheel] = useState(false);
-  const [hasCheckedSpinWheel, setHasCheckedSpinWheel] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const parseLocalDateOnly = (dateStr) => {
     const [year, month, day] = (dateStr || '').split('-').map(Number);
     if (Number.isInteger(year) && Number.isInteger(month) && Number.isInteger(day)) {
@@ -80,14 +62,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               setWinNotification({ team: newBet.selected_team, amount: profit });
               setShowConfetti(true);
               
-              // Send browser notification
-              notificationService.betResolved({
-                outcome: 'won',
-                team: newBet.selected_team,
-                amount: formatCurrency(profit),
-                potentialWin: newBet.potential_win
-              });
-              
               if (winTimeoutRef.current) clearTimeout(winTimeoutRef.current);
               winTimeoutRef.current = setTimeout(() => {
                 setWinNotification(null);
@@ -95,14 +69,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
               }, 1500);
             } else if (newBet.outcome === 'lost') {
               setLossNotification({ team: newBet.selected_team, amount: newBet.amount });
-              
-              // Send browser notification
-              notificationService.betResolved({
-                outcome: 'lost',
-                team: newBet.selected_team,
-                amount: formatCurrency(newBet.amount),
-                potentialWin: 0
-              });
               
               if (lossTimeoutRef.current) clearTimeout(lossTimeoutRef.current);
               lossTimeoutRef.current = setTimeout(() => {
@@ -126,43 +92,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       fetchGames(),
       fetchBets()
     ]);
-    
-    // Check if user should see spin wheel automatically
-    const checkAutoOpenSpinWheel = async () => {
-      if (hasCheckedSpinWheel) return;
-      // Only check for authenticated users
-      if (!user) {
-        setHasCheckedSpinWheel(true);
-        return;
-      }
-      
-      try {
-        const response = await apiClient.get('/wheel/can-spin');
-        const today = new Date().toDateString();
-        const lastShown = localStorage.getItem('lastSpinWheelShown');
-        
-        // Auto-open if user has spins and hasn't seen it today
-        if (response.data.canSpin && lastShown !== today) {
-          // Add to popup queue with priority 3 (show third, after daily reward)
-          popupQueue.enqueue(
-            'spinWheel',
-            () => {
-              setShowSpinWheel(true);
-              localStorage.setItem('lastSpinWheelShown', today);
-            },
-            3, // Priority: 3 (show last)
-            0 // No initial delay (queue handles timing)
-          );
-        }
-        setHasCheckedSpinWheel(true);
-      } catch (error) {
-        console.error('Error checking spin wheel availability:', error);
-        // Mark as checked even on error to prevent infinite retries
-        setHasCheckedSpinWheel(true);
-      }
-    };
-    
-    checkAutoOpenSpinWheel();
     
     // Create abort controller to handle unmounting gracefully
     let isActive = true;
@@ -201,46 +130,13 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
       clearInterval(betsInterval);
       clearInterval(gamesInterval);
     };
-  }, [fetchGames, fetchBets, hasCheckedSpinWheel, user]);
+  }, [fetchGames, fetchBets]);
 
   const upcomingGames = React.useMemo(() => games.slice(0, 5), [games]);
   const recentActivity = React.useMemo(
     () => [...bets].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 6),
     [bets]
   );
-
-  // Handle notification toggle
-  const handleNotificationToggle = async () => {
-    const result = await notificationService.toggle();
-    setNotificationsEnabled(result);
-  };
-
-  // Handle notification banner dismiss
-  const handleNotificationBannerDismiss = () => {
-    notificationService.dismissBanner();
-    setNotificationsEnabled(true); // Hide banner by setting to truthy value
-  };
-
-  // Handle daily reward claimed
-  const handleDailyRewardClaimed = async (amount, newBalance, streak) => {
-    if (fetchUserProfile) {
-      await fetchUserProfile();
-    }
-    
-    // Check for streak achievements
-    try {
-      await apiClient.post('/achievements/check-all-games');
-    } catch (error) {
-      console.error('Error checking achievements:', error);
-    }
-  };
-
-  // Handle spin wheel prize
-  const handleSpinWheelPrize = async (amount, newBalance) => {
-    if (fetchUserProfile) {
-      await fetchUserProfile();
-    }
-  };
 
   // Handle achievement claimed
   const handleAchievementClaimed = async (amount, newBalance) => {
@@ -253,29 +149,32 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
     <div className="dashboard school-dashboard ds-page">
       <Confetti show={showConfetti} onComplete={() => setShowConfetti(false)} />
       
-      {/* Daily Reward Modal */}
-      <DailyReward onRewardClaimed={handleDailyRewardClaimed} user={user} />
+      {/* Daily Reward Modal - DISABLED */}
+      {/* <DailyReward onRewardClaimed={handleDailyRewardClaimed} user={user} /> */}
       
       {/* Achievements Popup */}
       <Achievements onAchievementClaimed={handleAchievementClaimed} user={user} />
 
-      {/* Notification Permission Banner */}
-      {!notificationsEnabled && !isMobile && !notificationService.isBannerDismissed() && (
-        <div className="notification-banner">
-          <div className="notification-banner-icon">🔔</div>
-          <div className="notification-banner-content">
-            <strong>Enable Notifications</strong>
-            <p>Get instant updates when your bets are resolved, new games are available, and more!</p>
+      {/* Championship Announcement Banner */}
+      <div className="championship-banner">
+        <div className="championship-banner-inner">
+          <div className="championship-hype-line">
+            <span>🏆</span>
+            <span className="championship-hype-title">STATE CHAMPS!!! 🏆</span>
+            <span>🏆</span>
           </div>
-          <button className="notification-banner-btn" onClick={handleNotificationToggle}>
-            Enable Notifications
-          </button>
-          <button className="notification-banner-close" onClick={handleNotificationBannerDismiss} title="Don't show again">
-            ✕
-          </button>
+          <div className="championship-main-line">
+            🔥 BOYS BASKETBALL WINS THE STATE CHAMPIONSHIP!!! 🔥
+          </div>
+          <div className="championship-sub-line">
+            🏀 AND SHOUTOUT TO GIRLS BASKETBALL &mdash; 4TH PLACE AT STATE! INCREDIBLE SEASON! 🏀
+          </div>
+          <div className="championship-hype-bottom">
+            WE ARE SO PROUD &bull; LET&apos;S GOOOOO &bull; 🎉🎊🏆🎊🎉
+          </div>
         </div>
-      )}
-      
+      </div>
+
       {/* Win/Loss Notifications */}
       {winNotification && (
         <div className="notification-dismiss-overlay" onClick={() => { clearTimeout(winTimeoutRef.current); setWinNotification(null); setShowConfetti(false); }}>
@@ -299,33 +198,6 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         </div>
       )}
 
-
-      {/* Back to the Bay - State Playoffs Banner */}
-      <div className="back-to-bay-banner">
-        <div className="bay-banner-glow"></div>
-        <div className="bay-banner-top-badge">🏆 STATE PLAYOFFS — FINAL 8 🏆</div>
-        <div className="bay-banner-content">
-          <div className="bay-banner-trophy">🏀</div>
-          <div className="bay-banner-text">
-            <div className="bay-banner-headline">WE&rsquo;RE GOING TO COOS BAY!</div>
-            <div className="bay-banner-sub">Both programs in the Final 8 &mdash; biggest moment in years</div>
-          </div>
-          <div className="bay-banner-trophy">🏀</div>
-        </div>
-        <div className="bay-banner-teams-row">
-          <div className="bay-team-card boys">
-            <span className="bay-team-label">🔥 BOYS</span>
-            <span className="bay-team-status">STATE TITLE CONTENDERS</span>
-            <span className="bay-team-note">Strong chance to bring it home</span>
-          </div>
-          <div className="bay-team-card girls">
-            <span className="bay-team-label">⭐ GIRLS</span>
-            <span className="bay-team-status">HISTORIC APPEARANCE</span>
-            <span className="bay-team-note">First time in years &mdash; making history</span>
-          </div>
-        </div>
-        <div className="bay-banner-wave">🚌 Booster Buses Heading to Coos Bay &mdash; Come Cheer &rsquo;Em On! 🌊</div>
-      </div>
 
       {/* Main Grid Layout */}
       <div className="dashboard-grid school-grid">
@@ -465,17 +337,7 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
 
         {/* Right Sidebar */}
         <div className="dashboard-sidebar">
-          {/* Spin Wheel CTA - Secondary */}
-          <div className="card spin-wheel-card">
-            <h3>🎰 Daily Spin Wheel</h3>
-            <p>Spin once per day for bonus Valiant Bucks!</p>
-            <button 
-              className="btn btn-spin-wheel"
-              onClick={() => setShowSpinWheel(true)}
-            >
-              Spin to Win!
-            </button>
-          </div>
+          {/* Spin Wheel CTA - DISABLED */}
 
           {/* Quick Links - Minimal */}
           <div className="card quick-links-minimal">
@@ -504,12 +366,12 @@ function Dashboard({ user, onNavigate, updateUser, fetchUserProfile }) {
         </div>
       </div>
 
-      {/* Spin Wheel Modal */}
-      <SpinWheel 
+      {/* Spin Wheel Modal - DISABLED */}
+      {/* <SpinWheel 
         isOpen={showSpinWheel} 
         onClose={() => setShowSpinWheel(false)}
         onPrizeWon={handleSpinWheelPrize} 
-      />
+      /> */}
     </div>
   );
 }

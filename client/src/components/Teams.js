@@ -276,8 +276,29 @@ function Teams() {
       </div>
     );
 
+    const isBoysTeam = team.id === 'boys';
+
     return (
       <div className="team-section">
+        {isBoysTeam ? (
+          <div className="season-banner champion-banner">
+            <span className="season-banner-icon">🏆</span>
+            <div className="season-banner-text">
+              <span className="season-banner-title">STATE CHAMPIONS</span>
+              <span className="season-banner-sub">2025–26 Season · Final</span>
+            </div>
+            <span className="season-banner-icon">🏆</span>
+          </div>
+        ) : (
+          <div className="season-banner fourth-place-banner">
+            <span className="season-banner-icon">🥉</span>
+            <div className="season-banner-text">
+              <span className="season-banner-title">4th Place — State Tournament</span>
+              <span className="season-banner-sub">2025–26 Season · Final</span>
+            </div>
+            <span className="season-banner-icon">🥉</span>
+          </div>
+        )}
         <div className="team-header">
           <h2>{team.name}</h2>
           <div className="team-stats">
@@ -445,20 +466,81 @@ function Teams() {
     <div className="teams-page ds-page">
       <div className="page-header">
         <h1>Valiant Basketball</h1>
+        <p className="season-final-label">2025&ndash;26 Season &mdash; Final</p>
       </div>
-      
+
+      <div className="season-summary-card">
+        <h2 className="season-summary-title">2025&ndash;26 Season Recap</h2>
+        <p className="season-summary-intro">
+          The 2025&ndash;26 season was historic for Valiant Basketball. The boys program, led by first-year head coach Bryan Fraser,
+          delivered a dominant run to the <strong>3A State Championship</strong> — finishing 27&ndash;3 overall and 13&ndash;1 in league play.
+          Coach Fraser&rsquo;s defense-first system transformed the team from day one, and the results speak for themselves.
+          The girls program had an equally impressive year under Coach Pat Thomas, going 23&ndash;6 overall and 11&ndash;1 in league,
+          earning a <strong>4th-place finish at the State Tournament</strong> and a top-6 OSAA ranking.
+          Both teams competed in the 3A Lewis &amp; Clark League.
+        </p>
+
+        <div className="season-summary-grid">
+          <div className="season-summary-team">
+            <div className="season-summary-team-header boys-header">
+              <span>🏆</span>
+              <span>Boys Basketball</span>
+              <span className="season-result-badge champion-badge">State Champions</span>
+            </div>
+            <div className="season-summary-stats">
+              <div className="season-stat">
+                <span className="season-stat-label">Overall</span>
+                <span className="season-stat-value">27&ndash;3</span>
+              </div>
+              <div className="season-stat">
+                <span className="season-stat-label">League</span>
+                <span className="season-stat-value">13&ndash;1</span>
+              </div>
+              <div className="season-stat">
+                <span className="season-stat-label">Finish</span>
+                <span className="season-stat-value">1st &mdash; State</span>
+              </div>
+            </div>
+            <p className="season-summary-coach">Head Coach: <strong>Bryan Fraser</strong> &mdash; 1st season &mdash; 3A State Champion</p>
+          </div>
+
+          <div className="season-summary-team">
+            <div className="season-summary-team-header girls-header">
+              <span>🥉</span>
+              <span>Girls Basketball</span>
+              <span className="season-result-badge fourth-badge">4th Place &mdash; State</span>
+            </div>
+            <div className="season-summary-stats">
+              <div className="season-stat">
+                <span className="season-stat-label">Overall</span>
+                <span className="season-stat-value">23&ndash;6</span>
+              </div>
+              <div className="season-stat">
+                <span className="season-stat-label">League</span>
+                <span className="season-stat-value">11&ndash;1</span>
+              </div>
+              <div className="season-stat">
+                <span className="season-stat-label">Finish</span>
+                <span className="season-stat-value">4th &mdash; State</span>
+              </div>
+            </div>
+            <p className="season-summary-coach">Head Coach: <strong>Pat Thomas</strong> &mdash; 3A Lewis &amp; Clark League</p>
+          </div>
+        </div>
+      </div>
+
       <div className="tabs">
         <button 
           className={`tab-button ${activeTab === 'boys' ? 'active' : ''}`}
           onClick={() => setActiveTab('boys')}
         >
-          Boys Basketball
+          🏆 Boys Basketball
         </button>
         <button 
           className={`tab-button ${activeTab === 'girls' ? 'active' : ''}`}
           onClick={() => setActiveTab('girls')}
         >
-          Girls Basketball
+          🥉 Girls Basketball
         </button>
       </div>
 

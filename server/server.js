@@ -83,12 +83,13 @@ app.use('/api/teams-admin', require('./routes/teamsAdmin'));
 app.use('/api/transactions', require('./routes/transactions'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/error-logs', require('./routes/errorLogs'));
-app.use('/api/wheel', require('./routes/wheelSpin'));
-app.use('/api/daily-rewards', require('./routes/dailyRewards'));
+// app.use('/api/wheel', require('./routes/wheelSpin'));        // DISABLED
+// app.use('/api/daily-rewards', require('./routes/dailyRewards')); // DISABLED
 app.use('/api/achievements', require('./routes/achievements'));
 app.use('/api/periodic-bonuses', require('./routes/periodicBonuses'));
 app.use('/api/referrals', require('./routes/referrals'));
 app.use('/api/brackets', require('./routes/brackets'));
+app.use('/api/settings', require('./routes/settings'));
 
 // Health check
 app.get('/api/health', (req, res) => {

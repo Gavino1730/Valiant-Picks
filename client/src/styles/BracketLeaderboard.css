@@ -420,6 +420,86 @@
   }
 }
 
+/* ── Winner Banner ──────────────────────────────── */
+@keyframes winner-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.5); }
+  50%       { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
+}
+
+.bracket-winner-banner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(135deg, #1a2a1a 0%, #162616 100%);
+  border: 2px solid #facc15;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  animation: winner-pulse 2.5s ease-in-out 3;
+}
+
+.bracket-winner-banner--girls {
+  background: linear-gradient(135deg, #2a1422 0%, #260f1c 100%);
+  border-color: #f472b6;
+  animation: none;
+}
+
+.bracket-winner-banner--girls {
+  --winner-color: #f472b6;
+}
+
+.bracket-winner-trophy {
+  font-size: 3rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.bracket-winner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bracket-winner-congrats {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #facc15;
+}
+
+.bracket-winner-banner--girls .bracket-winner-congrats {
+  color: #f472b6;
+}
+
+.bracket-winner-name {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+
+.bracket-winner-sub {
+  font-size: 13px;
+  color: #9aa3b0;
+  margin-top: 2px;
+}
+
+@media (max-width: 480px) {
+  .bracket-winner-banner {
+    gap: 14px;
+    padding: 16px 16px;
+    border-radius: 12px;
+  }
+  .bracket-winner-trophy {
+    font-size: 2.2rem;
+  }
+  .bracket-winner-name {
+    font-size: 1.3rem;
+  }
+}
+
 /* ── Tab scrolling on mobile ──────────────────── */
 @media (max-width: 767px) {
   .bracket-leaderboard .bracket-tabs {
@@ -468,6 +548,11 @@
 
 .skel-sm  { width: 40px;  height: 14px; }
 .skel-md  { width: 110px; height: 14px; }
+
+.leaderboard-row--champion {
+  background: rgba(250, 204, 21, 0.07);
+  border-radius: 8px;
+}
 
 .leaderboard-row--skeleton {
   pointer-events: none;

@@ -5,12 +5,12 @@ import './styles/design-system.css';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import OnboardingModal from './components/OnboardingModal';
+import ThankYouModal from './components/ThankYouModal';
 import Footer from './components/Footer';
 import { ToastProvider, useToast } from './components/ToastProvider';
 import './styles/Toast.css';
 import apiClient from './utils/axios';
 import { formatCurrency } from './utils/currency';
-import notificationService from './utils/notifications';
 
 // Helper to handle chunk load errors - retry once then refresh
 const lazyWithRetry = (componentImport) => {
@@ -300,47 +300,17 @@ function AppContent() {
     }
   }, []);
 
-  const sendBrowserNotification = useCallback((notification) => {
-    // Map notification types to browser notification messages
-    const typeMessages = {
-      'bet_won': { title: '🎉 Bet Won!', body: notification.message },
-      'bet_lost': { title: '😔 Bet Lost', body: notification.message },
-      'bet_placed': { title: '✅ Bet Placed', body: notification.message },
-      'balance_gift': { title: '🎁 Balance Gift', body: notification.message },
-      'balance_pending': { title: '⏳ Balance Pending', body: notification.message },
-      'default': { title: notification.title || '📢 Notification', body: notification.message }
-    };
-
-    const messageData = typeMessages[notification.type] || typeMessages.default;
-    
-    notificationService.send(messageData.title, {
-      body: messageData.body,
-      tag: `notification-${notification.id}`,
-      data: { notificationId: notification.id, type: notification.type }
-    });
-  }, []);
-
   const fetchAndCheckNotifications = useCallback(async () => {
     try {
       const response = await apiClient.get('/notifications');
       const notifications = response.data || [];
-      
-      // Check for new unread notifications and send browser notifications
-      if (previousNotificationIds.current.size > 0) {
-        notifications.forEach(notification => {
-          // If this is a new notification that wasn't in the previous set and is unread
-          if (!previousNotificationIds.current.has(notification.id) && !notification.is_read) {
-            sendBrowserNotification(notification);
-          }
-        });
-      }
       
       // Update the set of notification IDs we've seen
       previousNotificationIds.current = new Set(notifications.map(n => n.id));
     } catch (err) {
       // Fail silently - notifications are not critical
     }
-  }, [sendBrowserNotification]);
+  }, []);
 
   const fetchUserProfile = useCallback(async () => {
     try {
@@ -765,6 +735,7 @@ function AppContent() {
       {token && <Footer onNavigate={handlePageChange} />}
       
       {token && <OnboardingModal />}
+      <ThankYouModal />
     </div>
     </ToastProvider>
   );

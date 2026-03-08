@@ -10,6 +10,7 @@ function Leaderboard() {
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState({ key: 'balance', direction: 'desc' });
+  const [frozen, setFrozen] = useState(false);
 
   const PAGE_SIZE = 25;
   let currentUser = null;
@@ -24,11 +25,16 @@ function Leaderboard() {
 
   useEffect(() => {
     fetchData();
-    // Poll for leaderboard updates every 20 seconds
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (frozen) return;
+    // Poll for leaderboard updates every 20 seconds when not frozen
     const interval = setInterval(fetchData, 20000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [frozen]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -36,10 +42,11 @@ function Leaderboard() {
 
   const fetchData = async () => {
     try {
-      // Fetch users and bets simultaneously to avoid intermediate renders with stale data
-      const [usersRes, betsRes] = await Promise.all([
+      // Fetch users, bets, and settings simultaneously
+      const [usersRes, betsRes, settingsRes] = await Promise.all([
         apiClient.get('/users'),
         apiClient.get('/bets/all'),
+        apiClient.get('/settings'),
       ]);
 
       // Filter out admin account from displayed users
@@ -50,9 +57,10 @@ function Leaderboard() {
         ? betsRes.data.filter(b => b.user_id !== adminUser.id)
         : betsRes.data;
 
-      // Set both at once so React 18 batches them into a single render
+      // Set all state at once so React 18 batches them into a single render
       setUsers(nonAdminUsers);
       setBets(nonAdminBets);
+      setFrozen(!!settingsRes.data?.settings?.leaderboard_frozen);
       setError('');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to fetch leaderboard');
@@ -168,8 +176,17 @@ function Leaderboard() {
   return (
     <div className="leaderboard-page ds-page">
       <div className="leaderboard-header page-header">
-        <h1>Leaderboard</h1>
+        <h1>Leaderboard {frozen && <span className="frozen-badge">🔒 Final Standings</span>}</h1>
       </div>
+
+      {frozen && (
+        <div className="frozen-banner">
+          <span className="frozen-banner__icon">🏆</span>
+          <div className="frozen-banner__text">
+            <strong>The leaderboard is frozen!</strong> These are the final standings. Congratulations to everyone who participated!
+          </div>
+        </div>
+      )}
 
       {error && <div className="alert alert-error">{error}</div>}
 
@@ -185,6 +202,28 @@ function Leaderboard() {
           <div className="summary-label">Total Picks</div>
         </div>
       </div>
+
+      {/* Congratulations Podium — shown only when frozen */}
+      {frozen && rankedUsers.length > 0 && (
+        <div className="congrats-podium">
+          {rankedUsers.slice(0, 3).map((user, idx) => {
+            const medals = ['🥇', '🥈', '🥉'];
+            const labels = ['1st Place', '2nd Place', '3rd Place'];
+            const podiumClasses = ['podium-gold', 'podium-silver', 'podium-bronze'];
+            return (
+              <div key={user.id} className={`congrats-card ${podiumClasses[idx]}`}>
+                <div className="congrats-medal">{medals[idx]}</div>
+                <div className="congrats-rank">{labels[idx]}</div>
+                <div className="congrats-name">{user.username}</div>
+                <div className="congrats-balance">{formatCurrency(user.balance)}</div>
+                <div className="congrats-message">
+                  {idx === 0 ? 'Champion! Outstanding performance!' : idx === 1 ? 'Runner-up! Amazing season!' : 'Great job finishing on the podium!'}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Leaderboard Table/Cards */}
       <div className="leaderboard-container">

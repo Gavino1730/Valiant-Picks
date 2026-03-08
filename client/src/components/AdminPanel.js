@@ -41,6 +41,8 @@ function AdminPanel() {
   const [userSearch, setUserSearch] = useState('');
   const [showCompletedGames, setShowCompletedGames] = useState(false);
   const [selectedGameIds, setSelectedGameIds] = useState([]);
+  const [leaderboardFrozen, setLeaderboardFrozen] = useState(false);
+  const [settingsLoading, setSettingsLoading] = useState(false);
 
   const gameFormDefaults = {
     teamType: 'Boys Basketball',
@@ -78,7 +80,8 @@ function AdminPanel() {
     { key: 'bets', label: 'View All Picks', icon: '📋' },
     { key: 'brackets', label: 'Brackets', icon: '🏆' },
     { key: 'users', label: 'Manage Users', icon: '🧑‍💼' },
-    { key: 'teams', label: 'Manage Teams', icon: '🛠️' }
+    { key: 'teams', label: 'Manage Teams', icon: '🛠️' },
+    { key: 'settings', label: 'Settings', icon: '⚙️' },
   ];
 
 
@@ -129,11 +132,34 @@ function AdminPanel() {
     }
   };
 
+  const fetchSettings = async () => {
+    try {
+      const response = await apiClient.get('/settings');
+      setLeaderboardFrozen(!!response.data?.settings?.leaderboard_frozen);
+    } catch (err) {
+      // non-critical, ignore
+    }
+  };
+
+  const handleToggleFreeze = async () => {
+    const newFrozen = !leaderboardFrozen;
+    setSettingsLoading(true);
+    try {
+      const response = await apiClient.put('/settings', { leaderboard_frozen: newFrozen });
+      setLeaderboardFrozen(!!response.data?.settings?.leaderboard_frozen);
+    } catch (err) {
+      setError('Failed to update leaderboard setting: ' + (err.response?.data?.error || err.message));
+    } finally {
+      setSettingsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchAllBets();
     fetchUsers();
     fetchGames();
     fetchPropBets();
+    fetchSettings();
   }, []);
 
   useEffect(() => {
@@ -819,6 +845,10 @@ function AdminPanel() {
     teams: {
       title: 'Manage Teams',
       subtitle: 'Update team info, schedules, and rosters.'
+    },
+    settings: {
+      title: 'Settings',
+      subtitle: 'Configure leaderboard and app-wide options.'
     }
   };
 
@@ -852,7 +882,8 @@ function AdminPanel() {
     ),
     bets: null,
     brackets: null,
-    teams: null
+    teams: null,
+    settings: null
   };
 
   const { title, subtitle } = headerConfig[tab] || headerConfig.games;
@@ -893,6 +924,9 @@ function AdminPanel() {
         </button>
         <button className={`admin-tab ${tab === 'teams' ? 'active' : ''}`} onClick={() => setTab('teams')}>
           Manage Teams
+        </button>
+        <button className={`admin-tab ${tab === 'settings' ? 'active' : ''}`} onClick={() => setTab('settings')}>
+          Settings
         </button>
       </div>
 
@@ -2195,6 +2229,35 @@ function AdminPanel() {
 
       {tab === 'teams' && (
         <AdminTeams />
+      )}
+
+      {tab === 'settings' && (
+        <div className="admin-section">
+          <div className="admin-card" style={{ maxWidth: 480 }}>
+            <h3 style={{ marginBottom: '0.5rem' }}>Leaderboard</h3>
+            <p className="admin-muted" style={{ marginBottom: '1.25rem' }}>
+              Freeze the leaderboard to lock in final standings and display congratulations to the top players.
+              While frozen, the leaderboard stops auto-refreshing for all users.
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                className={`admin-button ${leaderboardFrozen ? 'admin-button--destructive' : 'admin-button--primary'}`}
+                onClick={handleToggleFreeze}
+                disabled={settingsLoading}
+              >
+                {settingsLoading
+                  ? 'Saving…'
+                  : leaderboardFrozen
+                  ? '🔓 Unfreeze Leaderboard'
+                  : '🔒 Freeze Leaderboard'}
+              </button>
+              <span className={`admin-badge ${leaderboardFrozen ? 'admin-badge--warning' : 'admin-badge--success'}`}>
+                {leaderboardFrozen ? 'Frozen — Final Standings Active' : 'Live — Auto-updating'}
+              </span>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Game Status Management Modal */}

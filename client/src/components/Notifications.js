@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import apiClient from '../utils/axios';
-import notificationService from '../utils/notifications';
 import '../styles/Notifications.css';
 
 function Notifications({ onUnreadChange }) {
@@ -21,17 +20,6 @@ function Notifications({ onUnreadChange }) {
       try {
         const response = await apiClient.get('/notifications');
         const newNotifications = response.data;
-        
-        // Check for new unread notifications and send browser notifications
-        if (previousNotificationIds.current.size > 0) {
-          newNotifications.forEach(notification => {
-            // If this is a new notification that wasn't in the previous set
-            if (!previousNotificationIds.current.has(notification.id) && !notification.is_read) {
-              // Send browser notification
-              sendBrowserNotification(notification);
-            }
-          });
-        }
         
         // Update the set of notification IDs
         previousNotificationIds.current = new Set(newNotifications.map(n => n.id));
@@ -72,26 +60,6 @@ function Notifications({ onUnreadChange }) {
     
     return () => clearInterval(pollInterval);
   }, [isMarkingAsRead, updateUnreadCount]);
-
-  const sendBrowserNotification = (notification) => {
-    // Map notification types to browser notification messages
-    const typeMessages = {
-      'bet_won': { title: '🎉 Bet Won!', body: notification.message },
-      'bet_lost': { title: '😔 Bet Lost', body: notification.message },
-      'bet_placed': { title: '✅ Bet Placed', body: notification.message },
-      'balance_gift': { title: '🎁 Balance Gift', body: notification.message },
-      'balance_pending': { title: '⏳ Balance Pending', body: notification.message },
-      'default': { title: notification.title || '📢 Notification', body: notification.message }
-    };
-
-    const messageData = typeMessages[notification.type] || typeMessages.default;
-    
-    notificationService.send(messageData.title, {
-      body: messageData.body,
-      tag: `notification-${notification.id}`,
-      data: { notificationId: notification.id, type: notification.type }
-    });
-  };
 
   const markAsRead = async (id) => {
     try {
